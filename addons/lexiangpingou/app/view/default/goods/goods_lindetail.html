@@ -93,10 +93,11 @@
     	<div class="content">
     		<div class="dt_detail">
 			    <section class="detail_main" style="position:relative">
-				  {if  !empty($advs)}
+				  {if !empty($advs)||!empty($goods["index_video"])}
 			        <div class="sliderImage">
 			            <div class="images" id="sliderImg" style="visibility: visible;">
 			            	<ul>
+			            		{php include wl_template('common/video_detail');}
 			            		{loop $advs $adv}
 			            		<li><img src="{php echo tomedia($adv['thumb']);}" style='width:100%;'></li>
 			            		{/loop}
@@ -121,16 +122,34 @@
 			    	<div class="progress"><div class="percent"></div></div><span class="total_tuan">共团</span></div>
 			    	<div class="playTips" > 支付开团并邀请邻近好友参加，人数不足自动退款，详见下方邻购玩法</div>
 			    	<script>
-					    $(function() {
-					        new Swipe($('#sliderImg')[0], {
-					            speed:500,
-					            auto:3000,
-					            callback: function(){
-					                var lis = $("#sliderNum").children();
-					                lis.removeClass("curr").eq(this.index).addClass("curr");
-					            }
-					        });
-					    });
+					    var swipeConfig = {
+                            speed:500,
+                            auto:3000,
+                            callback: function(){
+                                var lis = $("#sliderNum").children();
+                                lis.removeClass("curr").eq(this.index).addClass("curr");
+                            }
+                        }
+                        var swipe;
+                        (function() {
+                            swipe = new Swipe($('#sliderImg')[0], swipeConfig);
+                            $('video').attr('poster',"{$goods['gimg']}").attr('id','media').attr('controls','controls');
+                            var mmedia = document.getElementById("media");
+                            mmedia.onplay=function(){
+                                console.log("视频已播放.");
+                                swipe.stop()
+                                $.get("{php echo app_url('goods/detail/up_num')}",{id:$('video').attr('data-id')},function(res){
+                                    console.log(res);
+                                    if(JSON.parse(res).status=='error'){
+                                        $('video').removeAttr('src');
+                                        $.toast("已无播放次数");
+                                    }
+                                })
+                            };
+                            mmedia.onpause=function() {
+                                swipe.begin()
+                            }
+                        })()
 					</script>
 					<!--//佣金外快-->
 					{php include wl_template('common/commission');}

@@ -94,7 +94,7 @@
 
     <div class="page page-current" id="page-goods-list">
         <div class="content infinite-scroll native-scroll" data-distance="10">
-            <div class="topbar"><h3 class="title">乐享拼购</h3><div class="barfn"><i class="refresh"></i><i class="share"></i></div></div>
+            <div class="topbar"><h3 class="title">火蝶云</h3><div class="barfn"><i class="refresh"></i><i class="share"></i></div></div>
             {php include wl_template('common/followed');}
             <div class="banner" id="banner" style="visibility: visible;">
                 <ul class="imgs">
@@ -255,31 +255,10 @@ z-index:10000000">
 		<span class="isshow" style="display:none;">{{ d.list[i].isshow }}</span>
 		<span class="isupjia" style="display:none;">{{ d.list[i].isupjia }}</span>
 		<span style="height:20px;border-left:1px solid white;margin-top:5px;margin-bottom:5px;padding-left: 20px;padding-right:15px;">
-		{{# if( d.list[i].selltype==1){ }}
-		随意团
-		{{# } }}
-		{{# if( d.list[i].selltype==2){ }}
-		邻购团
-		{{# } }}
-		{{# if( d.list[i].selltype==0){ }}
-		单买
-		{{# } }}
-		{{# if( d.list[i].selltype==3){ }}
-		自选团
-		{{# } }}
-		{{# if( d.list[i].selltype==4){ }}
-		阶梯团
-		{{# } }}
-		{{# if( d.list[i].selltype==5){ }}
-		抽奖团
-		{{# } }}
-		
-		{{# if( d.list[i].selltype==6){ }}
-		新专团
-		{{# } }}
-			{{# if( d.list[i].selltype==7){ }}
-		订金团
-		{{# } }}
+
+            <!--不同模式文字   单买，随意团 -->
+		{php include wl_template('common/selltype');}
+
 		</span>
 		<span class="one_limit" style="display:none">{{d.list[i].one_limit}}</span>
 		<span class="many_limit" style="display:none;">{{ d.list[i].many_limit }}</span>
@@ -325,6 +304,7 @@ z-index:10000000">
 transition-duration:position:fixed;left:0px;right:0px;bottom:-30px;z-index:100870;border-radius:15px;margin:auto;transition-duration:0.5s;
 			transition-property:bottom;opacity:1;transition-timing-function:ease-out;">
 <script>
+    console.log('吉之城 goods_list2_2')
     //触屏优化
     var content = document.getElementsByClassName("content")[0];
     content.addEventListener("touchmove", function (ev) {
@@ -381,10 +361,10 @@ transition-duration:position:fixed;left:0px;right:0px;bottom:-30px;z-index:10087
             var thispagesize = 6;
             var thispagesizemax = 100;
             var thispage = 1;
-
-            function addItems(thispage, thispagesize) {
+            var usepage = 1;
+            function addItems(thispage, thispagesize, onpage, success) {
                 sessionStorage.setItem('thispage',thispage);
-                var ajaxurl = "{php echo app_url('goods/list/shopajax',array('cid' => $cid))}" + "&page=" + thispage + "&pagesize=" + thispagesize;
+                var ajaxurl = "{php echo app_url('goods/list/shopajax',array('cid' => $cid))}" + "&page=" + thispage + "&pagesize=" + thispagesize+"&usepage="+onpage;
                 $.ajax({
                     type: "POST",
                     url: ajaxurl,
@@ -395,7 +375,7 @@ transition-duration:position:fixed;left:0px;right:0px;bottom:-30px;z-index:10087
                         if (data.list.length > 0) {
                             var gettpl = document.getElementById('goodslist').innerHTML;
                             laytpl(gettpl).render(data, function(html){
-                                $(".ul_1").append(html);
+                                onpage ? $(".ul_1").append(html) : $(".ul_1").html(html);
                             });
                         } else {
                             $(".loading_more").remove();
@@ -403,30 +383,13 @@ transition-duration:position:fixed;left:0px;right:0px;bottom:-30px;z-index:10087
                         }
                         joinSession();
                         setSealout();
+                        success&&success()
                     },
                     error: function() {
                         $('.error').show();
                     }
                 });
             }
-            addItems(thispage, thispagesize);
-            $(page).on('infinite', function() {
-                if (loading) return;
-                loading = true;
-                $(".loading_more").show();
-                if (orderlist.getBoundingClientRect().top < -500){
-                    gotop.style.setProperty("display", "block");
-                }else {
-                    gotop.style.setProperty("display", "none");
-                }
-                setTimeout(function() {
-                    loading = false;
-                    thispage++;
-                    addItems(thispage, thispagesize);
-//                    $(".loading_more").hide();
-                    $.refreshScroller();
-                }, 200);
-            });
             sesso=function sessionProcess(elem) {
                 var externals = document.getElementsByClassName("externals");
                 var len = externals.length;
@@ -448,33 +411,42 @@ transition-duration:position:fixed;left:0px;right:0px;bottom:-30px;z-index:10087
             }
             if (sessionStorage.getItem("position") !== null){
                 document.getElementById("animationS").style.setProperty("display","block");
+                usepage = 0;
                 setTimeout(function() {
                     var classname = sessionStorage.getItem("position").slice(-1*sessionStorage.getItem("position").length,-1*sessionStorage.getItem("position").length+9);
                     var index = parseInt(sessionStorage.getItem("position").slice(-1*sessionStorage.getItem("position").length+9));
-                    var i = index;
-                    var n = ( i /4 +2 )* 500;
-                    setTimeout(function(){
-                        loadData(i);
-                        setTimeout(function(){
-                            document.getElementsByClassName(classname)[index].scrollIntoView();
-                            setTimeout(function(){
-                                document.getElementById("animationS").style.setProperty("display","none");
-                            },0)
-                        },n)
-                    },200)
+                    addItems(thispage,thispagesize, usepage, function() {
+                        document.getElementsByClassName(classname)[index].scrollIntoView();
+                        document.getElementById("animationS").style.setProperty("display","none");
+                    });
                 },0);
+            } else {
+                addItems(thispage, thispagesize, usepage);
             }
-            function loadData(i) {
-                if (i<3) return;
-                thispage++;
-                addItems(thispage,thispagesize);
-                setTimeout(function(){
-                    loadData(i-4);
-                },200)
-
+            if(usepage) {
+                $(page).on('infinite', function() {
+                    if (loading) return;
+                    loading = true;
+                    $(".loading_more").show();
+                    if (orderlist.getBoundingClientRect().top < -500){
+                        gotop.style.setProperty("display", "block");
+                    }else {
+                        gotop.style.setProperty("display", "none");
+                    }
+                    setTimeout(function() {
+                        loading = false;
+                        thispage++;
+                        addItems(thispage, thispagesize, usepage);
+                        // $(".loading_more").hide();
+                        $.refreshScroller();
+                    }, 200);
+                });
+            } else {
+                $('.noData').show();
             }
         });
         $.init();
+
     });
     function setSealout() {
         var buys = document.getElementsByClassName("pluslist");

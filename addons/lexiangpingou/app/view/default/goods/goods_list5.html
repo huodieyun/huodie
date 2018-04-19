@@ -187,6 +187,7 @@ right: 40px;
 top: -4px;border-radius: 1em 2px 2px 1em;padding: 0px 0.3em;font-size: 1.2em;margin-right: -10px;">
 		<span style="display:none;height:20px;border-left:1px solid white;margin-top:5px;margin-bottom:5px;padding-right:15px;"></span>
 		<span class="isshow" style="display:none;">{{ d.list[i].isshow }}</span>
+		<span class="isupjia" style="display:none;">{{ d.list[i].isupjia }}</span>
 		<span class="typenotice" style="font-size:1.5em;border-left: 3px solid transparent;">
 
 			<!--不同模式文字   单买，随意团 -->
@@ -244,105 +245,96 @@ top: -4px;border-radius: 1em 2px 2px 1em;padding: 0px 0.3em;font-size: 1.2em;mar
 		'use strict';
 		//商品列表页
 		$(document).on("pageInit", "#page-goods-list", function(e, id, page) {
-			var loading = false;
-			var thispagesize = 6;
-			var thispagesizemax = 100;
-			var thispage = 1;
+            var loading = false;
+            var thispagesize = 4;
+            var thispagesizemax = 100;
+            var thispage = 1;
+            var usepage = 1;
+            function addItems(thispage, thispagesize, onpage, success) {
+                sessionStorage.setItem('thispage',thispage);
+                var ajaxurl = "{php echo app_url('goods/list/ajax',array('cid' => $cid))}" + "&page=" + thispage + "&pagesize=" + thispagesize+"&usepage="+onpage;
+                $.ajax({
+                    type: "POST",
+                    url: ajaxurl,
+                    dataType: 'json',
+                    beforeSend: function(XMLHttpRequest) {},
+                    success: function(data) {
+                        thispagesizemax = data.total;
+                        if (data.list.length > 0) {
+                            var gettpl = document.getElementById('goodslist').innerHTML;
+                            laytpl(gettpl).render(data, function(html){
+                                onpage ? $(".ul_1").append(html) : $(".ul_1").html(html);
+                            });
+                        } else {
+                            $(".loading_more").remove();
+                            $('.noData').show();
+                        }
+                        joinSession();
+                        setSealout();
+                        success&&success()
+                    },
+                    error: function() {
+                        $('.error').show();
+                    }
+                });
+            }
+            sesso=function sessionProcess(elem) {
+                var externals = document.getElementsByClassName("externals");
+                var len = externals.length;
+                for ( var i = 0; i < len; i++ ) {
+                    if ( elem === externals[i] ) {
+                        var classclassname = elem.className.slice(9);
+                        sessionStorage.setItem("position", classclassname+i.toString());
+                        sessionStorage.setItem("id", externals[i].id);
+                        sessionStorage.setItem("weight", externals[i].getElementsByClassName('weight')[0].innerHTML);
+                        sessionStorage.setItem("kucun", externals[i].getElementsByClassName('kucun')[0].innerHTML);
+                        sessionStorage.setItem("isGuige", externals[i].getElementsByClassName("isguige")[0].innerHTML);
+                        sessionStorage.setItem("price", externals[i].getElementsByClassName("price")[0].innerHTML.slice(1));
+                        sessionStorage.setItem("img", externals[i].getElementsByTagName("img")[1].src);
+                        sessionStorage.setItem("title", externals[i].getElementsByTagName("h5")[0].innerHTML);
+                        saveSession();
+                    }
+                }
 
-			function addItems(thispage, thispagesize) {
-				sessionStorage.setItem('thispage',thispage);
-				var ajaxurl = "{php echo app_url('goods/list/ajax',array('cid' => $cid))}" + "&page=" + thispage + "&pagesize=" + thispagesize;
-				$.ajax({
-					type: "POST",
-					url: ajaxurl,
-					dataType: 'json',
-					beforeSend: function(XMLHttpRequest) {},
-					success: function(data) {
-						console.log(data);
-						thispagesizemax = data.total;
-						if (data.list.length > 0) {
-							var gettpl = document.getElementById('goodslist').innerHTML;
-							laytpl(gettpl).render(data, function(html){
-								$(".ul_1").append(html);
-							});
-						} else {
-							$(".loading_more").remove();
-							$('.noData').show();
-						}
-						joinSession();
-						setSealout();
-					},
-					error: function() {
-						$('.error').show();
-					}
-				});
-			}
-			addItems(thispage, thispagesize);
-			$(page).on('infinite', function() {
-				if (loading) return;
-				loading = true;
-				$(".loading_more").show();
-				if (orderlist.getBoundingClientRect().top < -500){
-					gotop.style.setProperty("display", "block");
-				}else {
-					gotop.style.setProperty("display", "none");
-				}
-				setTimeout(function() {
-					loading = false;
-					thispage++;
-					addItems(thispage, thispagesize);
-//					$(".loading_more").hide();
-					$.refreshScroller();
-				}, 200);
-			});
-			sesso=function sessionProcess(elem) {
-				var externals = document.getElementsByClassName("externals");
-				var len = externals.length;
-				for ( var i = 0; i < len; i++ ) {
-					if ( elem === externals[i] ) {
-						var classclassname = elem.className.slice(9);
-						sessionStorage.setItem("position", classclassname+i.toString());
-						sessionStorage.setItem("id", externals[i].id);
-						sessionStorage.setItem("weight", externals[i].getElementsByClassName('weight')[0].innerHTML);
-						sessionStorage.setItem("kucun", externals[i].getElementsByClassName('kucun')[0].innerHTML);
-						sessionStorage.setItem("isGuige", externals[i].getElementsByClassName("isguige")[0].innerHTML);
-						sessionStorage.setItem("price", externals[i].getElementsByClassName("price")[0].innerHTML.slice(1));
-						sessionStorage.setItem("img", externals[i].getElementsByTagName("img")[1].src);
-						sessionStorage.setItem("title", externals[i].getElementsByTagName("h5")[0].innerHTML);
-						saveSession();
-					}
-				}
+            }
+            if (sessionStorage.getItem("position") !== null){
+                document.getElementById("animationS").style.setProperty("display","block");
+                usepage = 0;
+                setTimeout(function() {
+                    var classname = sessionStorage.getItem("position").slice(-1*sessionStorage.getItem("position").length,-1*sessionStorage.getItem("position").length+9);
+                    var index = parseInt(sessionStorage.getItem("position").slice(-1*sessionStorage.getItem("position").length+9));
+                    addItems(thispage,thispagesize, usepage, function() {
+                        document.getElementsByClassName(classname)[index].scrollIntoView();
+                        document.getElementById("animationS").style.setProperty("display","none");
+                    });
+                },0);
+            } else {
+                addItems(thispage, thispagesize, usepage);
+            }
+            if(usepage) {
+                $(page).on('infinite', function() {
+                    if (loading) return;
+                    loading = true;
+                    $(".loading_more").show();
+                    if (orderlist.getBoundingClientRect().top < -500){
+                        gotop.style.setProperty("display", "block");
+                    }else {
+                        gotop.style.setProperty("display", "none");
+                    }
+                    setTimeout(function() {
+                        loading = false;
+                        thispage++;
+                        addItems(thispage, thispagesize, usepage);
+                        // $(".loading_more").hide();
+                        $.refreshScroller();
+                    }, 200);
+                });
+            } else {
+                $('.noData').show();
+            }
+        });
+        $.init();
 
-			}
-			if (sessionStorage.getItem("position") !== null){
-				document.getElementById("animationS").style.setProperty("display","block");
-				setTimeout(function() {
-					var classname = sessionStorage.getItem("position").slice(-1*sessionStorage.getItem("position").length,-1*sessionStorage.getItem("position").length+9);
-					var index = parseInt(sessionStorage.getItem("position").slice(-1*sessionStorage.getItem("position").length+9));
-					var i = index;
-					var n = ( i /4 +2 )* 500;
-					setTimeout(function(){
-						loadData(i);
-						setTimeout(function(){
-							document.getElementsByClassName(classname)[index].scrollIntoView();
-							setTimeout(function(){
-								document.getElementById("animationS").style.setProperty("display","none");
-							},0)
-						},n)
-					},200)
-				},0);
-			}
-			function loadData(i) {
-				if (i<3) return;
-				thispage++;
-				addItems(thispage,thispagesize);
-				setTimeout(function(){
-					loadData(i-4);
-				},200)
-
-			}
-		});
-		$.init();
 	});
 	function setSealout() {
 		var buys = document.getElementsByClassName("btn");

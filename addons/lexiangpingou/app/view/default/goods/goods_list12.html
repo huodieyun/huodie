@@ -73,7 +73,14 @@
     }
     .listCon li{
         margin: 5px 0;
+        overflow: hidden;
+        border-top: 1px solid #e5e5e5;
+        border-right: 1px solid #e5e5e5;
+        border-bottom: 1px solid #e5e5e5;
+        border-left: 1px solid #e5e5e5;
         background: #fff;
+        min-height: 120px;
+        overflow: hidden;
     }
     .listCon h5{
         /*white-space: nowrap;*/
@@ -201,7 +208,7 @@
             padding: 0;
         }
     }
-    
+
     .shouye i{
         background-position: 3px 0px!important;
     }
@@ -436,30 +443,10 @@ z-index:10000000">
 		<span class="isshow" style="display:none;">{{ d.list[i].isshow }}</span>
 		<span class="isupjia" style="display:none;">{{ d.list[i].isupjia }}</span>
 		<span style="display:none;height:20px;border-left:1px solid white;margin-top:5px;margin-bottom:5px;padding-left: 20px;padding-right:15px;">
-		{{# if( d.list[i].selltype==1){ }}
-		随意团
-		{{# } }}
-		{{# if( d.list[i].selltype==2){ }}
-		邻购团
-		{{# } }}
-		{{# if( d.list[i].selltype==0){ }}
-		单买
-		{{# } }}
-		{{# if( d.list[i].selltype==3){ }}
-		自选团
-		{{# } }}
-		{{# if( d.list[i].selltype==4){ }}
-		阶梯团
-		{{# } }}
-		{{# if( d.list[i].selltype==5){ }}
-		抽奖团
-		{{# } }}
-		{{# if( d.list[i].selltype==6){ }}
-		新专团
-		{{# } }}
-				{{# if( d.list[i].selltype==7){ }}
-		订金团
-		{{# } }}
+
+            <!--不同模式文字   单买，随意团 -->
+		{php include wl_template('common/selltype');}
+
 		</span>
 		<div class="kucun" style="display:none;">{{ d.list[i].gnum }}</div>
 		<div class="weight" style="display:none;">{{ d.list[i].weight}}</div>
@@ -553,43 +540,77 @@ border: 2px solid hsl(0, 0%, 100%);" class="myService external {if $_GPC['ac']==
         //	var isPost = true;
         var Guigein = JSON.parse(sessionStorage.getItem("guigein"))|| {};//存放已经购买的规格，
 
-        $(function() {
-            'use strict';
-            //商品列表页
-            $(document).on("pageInit", "#page-goods-list", function(e, id, page) {
-                var loading = false;
-                var thispagesize = 6;
-                var thispagesizemax = 100;
-                var thispage = 1;
-
-                function addItems(thispage, thispagesize) {
-                    sessionStorage.setItem('thispage',thispage);
-                    var ajaxurl = "{php echo app_url('goods/list/shopajax',array('is_hunda'=>1,'cid' => $cid,'keyword' => $keyword))}" + "&page=" + thispage + "&pagesize=" + thispagesize;
-                    $.ajax({
-                        type: "POST",
-                        url: ajaxurl,
-                        dataType: 'json',
-                        beforeSend: function(XMLHttpRequest) {},
-                        success: function(data) {
-                            thispagesizemax = data.total;
-                            if (data.list.length > 0) {
-                                var gettpl = document.getElementById('goodslist').innerHTML;
-                                laytpl(gettpl).render(data, function(html){
-                                    $(".ul_1").append(html);
-                                });
-                            } else {
-                                $(".loading_more").remove();
-                                $('.noData').show();
-                            }
-                            joinSession();
-                            setSealout();
-                        },
-                        error: function() {
-                            $('.error').show();
+    $(function() {
+        'use strict';
+        //商品列表页
+        $(document).on("pageInit", "#page-goods-list", function(e, id, page) {
+            var loading = false;
+            var thispagesize = 6;
+            var thispagesizemax = 100;
+            var thispage = 1;
+            var usepage = 1;
+            function addItems(thispage, thispagesize, onpage, success) {
+                sessionStorage.setItem('thispage',thispage);
+                var ajaxurl = "{php echo app_url('goods/list/shopajax',array('is_hunda'=>1,'cid' => $cid,'keyword' => $_GPC['keyword']))}" + "&page=" + thispage + "&pagesize=" + thispagesize+"&usepage="+onpage;
+                $.ajax({
+                    type: "POST",
+                    url: ajaxurl,
+                    dataType: 'json',
+                    beforeSend: function(XMLHttpRequest) {},
+                    success: function(data) {
+                        thispagesizemax = data.total;
+                        if (data.list.length > 0) {
+                            var gettpl = document.getElementById('goodslist').innerHTML;
+                            laytpl(gettpl).render(data, function(html){
+                                onpage ? $(".ul_1").append(html) : $(".ul_1").html(html);
+                            });
+                        } else {
+                            $(".loading_more").remove();
+                            $('.noData').show();
                         }
-                    });
+                        joinSession();
+                        setSealout();
+                        success&&success()
+                    },
+                    error: function() {
+                        $('.error').show();
+                    }
+                });
+            }
+            sesso=function sessionProcess(elem) {
+                var externals = document.getElementsByClassName("externals");
+                var len = externals.length;
+                for ( var i = 0; i < len; i++ ) {
+                    if ( elem === externals[i] ) {
+                        var classclassname = elem.className.slice(9);
+                        sessionStorage.setItem("position", classclassname+i.toString());
+                        sessionStorage.setItem("id", externals[i].id);
+                        sessionStorage.setItem("weight", externals[i].getElementsByClassName('weight')[0].innerHTML);
+                        sessionStorage.setItem("kucun", externals[i].getElementsByClassName('kucun')[0].innerHTML);
+                        sessionStorage.setItem("isGuige", externals[i].getElementsByClassName("isguige")[0].innerHTML);
+                        sessionStorage.setItem("price", externals[i].getElementsByClassName("price")[0].innerHTML.slice(1));
+                        sessionStorage.setItem("img", externals[i].getElementsByTagName("img")[1].src);
+                        sessionStorage.setItem("title", externals[i].getElementsByTagName("h5")[0].innerHTML);
+                        saveSession();
+                    }
                 }
-                addItems(thispage, thispagesize);
+
+            }
+            if (sessionStorage.getItem("position") !== null){
+                document.getElementById("animationS").style.setProperty("display","block");
+                usepage = 0;
+                setTimeout(function() {
+                    var classname = sessionStorage.getItem("position").slice(-1*sessionStorage.getItem("position").length,-1*sessionStorage.getItem("position").length+9);
+                    var index = parseInt(sessionStorage.getItem("position").slice(-1*sessionStorage.getItem("position").length+9));
+                    addItems(thispage,thispagesize, usepage, function() {
+                        document.getElementsByClassName(classname)[index].scrollIntoView();
+                        document.getElementById("animationS").style.setProperty("display","none");
+                    });
+                },0);
+            } else {
+                addItems(thispage, thispagesize, usepage);
+            }
+            if(usepage) {
                 $(page).on('infinite', function() {
                     if (loading) return;
                     loading = true;
@@ -602,62 +623,17 @@ border: 2px solid hsl(0, 0%, 100%);" class="myService external {if $_GPC['ac']==
                     setTimeout(function() {
                         loading = false;
                         thispage++;
-                        addItems(thispage, thispagesize);
-//                        $(".loading_more").hide();
+                        addItems(thispage, thispagesize, usepage);
+                        // $(".loading_more").hide();
                         $.refreshScroller();
                     }, 200);
                 });
-                sesso=function sessionProcess(elem) {
-                    var externals = document.getElementsByClassName("externals");
-                    var len = externals.length;
-                    for ( var i = 0; i < len; i++ ) {
-                        if ( elem === externals[i] ) {
-                            var classclassname = elem.className.slice(9);
-                            //定位问题产生闪图没有display:none
-//                            sessionStorage.setItem("position", classclassname+i.toString());
-                            sessionStorage.setItem("id", externals[i].id);
-                            sessionStorage.setItem("weight", externals[i].getElementsByClassName('weight')[0].innerHTML);
-                            sessionStorage.setItem("kucun", externals[i].getElementsByClassName('kucun')[0].innerHTML);
-                            sessionStorage.setItem("isGuige", externals[i].getElementsByClassName("isguige")[0].innerHTML);
-                            sessionStorage.setItem("price", externals[i].getElementsByClassName("price")[0].innerHTML.slice(1));
-                            sessionStorage.setItem("img", externals[i].getElementsByTagName("img")[1].src);
-                            sessionStorage.setItem("title", externals[i].getElementsByTagName("h5")[0].innerHTML);
-                            saveSession();
-                        }
-                    }
-
-                }
-                sessionStorage.removeItem('position');
-                if (sessionStorage.getItem("position") !== null){
-                    document.getElementById("animationS").style.setProperty("display","block");
-                    setTimeout(function() {
-                        var classname = sessionStorage.getItem("position").slice(-1*sessionStorage.getItem("position").length,-1*sessionStorage.getItem("position").length+9);
-                        var index = parseInt(sessionStorage.getItem("position").slice(-1*sessionStorage.getItem("position").length+9));
-                        var i = index;
-                        var n = ( i /4 +2 )* 500;
-                        setTimeout(function(){
-                            loadData(i);
-                            setTimeout(function(){
-                                document.getElementsByClassName(classname)[index].scrollIntoView();
-                                setTimeout(function(){
-                                    document.getElementById("animationS").style.setProperty("display","none");
-                                },0)
-                            },n)
-                        },200)
-                    },0);
-                }
-                function loadData(i) {
-                    if (i<3) return;
-                    thispage++;
-                    addItems(thispage,thispagesize);
-                    setTimeout(function(){
-                        loadData(i-4);
-                    },200)
-
-                }
-            });
-            $.init();
+            } else {
+                $('.noData').show();
+            }
         });
+        $.init();
+    });
         function setSealout() {
             var buys = document.getElementsByClassName("pluslist");
             var noneimg = document.getElementsByClassName("noneimg");

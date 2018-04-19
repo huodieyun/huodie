@@ -65,7 +65,7 @@
 <div class="page-group">
 	<div class="page page-current" id="page-goods-list">
 		<div class="content infinite-scroll native-scroll" data-distance="10">
-			<div class="topbar"><h3 class="title">乐享拼购</h3><div class="barfn"><i class="refresh"></i><i class="share"></i></div></div>
+			<div class="topbar"><h3 class="title">火蝶云</h3><div class="barfn"><i class="refresh"></i><i class="share"></i></div></div>
 			{php include wl_template('common/followed');}
 			<div class="banner" id="banner" style="visibility: visible;">
 				<ul class="imgs">
@@ -307,6 +307,7 @@ border: 2px solid hsl(0, 0%, 100%);" class="myService external {if $_GPC['ac']==
 transition-duration:position:fixed;left:0px;right:0px;bottom:-30px;z-index:100870;border-radius:15px;margin:auto;transition-duration:0.5s;
 			transition-property:bottom;opacity:1;transition-timing-function:ease-out;">
 <script>
+	console.log('list3')
 	//触屏优化
 	var content = document.getElementsByClassName("content")[0];
 	content.addEventListener("touchmove", function (ev) {
@@ -347,104 +348,96 @@ transition-duration:position:fixed;left:0px;right:0px;bottom:-30px;z-index:10087
 		'use strict';
 		//商品列表页
 		$(document).on("pageInit", "#page-goods-list", function(e, id, page) {
-			var loading = false;
-			var thispagesize = 4;
-			var thispagesizemax = 100;
-			var thispage = 1;
+            var loading = false;
+            var thispagesize = 4;
+            var thispagesizemax = 100;
+            var thispage = 1;
+            var usepage = 1;
+            function addItems(thispage, thispagesize, onpage, success) {
+                sessionStorage.setItem('thispage',thispage);
+                var ajaxurl = "{php echo app_url('goods/list/shopajax',array('cid' => $cid))}" + "&page=" + thispage + "&pagesize=" + thispagesize+"&usepage="+onpage;
+                $.ajax({
+                    type: "POST",
+                    url: ajaxurl,
+                    dataType: 'json',
+                    beforeSend: function(XMLHttpRequest) {},
+                    success: function(data) {
+                        thispagesizemax = data.total;
+                        if (data.list.length > 0) {
+                            var gettpl = document.getElementById('goodslist').innerHTML;
+                            laytpl(gettpl).render(data, function(html){
+                                onpage ? $(".ul_1").append(html) : $(".ul_1").html(html);
+                            });
+                        } else {
+                            $(".loading_more").remove();
+                            $('.noData').show();
+                        }
+                        joinSession();
+                        setSealout();
+                        success&&success()
+                    },
+                    error: function() {
+                        $('.error').show();
+                    }
+                });
+            }
+            sesso=function sessionProcess(elem) {
+                var externals = document.getElementsByClassName("externals");
+                var len = externals.length;
+                for ( var i = 0; i < len; i++ ) {
+                    if ( elem === externals[i] ) {
+                        var classclassname = elem.className.slice(9);
+                        sessionStorage.setItem("position", classclassname+i.toString());
+                        sessionStorage.setItem("id", externals[i].id);
+                        sessionStorage.setItem("weight", externals[i].getElementsByClassName('weight')[0].innerHTML);
+                        sessionStorage.setItem("kucun", externals[i].getElementsByClassName('kucun')[0].innerHTML);
+                        sessionStorage.setItem("isGuige", externals[i].getElementsByClassName("isguige")[0].innerHTML);
+                        sessionStorage.setItem("price", externals[i].getElementsByClassName("price")[0].innerHTML.slice(1));
+                        sessionStorage.setItem("img", externals[i].getElementsByTagName("img")[1].src);
+                        sessionStorage.setItem("title", externals[i].getElementsByTagName("h5")[0].innerHTML);
+                        saveSession();
+                    }
+                }
 
-			function addItems(thispage, thispagesize) {
-				sessionStorage.setItem('thispage',thispage);
-				var ajaxurl = "{php echo app_url('goods/list/shopajax',array('cid' => $cid))}" + "&page=" + thispage + "&pagesize=" + thispagesize;
-				$.ajax({
-					type: "POST",
-					url: ajaxurl,
-					dataType: 'json',
-					beforeSend: function(XMLHttpRequest) {},
-					success: function(data) {
-						thispagesizemax = data.total;
-						if (data.list.length > 0) {
-							var gettpl = document.getElementById('goodslist').innerHTML;
-							laytpl(gettpl).render(data, function(html){
-								$(".ul_1").append(html);
-							});
-						} else {
-							$(".loading_more").remove();
-							$('.noData').show();
-						}
-						joinSession();
-						setSealout();
-					},
-					error: function() {
-						$('.error').show();
-					}
-				});
-			}
-			addItems(thispage, thispagesize);
-			$(page).on('infinite', function() {
-				if (loading) return;
-				loading = true;
-				$(".loading_more").show();
-				if (orderlist.getBoundingClientRect().top < -500){
-					gotop.style.setProperty("display", "block");
-				}else {
-					gotop.style.setProperty("display", "none");
-				}
-				setTimeout(function() {
-					loading = false;
-					thispage++;
-					addItems(thispage, thispagesize);
-//					$(".loading_more").hide();
-					$.refreshScroller();
-				}, 200);
-			});
-			sesso=function sessionProcess(elem) {
-				var externals = document.getElementsByClassName("externals");
-				var len = externals.length;
-				for ( var i = 0; i < len; i++ ) {
-					if ( elem === externals[i] ) {
-						var classclassname = elem.className.slice(9);
-						sessionStorage.setItem("position", classclassname+i.toString());
-						sessionStorage.setItem("id", externals[i].id);
-						sessionStorage.setItem("weight", externals[i].getElementsByClassName('weight')[0].innerHTML);
-						sessionStorage.setItem("kucun", externals[i].getElementsByClassName('kucun')[0].innerHTML);
-						sessionStorage.setItem("isGuige", externals[i].getElementsByClassName("isguige")[0].innerHTML);
-						sessionStorage.setItem("price", externals[i].getElementsByClassName("price")[0].innerHTML.slice(1));
-						sessionStorage.setItem("img", externals[i].getElementsByTagName("img")[1].src);
-						sessionStorage.setItem("title", externals[i].getElementsByTagName("h5")[0].innerHTML);
-						saveSession();
-					}
-				}
+            }
+            if (sessionStorage.getItem("position") !== null){
+                document.getElementById("animationS").style.setProperty("display","block");
+                usepage = 0;
+                setTimeout(function() {
+                    var classname = sessionStorage.getItem("position").slice(-1*sessionStorage.getItem("position").length,-1*sessionStorage.getItem("position").length+9);
+                    var index = parseInt(sessionStorage.getItem("position").slice(-1*sessionStorage.getItem("position").length+9));
+                    addItems(thispage,thispagesize, usepage, function() {
+                        document.getElementsByClassName(classname)[index].scrollIntoView();
+                        document.getElementById("animationS").style.setProperty("display","none");
+                    });
+                },0);
+            } else {
+                addItems(thispage, thispagesize, usepage);
+            }
+            if(usepage) {
+                $(page).on('infinite', function() {
+                    if (loading) return;
+                    loading = true;
+                    $(".loading_more").show();
+                    if (orderlist.getBoundingClientRect().top < -500){
+                        gotop.style.setProperty("display", "block");
+                    }else {
+                        gotop.style.setProperty("display", "none");
+                    }
+                    setTimeout(function() {
+                        loading = false;
+                        thispage++;
+                        addItems(thispage, thispagesize, usepage);
+                        // $(".loading_more").hide();
+                        $.refreshScroller();
+                    }, 200);
+                });
+            } else {
+                $('.noData').show();
+            }
+        });
+        $.init();
 
-			}
-			if (sessionStorage.getItem("position") !== null){
-				document.getElementById("animationS").style.setProperty("display","block");
-				setTimeout(function() {
-					var classname = sessionStorage.getItem("position").slice(-1*sessionStorage.getItem("position").length,-1*sessionStorage.getItem("position").length+9);
-					var index = parseInt(sessionStorage.getItem("position").slice(-1*sessionStorage.getItem("position").length+9));
-					var i = index;
-					var n = ( i /4 +2 )* 500;
-					setTimeout(function(){
-						loadData(i);
-						setTimeout(function(){
-							document.getElementsByClassName(classname)[index].scrollIntoView();
-							setTimeout(function(){
-								document.getElementById("animationS").style.setProperty("display","none");
-							},0)
-						},n)
-					},200)
-				},0);
-			}
-			function loadData(i) {
-				if (i<3) return;
-				thispage++;
-				addItems(thispage,thispagesize);
-				setTimeout(function(){
-					loadData(i-4);
-				},200)
-
-			}
-		});
-		$.init();
 	});
 	function setSealout() {
 		var buys = document.getElementsByClassName("pluslist");

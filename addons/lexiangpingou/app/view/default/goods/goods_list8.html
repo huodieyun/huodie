@@ -370,6 +370,9 @@ z-index:10000000">
 				{{# if( d.list[i].selltype==7){ }}
 		订金团
 		{{# } }}
+            {{# if( d.list[i].selltype==10){ }}
+            砍价
+            {{# } }}
 		</span>
 		<div class="kucun" style="display:none;">{{ d.list[i].gnum }}</div>
 		<div class="weight" style="display:none;">{{ d.list[i].weight}}</div>
@@ -429,6 +432,7 @@ border: 2px solid hsl(0, 0%, 100%);" class="myService external {if $_GPC['ac']==
 <!--transition-duration:position:fixed;left:0px;right:0px;bottom:-30px;z-index:100870;border-radius:15px;margin:auto;transition-duration:0.5s;-->
 			<!--transition-property:bottom;opacity:1;transition-timing-function:ease-out;">-->
 <script>
+    console.log('goods_list8');
     //触屏优化
     var content = document.getElementsByClassName("content")[0];
     content.addEventListener("touchmove", function (ev) {
@@ -473,10 +477,10 @@ border: 2px solid hsl(0, 0%, 100%);" class="myService external {if $_GPC['ac']==
             var thispagesize = 4;
             var thispagesizemax = 100;
             var thispage = 1;
-
-            function addItems(thispage, thispagesize) {
+            var usepage = 1;
+            function addItems(thispage, thispagesize, onpage, success) {
                 sessionStorage.setItem('thispage',thispage);
-                var ajaxurl = "{php echo app_url('goods/list/shopajax',array('cid' => $cid,'keyword' => $keyword))}" + "&page=" + thispage + "&pagesize=" + thispagesize;
+                var ajaxurl = "{php echo app_url('goods/list/shopajax',array('cid' => $cid,'keyword' => $_GPC['keyword']))}" + "&page=" + thispage + "&pagesize=" + thispagesize+"&usepage="+onpage;
                 $.ajax({
                     type: "POST",
                     url: ajaxurl,
@@ -487,7 +491,7 @@ border: 2px solid hsl(0, 0%, 100%);" class="myService external {if $_GPC['ac']==
                         if (data.list.length > 0) {
                             var gettpl = document.getElementById('goodslist').innerHTML;
                             laytpl(gettpl).render(data, function(html){
-                                $(".ul_1").append(html);
+                                onpage ? $(".ul_1").append(html) : $(".ul_1").html(html);
                             });
                         } else {
                             $(".loading_more").remove();
@@ -495,30 +499,13 @@ border: 2px solid hsl(0, 0%, 100%);" class="myService external {if $_GPC['ac']==
                         }
                         joinSession();
                         setSealout();
+                        success&&success()
                     },
                     error: function() {
                         $('.error').show();
                     }
                 });
             }
-            addItems(thispage, thispagesize);
-            $(page).on('infinite', function() {
-                if (loading) return;
-                loading = true;
-                $(".loading_more").show();
-                if (orderlist.getBoundingClientRect().top < -500){
-                    gotop.style.setProperty("display", "block");
-                }else {
-                    gotop.style.setProperty("display", "none");
-                }
-                setTimeout(function() {
-                    loading = false;
-                    thispage++;
-                    addItems(thispage, thispagesize);
-//                    $(".loading_more").hide();
-                    $.refreshScroller();
-                }, 200);
-            });
             sesso=function sessionProcess(elem) {
                 var externals = document.getElementsByClassName("externals");
                 var len = externals.length;
@@ -540,30 +527,38 @@ border: 2px solid hsl(0, 0%, 100%);" class="myService external {if $_GPC['ac']==
             }
             if (sessionStorage.getItem("position") !== null){
                 document.getElementById("animationS").style.setProperty("display","block");
+                usepage = 0;
                 setTimeout(function() {
                     var classname = sessionStorage.getItem("position").slice(-1*sessionStorage.getItem("position").length,-1*sessionStorage.getItem("position").length+9);
                     var index = parseInt(sessionStorage.getItem("position").slice(-1*sessionStorage.getItem("position").length+9));
-                    var i = index;
-                    var n = ( i /4 +2 )* 500;
-                    setTimeout(function(){
-                        loadData(i);
-                        setTimeout(function(){
-                            document.getElementsByClassName(classname)[index].scrollIntoView();
-                            setTimeout(function(){
-                                document.getElementById("animationS").style.setProperty("display","none");
-                            },0)
-                        },n)
-                    },200)
+                    addItems(thispage,thispagesize, usepage, function() {
+                        document.getElementsByClassName(classname)[index].scrollIntoView();
+                        document.getElementById("animationS").style.setProperty("display","none");
+                    });
                 },0);
+            } else {
+                addItems(thispage, thispagesize, usepage);
             }
-            function loadData(i) {
-                if (i<3) return;
-                thispage++;
-                addItems(thispage,thispagesize);
-                setTimeout(function(){
-                    loadData(i-4);
-                },200)
-
+            if(usepage) {
+                $(page).on('infinite', function() {
+                    if (loading) return;
+                    loading = true;
+                    $(".loading_more").show();
+                    if (orderlist.getBoundingClientRect().top < -500){
+                        gotop.style.setProperty("display", "block");
+                    }else {
+                        gotop.style.setProperty("display", "none");
+                    }
+                    setTimeout(function() {
+                        loading = false;
+                        thispage++;
+                        addItems(thispage, thispagesize, usepage);
+                        // $(".loading_more").hide();
+                        $.refreshScroller();
+                    }, 200);
+                });
+            } else {
+                $('.noData').show();
             }
         });
         $.init();

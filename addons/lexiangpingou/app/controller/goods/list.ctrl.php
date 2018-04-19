@@ -488,11 +488,15 @@ if ($op == 'm_ajax') {
     //邻购
     $lin = checkfunc(8161);
     $tuan = $_GPC['is_tuan'];
+    $usepage = $_GPC['usepage'];
+    if(!isset($usepage)){
+        $usepage = 1;
+    }
     $is_hunda = 0;
     if ($tuan == 2) {
         $is_hunda = 1;
     }
-    $data = goods_get_list(array('usepage' => 1, 'ishows' => '1,3', 'page' => $page, 'pagesize' => $pagesize, 'lin' => $lin['status'], 'is_hunda' => $is_hunda, 'm_ajax' => 1, 'tuan' => $tuan, 'cid' => $cid, 'gname' => $keyword, 'orderby' => 'ORDER BY displayorder DESC'));
+    $data = goods_get_list(array('usepage' => $usepage, 'ishows' => '1,3', 'page' => $page, 'pagesize' => $pagesize, 'lin' => $lin['status'], 'is_hunda' => $is_hunda, 'm_ajax' => 1, 'tuan' => $tuan, 'cid' => $cid, 'gname' => $keyword, 'orderby' => 'ORDER BY displayorder DESC'));
     foreach ($data['list'] as $key => $value) {
         $params = pdo_fetchall("SELECT * FROM" . tablename('tg_goods_param') . "WHERE goodsid = '{$value['id']}' limit 0,3 ");
         $data['list'][$key]['params'] = $params;
