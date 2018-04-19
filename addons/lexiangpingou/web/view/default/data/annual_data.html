@@ -1,0 +1,496 @@
+{php include wl_template('common/header_annual');}
+<style type="text/css">
+    .container {
+      background: #fff;
+      max-width: 750px;
+      padding: 0;
+    }
+    .title {
+      padding: 20px 0;
+      text-align: center;
+      font-size: 20px;
+      font-weight: 600;
+    }
+    .content .box {
+      max-width: 750px;
+      margin: auto;
+      background: #232635;
+      color: #fff;
+    }
+    .content .box .line {
+      padding: 20px 10px;
+    }
+    .content .box .line:last-child {
+      padding-bottom: 50px;
+    }
+    .content .box .line .main-top {
+      position: relative;
+    }
+    .content .box .line .main-top .img {
+      background-repeat: no-repeat;
+      /*line-height: 50px;*/
+      max-width: 800px;
+      padding-left: 30px;
+      font-size: 30px;
+      background-image: url('{TG_URL_WRES}images/data/box.png');
+    }
+    .content .box .line .main-top .img .num {
+      border: 1px solid #fff;
+      border-radius: 50%;
+      width: 5%;
+      height: 5%;
+      line-height: 100%;
+      position: relative;
+      text-align: center;
+      right: 5px;
+      display: inline-block;
+    }
+    .content .box .line .main-top .text-right {
+      position: absolute;
+      right: 0;
+      top: -30px;
+      font-size: 20px;
+    }
+    .content .box .line .main-top .logo-big {
+      font-size: 50px;
+      color: #f57029;
+      font-weight: 600;
+    }
+    .content .box .line .content {
+      font-size: 20px;
+    }
+    .content .box .line .content .row {
+      margin: 10px;
+      font-size: 30px;
+    }
+    .content .box .line .content .row .right-title {
+      display: inline-block;
+      width: 300px;
+    }
+    .content .box .line .content .row .text {
+      color: #f5702a;
+      font-size: 35px;
+      font-weight: 600;
+      border: 2px solid #f5702a;
+      padding: 10px 20px;
+      display: inline-block;
+      margin-bottom: 10px;
+    }
+    .change-img {
+      background: #fff;
+    }
+    .change-img .content {
+      max-width: 720px;
+      margin: auto;
+      padding: 10px 0;
+    }
+    .change-img .content .btn {
+      margin-right: 20px;
+    }
+    .change-img .content .text-red {
+      color: red;
+    }
+    #logo-img {
+        width: 50px;
+        height: 50px;
+        margin-left: 20px;
+        float: left;
+        margin-top: 20px;
+        border-radius: 50%;
+    }
+    #logo-text {
+        line-height: 50px;
+        position: relative;
+        top: 240px;
+        width: 100%;
+        text-align: center;
+        font-size: 25px;
+        font-weight: 600;
+        color: #f57029;
+        left: 0;
+        margin: auto;
+    }
+    .small-text {
+        font-size: 20px;
+        color: aqua;
+    }
+    .one-img {
+        float: left;
+        position: relative;
+        left: 100px;
+    }
+    .left-num {
+        margin-left: 120px;
+    }
+</style>
+<div class="container" id="view">
+    <div class="content text-center">
+        <div class="main" >
+            <div class="box" >
+                <div class="logo-img text-left">
+
+                    <div class="text" id="logo-text">{$name}</div>
+                </div>
+                <img src="{TG_URL_WRES}images/data/head.png">
+                <div class="line text-left">
+                    <div class="main-top">
+                        <div class="img"><span class="num">1</span>总订单量：<span class="left-num">{$data['total_order']}件</span></div>
+                        <div class="text-right">（统计方式：支付过的订单）</div>
+                    </div>
+                    <div class="content">
+                        <div class="row">
+                            <div class="col-md-12"><div>月峰值订单量：<span style="margin-left: 100px">{$data['mon_order']}件</span></div></div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12"><div>日峰值订单量：<span style="margin-left: 100px">{$data['day_order']}件</span></div></div>
+                        </div>
+                        <div class="chart" id="order" style="height: 300px;">
+
+                        </div>
+                    </div>
+                    <div class="line-img text-center">
+                        <img src="{TG_URL_WRES}images/data/long.png">
+                    </div>
+                </div>
+                <div class="line text-left">
+                    <div class="main-top">
+                        <div class="img"><span class="num">2</span>总支付金额：<span style="margin-left: 93px">{$data['total_pay']}元</span></div>
+                        <div class="text-right">（统计方式：支付过的订单总额）</div>
+                    </div>
+                    <div class="content">
+                        <div class="row">
+                            <div class="col-md-12"><div>月峰值支付金额：<span style="margin-left: 70px">{$data['mon_pay']}元</span></div></div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12"><div>日峰值支付金额：<span style="margin-left: 70px">{$data['day_pay']}元</span></div></div>
+                        </div>
+                        <div class="chart" id="pay" style="height: 300px;">
+
+                        </div>
+                    </div>
+                    <div class="line-img text-center">
+                        <img src="{TG_URL_WRES}images/data/long.png">
+                    </div>
+                </div>
+                <div class="line text-left">
+                    <div class="main-top">
+                        <div class="img"><span class="num">3</span>新增粉丝总数：<span style="margin-left: 65px">{$data['fans']}人</span></div>
+                        <div class="text-right">（统计方式：使用火蝶云平台后增加的粉丝）</div>
+                    </div>
+                    <div class="content">
+                        <div class="row">
+                            <div class="col-md-12"><div>月峰值新增人数：<span style="margin-left: 75px">{$data['mon_fans']}人</span></div></div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12"><div>日峰值新增人数：<span style="margin-left: 75px">{$data['day_fans']}人</span></div></div>
+                        </div>
+                        <div class="chart" id="fans" style="height: 300px;">
+
+                        </div>
+                    </div>
+                    <div class="line-img text-center">
+                        <img src="{TG_URL_WRES}images/data/long.png">
+                    </div>
+                </div>
+                <div class="line text-left">
+                    <div class="main-top">
+                        <div class="img"><span class="num">4</span>年度平均客单价：<span style="margin-left: 35px">{$data['customer_price']}元</span></div>
+                        <div class="text-right"></div>
+                    </div>
+                    <div class="content">
+                        <div class="row">
+                            <div class="col-md-12"><div>月峰值平均客单价：<span style="margin-left: 45px">{$data['mon_customer_price']}元</span></div></div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12"><div>日峰值平均客单价：<span style="margin-left: 45px">{$data['day_customer_price']}元</span></div></div>
+                        </div>
+                        <div class="chart" id="customer_price" style="height: 300px;">
+
+                        </div>
+                    </div>
+                    <div class="line-img text-center">
+                        <img src="{TG_URL_WRES}images/data/long.png">
+                    </div>
+                </div>
+                <div class="line text-left">
+                    <div class="main-top">
+                        <div class="img"><span class="num">5</span>我的排行榜：</div>
+                        <div class="text-right"></div>
+                    </div>
+                    <div class="content">
+                        <div class="row">
+                            <span class="text-right right-title">销售量最好的商品：</span>
+                            <span class="text-right">{$data['goods_top_name']}</span>
+                        </div>
+                        <div class="row">
+                            <span class="text-right right-title"></span>
+                            <span class="text-right small-text">已销售{$data['num1']}件</span>
+                        </div>
+                        <div class="row">
+                            <span class="text-right right-title">销售金额最大的商品：</span>
+                            <span class="text-right">{$data['goods_sale_top_name']}</span>
+                        </div>
+                        <div class="row">
+                            <span class="text-right right-title"></span>
+                            <span class="text-right small-text">已销售{$data['num2']}元</span>
+                        </div>
+                        <div class="row">
+                            <span class="text-right right-title">开过最大的团：</span>
+                            <span class="text-right">{$data['big_tuan']}人团</span>
+                        </div>
+                        <div class="row">
+                            <span class="text-right right-title">PV日峰值：</span>
+                            <span class="text-right">{$data['pv_top']}人次</span>
+                        </div>
+                        <div class="row">
+                            <span class="text-right right-title">UV日峰值：</span>
+                            <span class="text-right">{$data['uv_top']}人</span>
+                        </div>
+                        <div class="row">
+                            <span class="text-right right-title">支付转化率日峰值：</span>
+                            <span class="text-right">{$data['zhl_top']}%</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="line text-left">
+                    <div class="main-top">
+                        <div class="img"><span class="num">6</span>火蝶评语:</div>
+                    </div>
+                    <div class="content text-center">
+                        <div class="row">
+                            {if $data['total_pay'] > 300000 && $data['total_order'] > 36500 && $data['fans'] > 3000 && $data['customer_price'] > 20}
+                                <div class="">
+                                    <img src="{TG_URL_WRES}images/data/happy.png" width="260" class="one-img"><div class="text">销售达人</div>
+                                </div>
+                                <div class="">
+                                    <div class="text">销量爆表</div>
+                                </div>
+                                <div class="">
+                                    <div class="text">粉丝激增</div>
+                                </div>
+                                <div class="">
+                                    <div class="text">客单惊人</div>
+                                </div>
+                            {elseif $data['total_pay'] < 300000 && $data['total_order'] < 36500 && $data['fans'] < 3000 && $data['customer_price'] < 20}
+                            <div class="col-md-12">
+                                <img src="{TG_URL_WRES}images/ns.png" width="200"><span class="text">暂未上榜，再接再厉</span>
+                            </div>
+                            {else}
+                                <img src="{TG_URL_WRES}images/data/fenfa.png" width="200" class="one-img">
+                                {if $data['total_pay'] > 300000}
+                                <div class="">
+                                    <div class="text">销售达人</div>
+                                </div>
+                                {/if}
+                                {if $data['total_order'] > 36500}
+                                <div class="">
+                                    <div class="text">销量爆表</div>
+                                </div>
+                                {/if}
+                                {if $data['fans'] > 3000}
+                                <div class="">
+                                    <div class="text">粉丝激增</div>
+                                </div>
+                                {/if}
+                                {if $data['customer_price'] > 20}
+                                <div class="">
+                                    <div class="text">客单惊人</div>
+                                </div>
+                                {/if}
+                            {/if}
+                        </div>
+                    </div>
+                    <div class="line-img text-center">
+                        <img src="{TG_URL_WRES}images/data/long.png">
+                    </div>
+                </div>
+                <img src="{TG_URL_WRES}images/data/foot.png">
+            </div>
+        </div>
+    </div>
+</div>
+<!-- <canvas ></canvas> -->
+<div class="change-img">
+    <div class="content">
+        <button class="btn btn-primary" onclick="tcanvas()">转为图片</button><span class="text-red">请先点击"转为图片"按钮，然后在上面的报告上鼠标右击另存为，可以保存图片，并发到朋友圈pk!</span>
+    </div>
+</div>
+<img src="" alt="" id="canvas">
+<script type="text/javascript">
+    function tcanvas(){
+        var targetDom = $("#view");
+        var oldCanvass = new Object();
+        $(targetDom).find("canvas").each(function (index,ele) {
+            if(index==0 ||index%2==0){
+                var oldCanvas = $(this);
+                imgData = convertCanvasToImage(oldCanvas[0]);
+                oldCanvass[index]=imgData;
+            }
+        })
+        var copyDom = targetDom.clone();
+        copyDom.width(targetDom.width() + "px");
+        copyDom.height(targetDom.height() + "px");
+        $('body').append(copyDom);
+        $(copyDom).find("canvas").each(function (index,ele) {
+            if(index==0 ||index%2==0){
+                $(this).before(oldCanvass[index]);
+                $(this).remove();
+            }
+        })
+        html2canvas(copyDom, {
+            allowTaint: true,
+            taintTest: false,
+            height: targetDom.outerHeight() + 20,
+            onrendered : function(canvas) {
+                imgData = canvas.toDataURL("image/png");
+                $("#view").html('<img src="'+imgData+'" alt="" id="canvas">');
+                // $("#canvas").attr('src',imgData);
+                copyDom.css('display','none');
+            }
+        });
+    }
+    function convertCanvasToImage(canvas) {
+        var image = new Image();
+        image.src = canvas.toDataURL("image/png");
+        return image;
+    }
+    var obj = {$arr};
+    function  createData(max) {
+        var data = [];
+        for (var i = 0; i < 12; i++) {
+            data.push(max*i);
+        }
+        return data;
+    }
+    function reOption(arr) {
+        var xAxisData = [];
+        for (var i = 0; i < 12; i++) {
+            xAxisData.push(i);
+        }
+
+        option = {
+            backgroundColor: '#08263a',
+            xAxis: [{
+                show: false,
+                data: xAxisData
+            }, {
+                show: false,
+                data: xAxisData
+            }],
+            visualMap: {
+                show: false,
+                min: 0,
+                max: 50,
+                dimension: 0,
+                inRange: {
+                    color: ['#4a657a', '#308e92', '#b1cfa5', '#f5d69f', '#f5898b', '#ef5055']
+                }
+            },
+            yAxis: {
+                axisLine: {
+                    show: false
+                },
+                axisLabel: {
+                    textStyle: {
+                        color: '#4a657a'
+                    }
+                },
+                splitLine: {
+                    show: true,
+                    lineStyle: {
+                        color: '#08263f'
+                    }
+                },
+                axisTick: {
+                    show: false
+                }
+            },
+            series: [{
+                name: 'back',
+                type: 'bar',
+                data: arr,
+                z: 1,
+                itemStyle: {
+                    normal: {
+                        opacity: 0.4,
+                        barBorderRadius: 5,
+                        shadowBlur: 3,
+                        shadowColor: '#111'
+                    }
+                }
+            }],
+            animationEasing: 'elasticOut',
+            animationEasingUpdate: 'elasticOut',
+            animationDelay: function (idx) {
+                return idx * 20;
+            },
+            animationDelayUpdate: function (idx) {
+                return idx * 20;
+            }
+        };
+        return option;
+    }
+    require(
+        [
+            'echarts',
+            'echarts/chart/bar', // 使用柱状图就加载bar模块，按需加载
+            'echarts/chart/line',
+            'echarts/chart/funnel',
+            'echarts/chart/pie'
+        ],
+        function (ec) {
+            // 基于准备好的dom，初始化echarts图表
+            //订单
+            var orderChart = ec.init(document.getElementById('order'));
+            var obj1 = {$order};
+            console.log(obj1);
+            var orderData = [];
+            for (var i = 1; i < 13; i++) {
+                if(obj1[i-1]){
+                    orderData.push(obj1[i-1].order_num);
+
+                }
+            }
+            var orderOption = reOption(orderData);
+            orderChart.setOption(orderOption);
+            // //支付
+            var payChart = ec.init(document.getElementById('pay'));
+            var payData = [];
+            for (var i = 1; i < 13; i++) {
+                if(obj1[i-1]){
+                    payData.push(obj1[i-1].pay);
+
+                }
+            }
+            var payOption = reOption(payData);
+            payChart.setOption(payOption);
+            //粉丝
+            var fansChart = ec.init(document.getElementById('fans'));
+            var fansobj = {$fans};
+            var fansData = [];
+            for (var i = 1; i < 13; i++) {
+                if(fansobj[i-1]){
+                    fansData.push(fansobj[i-1].fans_num);
+
+                }
+            }
+            var fansOption = reOption(fansData);
+            fansChart.setOption(fansOption);
+            //客单价
+            var customerChart = ec.init(document.getElementById('customer_price'));
+            var cusobj = {$customer_price};
+            var cusData = [];
+            for (var i = 1; i < 13; i++) {
+                if(cusobj[i-1]){
+                    cusData.push(cusobj[i-1].customer_price);
+
+                }
+            }
+            var cusOption = reOption(cusData);
+            customerChart.setOption(cusOption);
+        }
+    );
+
+</script>
+
+{php include wl_template('common/footer');}

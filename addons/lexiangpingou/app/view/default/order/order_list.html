@@ -1,0 +1,637 @@
+{php include wl_template('common/header');}
+<link rel="stylesheet" href="{TG_URL_ARES}weiui/weui.min.css">
+<script type="text/javascript" src="{TG_URL_ARES}js/qrcode.js"></script>
+	<style>      
+		.m-cart .empty a{color: {$_W['system_color']}}
+		.link-ding {width:96%;margin:auto;height:auto;background-color:white;border-radius:5px;margin-bottom:6px; }
+		.link-ding-header{width:90%;position:relative;left:5%;height:40px;border-bottom:1px solid #ccc;}
+		.link-ding-header div:first-child{position:absolute;top:12.5px;height:22.5px;line-height:22.5px;color:#6fbfd8;font-size:14px;}
+		.link-ding-header div:nth-child(2) {position:absolute;top:35px;height:15px;line-height:15px;color:#888;font-size:10px;}
+		.link-ding-header div:nth-child(3) {position:absolute;top:45px;height:15px;line-height:15px;color:#888;font-size:10px;}
+		.link-ding-header span{background-color:hsl(36, 100%, 49%);display:block;width:65px;height:22.5px;top:12.5px;right:0px;border-radius:5px;color:white;font-size:14px;line-height:22.5px;position:absolute;text-align:center;}
+		.link-ding-body {width:90%;margin-left:5%;margin-top:5px;font-size:12px;color:#333;}
+		.link-ding-body>div {position:relative;margin-bottom:10px;}
+		.link-ding-body>div div:last-child{position:absolute;right:5%;top:0px;color:#6fbfd8;bottom:0px;margin:auto;}
+		.link-ding-body>div div:nth-child(3) {position:absolute;right:30%;top:0px;bottom:0px;margin:auto;}
+		.link-body-feight {position:relative;margin-top:10px;color:#999;padding: 5px 0;}
+		.link-total{position:absolute;right:0px!important;top:0px;color:#999!important;}
+		.link-ding-footer {
+			width:90%;margin-left:5%;color:white;border-top:1px solid #ccc;padding-bottom:1px;
+			width: 96%;
+			margin-left: 2%;
+			color: white;
+			border-top: 1px solid #ccc;
+			padding-bottom: 1px;
+			background: #fff;
+			margin-top: -5px;
+			margin-bottom: 5px;
+		}
+		.link-ding-footer>div:first-child {margin-top:10px;margin-bottom:10px;margin-left:10%;width:30%;height:27.5px;line-height:27.5px;text-align:center;font-size:12px;border-radius:5px;color:#999;border:1px solid #999;}
+		.link-ding-footer>div:last-child {
+            left: 60%;
+            width: 30%;
+            height: 27.5px;
+            line-height: 27.5px;
+            text-align: center;
+            top: -5px;
+            font-size: 12px;
+            border-radius: 5px;
+            background-color: #6fbfd8;
+            display: block;
+            position: absolute;
+        }
+        #order-group-detail {
+            left: 35%;
+            width: 30%;
+            height: 27.5px;
+            line-height: 27.5px;
+            text-align: center;
+            top: 10px;
+            font-size: 12px;
+            border-radius: 5px;
+            background-color: #6fbfd8;
+            display: block;
+            color:white;
+            position: absolute;
+        }
+        #order-serves {
+            width: 30%;
+            height: 27.5px;
+            line-height: 27.5px;
+            text-align: center;
+            top: 10px;
+            font-size: 12px;
+            border-radius: 5px;
+            background-color: #6fbfd8;
+            display: block;
+            color:white;
+            position: absolute;
+        }
+        #order-detail {
+            margin-top:10px;
+            margin-bottom:10px;
+            color:white!important;
+            margin-left:70%;
+            width:30%;
+            height:27.5px;
+            line-height:27.5px;
+            text-align:center;
+            font-size:12px;
+            border-radius:5px;
+            color:#999;
+        }
+        #order-final {
+                width: 30%;
+                height: 27.5px;
+                line-height: 27.5px;
+                text-align: center;
+                top: 10px;
+                font-size: 12px;
+                border-radius: 5px;
+                background-color: #6fbfd8;
+                display: block;
+                color:white;
+                position: absolute;
+        }
+        .weui-icon-success{
+            color: #ccc;
+        }
+        .weui-icon-success.active{
+            color: #ee5509;
+        }
+        .combined_sign_footer {
+            position: fixed;
+            z-index: 2001;
+            bottom: 50px;
+            left: 0;
+            width: 100%;
+            height: 50px;
+            padding: 0 0 0 15px;
+            background: #f9f9f9;
+        }
+        .combined_sign_container{
+            overflow: hidden;
+            height: 100%;
+            line-height: 50px;
+        }
+        .combined_sign_container>div:first-child {
+            float: left;
+        }
+        .combined_sign_container>div:first-child span {
+            display: inline-block;
+            margin: 0 5px;
+        }
+        .combined_sign_container>div:last-child {
+            float: right;
+            color: #fff;
+            background: #ee5509;
+            padding: 0 15px;
+        }
+        .combined_sign_goods {
+            border-bottom: 1px solid #f99b00;
+        }
+        .combined_sign_goods:last-child {
+            border-bottom: none;
+        }
+    </style>
+{if $uniacid_tpl['tpl']==8190||$uniacid_tpl['tpl']==8193}
+<style>
+	/*我的订单*/
+	.link-ding-header div:first-child,.link-ding-body>div div:last-child>span,.link-ding-body>div div:last-child{
+		color: #e4393c !important;
+	}
+	.m-cart .empty a{
+		color: #e4393c;
+	}
+	.link-ding-footer>a,.link-ding-footer>div:last-child{
+		background-color: #e4393c !important;
+	} 
+	.link-ding-body>div div.link-total{
+		color:#999 !important;
+	}
+
+</style>
+{/if}
+
+<div class="page-group">
+	
+    <div class="page page-current" id="page-order-list">
+    	<div class="buttons-tab" style="z-index: 100;">
+	      <a href="#tab1" class="tab-link button {if $status==''}active{/if}" id="">全部</a>
+	   <!--   <a href="#tab2" class="tab-link button {if $status=='0'}active{/if}" id="0">待付款</a>-->
+	      <a href="#tab3" class="tab-link button {if $status=='8'}active{/if}" id="8">待发货</a>
+	      <a href="#tab4" class="tab-link button {if $status=='2'}active{/if}" id="2">待收货</a>
+	      <a href="#tab5" class="tab-link button {if $status=='3'}active{/if}" id="3">已收货</a>
+		  <a href="#tab6" class="tab-link button {if $status=='11'}active{/if}" id="11" >售后</a>
+	    </div>
+		<div class="content infinite-scroll native-scroll" data-distance="10">
+		    <div class="tabs" style="padding-top: 2.8rem;">
+		    </div>
+			
+		     <div class="list" style="background-color: #efeff4;">
+		        <div class="loading_more" style="padding-top: 15px;display: none;font-size:1.2em;font-weight:bold;"><span class="loading"><i class="icon_load"></i>正在玩命的加载中......</span></div>
+		        <div class="error">加载失败，点击重新加载</div>
+		       
+				 
+	        <div class="noData" style="font-size:1.0em;color:#c3c3c3;">全部数据加载完毕
+			{if !$banquanfunction['status']}<div><a href="http://www.lexiangpingou.cn"><img src="{TG_URL_ARES}images/bbb.png" width="40%"></a><div>火蝶科技技术热线:400-626-1079</div></div>{/if}
+			</div>
+			
+	   		</div>
+
+        </div>
+        {php include wl_template('common/footerbar');}
+    </div>
+
+    <div class="combined_sign_footer" style="display: none;">
+        <div class="combined_sign_container">
+            <div>本次选中<span class="on_seleted_order_num">33</span>笔订单</div>
+            <div onclick="combinedSign()"><span>合并核销</span></div>
+        </div>
+    </div>
+</div>
+
+<div class="popup popup-qrcode">
+    <div class="content" style="background: #eee;">
+        <div class="list-block cards-list">
+          <ul>
+            <li class="card" style="border-radius: .2rem;">
+              <div class="card-header"><h3 class="font-size-14">到店自提核销凭证</h3></div>
+              <div class="card-content" style="border-top: 1px solid #e5e5e5">
+                <div id="nav" class="nav">
+                    <p class="nav-wrap" style="text-align: center;">
+                        <span class="j-nav-item j-nav-qrcode nav-choose nav-item">手机微信核销码 </span>
+                    </p>
+                </div>
+                <div class="card-content-inner">
+                    <p style="text-align: center; font-size: 1.1em; ">请将本二维码出示给核销员</p>
+                    <p id="qrcode_pic" style="text-align: center"></p>
+
+
+              </div>
+            </li>
+          </ul>
+        </div>
+        <div class="weui_btn_area">
+            <a class="weui_btn weui_btn_warn close-popup">关闭</a>
+        </div>
+    </div>
+</div>
+
+<script type="text/html" id="orderlist">
+{{# for(var i = 0, len = d.list.length; i < len; i++){ }}
+
+<div class="link-ding">
+    {{# if(d.list[i].statusname == "到店自提" && d.list[i].status == "8"&& d.list[i].is_hbhexiao == 1&&d.list[i].servestype==0){ }}
+    <div class="select_ctrl"><i onclick="chooseI(this)" class="weui-icon-success" data-orderno="{{d.list[i].orderno}}"></i></div>
+    {{# } }}
+    <div class="link-ding-header">
+        <div>{{# if(d.list[i].statusname!='待付款'){ }}订单号:{{ d.list[i].orderno }}{{# } else { }} 订单号:{{ cutStrings(d.list[i].orderno,17) }}{{# } }}</div>
+        <!--<div>下单时间：2016-06-21 10:35:23</div>
+        <div>收货地址：21日下午自提（中山市）</div>-->
+        <span>
+            {{# if(d.list[i].is_partsend == "2" && d.list[i].status == "8") { }}
+                部分发货
+            {{# } else { }}
+                {{ d.list[i].statusname }}
+            {{# } }}
+        </span>
+	</div>
+	<div class="link-ding-body">
+	{{# if(d.list[i].g_id>0){ }}
+		<div>
+			<div>{{ cutString(d.list[i].name,30) }}{{# if(d.list[i].optionname.length>0){ }}<br>规格：{{ d.list[i].optionname }}{{# } }}</div>
+			<div style="position:absolute;right:30%;top:0px;bottom:0px;margin:auto;" >x{{ d.list[i].gnum }}</div>
+			<div style="position:absolute;right:5%;top:0px;bottom:0px;margin:auto;">￥{{ d.list[i].goodsprice }}</div>
+			{{# if(d.list[i].godluck==0){ }}<div ><img src="{TG_URL_ARES}images/nozj.png" width="25%" style="float:right;top:-20px;right:60px;position:absolute;z-index:2;">{{# } }}{{# if(d.list[i].godluck==1){ }}<img src="{TG_URL_ARES}images/yzj.png" width="25%" style="float:right;top:-20px;right:60px;position:absolute;z-index:2;"></div>{{# } }}
+		</div>
+		{{# } else { }}
+		
+				{{# for(var j = 0, lenn = d.list[i].goods.length; j < lenn; j++){ }}
+				<div>
+					<div style="width: 150px;overflow: hidden;white-space: nowrap;text-overflow: ellipsis;">{{d.list[i].goods[j].gname}}</div>
+					<span>{{# if(d.list[i].goods[j].item.length>0){ }}规格：{{ d.list[i].goods[j].item }}{{# } }}</span>
+					<div>x{{ d.list[i].goods[j].num }}</div>
+					<div>￥{{ d.list[i].goods[j].oprice }}</div>
+				</div>
+				{{# } }}
+				
+		{{# } }}
+		{{# if(d.list[i].selltype==4){ }}<div>返还：￥{{ d.list[i].refund }}元</div>{{# } }}
+		{{# if(d.list[i].bukuanstatus==2){ }}<div>补款金额<span style="float: right" class="ed5CO">￥{{ d.list[i].bkprice }}</span></div>{{# } }}
+		<div class="link-body-feight" style="position: relative">
+			<div style="color:#999">运费：￥{{ d.list[i].freight }}元</div>
+			<div class="link-total">总计：<span class="ed5CO" style="color:#6fbfd8;font-size:1.5em;">￥{{ d.list[i].realprice }}</span></div>
+		</div>
+	</div>
+	<div class="link-ding-footer" style="position:relative;">
+
+		{{# if(d.list[i].status == 0){ }}
+	        <div class="weui_btn weui_btn_mini weui_btn_tran cancel" style="" oid="{{ d.list[i].orderno }}">取消订单</div>
+	        <div class="weui_btn weui_btn_mini weui_btn_blue field-btn-gray topay" style="color: #fff"  oid="{{ d.list[i].orderno }}">去支付</div>
+	        {{# } else { }}
+	        {{# if(d.list[i].ta){ }}
+	        <a href="{{ d.list[i].ta }}" style="left: 35%;
+    width: 30%;
+    height: 27.5px;
+    line-height: 27.5px;
+    text-align: center;
+    top: 10px;
+    font-size: 12px;
+    border-radius: 5px;
+    background-color: #6fbfd8;
+    display: block;
+	color:white;
+    position: absolute;" class="external weui_btn weui_btn_mini weui_btn_blue">团详情</a>
+	        {{# } }}
+
+			{{# if( d.list[i].service==1){ }}
+			
+		 <a href="{{ d.list[i].sa }}" style="
+    width: 30%;
+    height: 27.5px;
+    line-height: 27.5px;
+    text-align: center;
+    top: 10px;
+    font-size: 12px;
+    border-radius: 5px;
+    background-color: #6fbfd8;
+    display: block;
+	color:white;
+    position: absolute;" class="external  weui_btn_mini weui_btn_blue">{{# if( d.list[i].servestype==0){ }}	申请售后 {{# } }}{{# if( d.list[i].servestype>=1){ }}售后详情 {{# } }}</a>
+	{{# } }}
+
+            {{# if(d.list[i].is_partsend == "2" && d.list[i].status != "3") { }}
+                <a href="{php echo app_url('order/order/childlist')}orderno={{ d.list[i].orderno }}" id="order-detail" class="weui_btn weui_btn_mini weui_btn_blue field-btn-gray external">订单详情</a>
+            {{# } else { }}
+                <a href="{php echo app_url('order/order/detail')}id={{ d.list[i].id }}" id="order-detail" class="weui_btn weui_btn_mini weui_btn_blue field-btn-gray external">订单详情</a>
+            {{# } }}
+
+	        {{# } }}
+		{{# if(d.list[i].bukuanstatus == 1){ }}
+		<a href="{php echo app_url('order/master_orderconfirm');}master_orderno={{ d.list[i].orderno }}" style="
+    width: 30%;
+    height: 27.5px;
+    line-height: 27.5px;
+    text-align: center;
+    top: 10px;
+    font-size: 12px;
+    border-radius: 5px;
+    background-color: #6fbfd8;
+    display: block;
+	color:white;
+    position: absolute;"  class="external  weui_btn_mini weui_btn_blu">补交尾款</a>
+		{{# } }}
+	</div>
+</div>
+{{# } }}
+
+</script>
+<div class="popup popup-qrcode">
+  	<div class="content" style="background: #eee;">
+    	<div class="list-block cards-list">
+	      <ul>
+	        <li class="card" style="border-radius: .2rem;">
+	          <div class="card-header"><h3 class="font-size-14">核销订单提货凭证</h3></div>
+	          <div class="card-content">
+	            <div class="card-content-inner">
+			        <div class="voucher-code">
+			            <p>提货码：{$order['hexiaoma']}</p>
+			            <p>
+			                <img src="{TG_URL}data/qrcode/{$_W['uniacid']}/{$order['orderno']}.png" alt="">
+			            </p>
+			        </div>
+			        <div class="voucher-address font-size-14">
+			            <p>提货地址：{$order['address']}</p>
+			            <p>到店时间：尽快到店提货</p>
+			        </div>
+			        <div class="voucher-goods-info font-size-14">
+			            <p>商品信息：{$goods['gname']} </p>
+				        <p>实付金额：{$order['pay_price']}元</p>
+				        </div>
+				    </div>
+	          </div>
+	        </li>
+	      </ul>
+	    </div>
+	    <div class="weui_btn_area">
+        	<a class="weui_btn weui_btn_warn close-popup">关闭</a>
+    	</div>
+  	</div>
+<script type="text/javascript">
+ var arr = new Array(1,2,3,8);
+ function chooseI(self){
+     if ($(self).hasClass('active')) {
+         $(self).removeClass('active');
+     } else {
+         $(self).addClass('active');
+     }
+     $('.combined_sign_footer').show();
+     var length = $('.link-ding').find('i.weui-icon-success.active').length;
+     if(length == 0) {
+         $('.combined_sign_footer').hide();
+     }
+     $('.on_seleted_order_num').html(length);
+ }
+function contains(arr, obj) {  
+    var i = arr.length;  
+    while (i--) {  
+        if (arr[i] === obj) {  
+            return true;  
+        }  
+    }  
+    return false;  
+}
+ function cutStrings(str, len) {
+
+	 //length属性读出来的汉字长度为1
+
+	 if(str.length*2 <= len) {
+
+		 return str;
+
+	 }
+
+	 var strlen = 0;
+
+	 var s = "";
+
+	 for(var i = 0;i < str.length; i++) {
+
+		 s = s + str.charAt(i);
+
+		 if (str.charCodeAt(i) > 128) {
+
+			 strlen = strlen + 2;
+
+			 if(strlen >= len){
+
+				 return s.substring(0,s.length-1) + "***";
+
+			 }
+
+		 } else {
+
+			 strlen = strlen + 1;
+
+			 if(strlen >= len){
+
+				 return s.substring(0,s.length-2) + "***";
+
+			 }
+
+		 }
+
+	 }
+
+	 return s;
+
+ }
+function cutString(str, len) {
+
+    //length属性读出来的汉字长度为1
+
+    if(str.length*2 <= len) {
+
+        return str;
+
+    }
+
+    var strlen = 0;
+
+    var s = "";
+
+    for(var i = 0;i < str.length; i++) {
+
+        s = s + str.charAt(i);
+
+        if (str.charCodeAt(i) > 128) {
+
+            strlen = strlen + 2;
+
+            if(strlen >= len){
+
+                return s.substring(0,s.length-1) + "...";
+
+            }
+
+        } else {
+
+            strlen = strlen + 1;
+
+            if(strlen >= len){
+
+                return s.substring(0,s.length-2) + "...";
+
+            }
+
+        }
+
+    }
+
+    return s;
+
+}
+
+	//alert("..");
+	//alert(document.getElementById("asg").innerHTML);
+	//alert(document.getElementsByClassName('fa fa-qrcode').length);
+	if (document.getElementById('qrcode')){
+		document.getElementById('qrcode').onclick=function ( ev ) {
+			//alert( "xx");
+			//document.querySelector('.popup-qrcode').style.setProperty("display","block");
+		}
+	}
+	/*	var xhr=new XMLHttpRequest();
+	var url;
+	var formData=new FormData();
+	formData.append("ordernumber",)
+	xhr.onreadystatechange=function() {
+		if (xhr.readystate==4) {
+			if ((xhr.state>=200 && xhr.state<300) || xhr.state=304) {
+				alert(xhr.responseText);
+			}
+		}
+	}
+	xhr.open("post",url,true);
+	xhr.send(formData);*/
+	$('.buttons-tab').find('a').click(function(){
+		var status = $(this).attr('id');
+		$(this).addClass('active').siblings().removeClass('active');
+		location.href = "{php echo app_url('order/order/list')}&status="+status;
+	});
+	//取消订单
+	$(document).on('click','.cancel',function(){
+		var orderno = $(this).attr('oid');
+		$.confirm('确认取消订单？',
+	        function () {
+	          	$.post("{php echo app_url('order/order/cancel')}",{orderno:orderno},function(d){
+					if(d.status == 1){
+					    $.toast('订单取消成功！');
+					    setTimeout(function () {
+							location.href = "{php echo app_url('order/order/list')}";
+						}, 1000);
+					}else{
+						$.toast(d.result);
+					}
+				},"json");
+	        }
+	    );
+	});
+	//支付订单
+	$(document).on('click','.topay',function(){
+		var orderno = $(this).attr('oid');
+      	$.post("{php echo app_url('order/order/topay')}",{orderno:orderno},function(d){
+			if(d.status == 1){
+				location.href = "{php echo app_url('pay/paytype')}"+'orderno='+orderno+'&paytype=wechat';
+			}else{
+				$.toast(d.result);
+			}
+		},"json");
+	});
+ //合并核销
+ function combinedSign() {
+     var _arr = [];
+     $('i.weui-icon-success.active').each(function(index, item) {
+         _arr.push($(item).attr('data-orderno'));
+     })
+
+     if(_arr.length == 0) {
+         $.toast('请选择自提订单');
+         return;
+     }
+
+     $.post("{php echo app_url('order/order/getlongurl')}",{ordernos: _arr}, function (res) {
+         res = JSON.parse(res);
+         console.log(res);
+         var html = '';
+         $('canvas').remove();
+         var longurl=res.longurl;
+         $('#qrcode_pic').qrcode({text:longurl});
+         var popupQrcode = document.getElementsByClassName("popup popup-qrcode")[0];
+         for(var i = 0, len = res.orders.length; i < len; i++) {
+             var goods = '';
+             html += '<div class="voucher-address font-size-14">'+
+                 '<p>提货点：'+res.orders[i].store.storename+'</p>'+
+                 '<p>提货地址：'+res.orders[i].store.address+'</p>'+
+                 '<p>联系电话：'+res.orders[i].store.tel+'</p>'+
+                 '</div>'
+             for(var k = 0; k < res.orders[i].goods.length; k++) {
+                 goods += '<div class="voucher-goods-info font-size-14 combined_sign_goods">'+
+                     '<p>商品名称：'+res.orders[i].goods[k].gname+'</p>'+
+                     '<p>数量：'+res.orders[i].goods[k].gnum+'</p>'+
+                     '<p>实付金额：'+res.orders[i].goods[k].gprice+'元</p>'+
+                     '</div>'
+             }
+             html+=goods;
+         }
+         $('.card-content-inner').append(html);
+         popupQrcode.classList.add("modal-in");
+         popupQrcode.style.display = 'block';
+     })
+ }
+	$(function () {
+	
+	  'use strict';
+		$(document).on("pageInit", "#page-order-list", function(e, id, page) {
+		
+		    var loading = false;
+		    var thispagesize = 10;
+		    var thispagesizemax = 0;
+		    var thispage = 1;
+		    function addItems(thispage, thispagesize) {
+		    	var status = "{$status}";
+		    	var ajaxurl = "{php echo app_url('order/order/ajax')}"+"&page="+thispage+"&pagesize="+thispagesize+"&status="+status;
+		    	$.ajax({
+						type: "POST",
+						url: ajaxurl,
+						dataType: 'json',
+						beforeSend: function(XMLHttpRequest) {
+							
+						},
+						success: function(data) {
+							thispagesizemax = data.total;
+							if (data.list.length > 0) {
+								var gettpl = document.getElementById('orderlist').innerHTML;
+								laytpl(gettpl).render(data, function(html){
+								    $(".tabs").append(html);
+								});
+							} else if (thispagesizemax > 0) {
+								$(".loading_more").remove();
+								$('.noData').show();
+							} else {
+								var html = '<div class="m-cart" id="s"><div class="empty" id="pro-view-6">暂无订单数据，<a href="{php echo app_url('goods/index')}" class="external">马上去逛逛~</a></div></div>';
+								$(".tabs").append(html);
+							}
+						},
+						error:function(){
+						$('.error').show();
+					}
+					});
+		    }
+		    addItems(thispage,thispagesize);
+		     
+		    $(page).on('infinite', function() {
+		      	if (loading) return;
+		      	loading = true;
+		      	$(".loading_more").show();
+			   	setTimeout(function() {
+			        loading = false;
+			        thispage++;
+			        addItems(thispage,thispagesize);
+			        $(".loading_more").hide();
+			        $.refreshScroller();
+			    }, 1000);
+		    });
+		});
+	  $.init();
+	});
+ //滚动条选中元素居中
+ var item = $(".buttons-tab a.active");
+ var container = $(".buttons-tab");
+ var itemOffset = item.offset();
+ var itemOffsetLeft = itemOffset.left + container.scrollLeft();
+ var centerLeft = (container.width()- item.width()) / 2;
+ container.scrollLeft(itemOffsetLeft - centerLeft);
+</script>
+{php include wl_template('common/footer');}

@@ -1,0 +1,159 @@
+{php include wl_template('common/header');}
+<ul class="nav nav-tabs">
+	<li class="active"><a href="{php echo url('platform/special/display')}">系统回复</a></li>
+	<li class="active" style="float:right;"><a target="_blank" style="cursor:pointer;" href="http://v.youku.com/v_show/id_XMTc0OTkxMzcyNA==.html?from=s1.8-1-1.2&spm=a2h0k.8191407.0.0">视频演示</a></li>
+	<li class="active" style="float:right;"><a target="_blank" style="cursor:pointer;" href="http://doc.lexiangpingou.cn/systemReply.html">图文说明</a></li>
+</ul>
+<div class="clearfix">
+	<form class="form form-horizontal" action="" method="post">
+		<input type="hidden" name="id" value="{$rule['rule'][id]}">
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				系统回复
+			</div>
+			<div class="panel-body">
+				<div class="form-group">
+					<label class="col-xs-12 col-sm-3 col-md-2 control-label">关注自动回复关键词:</label>
+					<div class="col-sm-9 col-xs-12" style="position:relative">
+						<div class="input-group">
+							<input type="text" name="welcome" class="form-control" id="welcomeinput" value="{$setting['welcome']}" placeholder="可根据关键字直接关联指定的回复规则" autocomplete="off" />
+							<div class="input-group-btn">
+								<span class="btn btn-primary" id="welcome_search"><i class="fa fa-search"></i> 搜索</span>
+							</div>
+						</div>
+						<div id="welcome_menu" style="width:100%;position:absolute;top:32px;left:16px;display:none;z-index:10000">
+							<ul class="dropdown-menu" style="display:block;width:91%;height:400px;overflow-y:scroll;"></ul>
+						</div>
+						<div class="help-block">新用户添加公众帐号好友时，发送的欢迎信息。<a href="javascript:;" id="welcome"><i class="fa fa-github-alt"></i> 表情</a></div>
+						<div class="help-block">
+							指定用户添加公众帐号好友时，发送的欢迎信息, 你可以在这里输入关键字, 那么用户添加公众号好友时就相当于发送这个内容至乐享拼购<br>
+							这个过程是程序模拟的, 比如这里添加关键字: 欢迎关注, 那么用户添加公众号好友时, 乐享拼购相当于接受了粉丝用户的消息, 内容为"欢迎关注"
+						</div>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-xs-12 col-sm-3 col-md-2 control-label">再次关注自动回复关键词:</label>
+					<div class="col-sm-9 col-xs-12" style="position:relative">
+						<div class="input-group">
+							<input type="text" name="newuser" class="form-control" id="newuserinput" value="{$setting['newuser']}" placeholder="可根据关键字直接关联指定的回复规则" autocomplete="off" />
+							<div class="input-group-btn">
+								<span class="btn btn-primary" id="newuser_search"><i class="fa fa-search"></i> 搜索</span>
+							</div>
+						</div>
+						<div id="newuser_menu" style="width:100%;position:absolute;top:32px;left:16px;display:none;z-index:10000">
+							<ul class="dropdown-menu" style="display:block;width:91%;height:400px;overflow-y:scroll;"></ul>
+						</div>
+						<div class="help-block">老用户重新添加公众帐号好友时，发送的欢迎信息。<a href="javascript:;" id="welcome"><i class="fa fa-github-alt"></i> 表情</a></div>
+						
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-xs-12 col-sm-3 col-md-2 control-label">默认回复关键字:</label>
+					<div class="col-sm-9 col-xs-12">
+						<div class="input-group">
+							<input type="text" name="default" class="form-control" id="defaultinput" value="{$setting['default']}" placeholder="可根据关键字直接关联指定的回复规则" />
+							<div class="input-group-btn">
+								<span class="btn btn-primary search" id="default_search"><i class="fa fa-search"></i> 搜索</span>
+							</div>
+						</div>		
+						<div id="default_menu" style="width:100%;position:absolute;top:32px;left:16px;display:none;z-index:10000">
+							<ul class="dropdown-menu" style="display:block;width:91%;height:400px;overflow-y:scroll"></ul>
+						</div>
+						<div class="help-block">当系统不知道该如何回复粉丝的消息时，默认发送的内容。<a href="javascript:;" id="default"><i class="fa fa-github-alt"></i> 表情</a></div>
+						<div class="help-block">
+							指定系统不知道该如何回复粉丝的消息时，发送的默认信息, 你可以在这里输入关键字, 那么系统不知道该如何回复粉丝的消息时就相当于发送这个内容至乐享拼购<br>
+							这个过程是程序模拟的, 比如这里添加关键字: ￥@%&%#@*, 系统不知道该如何回复粉丝的消息, 乐享拼购相当于接受了粉丝用户的消息, 内容为"￥@%&%#@*"
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="form-group">
+			<div class="col-sm-12">
+					<input name="submit" type="submit" id="submit" value="提交" class="btn btn-primary col-lg-1" />
+					<input type="hidden" name="token" value="{$_W['token']}" />
+			</div>
+		</div>
+	</form>
+</div>
+<script>
+		function postAjax(url, obj){
+			var formData = new FormData();
+			for (var pro in obj) {
+				formData.append(pro, obj[pro]);
+			}
+			var xhr = new XMLHttpRequest();
+			xhr.open('post', url, true);
+			xhr.send(formData);
+			xhr.onreadystatechange = function() {
+				if (xhr.readyState ==4) {
+				  if ((xhr.status >=200 && xhr.status<300) || xhr.status ==304){
+					if (xhr.responseText == '1') {
+						util.tips("更新成功");
+					} else {
+						util.tips("更新失败1");
+					}
+				  }
+				  else {
+					util.tips("更新失败");
+				  }
+				}
+			}
+		}
+		
+		util.emotion($("#default"), $("#defaultinput")[0]);
+		util.emotion($("#welcome"), $("#welcomeinput")[0]);
+		var submit = document.getElementById("submit");
+		var url = "{php echo web_url('gzhset/special/ckajax')}";
+		submit.addEventListener("click",function (ev) {
+			ev.preventDefault();
+			var newusers = document.querySelector("input[name='newuser']");
+			var defaults = document.querySelector("input[name='default']");
+			var welcome = document.querySelector("input[name='welcome']");
+			
+			var obj = {dtdefault:defaults.value, welcome:welcome.value,newuser:newusers.value};
+			postAjax(url, obj);
+		},false);
+		function select_keyword(clickid, menuid, inputid){
+			$(clickid).click(function(){
+				var search_value = $(inputid).val(); 
+				$('body').append('<div class="layer_bg"></div>');
+				$('.layer_bg').height($(document).height());
+				$('.layer_bg').css({width : '100%', position : 'absolute', top : '0', left : '0', 'z-index' : '0'});
+				$.post("{php echo url('platform/special/search_key')}", {'key_word' : search_value}, function(data){
+					var data = $.parseJSON(data);
+					var total = data.length;
+					var html = '';
+					if(total > 0) {
+						for(var i = 0; i < total; i++) {
+							html += '<li><a href="javascript:;">' + data[i] + '</a></li>';
+						}
+					} else {
+						html += '<li><a href="javascript:;" class="no-result">没有匹配到您输入的关键字</a></li>';
+					}
+					$(menuid + ' ul').html(html);
+					$(menuid + ' ul li a[class!="no-result"]').click(function(){
+						$('.layer_bg').remove();
+						$(inputid).val($(this).html());
+						$(menuid).hide();
+					});
+					$(menuid).show();
+				}); 
+				$('.layer_bg').click(function(){
+					$(menuid).hide();
+					$(this).remove();
+				});
+
+			});
+			$(inputid).keydown(function(event){
+				if(event.keyCode == 13){
+					$(clickid).click();
+					return false;
+				}
+			});
+		}
+		select_keyword('#newuser_search', '#newuser_menu', '#newuserinput');
+		select_keyword('#welcome_search', '#welcome_menu', '#welcomeinput');	
+		select_keyword('#default_search', '#default_menu', '#defaultinput');	
+</script>
+{php include wl_template('common/footer');}

@@ -1,0 +1,223 @@
+{php include wl_template('common/header');}
+<ul class="nav nav-tabs">
+	<li {if $do == 'list' && $opp == 'on'} class="active"{/if}><a href="{php echo web_url('member/activity/list', array('opp' => 'on'));}">进行中</a></li>
+	<li {if $do == 'list' && $opp == 'future'} class="active"{/if}><a href="{php echo web_url('member/activity/list', array('opp' => 'future'));}">未开始</a></li>
+	<li {if $do == 'list' && $opp == 'end'} class="active"{/if}><a href="{php echo web_url('member/activity/list', array('opp' => 'end'));}">己结束</a></li>
+	<li class="ex-button"><a class="ex-b-lastA" target="_blank" href="http://doc.lexiangpingou.cn/pCard.html">图文说明</a></li>
+</ul>
+<div class="clearfix coupon-list-top">
+	<div class="search pull-right">
+		<form class="form-inline" action='./index.php' method='get'>
+			<input type="hidden" name="c" value="site" />
+            <input type="hidden" name="a" value="entry" />
+            <input type="hidden" name="m" value="lexiangpingou" />
+            <input type="hidden" name="do" value="member" />
+            <input type="hidden" name="ac" value="activity" />
+            <input type="hidden" name="op" value="list"/>
+			<div class="form-group">
+				<div class="input-group">
+					<div class="input-group-addon"><i class="fa fa-search"></i></div>
+					<input type="text" class="form-control" placeholder="搜索" name="keyword">
+				</div>
+			</div>
+		</form>
+	</div>
+	<div><a href="{php echo web_url('member/activity/create');}" class="btn btn-success">新建优惠券</a></div>
+</div>
+<style>
+table thead tr th, table tbody tr td {text-align: center; width: 10%;}
+table thead tr th:last-child, table tbody tr td:last-child {text-align: right;}
+</style>
+<div class="panel panel-default">
+	<div class="panel-body table-responsive">
+		<table class="table table-hover">
+			<thead>
+			<tr>
+				<th>优惠券名称</th>
+				<th>价值(元)</th>
+				<th>最低消费</th>
+				<th>领取限制</th>
+				<th>库存</th>
+				<th>领取人 / 次</th>
+				<th>已使用</th>
+				<th>积分</th>
+				<th style="width:180px;">有效期</th>
+				<th style="width:180px;">操作</th>
+			</tr>
+			</thead>
+			<tbody>
+			{loop $tg_coupon_templates $coupon_template}
+			<tr>
+				<td >{$coupon_template['name']}</td>
+				<td>
+					{if $coupon_template['is_random'] == 2} {$coupon_template['value']} <br/>~<br/> {$coupon_template['value_to']} {else} {$coupon_template['value']} {/if}
+				</td>
+				<td>
+					{if !empty($coupon_template['at_least']) && $coupon_template['at_least'] != 0.00}
+						￥{$coupon_template['at_least']}
+					{else}
+						不限制
+					{/if}
+				</td>
+				<td>
+					{if empty($coupon_template['quota'])}
+						不限张数
+					{else}
+						一人{$coupon_template['quota']} 张
+					{/if}
+				</td>
+				<td>{$coupon_template['stock']} </td>
+				<td>
+						
+						
+						{if $coupon_template['count_receive_num']} 
+							{$coupon_template['count_receive_num']} 
+						{else}
+							0
+						{/if}
+				</td>
+				<td>{if $coupon_template['count_receive_person']}
+							{$coupon_template['count_receive_person']} 
+						{else}
+							0
+						{/if}</td>
+				<td>{php echo $coupon_template['score'] > 0 ? $coupon_template['score'] : "无积分"}</td>
+				<td>
+					{php echo date('Y-m-d H:i:s', $coupon_template['start_time']);} <br/>
+					至<br/>
+					{php echo date('Y-m-d H:i:s', $coupon_template['end_time']);}
+				</td>
+				<td style="position:relative;">
+					{if $coupon_template['enable'] != 1}
+					<a href="{php echo web_url('member/activity/edit', array('id' => $coupon_template['id']))}" >查看</a>
+					 - 
+					已失效
+					{else}
+					<a href="javascript:;" data-id="{$coupon_template['id']}"  data-url="{php echo web_app_url('member/coupon/get',array('id'=>$coupon_template['id']))}" id="js-copy{$coupon_template['id']}" class="js-copy">复制链接</a>
+					{if checkstr($_W['user']['perms'],'activity.edit')}
+					-<a href="{php echo web_url('member/activity/edit', array('id' => $coupon_template['id']))}">编辑</a>
+					 -
+					{/if}
+					{if checkstr($_W['user']['perms'],'activity.fail')}
+					<a href="javascript:;" class="js-disable" data-coupon-template-id="{$coupon_template['id']}">使失效</a>
+					{/if}
+					{if $coupon_template['have_qrcode'] == 0}
+					<br />
+					<a href="javascript:;" data-url="{php echo web_app_url('member/coupon/get',array('id'=>$coupon_template['id']))}" class="js-qrcode create-qrcode" data-coupon-template-id="{$coupon_template['id']}" data-coupon-template-stock="{$coupon_template['stock']}" id="create-qrcode"  onclick="popwin = $('#modal-module-url').modal();">生成二维码</a>
+					{else}
+					<br />
+					<a href="{$coupon_template['qrcode_url']}" class="js-qrcode">下载二维码</a>
+					{/if}
+					{/if}
+
+				</td>
+			</tr>
+			{/loop}
+			</tbody>
+		</table>
+	</div>
+</div>
+<div class="modal fade" tabindex="-1" role="dialog" id="modal-module-url">
+	<div class="modal-dialog" role="document" style="margin-top: 20%">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				<h4 class="modal-title">生成二维码</h4>
+			</div>
+			<div class="modal-body">
+				<div class="form-group">
+					<input type="hidden" name="template_id" id="template_id">
+					<input type="hidden" name="stock" id="stock">
+					<input type="number" class="form-control" id="num" name="num" placeholder="请填写需要生成的二维码数量，最多一次生成400张">
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+				<button type="button" id="crecode" class="btn btn-primary" onclick="createQrcode()" data-url="">提交</button>
+			</div>
+		</div><!-- /.modal-content -->
+	</div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+{$pager}
+<!--<style>
+.inner__content {background: #eee none repeat scroll 0 0;border-top: 1px solid #dcdcdc;box-sizing: border-box;color: #666;margin-top: 10px;margin-bottom:10px;min-width: 100%;padding: 10px 5px;width: auto;text-align:center;}
+</style>-->
+<script type="text/javascript">
+	require(['jquery', 'util'], function($, util){
+		$('.js-copy').each(function(){
+			var id=$(this).attr('data-id');
+			util.clip($("#js-copy"+id), $(this).attr('data-url'));
+		});
+	});
+</script>
+<script>
+$(function(){
+	$('.fa-search').click(function() {
+		$('.coupon-list-top').find('form').submit();
+	});
+	$('.js-disable').click(function(e) {
+		e.stopPropagation();
+		var $this = $(this);
+		var op = "{$_GPC['op']}";
+		var coupon_template_id = $this.data('coupon-template-id');
+		var url = "{php echo web_url('member/activity/edit')}&id=" + coupon_template_id;
+		var html = '<a href="'+ url +'">查看</a> - 已失效';
+		util.nailConfirm(this, function(state) {
+			if (!state) return;
+			$.post("{php echo web_url('member/activity/disable')}", {id : coupon_template_id}, function(data) {
+				
+				if(!data.errno){
+					if (op == 'on' || op == 'future') {
+						$this.parent().parent().remove();
+					};
+					$this.parent().html(html);
+				};
+				util.tips(data.message);
+			}, 'json');
+		}, {html:'<div class="inner__content"><span style="color:red;font-size:12px;">失效后将导致该优惠券无法被领取和编辑</span></div>确定让这组优惠券失效?', placement:'left'});
+	});
+});
+
+
+$(".create-qrcode").on('click',function () {
+	var template_id = $(this).attr('data-coupon-template-id');
+	var stock = $(this).attr('data-coupon-template-stock');
+	$('input[name=template_id]').val(template_id);
+    $('input[name=stock]').val(stock);
+    var url = $(this).attr('data-url');
+    $('#crecode').attr('data-url',url);
+
+})
+//二维码相关操作
+	function  createQrcode(_this) {
+    	var template_id = $('input[name=template_id]').val();
+    	var num = $('input[name=num]').val();
+    	var stock = $('input[name=stock]').val();
+    	var url = $('#crecode').attr('data-url');
+    	if(Number(num) > Number(stock)){
+            // util.message('生成的二维码数量不能超过优惠券库存：'+stock);
+            util.tips('生成的二维码数量不能超过优惠券库存：'+stock,5000);
+            return false;
+		}
+        if(Number(num)>400){
+            // util.message('生成的二维码数量超过限制(400),如有需要请新建优惠券再生成二维码');
+            util.tips('生成的二维码数量超过限制(最大400),如有需要请新建优惠券再生成二维码',5000);
+            return false;
+        }
+        $.post("{php echo web_url('member/activity/createQrcode')}", {'template_id' : template_id,'num':num,'url':url}, function(data) {
+			data = data.message;
+            if(!data.errno){
+                popwin.hide();
+                util.tips('生成二维码成功');
+                setTimeout(function () {
+                    window.location.reload();
+                },3000)
+            }else{
+                util.tips('生成二维码失败');
+			}
+        }, 'json');
+    }
+
+</script>
+{php include wl_template('common/footer');}
+late('common/footer');}

@@ -1,0 +1,273 @@
+<style>
+    .input-group .form-control{
+        z-index: 0;
+    }
+    #modal-module-menus2 td{
+        overflow: inherit;
+    }
+</style>
+<div class="panel panel-info">
+    <div class="panel-heading">筛选</div>
+    <div class="panel-body">
+        <div class="form-group" style="background-color: #fff;padding: 25px 0;">
+            <label class="col-xs-12 col-sm-3 col-md-2 control-label">供货商选择</label>
+            <div class="col-sm-7 col-xs-12">
+                <div class='input-group'>
+                    <input type="text" name="saler" maxlength="30" value="{$_GPC['uname']}" id="saler" data-id="{$_GPC['id']}" class="form-control" readonly />
+                    <div class='input-group-btn'>
+                        <button class="btn btn-default" type="button" onclick="popwin = $('#modal-module-menus2').modal();">选择供货商</button>
+                    </div>
+                </div>
+                <div class='input-group' style="margin-top: 10px;">
+                    <input type="text" name="singleno" maxlength="30" value="{$_GPC['singleno']}" id="singleno" class="form-control"/>
+                    <div class='input-group-btn'>
+                        <button class="btn btn-default" type="button">填写平台单号</button>
+                    </div>
+                </div>
+                <div id="modal-module-menus2"  class="modal fade" tabindex="-1">
+                    <div class="modal-dialog" style='width: 660px;'>
+                        <div class="modal-content">
+                            <div class="modal-header"><button style="display: none" aria-hidden="true" data-dismiss="modal" class="saler_close" type="button">×</button><h3>选择供货商</h3></div>
+                            <div class="modal-body" >
+                                <div class="row">
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" name="keyword" value="" id="search-kwd2" placeholder="请输入公众号名称" />
+                                        <span class='input-group-btn'><button type="button" class="btn btn-default" onclick="search_members2();">搜索</button></span>
+                                    </div>
+                                </div>
+                                <div id="module-menus2" style="padding-top:5px;"></div>
+                            </div>
+                            <div class="modal-footer"><a href="#" class="btn btn-default" data-dismiss="modal" aria-hidden="true">关闭</a></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-2 col-xs-12"><button class="btn btn-primary searchGZH">搜索</button></div>
+            <div style="clear: both"></div>
+        </div>
+    </div>
+</div>
+
+<div class="order-list">
+    <div class="panel-body table-responsive collapse in" id="order-template-item-4" style="padding: 0;">
+        <button id="module-judgment" style="display:none" class="btn btn-default" type="button"
+                onclick="popwin = $('#modal-module-judgment').modal();">隐藏点击
+        </button>
+
+    </div>
+    {if empty($list)}
+    <div style="text-align: center;padding: 100px 0;" class="panel panel-default">暂无数据~</div>
+    {else}
+    <div class="panel panel-default">
+
+        <table class="table" style="background-color:#888">
+            <thead style="">
+            <tr>
+                <!--<th style="width:60px;" class="text-center"><input type="checkbox" onclick="var ck = this.checked;$(':checkbox').each(function(){this.checked = ck});" />全选</th>-->
+                <!--<th style="width: 100px">批次号</th>-->
+                <th style="width: 180px">商户/打款单号</th>
+
+                <th style="text-align:center;">退款金额</th>
+                <th style="text-align:center;">申请时间/状态</th>
+                <th style="width:180px;text-align:center;">支付单号/时间</th>
+                <th style="text-align:center;">支付银行流水图</th>
+                <th style="text-align:center;width: 80px">操作</th>
+
+            </tr>
+            </thead>
+
+            <!--</table>-->
+
+            <div class="panel-body table-responsive" style="padding: 0px;">
+                <!--<table class="table table-bordered">-->
+                <tbody style="background-color: #fff;">
+                {loop $list $item}
+                <tr>
+                    <!--<td class="goods-info line-feed" style="padding-left: 10px;width: 100px">{$item['pici']}</td>-->
+                    <td class="goods-info line-feed" style="width: 180px">{$item['account_name']}<br>{$item['singleno']}</td>
+                    <td class="goods-info line-feed" style="padding-left: 10px;">{$item['price']}</td>
+                    <td class="goods-info line-feed" style="padding-left: 10px;">{php echo date('Y-m-d H:i:s',$item['createtime'])}<br>{$item['statusname']}{if $item['check_paytime']}<br>{php echo date('Y-m-d H:i:s',$item['check_paytime'])}{/if}</td>
+
+                    <!--	<td class="text-center" style="width:80px;">{if empty($item['merchant']['name'])}{$_W['account']['name']}{else}{$item['merchant']['name']}{/if}</td>-->
+
+                    <td class="text-center" style="width: 180px">
+                        <p>{$item['uni_payno']}{if $item['paytime'] > 0}<br>{php echo date('Y-m-d H:i:s',$item['paytime'])}{/if}</p>
+                    </td>
+                    <td class="text-center" style="text-align:center;position: relative">
+                        {if !empty($item['uni_payimg'])}
+                        <img class="payimg" style="width: 50px;height: 50px" src="{$item['uni_payimg']}" alt="">
+                        {/if}
+                    </td>
+                    <td class="text-center" style="text-align:center;width: 80px">
+                        <a href="javascript:;" onclick="ajaxdetail({$item['id']})" >查看详情</a><br/>
+                        {if $item['status'] == 1}
+                        <a href="javascript:;" data-id="{$item['id']}" >确认收款</a>
+                        {/if}
+                    </td>
+                </tr>
+                {/loop}
+                </tbody>
+        </table>
+    </div>
+    </div>
+    {$pager}
+    {/if}
+</div>
+<div class="detail" style="z-index: 10;position: fixed;top: 0;left: 0;background-color: rgba(0,0,0,0.7); width: 100%;height: 100%;display: none">
+    <div class="panel panel-default" style="position: absolute;top: 5%;left: 30%;width: 40%">
+        <div class="panel-heading">详情
+            <a onclick="$('.detail').fadeOut()" style="cursor:pointer; float:right; margin-right:10px; font-weight:bold;" href="javascript:;">X</a>
+        </div>
+
+        <div class="panel-body clearfix">
+            <div class="col-xs-12  order-infos">
+                <div class="form-group clearfix">
+                    <label class="col-md-3 control-label">退款单号 ：</label>
+                    <div class="col-md-9 form-control-static singleno"></div>
+                </div>
+                <div class="form-group clearfix">
+                    <label class="col-md-3 control-label">状态 ：</label>
+                    <div class="col-md-9 form-control-static " id="order_status_text" ><span class="label label-success"></span></div>
+                </div>
+                <div class="parting-line"></div>
+                
+                <div class="form-group clearfix">
+                    <label class="col-md-3 control-label">打款金额：</label>
+                    <div class="col-md-9 uni_payprice">
+
+                    </div>
+                </div>
+                <div class="form-group clearfix uni_payno">
+                    <label class="col-md-3 control-label">打款单号：</label>
+                    <div class="col-md-9 ">
+
+                    </div>
+                </div>
+                <div class="form-group clearfix paytime">
+                    <label class="col-md-3 control-label">打款时间：</label>
+                    <div class="col-md-9 ">
+
+                    </div>
+                </div>
+                <div class="form-group clearfix check_paytime">
+                    <label class="col-md-3 control-label">确认收款时间：</label>
+                    <div class="col-md-9">
+
+                    </div>
+                </div>
+                <div class="form-group clearfix uni_payimg">
+                    <label class="col-md-3 control-label">流水图：</label>
+                    <div class="col-md-9 ">
+                        <img style="width: 100%" src="" alt="" onclick="$(this).next().show()">
+                        <img  onmousewheel="return bigimg(this)" style="
+                        display: none;
+                        position: fixed;
+                        top:50%;
+                        left: 50%;
+                        transform: translate(-50%,-50%);
+                        overflow: contain;
+                        z-index: 500" src="" alt="">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+     //加载商品详情
+    function ajaxdetail(id) {
+
+        $.get("{php echo web_url('platform' , array('ac' => 'supply_order','op' => 'refund_detail'))}",{"id":id},function(res){
+            var data=JSON.parse(res);
+            if(data.status==1){
+                var data=data.data;
+                $('.detail').fadeIn();
+//                util.tips(data.data);
+                $('.singleno').html(data.singleno);//平台单号
+
+                $('#order_status_text span').html(data.status);//订单状态
+
+                if(data.uni_payno != '' && data.uni_payno != null){
+                    $('.uni_payno').show();
+                    $('.uni_payno div').html(data.uni_payno);
+                } else {
+                    $('.uni_payno').hide();
+                }
+                if(data.paytime != '0'){
+                    $('.paytime').show();
+                    $('.paytime div').html(data.paytime);
+                } else {
+                    $('.paytime').hide();
+                }
+                if(data.check_paytime != '0'){
+                    $('.check_paytime').show();
+                    $('.check_paytime div').html(data.check_paytime);
+                } else {
+                    $('.check_paytime').hide();
+                }
+
+                
+
+                $('.uni_payprice').html('¥'+data.price);
+
+                if(data.uni_payimg != ""){
+                    $('.uni_payimg').show();
+                    $('.uni_payimg img').attr('src',data.uni_payimg);
+                } else {
+                    $('.uni_payimg').hide();
+                }
+            }else{
+                util.tips(data.data);
+                return false;
+            }
+        })
+    }
+    //确认收款
+     $('.platform_acceptor').click(function (e) {
+        e.stopPropagation();
+        var html = "您已核对收款信息，确认收款？";
+        var id = $(this).attr('data-id');
+        util.nailConfirm(this, function (state) {
+            if (!state) return;
+            $.post("{php echo web_url('platform/supply_order/supply_pay_check_receive');}", {id: id}, function (data) {
+                util.tips(data.message, 1000);
+                if(data.status == '1') {
+                    setTimeout(function () {
+                        location.reload();
+                    },1000);
+                }     
+            }, 'json');
+        }, {html: html});
+    });
+    function search_members2() {
+        if( $.trim($('#search-kwd2').val())==''){
+            Tip.focus('#search-kwd2','请输入关键词');
+            return;
+        }
+
+        $("#module-menus2").html("正在搜索....");
+        $.get("{php echo web_url('platform/platform_order',array('op'=>'supply_account'))}", {
+            keyword: $.trim($('#search-kwd2').val())
+        }, function(dat){
+            $('#module-menus2').html(dat);
+        })
+    }
+
+    //查询公众号
+    function select_member(o) {
+        $("#saler").val(o.name).attr('data-id',o.uniacid);
+        $(".saler_close").click();
+    }
+
+    //搜索按钮
+    $('.searchGZH').click(function () {
+        var id=$('#saler').attr('data-id');
+        if(!id){
+            return;
+        }
+        var uname=$('#saler').val();
+        var singleno=$('#singleno').val();
+        location.href="{php echo web_url('platform/platform_order',array('op'=>$_GPC['op'] , 'status' => $_GPC['status']))}"+'&id='+id+'&uname='+uname+'&singleno='+singleno;
+    });
+
+</script>

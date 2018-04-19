@@ -1,0 +1,65 @@
+{php include wl_template('common/header');}
+    <link rel="stylesheet" href="//cdn.bootcss.com/weui/1.1.1/style/weui.min.css">
+<link rel="stylesheet" href="//cdn.bootcss.com/jquery-weui/1.0.1/css/jquery-weui.min.css">
+<style>
+    body{
+        background: #fff;
+        overflow: inherit;
+    }
+    /*总分类*/
+    .fenLei{
+        min-height:100% ;
+    }
+    .fenlei_title{
+        background: #f3f3f3;
+        text-align: center;
+        padding: 10px;
+        position: relative;
+        font-size: 20px;
+    }
+    .fenlei_title a{
+        position: absolute;
+        right: 20px;
+        top: 10px;
+        font-size: 25px;
+    }
+    .fenleiDetail{
+        display: none;
+    }
+    {if $uniacid_tpl['tpl']==8199}
+    .bottombarr .fenlei i{
+        background-position: -46px 0!important;
+    }
+    .bottombarr a:nth-child(2) span{
+        color: #e02e23;
+        opacity: 0.9;
+    }
+    {/if}
+</style>
+<div class="fenLei">
+    <div class="fenlei_title">
+        <p>所有分类</p>
+        <a class="iconal-sousuo" href="{php echo app_url('goods/search')}"></a>
+    </div>
+    <div class="fenlei_content">
+        {loop $category $itme}
+        <a class="weui-cell weui-cell_access" href="{php echo app_url('goods/list/display', array('gid' => $itme['id']));}" >
+            <div class="weui-cell__bd weui-cell_primary">
+                <p class="fenlei_name">{$itme['name']}</p>
+            </div>
+            <span class="weui-cell__ft"></span>
+        </a>
+        {/loop}
+    </div>
+</div>
+
+
+
+
+{php include wl_template('common/footerbar');}
+{php include wl_template('common/footer');}
+
+
+
+
+

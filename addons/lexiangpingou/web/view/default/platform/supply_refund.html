@@ -1,0 +1,314 @@
+ <style>
+     .form-control-static {
+        padding-top: 0;
+     }
+ </style>
+ <div class="panel panel-info">
+    <div class="panel-heading">筛选</div>
+    <div class="panel-body">
+        <form action="./index.php" method="get" class="form-horizontal" role="form" style="background-color: #fff;padding: 10px 0;margin-bottom: 20px;">
+            <input type="hidden" name="c" value="site" />
+            <input type="hidden" name="a" value="entry" />
+            <input type="hidden" name="m" value="lexiangpingou" />
+            <input type="hidden" name="do" value="platform" />
+            <input type="hidden" name="ac" value="supply_order" />
+            <input type="hidden" name="op" value="supply_refund" />
+            <input type="hidden" name="status" value="{$_GPC['status']}">
+            <div class="form-group">
+                <label class="col-xs-12 col-sm-2 col-md-2 col-lg-1 control-label">搜索条件</label>
+                <select name="con_type" class="categoryI form-control tpl-category-parent" style="margin-right:20px;display: inline-block;width: 20%;float: left;">
+                    <option {if $_GPC['con_type'] == 1}selected{/if} value="1">打款单号</option>
+                    <option {if $_GPC['con_type'] == 2}selected{/if} value="2">支付单号</option>
+                </select>
+                <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
+                    <input class="form-control" name="keyword" id="" type="text" value="{$_GPC['keyword']}" placeholder="请输入搜索关键词">
+                </div>
+                <div class="col-md-2" style="float: right">
+                    <button class="btn btn-default min-width"><i class="fa fa-search"></i> 搜索</button>
+                </div>
+            </div>
+            <div class="form-group">
+                <script type="text/javascript">
+                    require(["daterangepicker"], function($){
+                        $(function(){
+                            $(".daterange.daterange-time").each(function(){
+                                var elm = this;
+                                $(this).daterangepicker({
+                                    startDate: $(elm).prev().prev().val(),
+                                    endDate: $(elm).prev().val(),
+                                    format: "YYYY-MM-DD HH:mm",
+                                    timePicker: true,
+                                    timePicker12Hour : false,
+                                    timePickerIncrement: 1,
+                                    minuteStep: 1
+                                }, function(start, end){
+                                    $(elm).find(".date-title").html(start.toDateTimeStr() + " 至 " + end.toDateTimeStr());
+                                    $(elm).prev().prev().val(start.toDateTimeStr());
+                                    $(elm).prev().val(end.toDateTimeStr());
+                                });
+                            });
+                        });
+                    });
+                </script>
+                <label class="col-xs-12 col-sm-2 col-md-2 col-lg-1 control-label">申请时间</label>
+                <?php if (empty($start)) { $start = time() - 7 * 24 * 60 * 60; $end = time(); } ?>
+                <input name="time[start]" type="hidden" value="{php echo date('Y-m-d H:i:s',$start)}">
+                <input name="time[end]" type="hidden" value="{php echo date('Y-m-d H:i:s',$end)}">
+                <button class="btn btn-default daterange daterange-time" type="button"><span class="date-title">{php echo date('Y-m-d H:i:s',$start)}至{php echo date('Y-m-d H:i:s',$end)}</span> <i class="fa fa-calendar"></i></button>
+            </div>
+        </form>
+    </div>
+</div>
+<div class="order-list">
+    <div class="panel-body table-responsive collapse in" id="order-template-item-4" style="padding: 0;">
+        <button id="module-judgment" style="display:none" class="btn btn-default" type="button"
+                onclick="popwin = $('#modal-module-judgment').modal();">隐藏点击
+        </button>
+
+    </div>
+    {if empty($list)}
+    <div style="text-align: center;padding: 100px 0;" class="panel panel-default">暂无数据~</div>
+    {else}
+    <div class="panel panel-default">
+
+        <table class="table" style="background-color:#888">
+            <thead style="">
+            <tr>
+                <!--<th style="width:60px;" class="text-center"><input type="checkbox" onclick="var ck = this.checked;$(':checkbox').each(function(){this.checked = ck});" />全选</th>-->
+                <!--<th style="width: 100px">批次号</th>-->
+                <th style="width: 180px">商户/打款单号</th>
+
+                <th style="text-align:center;">退款金额</th>
+                <th style="text-align:center;">申请时间/状态</th>
+                <th style="width:180px;text-align:center;">支付单号/时间</th>
+                <th style="text-align:center;">支付银行流水图</th>
+                <th style="text-align:center;width: 80px">操作</th>
+
+            </tr>
+            </thead>
+
+            <!--</table>-->
+
+            <div class="panel-body table-responsive" style="padding: 0px;">
+                <!--<table class="table table-bordered">-->
+                <tbody style="background-color: #fff;">
+                {loop $list $item}
+                <tr>
+                    <!--<td class="goods-info line-feed" style="padding-left: 10px;width: 100px">{$item['pici']}</td>-->
+                    <td class="goods-info line-feed" style="width: 180px">{$item['account_name']}<br>{$item['singleno']}</td>
+                    <td class="goods-info line-feed" style="padding-left: 10px;">{$item['price']}</td>
+                    <td class="goods-info line-feed" style="padding-left: 10px;">{php echo date('Y-m-d H:i:s',$item['createtime'])}<br>{$item['statusname']}{if $item['check_paytime']}<br>{php echo date('Y-m-d H:i:s',$item['check_paytime'])}{/if}</td>
+
+                    <!--	<td class="text-center" style="width:80px;">{if empty($item['merchant']['name'])}{$_W['account']['name']}{else}{$item['merchant']['name']}{/if}</td>-->
+
+                    <td class="text-center" style="width: 180px">
+                        <p>{$item['uni_payno']}{if $item['paytime'] > 0}<br>{php echo date('Y-m-d H:i:s',$item['paytime'])}{/if}</p>
+                    </td>
+                    <td class="text-center" style="text-align:center;position: relative">
+                        {if !empty($item['uni_payimg'])}
+                        <img class="payimg" style="width: 50px;height: 50px" src="{$item['uni_payimg']}" alt="">
+                        {/if}
+                    </td>
+                    <td class="text-center" style="text-align:center;width: 80px">
+                        <a href="javascript:;" onclick="ajaxdetail({$item['id']})">查看详情</a><br/>
+                        {if $item['status'] == 0}
+                        <a href="javascript:;" data-id="{$item['id']}" onclick="ljdk({$item['id']},{$item['price']})">立即退款</a>
+                        {/if}
+                    </td>
+                </tr>
+                {/loop}
+                </tbody>
+        </table>
+    </div>
+    </div>
+    {$pager}
+    {/if}
+</div>
+<div class="detail" style="z-index: 10;position: fixed;top: 0;left: 0;background-color: rgba(0,0,0,0.7); width: 100%;height: 100%;display: none">
+    <div class="panel panel-default" style="position: absolute;top: 5%;left: 30%;width: 40%">
+        <div class="panel-heading">详情
+            <a onclick="$('.detail').fadeOut()" style="cursor:pointer; float:right; margin-right:10px; font-weight:bold;" href="javascript:;">X</a>
+        </div>
+
+        <div class="panel-body clearfix">
+            <div class="col-xs-12  order-infos">
+                <div class="form-group clearfix">
+                    <label class="col-md-3 control-label">退款单号 ：</label>
+                    <div class="col-md-9 form-control-static singleno"></div>
+                </div>
+                <div class="form-group clearfix">
+                    <label class="col-md-3 control-label">状态 ：</label>
+                    <div class="col-md-9 form-control-static " id="order_status_text" ><span class="label label-success"></span></div>
+                </div>
+                <div class="parting-line"></div>
+                
+                <div class="form-group clearfix">
+                    <label class="col-md-3 control-label">打款金额：</label>
+                    <div class="col-md-9 uni_payprice">
+
+                    </div>
+                </div>
+                <div class="form-group clearfix uni_payno">
+                    <label class="col-md-3 control-label">打款单号：</label>
+                    <div class="col-md-9 ">
+
+                    </div>
+                </div>
+                <div class="form-group clearfix paytime">
+                    <label class="col-md-3 control-label">打款时间：</label>
+                    <div class="col-md-9 ">
+
+                    </div>
+                </div>
+                <div class="form-group clearfix check_paytime">
+                    <label class="col-md-3 control-label">确认收款时间：</label>
+                    <div class="col-md-9">
+
+                    </div>
+                </div>
+                <div class="form-group clearfix uni_payimg">
+                    <label class="col-md-3 control-label">流水图：</label>
+                    <div class="col-md-9 ">
+                        <img style="width: 100%" src="" alt="" onclick="$(this).next().show()">
+                        <img  onmousewheel="return bigimg(this)" style="
+                        display: none;
+                        position: fixed;
+                        top:50%;
+                        left: 50%;
+                        transform: translate(-50%,-50%);
+                        overflow: contain;
+                        z-index: 500" src="" alt="">
+                    </div>
+                </div>
+            </div>
+        </div>
+</div>
+
+</div>
+<div class="paydetail" style="z-index: 10;position: fixed;top: 0;left: 0;background-color: rgba(0,0,0,0.7); width: 100%;height: 100%;display: none">
+    <div class="panel panel-default" style="position: absolute;top: 15%;left: 25%;width: 50%">
+        <div class="panel-heading">立即退款
+            <a onclick="$('.paydetail').fadeOut()" style="cursor:pointer; float:right; margin-right:10px; font-weight:bold;" href="javascript:;">X</a>
+        </div>
+        <div class="panel-body">
+            <div class="form-group" style="height: 60px;">
+                <label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label">银行流水单号</label>
+                <div class="col-md-8">
+                    <input type="text" name="uni_payno" class="form-control" value="" placeholder="请输入银行流水单号" />
+                </div>
+            </div>
+            <div class="form-group" style="height: 40px;">
+                <label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label">打款金额</label>
+                <div class="col-md-8">
+                    <input type="text" name="uni_price" class="form-control" value=" " readonly="readonly" />
+                </div>
+            </div>
+            <div class="form-group" style="height: 60px;margin-top: 30px;">
+                <label class="col-xs-12 col-sm-3 col-md-2 control-label">银行流水图</label>
+                <div class="col-sm-9">
+                    {php echo tpl_form_field_image('refund_imgs');}
+                </div>
+            </div>
+        </div>
+        <div class="panel-footer" style="height: 60px;text-align: right">
+            <button onclick="refund()" class="btn btn-success js-refund1">提交申请</button>
+        </div>
+    </div>
+</div>
+<script>
+     //加载商品详情
+    function ajaxdetail(id) {
+
+        $.get("{php echo web_url('platform' , array('ac' => 'supply_order','op' => 'refund_detail'))}",{"id":id},function(res){
+            var data=JSON.parse(res);
+            if(data.status==1){
+                var data=data.data;
+                $('.detail').fadeIn();
+//                util.tips(data.data);
+                $('.singleno').html(data.singleno);//平台单号
+
+                $('#order_status_text span').html(data.status);//订单状态
+
+                if(data.uni_payno != '' && data.uni_payno != null){
+                    $('.uni_payno').show();
+                    $('.uni_payno div').html(data.uni_payno);
+                } else {
+                    $('.uni_payno').hide();
+                }
+                if(data.paytime != '0'){
+                    $('.paytime').show();
+                    $('.paytime div').html(data.paytime);
+                } else {
+                    $('.paytime').hide();
+                }
+                if(data.check_paytime != '0'){
+                    $('.check_paytime').show();
+                    $('.check_paytime div').html(data.check_paytime);
+                } else {
+                    $('.check_paytime').hide();
+                }
+
+                
+
+                $('.uni_payprice').html('¥'+data.price);
+
+                if(data.uni_payimg != ""){
+                    $('.uni_payimg').show();
+                    $('.uni_payimg img').attr('src',data.uni_payimg);
+                } else {
+                    $('.uni_payimg').hide();
+                }
+            }else{
+                util.tips(data.data);
+                return false;
+            }
+        })
+    }
+    function ljdk(id, price) {
+        $('.paydetail').show().attr('data-id',id);
+        $('input[name="uni_price"]').val(price);
+    }
+    //立即打款
+    function refund() {
+        if($('[name="uni_payno"]').val()==''){
+            util.tips('请填写退款单号');
+            return false;
+        }
+        if($('[name="refund_imgs"]').val()==''){
+            util.tips('请上传退款图片');
+            return false;
+        }
+        $.post(
+            "{php echo web_url('platform/supply_order/supply_refund_check_pay');}",
+            {
+                'id': $('.paydetail').attr('data-id'),
+                'uni_payno':$('[name="uni_payno"]').val(),
+                'uni_payimg':$('[name="refund_imgs"]').val()
+            },
+            function (res) {
+                var data = JSON.parse(res);
+                if (data.status == 1) {
+                    util.tips('提交成功');
+                    setTimeout(function () {
+                        location.reload();
+                    }, 1000)
+                } else {
+                    util.tips('提交失败');
+                }
+            }
+        )
+    }
+        /*
+    * js鼠标滚轮放大缩小图片
+    * @param obj 当前图片对象
+    * 如果不知道怎么使用，加微信wu7zhi在线帮你解答
+    */
+    function bigimg(obj){
+        var zoom = parseInt(obj.style.zoom,10)||100;
+        zoom += event.wheelDelta / 12;
+        if(zoom > 0 )
+        obj.style.zoom=zoom+'%';
+        return false;
+    }
+
+</script>

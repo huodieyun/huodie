@@ -1,0 +1,335 @@
+{php include wl_template('common/header');}
+<ul class="nav nav-tabs">
+	
+	<li {if intval($_GPC['op']) == 'display'}class="active"{/if}><a href="{php echo web_url('service/acclist/display/');}">购买记录</a></li>
+	<li {if intval($_GPC['op']) == 'post'}class="active"{/if}><a href="{php echo web_url('service/acclist/post');}">新增购买记录</a></li>
+	<!--<li {if intval($_GPC['op']) == 'testpost'}class="active"{/if}><a href="{php echo web_url('service/acclist/testpost');}">开通3天试用</a></li>-->
+</ul>
+{if $op == 'display'}
+<div class="panel panel-info">
+	<div class="panel-heading">筛选</div>
+	<div class="panel-body">
+		<form action="./index.php" method="get" class="form-horizontal" role="form">
+			<input type="hidden" name="c" value="site" />
+            <input type="hidden" name="a" value="entry" />
+            <input type="hidden" name="m" value="lexiangpingou" />
+            <input type="hidden" name="do" value="service" />
+			<input type="hidden" name="ac" value="acclist" />
+			<input type="hidden" name="op" value="display" />
+			
+			<div class="form-group">				
+				<label class="col-xs-12 col-sm-2 col-md-2 col-lg-1 control-label">公众号名称</label>
+                <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
+                    <input class="form-control" name="uniacidname" id="" type="text" value="{$_GPC['uniacidname']}" placeholder="可模糊查询公众号名称">
+                </div>
+				<label class="col-xs-12 col-sm-2 col-md-2 col-lg-1 control-label">功能名称</label>
+                <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
+                    <input class="form-control" name="functionname" id="" type="text" value="{$_GPC['functionname']}" placeholder="可模糊查询功能名称">
+                </div>
+			</div>
+			<div class="form-group">				
+				
+			</div>
+			<div class="form-group">				
+				<div class="pull-right col-md-3">
+					<button class="btn btn-default min-width"><i class="fa fa-search"></i> 搜索</button>
+				</div>
+			</div>
+		</form>
+	</div>
+</div>
+<div class="panel panel-default">
+	<div class="table-responsive">
+		<table class="table table-hover">
+			<thead>
+			<tr>
+				<th style="width:30%;">公众号名称</th>
+				<th class="text-center" style="width:20%;">功能名称</th>
+				<th class="text-center" style="width:30%;">到期时间</th>
+										
+				<th class="text-center" style="width:20%;">操作</th>
+			</tr>
+			</thead>
+			<tbody>
+			{loop $goodses $goods}
+			<tr data-toggle="popover" data-trigger="hover" data-placement="left" class="js-goods-img">
+				
+			<td class="line-feed">
+					{php echo cutstr($goods['gname'], 30, true);}
+					</td>
+				<td class="text-left" >
+				<span class="label label-info">{php echo cutstr($goods['functionname'], 30, true);}</span>
+					
+				</td>
+				<td class="text-left" >					
+					<span class="label label-warning">{$goods['endtime']}</span>
+				</td>
+						
+				<td class="text-center">
+					<a href="{php echo web_url('goods/goods', array('op' => 'post','id' => $goods['id']))}" class="">续费</a>
+					<br>
+					<a href="{php echo web_url('goods/goods', array('op' => 'sendnotice','id' => $goods['id'],'type'=>1))}" class="upjia">续费通知</a>-
+					<a href="{php echo web_url('goods/goods', array('op' => 'sendnotice','id' => $goods['id'],'type'=>2))}" class="downjia">降价通知</a>
+				</td>
+			</tr>
+			{/loop}
+			
+			</tbody>
+		</table>
+	</div>
+</div>
+
+{$pager}
+{/if}
+{if $op == 'post'}
+<div class="clearfix">
+<style>
+	.label1 {
+		display: block;
+		float:left;
+		width:16%;
+		text-align:left;		
+	}
+	datalist {
+		height:6em;
+		overflow:scroll;
+	}
+</style>
+	<form action="" method="post" class="form-horizontal form" id="form">
+			
+		<div style="margin-left:20px;padding-top:20px;"> 
+			<div>请选择公众号</div>
+			<input id="publicNum" name="publicNum" type="text" required placeholder="suib"/>    
+			<div id="publicName" style="display:inline-block;color:red;height:30px;font-size:16px;line-height:30px;text-align:center;border-radius:3px;margin-left:30px;">火蝶信息</div>
+		</div>
+		<div style="margin-left:20px;padding-top:20px;">
+			<div>申请人</div>
+			<input id="salename" required name="salename" type="text"/>    
+			</div>
+		<div style="margin-left:20px;margin-top:20px;" class="panel panel-default">
+			<div class="panel-heading"><h4 class="panel-title">功能列表</h4></div>   
+			{loop $funclist $item}
+			<label class="label1"><input class="check" type="checkbox" name="functions" value="{$item['id']}" onclick="functionValues()">{$item['name']}</label>
+			{/loop}
+			<input type="text" name="functionValue" id="functionValue" style="display:none;"/>
+		</div>
+		<div style="clear:both;margin-left:20px;margin-top:120px;">
+			<div>使用时间</div>
+			<div style="display:none;">
+			<label><input id="year" name="year" type="text" list="yearlist" autocomplete="false">年</label>
+			<label><input id="months" name="month" type="text" list="monthlist" autocomplete="false">月</label>
+			<label><input id="day" name="day" type="text" list="daylist" autocomplete="false">日</label>
+			</div>
+			<div style="display:none;">
+			<label><input id="hour" name="hour" type="text" list="hourlist" autocomplete="false">时</label>
+			<label><input id="minute" name="minute" type="text" list="minutelist" autocomplete="false">分</label>
+			<label><input id="second" name="second" type="text" list="secondlist" autocomplete="false">秒</label>
+			</div>
+			<!--<label ><input id="months" name="month" type="text" required list="monthslist" >月</label>-->
+			<label><input id="days" name="day" type="text" required list="daylist" >天</label>        
+		</div>
+		<div class="form-group col-md-12">
+			<input type="submit"  name="submit" value="提交" class="btn btn-primary col-lg-1" />
+			<input type="hidden" name="token" value="{$_W['token']}" />
+		</div>
+	</form>
+	<datalist id="yearlist" style="display:none;">		
+	</datalist>
+	<datalist id="monthlist" style="display:none;">		
+	</datalist>
+	<datalist id="monthslist" name="monthslist" style="display:none;">
+		<option value="1">1</option>
+		<option value="3">3</option>
+		<option value="6">6</option>
+		<option value="9">9</option>
+		<option value="12">12</option>
+		<option value="18">18</option>
+		<option value="24">24</option>
+	</datalist>
+	<datalist id="daylist" style="display:none;">
+
+	</datalist>
+	<datalist id="hourlist" style="display:none;">		
+	</datalist>
+	<datalist id="minutelist" style="display:none;">		
+	</datalist>
+	<datalist id="secondlist" style="display:none;">		
+	</datalist>
+	<script>
+		var yearlist = document.getElementById("yearlist");
+		var monthlist = document.getElementById("monthlist");
+		var daylist = document.getElementById("daylist");
+		var hourlist = document.getElementById("hourlist");
+		var minutelist = document.getElementById("minutelist");
+		var secondlist = document.getElementById("secondlist");
+		var year = document.getElementById("year");
+		var months = document.getElementById("months");
+		var day = document.getElementById("day");
+		var hour = document.getElementById("hour");
+		var minute = document.getElementById("minute");
+		var second = document.getElementById("second");
+		var date = new Date();
+		var datetime = [31, 28, 31, 30, 31,30, 31, 31, 30, 31, 30, 31];
+		var publicNum = document.getElementById("publicNum");
+		var functionValue = document.getElementById("functionValue");
+		var check = document.getElementsByClassName("check");
+		var form1 = document.getElementById("form");
+		var submitForm = document.getElementById("submitForm");
+
+		console.log(check.length);
+		function functionValues() {
+		  var len = check.length;
+		  var str = '';
+		  for (var i = 0; i < len; i++) {
+			if (check[i].checked){
+				str += check[i].value +',';
+			}
+		  }
+		  functionValue.value = str.slice(0,-1);
+		}
+		publicNum.value = '';
+		year.value = '';
+		months.value = '';
+		day.value = '';
+		hour.value = '';
+		minute.value = '';
+		second.value = '';
+		for (var i = 0; i < 3; i++) {
+			var option = document.createElement("option");
+			option.value = date.getFullYear() + i;
+			yearlist.appendChild(option);
+		}
+		
+		year.onblur = function () {
+			
+			months.value = '';
+			day.value = '';
+			hour.value = '';
+			minute.value = '';
+			second.value = '';
+			var monthlist = document.getElementById("monthlist");
+			if (year.value == date.getFullYear()){
+				monthlist.innerHTML = '';
+				daylist.innerHTML = '';
+				hourlist.innerHTML = '';
+				minutelist.innerHTML = '';
+				secondlist.innerHTML = '';
+				var month = date.getMonth();
+				for (var i = month + 1; i < 13; i++) {
+					var option = document.createElement("option");
+					option.value = i;
+					monthlist.appendChild(option);
+				}
+			}
+			else {
+				monthlist.innerHTML = '';
+				daylist.innerHTML = '';
+				hourlist.innerHTML = '';
+				minutelist.innerHTML = '';
+				secondlist.innerHTML = '';
+				for (var i = 1; i < 13; i ++) {					
+					var option = document.createElement("option");
+					option.value = i;
+					monthlist.appendChild(option);
+				}
+			}
+		}
+		
+		months.onblur = function () {
+			day.value = '';
+			hour.value = '';
+			minute.value = '';
+			second.value = '';
+			if (year.value == date.getFullYear() && months.value == date.getMonth() + 1 ){
+				daylist.innerHTML = '';
+				hourlist.innerHTML = '';
+				minutelist.innerHTML = '';
+				secondlist.innerHTML = '';
+				for (var i = date.getDate() + 1; i < datetime[date.getMonth() + 1] + 1; i++) {
+					var option = document.createElement("option");
+					option.value = i;
+					daylist.appendChild(option);
+				}
+			}
+			else if ((year.value == date.getFullYear() && months.value > date.getMonth() + 1) || (year.value > date.getFullYear())) {
+				daylist.innerHTML = '';
+				hourlist.innerHTML = '';
+				minutelist.innerHTML = '';
+				secondlist.innerHTML = '';
+				for (var i = 1; i < datetime[Number(months.value) - 1] + 1; i++) {
+					var option = document.createElement("option");
+					option.value = i;
+					daylist.appendChild(option);
+				}
+			}
+		}
+		
+		day.onblur = function () {
+			hour.value = '';
+			minute.value = '';
+			second.value = '';
+			hourlist.innerHTML = '';
+			minutelist.innerHTML = '';
+			secondlist.innerHTML = '';			
+			for (var i = 1; i < 25; i++) {
+				var option = document.createElement("option");
+				option.value = i;
+				hourlist.appendChild(option);
+			}
+		}
+		
+		hour.onblur = function () {
+			minute.value = '';
+			second.value = '';
+			minutelist.innerHTML = '';
+			secondlist.innerHTML = '';	
+			for (var i = 1; i < 61; i++) {
+				var option = document.createElement("option");
+				option.value = i;
+				minutelist.appendChild(option);
+			}
+		}
+		minute.onblur = function () {
+			second.value = '';
+			secondlist.innerHTML = '';
+			for (var i = 1; i < 61; i++) {
+				var option = document.createElement("option");
+				option.value = i;
+				secondlist.appendChild(option);
+			}
+		}
+		
+		var publicNum = document.getElementById("publicNum");
+		var publicName = document.getElementById("publicName");
+		publicNum.onblur = function (ev) {
+			var url = "{php echo web_url('service/acclist/ajax');}"
+			var id = ev.target.value;
+			postAjax(id, url);
+			
+		}
+		
+		function postAjax(id, url){
+		var formData = new FormData();
+			formData.append('id', id);
+			var xhr = new XMLHttpRequest();
+			xhr.open('post', url, true);
+			xhr.send(formData);
+			xhr.onreadystatechange = function() {
+				if (xhr.readyState ==4) {
+				  if ((xhr.status >=200 && xhr.status<300) || xhr.status ==304){
+					 publicName.textContent = xhr.responseText;					 
+				  }
+				  else {
+					console.log("cuowu");
+				  }
+				}
+			}
+		}
+	</script>
+</div>
+{/if}
+
+	
+	
+	
+{php include wl_template('common/footer');}

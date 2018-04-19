@@ -1,0 +1,1960 @@
+{php include wl_template('common/header');}
+
+<link rel="stylesheet" href="{TG_URL_ARES}weiui/weui.min.css">
+<link rel="stylesheet" href="{TG_URL_ARES}weiui/jquery-weui.min.css">
+<!--<script type="text/javascript" src="{TG_URL_ARES}weiui/jquery-weui.min.js"></script>-->
+<style>
+	.page{
+		z-index: 500;
+	}
+	#zitiMendian{
+		display: none;
+		position: fixed;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 100%;
+		z-index: 900;
+		background: #fff;
+		padding: 10px;
+		text-align: center;
+		font-size: 14px;
+	}
+	#zitiMendian>ul{
+		max-height: 90%;
+		overflow-y: auto;
+	}
+	#zitiMendian>ul>li{
+		padding: 5px;
+		margin-top:15px;
+		border-bottom:1px solid #ddd;
+		display: flex;
+		display: -webkit-flex;
+		align-items: center;
+		-webkit-align-items: center;
+	}
+	#zitiMendian>ul>li>div {
+		display: flex;
+		display: -webkit-flex;
+		-webkit-box-direction: normal;
+	    -webkit-box-orient: vertical;
+	    -moz-flex-direction: column;
+	    -webkit-flex-direction: column;
+	    flex-direction: column;
+	    -webkit-box-pack: center;
+	    -moz-justify-content: center;
+	    -webkit-justify-content: center;
+	    justify-content: center;
+	}
+	#zitiMendian p.kuan1{
+		flex:1;
+		-webkit-flex: 1;
+		/* for uc */
+		-webkit-box-flex: 1;
+		-moz-box-flex: 1;
+		-ms-flex: 1;
+	}
+	#zitiMendian p.kuan2{
+		flex:2;
+		-webkit-flex: 2;
+		/* for uc */
+		-webkit-box-flex: 2;
+		-moz-box-flex: 2;
+		-ms-flex: 2;
+	}
+	.weui-icon-success{
+		color: #ccc;
+	}
+	.weui-icon-success.active{
+		color: {$_W['system_color']};
+	}
+	.storeTJ{
+		width: 94%;
+		border-radius: 5px;
+		margin-top: 20px;
+		color: #fff;
+		position: absolute;
+		bottom: 10px;
+	}
+	.weui-actionsheet__cell{
+		font-size: 0.6rem;
+	}
+	.weui-actionsheet {
+		max-height: 100%;
+		overflow-y: auto;
+	}
+	.weui-actionsheet_cancel{
+		font-size: 14px;
+	}
+	.link{
+		width:100%;
+		height:auto;
+		position:relative;
+		min-height:35px;
+		background-color:white;
+	}
+	.link-method{
+		position:absolute;
+		width:40px;
+		text-align:center;
+		left:10px;
+		top:0px;
+		bottom:0px;
+		margin-top:auto;
+		margin-bottom:auto;
+		height:35px;
+		font-size:14px;
+		word-spacing:2px;
+		line-height:17.5px;
+		color:{$_W['system_color']};
+	}
+	.link-select{
+		position:relative;
+		margin-left:60px;
+		margin-top:5px;
+		height:auto;
+		min-height:30px;
+	}
+	.link-select .link-button:first-child{
+		margin-top:5px;
+	}
+	.link-button{
+		width:90%;
+		height:35px;
+		border:1px solid {$_W['system_color']};
+		border-radius:5px;
+		line-height:35px;
+		text-align:center;
+		color:{$_W['system_color']};
+		margin-bottom:3px;
+	}
+	.link-button2{
+		width:95%;
+		height:35px;
+		border:1px solid {$_W['system_color']};
+		border-radius:5px;
+		line-height:35px;
+		text-align:center;
+		color:{$_W['system_color']};
+		margin-bottom:3px;
+	}
+	.link-button1{
+		width:90%;
+
+		border:1px solid {$_W['system_color']};
+		border-radius:5px;
+		line-height:20px;
+		text-align:center;
+		color:{$_W['system_color']};
+		margin-bottom:3px;
+		font-size:12px;
+
+	}
+	.link-active{
+		color:white;
+		background-color:{$_W['system_color']};
+	}
+	.link-rule{
+		height:100%;
+		width:100%;
+		background-color:
+		rgba(128,128,128,0.5);
+		position:fixed;top:0px;
+		left:0px;
+		z-index:10000;
+	}
+	.link-rule>div{
+		text-align:center;
+		position:absolute;
+		top:0;
+		bottom:0;
+		left:8px;
+		right:8px;
+		margin-top:auto;
+		margin-bottom:auto;
+		height:85%;
+		background-color:white;
+		border-radius:8px;
+	}
+	.link-rule>div>div:first-child{
+		 font-weight:bold;
+		 background-color:#ececec;
+		 font-size:20px;
+		 line-height:40px;
+		 border-radius:8px 8px 0 0;
+		 height:40px;
+	}
+	.link-rule>div div:nth-child(2){
+		 text-align:left;
+		 position:absolute;
+		 top:48px;
+		 bottom:45px;
+		 left:19px;
+		 right:19px;
+		 overflow:scroll;
+	}
+	.link-rule>div div:last-child{
+		 position:absolute;
+		 left:0px;
+		 right:0px;
+		 width:150px;
+		 height:30px;
+		 bottom:5px;
+		 background-color:{$_W['system_color']};
+		 color:white;
+		 font-size:18px;
+		 margin-left:auto;
+		 margin-right:auto;
+		 line-height:30px;
+		 border-radius:5px; 
+	}
+	.once-card {
+		border: 1px solid {$_W['system_color']};
+		border-radius: 5px;
+		color: {$_W['system_color']};
+		padding: 0 5px;
+		display: inline-block;
+		margin: 5px;
+	}
+	.once-card-active {
+		background-color: {$_W['system_color']};
+		color: #fff;
+	}
+	.item_yhq {
+		border-top: 1px solid #f1f1f1;
+	}
+	.dt_commodity_info .item{
+		color: #e4393c;
+		font-size: 12px;
+		padding: 0;
+		border-bottom:none;
+	}
+	.dt_commodity_info .item span{
+		float:left;
+		width: 63px;
+	}
+	.dt_commodity_info .item .attval{
+		text-align: center;
+		float: left;
+		border: 1px solid #e4393c;
+		border-radius: 15px;
+		width: 55px;
+		height: 20px;
+	}
+	.dt_commodity_info .commodity_info dt{
+		width: 100px;
+		height: 100px;
+		background-size: 95px;
+	}
+	.dt_commodity_info .commodity_info dt img{
+		width: 100px;
+		height: 100px;
+	}
+	.stepGuild .step_tit i,.buttons-row .button.active,.stepGuild .step_item_on .step_num,.storeTJ{
+		background-color:{$_W['system_color']} ;
+	}
+	.buttons-row .button{
+		color: {$_W['system_color']};
+		border-color:{$_W['system_color']};
+	}
+	.stepGuild{
+		margin-bottom: 40px!important;
+	}
+</style>
+<style>
+.voucher-main{overflow:hidden;}
+	.voucher-main .list-cash-coupon{padding:10px 0 0 0; list-style:none; margin:10px auto;}
+	.voucher-main .list-cash-coupon li{margin:10px 0;}
+	.voucher-main .list-cash-coupon a{display:block;width:281px;height:109px;margin:auto;background:url('resource/images/voucher.png') no-repeat 0 -9px;-webkit-background-size:575px auto;position:relative;}
+	.voucher-main .list-cash-coupon a>p{position: absolute;max-width:200px;height:20px;color:#FFF;-webkit-box-sizing:border-box;}
+	.voucher-main .list-cash-coupon a>p:nth-of-type(1){left:25px;top:20px;font-size:14px;}
+	.voucher-main .list-cash-coupon a>p:nth-of-type(1)>span{font-size:30px;}
+	.voucher-main .list-cash-coupon a>p:nth-of-type(2){left: 26px;top: 62px;font-size: 14px;}
+	.voucher-main .list-cash-coupon a>p:nth-of-type(2):first-letter{font-size:14px;margin-right:3px;}
+	.voucher-main .list-cash-coupon a>p:nth-of-type(3){left: 26px;top: 83px;font-size: 12px;}
+	.voucher-main .list-cash-coupon a>p:nth-of-type(4){left: 160px;top: 42px;font-size: 11px;}
+	.voucher-main .list-cash-coupon a>p:nth-of-type(5){right: 12px;top:18px;font-size:14px;width:25px; line-height:18px;}
+	.voucher-main .list-cash-coupon li:nth-of-type(4n+2) a, .list-cash-coupon li .a2{background-position: 0 -133px;}
+	.voucher-main .list-cash-coupon li:nth-of-type(4n+3) a, .list-cash-coupon li .a3{background-position: 0 -256px;}
+	.voucher-main .list-cash-coupon li:nth-of-type(4n) a, .list-cash-coupon li .a4{background-position: 0 -378px;}
+	.voucher-main .list-cash-coupon li[disabled] a{background-position: 0 -502px;}
+	.voucher-main .list-cash-coupon li[disabled] a:after{content: "";-webkit-background-size: 110px auto;position: absolute;top: 0;left: 0;width: 100%;height: 100%;z-index: 100;pointer-events: none;}
+	.voucher-main .list-cash-coupon li[disabled="expire"] a:after{background-image: url('resource/images/voucher02.png'); background-repeat: no-repeat; background-position:50px 15px;}
+	.voucher-main .list-cash-coupon li[disabled] a>p{color:rgba(255,255,255,0.85)!important;}
+	.voucher-main .list-cash-coupon li.used a{background-position-x:right!important;}
+	.voucher-main .list-cash-coupon li.used:nth-of-type(4n+1) a>p:nth-of-type(5){color:#ee5375;}
+	.voucher-main .list-cash-coupon li.used:nth-of-type(4n+2) a>p:nth-of-type(5){color:#ffa619;}
+	.voucher-main .list-cash-coupon li.used:nth-of-type(4n+3) a>p:nth-of-type(5){color:#92c427;}
+	.voucher-main .list-cash-coupon li.used:nth-of-type(4n) a>p:nth-of-type(5){color:#2f9abd;}
+	.voucher-main .read-coupon .list-cash-coupon a>p:nth-of-type(3){left:210px; top:65px; font-size:10px;}
+	span.canSelect {margin:0.3em 0 0.3em 0.5em;display: inline-block;background: hsl(354, 91%, 73%);color: white;font-size: 0.9em;letter-spacing: 0.02em;padding: 0.2em 0.4em;border-radius: 4px;}
+	
+	span.cantSelect {margin:0.3em 0 0.3em 0.5em;display: inline-block;font-size: 0.9em;letter-spacing: 0.02em;padding: 0.2em 0.4em;border-radius: 4px;background:hsl(0, 0%, 95%);color:hsl(0, 0%, 60%);}
+	</style>
+<div class="page-group">
+    <div class="page page-current" id="page-order-confirm">
+		<div class="content" data-distance="10">
+			
+			<div id="ct">
+			    <div class="dt_order" style="margin-bottom:10px;">
+				<div class="dt_commodity_info">
+			            <dl class="commodity_info">
+			            	<dt style="background-position:4px 0;"><img src="{php echo tomedia($goods['share_image'])}" width="85" height="85" alt=""></dt>
+			            	<dd>
+			            		<h3>{$goods['gname']}</h3>
+			            		<div class="attr" id="ord_imes">
+			            			{if $goods['optionname']}<span>规格：{$goods['optionname']}</span>{/if}
+			            			<span style="display:block;">单价：¥{$price}</span>
+			            		</div>
+			            		
+									<span style="margin-left:0px; margin-top:1em;" class='spec_items options' id="in">
+										<span style="margin-left: 0px;"><font color="#888" size="2">数量：{$num}</font></span>
+										<div class="w-number" id="pro-view" style="">
+											<input class="w-number-input" type="hidden" id="num" name="num"  disabled="true" value="{$num}" style="height:25px;width:50px;">
+											<a class="w-number-btn w-number-btn-plus" id="up" style="height:26px;display:none;">
+												+
+											</a>
+											<a class="w-number-btn w-number-btn-minus" id="down" style="height:26px;display:none;">
+												-
+											</a>
+										</div>
+									</span>
+								{if $firstdiscount && $tuan_first==1}
+								<div class="item"><span class="attname">团长优惠:</span><span class="attval" id="attval">￥{$firstdiscount}</span></div>
+								{/if}
+			            	</dd>
+			            </dl>
+
+						{if $config['base']['firstfree']==1||($overfreemoney>0&&$goods['one_limit']>1)}
+			            <div style="padding: 10px;background-color: white;margin-bottom: 10px;">
+						<p style="color: rgb(111, 191, 216);">现在有以下活动（灰色表示未参与）</p>
+						<div>
+							{if $config['base']['firstfree']==1}<span class="canSelect">首单免运费</span>{/if}
+							{if $overfreemoney>0&&$goods['one_limit']>1}<span class="canSelect" data-set="1">满{$overfreemoney}免运费</span>{/if}
+
+						</div>
+					</div>
+					{/if}
+			        </div>
+			        {if $goods['selltype']==2&&$tuan_id>0&&$goods['community']&&$tuan_id>0}
+						<div style="background-color:white;">
+							<img src="{php echo tomedia($first['avatar'])}" width="30px" height="30px" style="border-radius:50%;margin-left:10px;"/>
+							<span style="margin-left:5px;line-height:60px;color:#888">团长：{$first['nickname']}</span>
+							<span class="address_txt" style="margin-bottom: 5px;padding-left:8px;">
+							{$adress_fee_tuan['province']}{$adress_fee_tuan['city']}{$adress_fee_tuan['county']}{$adress_fee_tuan['village']}</span>
+							<span class="address_txt" style="margin-bottom:5px;padding-left:10px;">{if $tuan_id>0}<?php echo substr($adress_fee_tuan['detailed_address'],0,-9);?>***{else}{$adress_fee_tuan['detailed_address']}{/if}</span>
+						</div>
+			        {/if}
+					{if $goods['selltype']==2&&$tuan_id>0&&!$goods['community']}
+							{if !empty($adress_fee)}
+						        <!--地址信息-->
+								{if $tuan_id>0}
+								<div style="width:100%;background-color:white;">
+									<img src="{php echo tomedia($first['avatar'])}" width="40px" height="40px" style="border-radius:50%;margin-left:10px;"/>
+									<span style="margin-left:5px;line-height:60px;color:#888">团长代收：{$first['nickname']}</span>
+								</div>
+								{/if}
+						        <div class="u_address" style="height:130px;">
+						            <div class="u_address_d">
+						                <i class="icon_pos"></i>
+						                <div class="address" id="dt_address" style="height: 125px;">
+										<input class="dt_ord_input" id="tname" type="text" style="margin-bottom: 5px;margin:0px;color:black;" placeholder="请输入你的姓名" value="{$memb['addname']}" style="display:block;"/>
+										<input class="dt_ord_input" type="text" id="ttel" value="{$memb['addmobile']}" placeholder="请输入你的联系方式" style="color:black;display:block;margin:0px;"/>
+										<span class="address_txt" style="margin-bottom: 5px;padding-left:8px;">
+										{$adress_fee['province']}{$adress_fee['city']}{$adress_fee['county']}</span>
+										<span class="address_txt" style="margin-bottom:5px;padding-left:10px;">{if $tuan_id>0}<?php echo substr($adress_fee['detailed_address'],0,-9);?>***{else}{$adress_fee['detailed_address']}{/if}</span>
+										</div>
+						                <i class="address_flag" {if $tuan_id>0}style="width:70px"{/if}>{if $tuan_id>0}代收地址{else}{if $adress_fee['type']==2}家庭{elseif $adress_fee['type']==1}公司{/if}{/if}</i>
+						                <i class="arrow arrow_show"></i>
+						            </div>
+						        </div>
+			                {else}
+								<div style="width:100%;background-color:white;">
+									<img src="{php echo tomedia($goods['gimg'])}" width="40px" height="40px" style="border-radius:50%;margin-left:10px;"/>
+									<span style="margin-left:5px;line-height:60px;color:#888">团长优惠</span>
+								</div>
+								</div>
+								
+			                	<div class="u_address">  
+						            <div class="u_address_d">
+						                <i class="icon_pos"></i>
+											<input class="dt_ord_input" id="tname" type="text" style="margin-bottom: 5px;" placeholder="请输入你的姓名" value="{$adress_fee['cname']}" style="display:block;"/>
+										<input class="dt_ord_input" type="text" id="ttel" value="{$adress_fee['tel']}" placeholder="请输入你的联系方式"  style="display:block;"/>
+						                <i class="arrow arrow_show"></i>
+						            </div>
+						        </div>
+			                {/if}
+					{else}
+					{if $goods['deliverytype']>0}
+					
+			    	{if $goods['deliverytype']==7}
+					
+				    <div class="content-block" style="background-color: white;margin: 0;">
+			          <div class="buttons-row" style="margin-top: .2rem;padding-bottom: 0.5rem;">
+			            <a href="#tab1-1" class="tab-link button" id="express" typeid="1">快递配送</a>
+			           {if !empty($stores)} <a href="#tab1-2" class="tab-link button" id="bdelete" typeid="2">自提</a>{/if}
+						<a href="#tab1-3" class="tab-link button" id="sh" typeid="3">送货上门</a>
+			          </div>
+			        </div>			        
+					  {elseif $goods['deliverytype']==1}
+			          <div class="content-block" style="background-color: white;margin: 0;">
+			          <div class="buttons-row" style="margin-top: .2rem;padding-bottom: 0.5rem;">
+			            <a href="#tab1-1" class="tab-link button" id="express" typeid="1">快递配送</a>
+			           {if !empty($stores)} <a href="#tab1-2" class="tab-link button" id="bdelete" typeid="2">自提</a>{/if}
+						
+			          </div>
+			        </div>
+					  {elseif $goods['deliverytype']==2}
+			         <div class="content-block" style="background-color: white;margin: 0;">
+			          <div class="buttons-row" style="margin-top: .2rem;padding-bottom: 0.5rem;">
+			            <a href="#tab1-1" class="tab-link button" id="express" typeid="1">快递配送</a>
+			            
+						<a href="#tab1-3" class="tab-link button" id="sh" typeid="3">送货上门</a>
+			          </div>
+			        </div>	
+					  {elseif $goods['deliverytype']==3}
+			         <div class="content-block" style="background-color: white;margin: 0;">
+			          <div class="buttons-row" style="margin-top: .2rem;padding-bottom: 0.5rem;">
+			           
+			          {if !empty($stores)} <a href="#tab1-2" class="tab-link button" id="bdelete" typeid="2">自提</a>{/if}
+						<a href="#tab1-3" class="tab-link button" id="sh" typeid="3">送货上门</a>
+			          </div>
+			        </div>	
+					  {elseif $goods['deliverytype']==4}
+					
+			         <div class="content-block" style="background-color: white;margin: 0;display:none;">
+			          <div class="buttons-row" style="margin-top: .2rem;padding-bottom: 0.5rem;">
+			            <a href="#tab1-1" class="tab-link button" id="express" typeid="1">快递配送</a>
+			           
+			          </div>
+			        </div>	
+					  {elseif $goods['deliverytype']==5}
+			          <div class="content-block" style="background-color: white;margin: 0;display:none;">
+			          <div class="buttons-row" style="margin-top: .2rem;padding-bottom: 0.5rem;">			          
+						<a href="#tab1-3" class="tab-link button" id="sh" typeid="3">送货上门</a>
+			          </div>
+			        </div>				  
+			        {elseif $goods['deliverytype']==6}
+			          <div class="content-block" style="background-color: white;margin: 0;">
+			          <div class="buttons-row" style="margin-top: .2rem;padding-bottom: 0.5rem;">
+			          {if !empty($stores)} <a href="#tab1-2" class="tab-link button" id="bdelete" typeid="2">自提</a>{/if}
+						</div>
+			        </div>	
+			        {/if}
+			        <div class="tabs">
+			            <div class="tab " id="tab1-1">
+			            	{if !empty($adress_fee)}
+						        <!--地址信息-->
+						        <div class="u_address">
+						            <div class="u_address_d">
+						                <i class="icon_pos"></i>
+						                <div class="address" id="dt_address" style="height: 56px;">
+										<span class="name" style="margin-bottom: 5px;">{$adress_fee['cname']}</span>
+										<span class="tel">{$adress_fee['tel']}</span>
+										<span class="address_txt" style="margin-bottom: 5px;">
+										{$adress_fee['province']}{$adress_fee['city']}{$adress_fee['county']}</span>
+										<span class="address_txt">{$adress_fee['village']}{$adress_fee['detailed_address']}</span>
+										</div>
+						                <i class="address_flag">{if $adress_fee['type']==2}家庭{elseif $adress_fee['type']==1}公司{/if}</i>
+						                <i class="arrow arrow_show"></i>
+						            </div>
+						        </div>
+			                {else}
+			                	<div class="u_address">
+						            <div class="u_address_d">
+						                <i class="icon_pos"></i>
+						                <div class="address" id="dt_address"><span class="toaddress" id="link-address1">您还没有收货地址哦，点击新增地址</span></div>
+						                <i class="arrow arrow_show"></i>
+						            </div>
+						        </div>
+			                {/if}
+							{if !empty($dispatch_list)}
+							<div class="link">
+								<div class="link-method">配送方式</div>
+								<div class="link-select">
+								{loop $dispatch_list $store}
+									<div class="link-button " id="{$store['id']}">{$store['name']}</div>
+								{/loop}
+
+								</div>
+							</div>
+							{/if}
+							 <!----->
+			            </div>
+
+			            <div class="tab {if $goods['is_hexiao']==2}active{/if}" id="tab1-2">
+							<div class="link">
+								<a class="weui-cell weui-cell_access zitiStores" href="javascript:;">
+									<div class="weui-cell__bd">
+										<p>请选择门店</p>
+									</div>
+									<div class="weui-cell__ft">
+									</div>
+								</a>
+
+								<!--<div class="link-method">自提地点</div>-->
+								<!--<div class="link-select">-->
+								<!--{loop $stores $store}-->
+									<!--<div class="link-button1 " id="{$store['id']}">{$store['storename']}<br>{$store['address']}</div>-->
+									<!--{/loop}-->
+
+								<!--</div>-->
+							</div>
+															            	
+			            	<div class="list-block" style="margin:0;padding-top: .5rem;background-color: white;">
+						      <ul>
+						        <li>
+						          <div class="item-content">
+						            <div class="item-inner">
+						              <div class="item-title label">收货人：</div>
+						              <div class="item-input">
+						                <input type="text" id="cnee" value="{$memb['addname']}" placeholder="请输入您的姓名">
+						              </div>
+						            </div>
+						          </div>
+						        </li>
+						        <li>
+						          <div class="item-content">
+						            <div class="item-inner">
+						              <div class="item-title label">联系电话：</div>
+						              <div class="item-input">
+						                <input type="tel" id="mobile" maxlength="11" value="{$memb['addmobile']}" placeholder="请输入您的联系电话">
+						              </div>
+						            </div>
+						          </div>
+						        </li>
+						       <!-- <li>
+						          <div class="item-content">
+						            <div class="item-inner">
+						              <div class="item-title label">核销日期：</div>
+						              <div class="item-input">
+						                <input type="date" id="gettime" placeholder="取货或消费日期" value="{php echo date('Y-m-d',time());}">
+						              </div>
+						            </div>
+						          </div>
+						        </li>-->
+								  {if $goods['is_self_time'] == "1"}
+								  <li>
+									  <div class="item-content">
+										  <div class="item-inner">
+											  <div class="item-title label">自提时间：</div>
+											  <div class="item-input">
+												  <input id="selfTime" type="date" value="{php echo date('Y-m-d',$goods['self_time_end']);}">
+											  </div>
+										  </div>
+									  </div>
+									  <div class="item-content">
+										  <span style="color:{$_W['system_color']};font-size: 12px;">可选择时间区段（<span class="s-start">{php echo date('Y-m-d', $goods['self_time_start'])}</span>，<span class="s-end">{php echo date('Y-m-d', $goods['self_time_end'])}</span>）</span>
+									  </div>
+								  </li>
+								  {/if}
+								  {if !empty($config['content_set'])}
+								  <li style="width:94%;padding:5px;border:1px dashed red;margin:8px auto;border-radius:5px;overflow:hidden;"><p style="font-size:0.7rem;color:#DE5246;text-indent:1rem;">{$config['content_set']}<p></li>
+								  {else}
+								  <li style="width:94%;padding:5px;border:1px dashed red;margin:8px auto;border-radius:5px;overflow:hidden;"><p style="font-size:0.7rem;color:#DE5246;text-indent:1rem;">★  为确保为您及时备货，请确认您选择的自提点！！！商品自提时间以商品名称或商品简介内容为准，逾期未提货将退款处理,请悉知！！！<p></li>
+								  {/if}
+						      </ul>
+						    </div>
+			            </div>
+						<div class="tab" id="tab1-3">
+							{if !empty($adress_fee)}
+						        <!--地址信息-->
+						        <div class="u_address">
+						            <div class="u_address_d">
+						                <i class="icon_pos"></i>
+						                <div class="address" id="dt_address" style="height: 56px;">
+										<span class="name" style="margin-bottom: 5px;">{$adress_fee['cname']}</span>
+										<span class="tel">{$adress_fee['tel']}</span>
+										<span class="address_txt" style="margin-bottom: 5px;">
+										{$adress_fee['province']}{$adress_fee['city']}{$adress_fee['county']}</span>
+										<span class="address_txt">{$adress_fee['detailed_address']}</span>
+										</div>
+						                <i class="address_flag">{if $adress_fee['type']==2}家庭{elseif $adress_fee['type']==1}公司{/if}</i>
+						                <i class="arrow arrow_show"></i>
+						            </div>
+						        </div>
+			                {else}
+			                	<div class="u_address">  
+						            <div class="u_address_d">
+						                <i class="icon_pos"></i>
+						                <div class="address" id="dt_address"><span class="toaddress"  id="link-address2" >您还没有收货地址哦，点击新增地址</span></div>
+						                <i class="arrow arrow_show"></i>
+						            </div>
+						        </div>
+			                {/if}
+							
+							<div class="link">
+								<div class="link-method">送货时间</div>
+								<div class="link-select">
+								{if $issendtime['status']&&$sendtime_setting['sendtime']&&$groupnum<=1}
+								  <div class="content-block"  style="background-color: white;margin: 0;margin-left:-15px;">
+									  <div class="buttons-row" style="margin-top: .2rem;padding-bottom: 0.5rem;">
+										<div class="tab-link button" id="link_tod">今天</div>
+										<div class="tab-link button" id="link_tom">明天</div>
+										<div class="tab-link button" id="link_sec">后天</div>
+									  </div>
+									</div>	
+									<div id="timeDisplay"></div>
+														 <?php
+										$nowtime=date('Y-m-d');
+										$nexttime = time() + (1 * 24 * 60 * 60); // 7 days; 24 hours; 60 mins; 60secs
+										$lasttime = time() + (2 * 24 * 60 * 60); // 7 days; 24 hours; 60 mins; 60secs
+										?>    
+										<?php $hour= date("H")?> 	
+										{loop $sendtimes $items}
+											<div class="link-button4 link-time" id="{$items['id']}">{$items['starttime']}:00-{$items['endtime']}:59</div>
+											{/loop}
+								{else}
+									{if empty($config['dispatch']['time'])}	我们会在组团成功后{$goods['endtime']}小时内送货上门，请注意安排接收！{else}{$config['dispatch']['time']}{/if}
+								{/if}
+									</div>
+							</div>
+
+			            </div>
+			        </div>
+			        {else}
+						{if !empty($adress_fee)}
+						        <!--地址信息-->
+						        <div class="u_address">
+						            <div class="u_address_d">
+						                <i class="icon_pos"></i>
+						                <div class="address" id="dt_address" style="height: 56px;">
+										<span class="name" style="margin-bottom: 5px;">{$adress_fee['cname']}</span>
+										<span class="tel">{$adress_fee['tel']}</span>
+										<span class="address_txt" style="margin-bottom: 5px;">
+										{$adress_fee['province']}{$adress_fee['city']}{$adress_fee['county']}</span>
+										<span class="address_txt">{$adress_fee['detailed_address']}</span>
+										</div>
+						                <i class="address_flag">{if $adress_fee['type']==2}家庭{elseif $adress_fee['type']==1}公司{/if}</i>
+						                <i class="arrow arrow_show"></i>
+						            </div>
+						        </div>
+			                {else}
+			                	<div class="u_address">  
+						            <div class="u_address_d">
+						                <i class="icon_pos"></i>
+						                <div class="address" id="dt_address"><span class="toaddress" id="link-address3">您还没有收货地址哦，点击新增地址</span></div>
+						                <i class="arrow arrow_show"></i>
+						            </div>
+						        </div>
+			                {/if}
+					{/if}
+			        {/if}
+			        {if $goods['is_once_card']}
+			        <div class="link">
+						<div class="link-method">送货时间</div>
+						<div class="link-select">
+							{if $goods['once_card_mon']}<span id="once_card_mon" class="once-card">星期一</span>{/if}
+							{if $goods['once_card_tues']}<span id="once_card_tues" class="once-card">星期二</span>{/if}
+							{if $goods['once_card_wed']}<span id="once_card_wed" class="once-card">星期三</span>{/if}
+							{if $goods['once_card_thur']}<span id="once_card_thur" class="once-card">星期四</span>{/if}
+							{if $goods['once_card_fir']}<span id="once_card_fir" class="once-card">星期五</span>{/if}
+							{if $goods['once_card_sat']}<span id="once_card_sat" class="once-card">星期六</span>{/if}
+							{if $goods['once_card_sun']}<span id="once_card_sun" class="once-card">星期日</span>{/if}
+							{if $goods['once_card_half_month']}<span id="once_card_half_month" class="once-card">半个月</span>{/if}
+							{if $goods['once_card_month']}<span id="once_card_month" class="once-card">一个月</span>{/if}
+						</div>				 																																					</div>
+					</div>
+					{/if}
+
+			        <div class="item_yhq" id="dt_ord_youhui"  >
+			            <div class="item_yhq_left" id="dt_ord_yhjmes">请选择或兑换优惠券{$coupon['name']}</div>
+			            <div class="item_yhq_right"></div>
+			        </div>
+			        <div>
+			                <input type="text" placeholder="给商家留言" style="margin-top:-1px;margin-bottom: 2px;" value="" class="dt_ord_input" maxlength="200" name="remark">
+			        </div>
+					{if intval($goods['idcard'])==1}
+					<div>
+						<input type="text" placeholder="请填写身份证" style="margin-top:-1px;margin-bottom: 2px;" value="" class="dt_ord_input" maxlength="20" name="idcard">
+					</div>
+					{/if}
+			        <div class="stepGuild" style="margin:1px;" {php echo $kaiguan['group_rule_switch'] != 2 ? '' : 'hidden'}>
+			            <div class="step_tit"><i></i>{if $goods['selltype']==1}拼团{elseif $goods['selltype']==2}邻购{elseif $goods['selltype']==3}自选团{elseif $goods['selltype']==4}阶梯团{elseif $goods['selltype']==6}新专团{elseif $goods['selltype']==7}预售团{/if}玩法<span><span id="lookdetail">查看详情&gt;</span></span></div>
+			            <div class="step_flow">
+			                <div class="step_item"><span class="step_num">1</span><span>选择<br>心仪商品</span></div>
+			                <div class="step_item step_item_on"><span class="step_num">2</span><span>支付开团<br>或参团</span></div>
+			                <div class="step_item"><span class="step_num">3</span><span>邀请好友<br>参团支付</span></div>
+			                <div class="step_item"><span class="step_num">4</span><span>达到人数<br>团购成功</span></div>
+			            </div>
+			        </div>
+			    </div>
+			</div>
+   		</div>
+   		<div class="footerr" style="z-index:500">
+	        <div class="order_mes">
+			<span>运费：</span>
+	        	<span class="order_price" id="freight" data-ajax="false">0.00</span>
+	        <span id="realTotalPrice">实付款：</span>
+			<input type="text" id="tuan_id" value="{$tuan_id}" hidden >
+						             
+	        	<span class="order_price" id="dt_ord_t2">¥{$pay_price}</span>
+	        	<button class="btn_gopay" id="dt_goPay">立即支付</button>
+	        </div>
+	    </div>
+    </div>
+</div>
+<div class="link-rule" style="display:none;">
+{if $goods['selltype']==1}
+	<div>
+		<div>拼团须知</div> 
+		<div>
+			<div style="color:{$_W['system_color']};">什么是拼团？</div>
+			<p>每个商品都有单独购买价和拼团价，当您通过拼团价购买时，开团支付成功后再邀请朋友参团，参团人数达到组团规定时，订单生效。在规定时间内，若人数不足组团失败，我们会在48小时内自动退款。</p>
+			<div style="color:{$_W['system_color']};">如何拼团成功？</div>
+			<p>拼团是基于好友的转发扩散，获取团购优惠。首先选择商品开团：选择拼团商品下单，团即刻开启，但团长完成支付，方能获取转发链接，并在团开启规定时间内邀请到相应人数的好友支付，此团方能成功。</p>
+			<div style="color:{$_W['system_color']};">团长干嘛的？</div>
+			<p>首先选择心仪的商品下单，并完成支付后即为团长。团长视为本次交易的发起人，且为第一位支付成功的成员。</p>
+			<div style="color:{$_W['system_color']};">拼团成员是什么？</div>
+			<p>通过分享出去的该团入口进入或者通过分享团入口进入并完成付款加入该团的团员，参团成员也可以将该团分享出去邀约更多的团员参团。</p>
+			<div style="color:{$_W['system_color']};">拼团失败是怎么回事？</div>
+			<p>从团长开团规定时间内未能找到相应开团人数的好友参团，则该团失败，系统会在48个小时内自动原路退款至你的支付账户中。</p>
+		</div>
+		<div id="link-know">已了解</div>
+	</div>
+	{elseif $goods['selltype']==3}
+	<div>
+		<div>自选团须知</div> 
+		<div>
+			<div style="color:{$_W['system_color']};">什么是自选团？</div>
+			<p>每个商品都有单独购买价和拼团价，拼团价可设置多人多个不同的人数价格团，可以根据粉丝自己朋友的情况选择人数去开团。当您通过拼团价购买时，开团支付成功后再邀请朋友参团，参团人数达到组团规定时，订单生效。在规定时间内，若人数不足组团失败，我们会在48小时内自动退款。</p>
+			<div style="color:{$_W['system_color']};">如何拼团成功？</div>
+			<p>拼团是基于好友的转发扩散，获取团购优惠。首先选择商品开团：选择拼团商品下单，团即刻开启，但团长完成支付，方能获取转发链接，并在团开启规定时间内邀请到相应人数的好友支付，此团方能成功。</p>
+			<div style="color:{$_W['system_color']};">团长干嘛的？</div>
+			<p>首先选择心仪的商品下单，并完成支付后即为团长。团长视为本次交易的发起人，且为第一位支付成功的成员。</p>
+			<div style="color:{$_W['system_color']};">拼团成员是什么？</div>
+			<p>通过分享出去的该团入口进入或者通过分享团入口进入并完成付款加入该团的团员，参团成员也可以将该团分享出去邀约更多的团员参团。</p>
+			<div style="color:{$_W['system_color']};">拼团失败是怎么回事？</div>
+			<p>从团长开团规定时间内未能找到相应开团人数的好友参团，则该团失败，系统会在48个小时内自动原路退款至你的支付账户中。</p>
+		</div>
+		<div id="link-know">已了解</div>
+	</div>
+	{elseif $goods['selltype']==2}
+	<div>
+		<div>邻购须知</div> 
+		<div>
+			<div style="color:{$_W['system_color']};">什么是邻购团？</div>
+			<p>邻购是基于邻近好友的组团购买，从而获得超低团购价,每个商品都有单独购买价和邻购价，团长选择商品并支付后，邻购即可开启。邻购所有成员收货地址只能是同一个且由团长填写。在规定时间内参与人数达到规定人数，邻购方能成功。若规定时间内邻购人数达不到规定人数，则失败，系统将自动原路退款；</p>
+			<div style="color:{$_W['system_color']};">如何邻购成功？</div>
+			<p>邻购是基于邻近好友的转发扩散，获取团购优惠。首先选择商品开团：选择邻购的商品下单，团即刻开启，但团长完成支付，方能获取转发链接，并在团开启规定时间内邀请到相应人数的好友支付，此团方能成功。</p>
+			<div style="color:{$_W['system_color']};">团长干嘛的？</div>
+			<p>邻购所有成员收货地址只能是同一个且由团长填写，首先选择心仪的商品下单，并完成支付后即为团长。团长视为本次交易的发起人，且为第一位支付成功的成员。</p>
+			<div style="color:{$_W['system_color']};">邻购成员是什么？</div>
+			<p>通过分享出去的该团入口进入并完成付款加入该团的团员，参团成员也可以将该团分享出去邀约更多的团员参团，所有参团团员必须认可团长所填写的收获地址。</p>
+			<div style="color:{$_W['system_color']};">领购失败是怎么回事？</div>
+			<p>团长开团在规定时间内未能找到相应开团人数的好友参团，则该团失败，系统会在48个小时内自动原路退款至你的支付账户。</p>
+		</div>
+		<div id="link-know" style="background-color:{$_W['system_color']};">已了解</div>
+	</div>
+	{elseif $goods['selltype']==4}
+	<div>
+		<div>阶梯团须知</div> 		
+		<div>			
+			<div style="color:{$_W['system_color']};">什么是阶梯团？</div>	
+			<p>每个商品都有单独购买价和阶梯拼团价，当您通过拼团价购买时，开团支付成功后再邀请朋友参团，参团人数达到组团规定时，系统将阶梯差价应退款金额自动退款至您的微信钱包中，然后在家坐等包裹。在规定时间内，若人数不足整团规定人数，在活动时间截止时，系统自动识别当前阶梯价格将阶梯差价应退款金额自动退款至您的微信钱包中，然后在家坐等包裹。</p >	
+			<div style="color:{$_W['system_color']};">如何拼团成功，并取得最低阶梯价？</div>	
+			<p>阶梯团是基于好友的转发扩散，获取团购优惠，达到规定人数自动降价退款至微信钱包。首先选择商品开团：选择拼团商品下单，团即刻开启，但团长完成支付，方能获取转发链接，并在团开启规定时间内邀请到相应人数的好友支付，此团方能成功获得本次阶梯团最低价。</p >		
+			<div style="color:{$_W['system_color']};">团长干嘛的？</div>		
+			<p>首先选择心仪的商品下单，并完成支付后即为团长。团长视为本次交易的发起人，且为第一位支付成功的成员。</p >	
+			<div style="color:{$_W['system_color']};">拼团成员是什么？</div>		
+			<p>通过分享出去的该团入口进入或者通过分享团入口进入并完成付款加入该团的团员，参团成员也可以将该团分享出去邀约更多的团员参团。</p >
+		</div>
+		<div id="link-know">已了解</div>
+	</div>
+		{elseif $goods['selltype']==7}
+	<div>
+		<div>阶梯团须知</div> 		
+		<div>			
+			<div style="color:{$_W['system_color']};">什么是阶梯团？</div>	
+			<p>每个商品都有单独购买价和阶梯拼团价，当您通过拼团价购买时，开团支付成功后再邀请朋友参团，参团时间达到组团规定时，系统将阶梯差价应补款金额计算出来，然后买家将尾款补齐后,即可成交，然后在家坐等包裹。</p >	
+			<div style="color:{$_W['system_color']};">如何拼团成功，并取得最低阶梯价？</div>	
+			<p>阶梯团是基于好友的转发扩散，获取团购优惠，达到规定人数自动降价。首先选择商品开团：选择拼团商品下单，团即刻开启，但团长完成支付，方能获取转发链接，并在团开启规定时间内邀请到相应人数的好友支付，此团方能成功获得本次阶梯团最低价。</p >		
+			<div style="color:{$_W['system_color']};">团长干嘛的？</div>		
+			<p>首先选择心仪的商品下单，并完成支付后即为团长。团长视为本次交易的发起人，且为第一位支付成功的成员。</p >	
+			<div style="color:{$_W['system_color']};">拼团成员是什么？</div>		
+			<p>通过分享出去的该团入口进入或者通过分享团入口进入并完成付款加入该团的团员，参团成员也可以将该团分享出去邀约更多的团员参团。</p >
+		</div>
+		<div id="link-know">已了解</div>
+	</div>
+	{elseif $goods['selltype']==6}
+	<div>
+	<div>新专团须知</div> 
+		<div>
+			<div style="color:{$_W['system_color']};">什么是新专团？</div>
+			<p>每个商品都有单独购买价和新用户专享价，当您通过拼团价购买时，开团支付成功后再邀请朋友参团，参团人数达到组团规定时，订单生效。在规定时间内，若人数不足组团失败，我们会在48小时内自动退款。新专团主要为未在商城购买过商品记录的用户去设立的一个专属团，新用户可以团长或者是团员，如已在商城下单的用户只能当团长</p>
+			<div style="color:{$_W['system_color']};">如何拼团成功？</div>
+			<p>拼团是基于好友的转发扩散，获取团购优惠。首先选择商品开团：选择拼团商品下单，团即刻开启，但团长完成支付，方能获取转发链接，并在团开启规定时间内邀请到相应人数的好友支付，此团方能成功。</p>
+			<div style="color:{$_W['system_color']};">团长干嘛的？</div>
+			<p>首先选择心仪的商品下单，并完成支付后即为团长。团长视为本次交易的发起人，且为第一位支付成功的成员。</p>
+			<div style="color:{$_W['system_color']};">拼团成员是什么？</div>
+			<p>通过分享出去的该团入口进入或者通过分享团入口进入并完成付款加入该团的团员，参团成员也可以将该团分享出去邀约更多的团员参团。</p>
+			<div style="color:{$_W['system_color']};">拼团失败是怎么回事？</div>
+			<p>从团长开团规定时间内未能找到相应开团人数的好友参团，则该团失败，系统会在48个小时内自动原路退款至你的支付账户中。</p>
+		</div>
+		<div id="link-know">已了解</div>
+	</div>
+	{/if}
+</div>
+<div id="zitiMendian">
+	<ul>
+		<!--<li>-->
+			<!--<i class="weui-icon-success"></i>-->
+			<!--<p>温州店</p>-->
+			<!--<p>温州店温州店温州店温州店温州店温州店温州店</p>-->
+		<!--</li>-->
+	</ul>
+	<button class="storeTJ">确认</button>
+</div>
+<div class="popup popup-youhui">
+	<header class="bar bar-nav">
+    	<a class="button button-link button-nav pull-right close-popup">关闭</a>
+    	<h1 class="title">优惠券列表</h1>
+  	</header>
+  	<div class="content" id="youhuic">
+    	
+  	</div>
+</div>
+<input id="link_zt" type="text" name="link_zt" value="0" hidden />
+
+<script type="text/html" id="couponlist">
+
+{{# for(var i = 0, len = d.length; i < len; i++){ }}
+
+
+<div class="voucher-main">
+			<ul class="list-cash-coupon">
+				<li disabled>
+					<a onclick="usecoupon({{ d[i].id }},{{ d[i].cash }})" style="{{# if(i%4 == 0){ }}background-position:0 -10px;{{# }else if(i%4 == 1){ }}background-position:0 -133px;{{# }else if(i%4 == 2){ }}background-position:0 -256px;{{# }else{ }}background-position:0 -379px;{{# } }}">
+						<p><span>￥ {{ d[i].cash }}</span>元</p>
+						<p>{{ d[i].name }}</p>
+						<p>截止时间：{{ d[i].end_time }}</p>
+						<p></p>
+						<p>立即使用</p>
+					</a>								
+				</li>
+			</ul>	
+		</div>
+{{# } }}
+</script>
+
+<script type="text/javascript">
+    $('.zitiStores').click(function(){
+    	{if $kaiguan['zitidingwei'] == 1}
+	        if(localStorage.getItem('locationADD')){
+	            var locationADD=JSON.parse(localStorage.getItem('locationADD'));
+	            storeList(locationADD.latitude,locationADD.longitude);
+	        }else{
+                $.showPreloader();
+                wx.getLocation({
+                    type: 'gcj02', //返回可以用于wx.openLocation的经纬度
+                    success: function(res) {
+                    	$.hidePreloader();
+                        storeList(res.latitude,res.longitude, 'success');
+                    },
+                    fail: function () {
+                    	$.hidePreloader();
+                    	storeList('','','fail');
+                    }
+                });
+	        }
+        {else}
+        	storeList('','', 'success');
+        {/if}
+    });
+
+    function storeList(lat, lon, status) {
+        $.get(
+            "{php echo app_url('goods/ajaxlist/storelist')}",
+            {
+                'uniacid':"{$_W['uniacid']}",
+                'g_id':"{$goods['id']}",
+				'lat':lat,
+				'lng':lon
+            },
+            function(data){
+                if(data.length<1){return false;}
+                var data=JSON.parse(data);
+                $.hidePreloader();
+                var html="";
+                var kaiguan  = {php echo intval($kaiguan['zitidingwei'])};
+				var html_child = '';
+				if(status == 'fail') $.toast('定位失败')
+                for(var i=0;i<data.length;i++){
+                	if (data[i].status == '1') {
+	                	html_child = kaiguan == 1 && (status == 'success') ? '<p> 距'+ data[i].distance +'</p>' : '';
+
+	                    html+="<li data-id="+data[i].id+"><i onclick='chooseI(this)' class='weui-icon-success'></i>" +
+							"<p class='kuan1'>"+data[i].storename+"</p><p class='kuan2'>"+data[i].address+"</p>"+html_child+"</li>"
+                	}
+                }
+                $('#zitiMendian>ul').html(html);
+                $('#zitiMendian').slideDown();
+            }
+        );
+    }
+	function chooseI(a){
+		$('#zitiMendian li i').removeClass('active');
+		$(a).addClass('active');
+	}
+	$('.storeTJ').click(function(){
+		var ii=$('#zitiMendian li i');
+		for(var i=0;i<ii.length;i++){
+			if($(ii[i]).hasClass('active')){
+				var p=$(ii[i]).next('p');
+				$('a.zitiStores p').html('您选择的门店是: '+ p.html()).attr('data-id',$(ii[i]).parent().attr('data-id'));
+				$('#zitiMendian').slideUp();
+				setT(i,$(ii[i]).parent().attr('data-id'));
+				return false;
+			}
+		}
+		$.toast('请选择门店');
+	});
+
+	var isPost = true;//是否提交，根据这个来判断
+    sessionStorage.setItem("counpon",'0');
+	var linktimes=document.getElementsByClassName("link-time");
+	var ajaxData={};//存放ajax数据，如果存在该数据，ajax直接省略并读取该数值，减少网络负担
+	if (document.getElementById("attval")){
+	  var discount='{$firstdiscount}';
+	}
+	else { 
+	  var discount=0;
+	}
+    var orderTime={};
+    orderTime.date=2;
+    orderTime.time=1;
+	function getCash(){
+	  var cash = Number(sessionStorage.getItem("counpon"));
+	  return cash;
+	}
+	
+	//查看详情点击确定收回
+	if (document.getElementById("link-know")){
+	  document.getElementById("link-know").onclick = function(){
+		document.querySelector('.link-rule').style.setProperty("display","none");
+	  }
+	}
+	document.getElementById("lookdetail").onclick=function(){
+	  document.querySelector('.link-rule').style.setProperty("display","block");
+	}
+	
+	//数量加减begin,如果有存在加,那么定义加减事件
+	var productNum=1;
+	if ( document.getElementById( 'up' ) ) {
+	  var plus = document.getElementById( 'up' ),
+	     minus = document.getElementById( 'down' ),
+	   product = document.getElementById( 'num' )
+	productNum = parseInt( product.value );
+	  plus.addEventListener( 'click', plusHander, false );
+	  minus.addEventListener( 'click', minusHander, false );		
+	  product.addEventListener('change',valueChange,false)
+		
+		function valueChange( event ) {
+		  productNum = parseInt(document.getElementById( 'num' ).value);
+		  if ( productNum < 1 ) {
+			$.toast( "数量不能小于0");
+			document.getElementById("dt_ord_t2").innerHTML ="￥";
+          }
+		  else {
+			document.getElementById("dt_ord_t2").innerHTML ="￥"+ (Number(linkExpress)+linkPrice*productNum-discount-getCash()).toFixed(2);
+		  }			
+		}
+		
+		function plusHander( event ) {
+		  if ( true ) {
+			document.getElementById( 'num' ).value = ++productNum;
+			document.getElementById("dt_ord_t2").innerHTML ="￥"+ (Number(linkExpress)+linkPrice*productNum-discount-getCash()).toFixed(2);
+		  }
+		}
+		
+		function minusHander( event ) {
+		  if ( productNum>1 ) {
+			document.getElementById( 'num' ).value = --productNum;	
+			document.getElementById("dt_ord_t2").innerHTML = "￥"+ (Number(linkExpress)+linkPrice*productNum-discount-getCash()).toFixed(2);
+		  }
+		  else {
+			$.toast( "数量不能小于0");
+		  }
+		}
+	}
+	
+	var lingouid={$goods['selltype']};
+	
+	//选择送货上门
+	if (document.getElementById("link_tod")){
+	  var linkToday=document.getElementById("link_tod"),
+	  linkTom=document.getElementById("link_tom"),
+	  linkNext=document.getElementById("link_sec"),
+	  orderTime={};
+	  //定义选择日期，分别是今日明日后天
+	  linkToday.addEventListener("click",function(){
+		selectActive(1);		
+	  },false);
+	  
+	  linkTom.addEventListener("click",function(){
+		selectActive(2);
+      },false);
+		
+	  linkNext.addEventListener("click",function(){
+		selectActive(3);
+	  },false);
+	}
+
+	//选择日期的函数，前端显示激活日期，然后通过ajax回调某一天的可配送时间列表
+	function selectActive(n){
+	  if (document.getElementById("link_tod")){
+	  switch (n){
+		case 1:
+		  linkToday.classList.add("active");
+		  linkTom.classList.remove("active");
+		  linkNext.classList.remove("active");
+		  break;
+		case 2:
+		  linkToday.classList.remove("active");
+		  linkTom.classList.add("active");
+		  linkNext.classList.remove("active");
+		  break;
+		case 3:
+		  linkToday.classList.remove("active");
+		  linkTom.classList.remove("active");
+		  linkNext.classList.add("active");
+		  break;
+		default:
+		  $.toast("传入错误值");
+		}
+		
+		orderTime.date=n;
+		orderTime.time=0;
+		var xhr=new XMLHttpRequest(),
+		timeDisplay=document.getElementById("timeDisplay"),
+		formData=new FormData();	
+		formData.append("ad",n);
+		formData.append("id","{$_GPC['id']}");
+		formData.append("op","at");
+		var url="{php echo app_url('order/orderconfirm')}";
+		xhr.open("post",url,true);												
+		xhr.send(formData); 												                
+		xhr.onreadystatechange=function(){
+		  if (xhr.readyState==4) {
+			if ((xhr.status>=200 && xhr.status<300)||xhr.status==304) {
+			  var responseText=JSON.parse(xhr.responseText);
+			  var linka=document.getElementsByClassName("link-button2");
+			  if (linka.length>0){
+				for (var j=0;j<linka.length;j++){
+				  linka[j].removeEventListener("click",function(ev){
+					for (var i=0;i<linka.length;i++){
+					  if (ev.target==linka[i]){
+						linka[i].classList.add("link-active");
+					  }
+					  else{
+						linka[i].classList.remove("link-active");
+					  }
+					}
+				  },false);					
+				}
+			  }
+			  //填充时间并且定义事件，每次点击以便通知后台具体时间
+			  timeDisplay.innerHTML="";
+			  for (var i=0;i<responseText.length;i++){
+//				var originTime = responseText[i].name.slice(0,2);
+//				var ntime=new Date(),targetTime=ntime.getHours();
+
+				  var ntime=new Date();
+				  var originTime =ntime.getFullYear()+'/'+(ntime.getMonth()+1)+'/'+ntime.getDate()+' '+responseText[i].name.slice(0,5);
+				  var targetTime = Date.parse(ntime);
+				  originTime=Date.parse(originTime);
+
+				if (targetTime<originTime && n==1){								
+				  timeDisplay.innerHTML+='<div class="link-button2">'+responseText[i].name+'</div>';	
+				}
+				else if (n>1){
+				  timeDisplay.innerHTML+='<div class="link-button2">'+responseText[i].name+'</div>';
+				}
+			  }						
+			  var linka=document.getElementsByClassName("link-button2");
+			  if (linka.length>0) {
+				linka[0].classList.add("link-active");
+			  }						
+			  for (var j=0;j<linka.length;j++){
+				linka[j].addEventListener("click",function(ev){
+				  for (var i=0;i<linka.length;i++){
+					if (ev.target==linka[i]){
+					  linka[i].classList.add("link-active");
+					  orderTime.time=i;
+					  //$.toast(JSON.stringify(orderTime));
+					}
+					else{
+					  linka[i].classList.remove("link-active");
+					}
+			      }
+				},false);					
+			  }
+		    }
+	      }		
+		}
+	  }		
+	}
+
+	//选择快递按钮，自提，以及送货上门按钮，点击触发对应的二级菜单，并且根据选中的二级菜单将数据传递给后台
+	var linkButtons=document.getElementsByClassName("link-button"),//快递按钮
+	 linkButtonsLen=linkButtons.length,		
+		  linkPrice='{$price}',		
+	   linkButton1s=document.getElementsByClassName("link-button1"),//时间按钮
+	linkButton1sLen=linkButton1s.length,
+	    linkExpress;	
+	if (linkButtonsLen>0){
+	  for (var i=0;i<linkButtonsLen;i++){
+		linkButtons[i].addEventListener("click",function(ev){
+		  for (var j=0;j<linkButtonsLen;j++){
+		    if (ev.target==linkButtons[j]){
+			  clickLinkButton(j);										
+		    }
+		    else{
+			  linkButtons[j].classList.remove("link-active");
+		    }
+		  }
+		},false)
+	  }
+	}
+	{if $goods['deliverytype']==0||$goods['deliverytype']==5||$goods['deliverytype']==6||$goods['deliverytype']==3}
+		$('#freight').attr('data-ajax','true');
+	{/if}
+
+	//定义选中方法，前端改变呈现方式，然后读取后台数据改变前端的价格
+	function clickLinkButton(j){	
+	  for (var i=0; i < linkButtonsLen; i++){
+		linkButtons[i].classList.remove("link-active");
+	  }
+	  if (linkButtons.length > 0){
+		linkButtons[j].classList.add("link-active");
+	  }
+	  if (ajaxData["0" + j.toString()] === undefined){		
+		var xhr = new XMLHttpRequest(),
+	   formData = new FormData();
+		formData.append("tid",linkButtons[j].id);
+		formData.append("id",{$id});
+		  formData.append("groupnum",{$groupnum});
+		  formData.append("num",{$num});
+		formData.append("op","ck");
+		var url="{php echo app_url('order/orderconfirm')}";
+		xhr.open("post",url,true);												
+		xhr.send(formData); 												                
+		xhr.onreadystatechange = function(){
+		  if (xhr.readyState == 4) {
+			if ((xhr.status >= 200 && xhr.status < 300) || xhr.status == 304) {
+			  linkExpress=Number(xhr.responseText);
+			  if (linkExpress.length > 10){
+				location.replace(location.href);
+				return false;
+			  }
+			  ajaxData["0"+j.toString()]=linkExpress;
+				$('#freight').attr('data-ajax','true');
+			  //$.toast(ajaxData["0"+j.toString()]);
+			  document.getElementById("link_zt").value=linkButtons[j].id;
+			  document.getElementById("freight").innerHTML=linkExpress.toFixed(2);;
+			  document.getElementById("dt_ord_t2").innerHTML="￥"+ (Number(linkExpress)+linkPrice*productNum-discount-getCash()).toFixed(2);
+			}
+		  }
+		}
+	  }		
+	  else {
+		var xhr=new XMLHttpRequest(),
+		  formData=new FormData();
+		formData.append("tid",linkButtons[j].id);
+		formData.append("id",{$id});
+		  formData.append("groupnum",{$groupnum});
+		  formData.append("num",{$num});
+		formData.append("op","ck");
+		var url="{php echo app_url('order/orderconfirm')}";
+		xhr.open("post",url,true);												
+		xhr.send(formData);
+		document.getElementById("freight").innerHTML=ajaxData["0"+j.toString()].toFixed(2);
+		document.getElementById("dt_ord_t2").innerHTML="￥"+ (Number(ajaxData["0"+j.toString()])+linkPrice*productNum-discount-getCash()).toFixed(2);
+		document.getElementById("link_zt").value=linkButtons[j].id;
+	  }
+	}
+	if (linkButton1s.length>0){
+	  var link_id=linkButton1s[0].id;
+	  if (linkButton1sLen>0){
+		for (var i=0;i<linkButton1sLen;i++){
+		  //r[i]=undefined;
+		  linkButton1s[i].addEventListener("click",function(ev){
+		    for (var j=0;j<linkButton1sLen;j++){
+			  if (ev.target==linkButton1s[j]){
+				linkButton1s[j].classList.add("link-active");
+				link_id=linkButton1s[j].id;
+				setT(j, link_id);
+			  }
+			  else{
+				linkButton1s[j].classList.remove("link-active");
+			  }
+			}
+		  },false)
+		}
+	  }
+	}
+	
+	//通过点击快递方式，通过ajax获得运费，并且改变前端显示
+   	function setT(n, link_id){
+	  if (ajaxData["aaa"+n.toString()]=== undefined){
+		isPost = false;
+		var xhr=new XMLHttpRequest(),
+		  formData=new FormData();
+		 formData.append("id",{$id});
+		 formData.append("groupnum",{$groupnum});
+		formData.append("sid",link_id);
+		formData.append("op","zt");
+		var url="{php echo app_url('order/orderconfirm')}";
+		xhr.open("post",url,true);												
+		xhr.send(formData); 												                
+		xhr.onreadystatechange=function(){									
+		  if (xhr.readyState==4) {
+			if ((xhr.status>=200 && xhr.status<300)||xhr.status==304) {	
+			  isPost = true;
+			  linkExpress=Number(xhr.responseText);
+			 
+			  if (linkExpress.length>10){
+				location.replace(location.href);
+				return false;
+			  }
+			  ajaxData["aaa"+n.toString()]=linkExpress;
+			  document.getElementById("link_zt").value=link_id;
+			  //$.toast(link_id);
+			  document.getElementById("freight").innerHTML=linkExpress.toFixed(2);
+			  document.getElementById("dt_ord_t2").innerHTML="￥"+ (Number(linkExpress)+linkPrice*productNum-discount-getCash()).toFixed(2);
+			}
+		    else {
+			  isPost = true;
+		    }
+		  }
+		}
+	  }
+	  else {
+		var xhr=new XMLHttpRequest(),
+		formData=new FormData();
+		formData.append("id",{$id});
+		formData.append("groupnum",{$groupnum});
+		formData.append("sid",link_id);
+		formData.append("op","zt");
+
+		var url="{php echo app_url('order/orderconfirm')}";
+		xhr.open("post",url,true);												
+		xhr.send(formData);
+		
+		document.getElementById("freight").innerHTML=ajaxData["aaa"+n.toString()].toFixed(2);
+		document.getElementById("dt_ord_t2").innerHTML="￥"+ (ajaxData["aaa"+n.toString()]+linkPrice*productNum-discount-getCash()).toFixed(2);
+		document.getElementById("link_zt").value=link_id;
+	  }
+	}
+	
+	//处理优惠卷，通过得到点击优惠卷的价格，在通过总价格减去优惠卷的价格来计算
+	sessionStorage.setItem("oldcounpon",0);		
+	var jumptype={$type};			
+	var num = "{php echo $goods['gnum']}";
+    var isshow = "{php echo $goods['isshow']}";
+    var addrid = "{php echo $adress_fee['id']}";
+    var freight = "{php echo $freight}";
+    var pay_price = "{php echo $pay_price}";
+    var couponid = 0;
+    var typeid = $('.buttons-row .active').attr('typeid');
+    num = parseInt(num);
+	function getTotalPrice(){
+	  return Number( document.getElementById("dt_ord_t2").innerHTML.slice(-document.getElementById("dt_ord_t2").innerHTML.length+1))+Number(sessionStorage.getItem("oldcounpon"));
+	}
+	
+	//使用优惠卷
+	function usecoupon(id,cash){
+	  $.closeModal();
+	  $('#couponid').val(id);
+	  couponid = id;
+	  $('#dt_ord_yhjmes').html('使用优惠券： ￥-'+cash+'元');
+	  /*if(typeid == 2 || typeid == 4){
+		$('#dt_ord_t2').html('￥' + (pay_price - freight - cash).toFixed(2));
+	  }
+	  else{
+		$('#dt_ord_t2').html('￥' + (pay_price - cash).toFixed(2));
+	  }*/		
+	  sessionStorage.setItem("oldcounpon",sessionStorage.getItem("counpon"));
+	  $('#dt_ord_t2').html('￥' + (getTotalPrice() - cash).toFixed(2));
+	  sessionStorage.setItem("counpon",cash);
+	}
+	
+	//提前判断非法进入该页面的，如果价格为0提前跳转到首页
+	function checkOrderValue() {
+	  var str = Number(document.getElementById("dt_ord_t2").innerHTML.slice(1));
+	  if (str > 0) {
+	    return true;
+	  }
+	  else {
+	    $.toast("金额不能小于等于0");
+		location.href = "{php echo app_url('goods_list')}";
+		return false;
+	  }
+	}
+	
+    $(function() {
+	
+	  'use strict';
+	  $(document).on("pageInit", "#page-order-confirm", function(e, id, page) {
+	    var gettpl = document.getElementById('couponlist').innerHTML;
+		var emphtml = '<div class="m-cart" id="s"><div class="empty" id="pro-view-6">暂无可用优惠券</div></div>';			
+		laytpl(gettpl).render({php echo json_encode($coupon)}, function(html){
+		  if (html.length < 10){
+			$("#youhuic").append(emphtml);
+		  }
+		  else{
+			$("#youhuic").append(html);
+		  }
+		});
+		  $('#bdelete').click(function(){
+			  		$('#tab1-2 a').find('p').removeAttr('data-id').html('请选择门店');
+				  var shiprice = ($('#dt_ord_t2').html().slice(1) - $('#freight').html()).toFixed(2);
+				  $('#dt_ord_t2').html('￥' + shiprice).attr('num', shiprice);
+				  $('#freight').html('0.00');
+
+		  });
+		//订单提交，检测各种方式
+		$('#dt_goPay').on('click', function () {
+
+
+			 {if $goods['selltype'] == 5 && intval($is_allow) == 0}
+			 	$(this).css('background', '#ccc');
+			 	$.toast('该商品限购，不可多次购买');
+			 	return false;
+			 {/if}
+			 {if $goods['selltype'] == 2&&$goods['community']&&empty($adress_fee['village'])}
+		 		$.toast('您还没有填写小区名哦');
+		 		return false;
+			 {/if}
+			if($('#freight').attr('data-ajax')=='false'){
+				$.toast("运费异常，请刷新页面");
+				return false;
+			}
+			if($('#bdelete').hasClass('active')&&!$('.zitiStores p').attr('data-id')){
+				$.toast("请选择门店");
+				return false;
+			}
+			if({php echo intval($_GPC['groupnum'])}==1&&$('#sh').hasClass('active')&&$('#timeDisplay').html()==''){
+                $.toast("您未选择送货时间");
+                return false;
+			}
+
+		  //$.toast(document.getElementById("tab1-1").classList.contains("tab"));
+		  if (isPost && checkOrderValue()) {
+		    if (document.getElementById("link-address1")){
+			  if (document.getElementById("tab1-1").classList.contains("active")){						
+				$.toast("未填写地址");
+				return false;							
+			  }
+			}				
+			if (document.getElementById("link-address2")){
+			  if (document.getElementById("tab1-3").classList.contains("active")){						
+				$.toast("未填写地址");
+				return false;
+			  }
+		    }
+			if (document.getElementById("dt_ord_t2").innerHTML=='￥NaN') {
+			  $.toast("网络错误");
+			  location.replace(location.href);
+			}
+			if (document.getElementById("link-address") || document.getElementById("link-address1") || document.getElementById("link-address2") || document.getElementById("link-address3")){
+			  if (document.getElementById("tab1-2")) {
+			    if (!document.getElementById("tab1-2").classList.contains("active")){						
+				  $.toast("未填写地址");
+				  return false;
+				}
+			  }
+			  else{
+				$.toast("未填写地址");
+				return false;
+			  }
+			}
+              var idcard=$('[name="idcard"]').val();
+              if({php echo intval($goods['idcard'])}==1){
+                  if(idcard==''){
+                      $.toast("请填写身份证号码");
+                      return false;
+                  }
+                  var reg = /(^\d{15}$)|(^\d{18}$)|(^\d{17}(\d|X|x)$)/;
+                  if(reg.test(idcard) === false){
+                      $.toast("身份证号码填写有误");
+                      return false;
+                  }
+              }
+
+			var typeid = $('.buttons-row .active').attr('typeid');
+			var name = $('#cnee').val();
+		    var mobile = $('#mobile').val();
+		    var gettime = $('#gettime').val();
+			var buynum = $('#num').val();
+//			var link_zt=$('#link_zt').val();
+			var link_zt=$('.zitiStores p').attr('data-id');
+		    var remark = $('.dt_ord_input').val();
+			  var onceCard = $('.once-card-active').attr('id');
+			  var selfTime = $('#selfTime').val();
+			  var cTime = new Date(selfTime);
+			  var sStart = new Date($('.s-start').text());
+			  var sEnd = new Date($('.s-end').text());
+			  if (sStart > cTime || cTime > sEnd) {
+				  $.toast("自提时间不正确！");
+				  return false;
+			  }
+			if (num <= 0){
+			  $.toast('销量爆表，库存不足咯!');
+			  return false;
+			}
+			if(isshow != 1){
+			  $.toast('商品已下架或售罄，无法购买!');
+			  return false;
+			}
+			if (typeid == 2  || typeid == 4){
+			  if (!name){
+				$.toast('请输入您的姓名');
+				return false;
+			  }
+			  if (!mobile){
+				$.toast('请输入您的手机号码');
+				return false;
+			  }
+				if (!(/^1[34578]\d{9}$/.test(mobile))){
+					$.toast('您的手机号码有误');
+					return false;
+				}
+			  //if(!gettime){
+			  //	$.toast('请选择您的核销时间');
+			  //	return false;
+			  //}
+			}
+			  //			  防止多次点重复提交订单bug
+			$('#dt_goPay').attr('disabled','disabled');
+			if (document.getElementById("ttel")) {
+			  var ttel = document.getElementById("ttel").value;
+			  var tname = document.getElementById("tname").value;
+			}
+			var groupnum={$groupnum};
+			var id={$id};
+			var tuan_id=document.getElementById("tuan_id").value;
+			var freight=document.getElementById("freight").innerHTML;
+              var senddate=1;
+              switch ($('.buttons-row>div.active').html()){
+                  case '今天':
+                      senddate=1;break;
+                  case '明天':
+                      senddate=2;break;
+                  case '后天':
+                      senddate=3;break;
+              }
+
+              {if intval($is_commander) == 1} //团长免单
+              $.post("{$_W['siteroot']}"+"minapi.php?op=check_newtuan",{gid: "{$id}", uniacid:"{$_W['uniacid']}", openid:"{$_W['openid']}"}, function (res) {
+                  res = JSON.parse(res);
+                  if(res.status == '1'){
+                      $.get("{$_W['siteroot']}"+"minapi.php?op=check_newpayresult",{
+                          orderno: res.data.orderno,
+                          transid: '订单免费',
+                          fee: res.data.pay_price,
+
+                      },function (res) {
+                          res = JSON.parse(res);
+                          if(res.status == '1'){
+                              location.href="{php echo app_url('pay/success')}?uniacid={$_W['uniacid']}&orderno="+res.orderno+"&tuan_id="+res.tuan_id;
+                          }
+                      })
+                      return false;
+                  } else {
+                      $.toast(res.message);
+                  }
+              })
+              return;
+              {/if}
+
+              var sendtime=$('#timeDisplay .link-active').html();
+			$.post("{php echo app_url('order/orderconfirm')}",{freight:freight,tuan_id:tuan_id,id:id,groupnum:groupnum,ttel:ttel,tname:tname,typeid:typeid,name:name,link_zt:link_zt,mobile:mobile,gettime:gettime,remark:remark,addrid:addrid,couponid:couponid,num:buynum,'senddate':senddate,'sendtime':sendtime, 'once_card': onceCard,'self_time': selfTime},function(d){
+			  if (d.status == 1){
+			    //console.log(9);
+				  top.location.href = "{php echo app_url('pay/paytype')}"+'orderno='+d.result.orderno;
+			  }
+			  else if (d.status == 0){
+			    $.toast("请确认姓名和联系方式");
+				$('#dt_goPay').removeAttr('disabled');
+			  }
+			  else {
+                  $.toast(d.result.result);
+				 $('#dt_goPay').removeAttr('disabled');
+			  }
+		    },"json");
+			console.log(10);
+		  }
+		});  
+		if (jumptype>0){
+		  if (jumptype==1){
+		    couponid = 0;
+		    if (document.getElementById('bdelete')){
+			  document.getElementById('bdelete').classList.remove("active");
+		    }
+		    if (document.getElementById('express')){
+			  document.getElementById('express').classList.remove("active");
+		    }
+		    document.getElementById("sh").classList.add("active");
+		    document.getElementById("tab1-2").classList.remove("active");
+		    document.getElementById("tab1-1").classList.remove("active");
+		    document.getElementById("tab1-3").classList.add("active");
+		    $('#freight').html('0.00');
+		    var xhr=new XMLHttpRequest(),
+			  formData=new FormData();
+		    //formData.append("tid",linkButtons[j].id);
+			formData.append("id",{$id});
+		    formData.append("op","sh");
+		    var url="{php echo app_url('order/orderconfirm')}";
+		    xhr.open("post",url,true);
+		    xhr.send(formData);
+		    xhr.onreadystatechange=function(){
+		      if (xhr.readyState==4) {
+			    if ((xhr.status>=200 && xhr.status<300)||xhr.status==304) {
+			      linkExpress=Number(xhr.responseText);
+			      document.getElementById("freight").innerHTML=linkExpress.toFixed(2);
+			      document.getElementById("dt_ord_t2").innerHTML="￥"+ (Number(linkExpress)+linkPrice*productNum-discount-getCash()).toFixed(2);
+			    }
+		      }
+		    }
+		    {if $kaiguan['area_delivery'] == '1'} //开启送货上门区域配送
+		  		initDeliveryPrice();
+		  	{/if}
+		    //$('#dt_ord_yhjmes').html('请选择或兑换优惠券');
+		  }
+		  if (jumptype==2){
+			if (document.getElementById('bdelete') ){
+			  //$.toast("666");
+			  //document.getElementById('bdelete').classList.remove("active");}
+			  //document.getElementById('express').classList.remove("active");
+			  if (document.getElementById("sh")){
+				document.getElementById("sh").classList.remove("active");
+			  }
+			  clickLinkButton(0);
+			  couponid = 0;
+			  $('#freight').html(freight);
+			  //$('#dt_ord_yhjmes').html('请选择或兑换优惠券');
+			  $('#dt_ord_t2').html('￥'+pay_price-getCash());
+			}
+		  }
+		}
+		//$.toast('{$tuan_id}');
+		$('#dt_ord_youhui').on('click', function () {
+		  $.popup('.popup-youhui');
+		});
+
+		//选择地址
+		$('.u_address').on('click', function () {
+			if (lingouid==2) {
+				var tuanId='{$tuan_id}';
+				if (tuanId-0>0){
+					{if $goods['community'] == 0}
+					  return;
+					{/if}
+				}
+			}
+			location.href = "{php echo app_url('address/addmanage',array('goodsid'=>$id,'tuan_id'=>$tuan_id,'groupnum'=>$groupnum,'num'=>$num))}";
+		});
+
+		//选择快递配送的时候，先ajax获取快递方式列表，然后第一个默认选中，改变价格
+		$('#express').on('click', function () {
+			if (typeof $('#dt_goPay').attr('disabled') != 'undefined') {
+				$('#dt_goPay').removeAttr('disabled').css({'background': '#f97b87'});
+			}
+		  document.getElementById("link_zt").value=linkButtons[0].id;
+		  if (document.getElementById('bdelete')){
+              orderTime.time=1;
+			document.getElementById('bdelete').classList.remove("active");
+		  }
+		  //document.getElementById('express').classList.remove("active");
+		  if (document.getElementById("sh")){
+			document.getElementById("sh").classList.remove("active");
+		  }
+		  if (document.getElementById("express")){
+              orderTime.time=1;
+			document.getElementById("express").classList.add("active");
+		  }	
+		  var xhr=new XMLHttpRequest(),
+			formData=new FormData();
+		  for (var i=0;i<linkButtonsLen;i++){
+			linkButtons[i].classList.remove("link-active");
+		  }
+		  if (linkButtons.length>0){
+			linkButtons[0].classList.add("link-active");
+			formData.append("tid",linkButtons[0].id);	
+		  }
+		  if (ajaxData["0"+"ccc"]===undefined){	
+			formData.append("id",{$id});
+			  formData.append("groupnum",{$groupnum});
+			  formData.append("num",{$num});
+			formData.append("op","ck");
+			var url="{php echo app_url('order/orderconfirm')}";
+			xhr.open("post",url,true);												
+			xhr.send(formData); 												                
+			xhr.onreadystatechange=function(){
+			  if (xhr.readyState==4) {
+				if ((xhr.status>=200 && xhr.status<300)||xhr.status==304) {
+				  linkExpress=Number(xhr.responseText);
+				  if (linkExpress.length>10){
+					location.replace(location.href);
+					return false;
+				  }
+				  ajaxData["0"+"ccc"]=linkExpress;
+				  document.getElementById("freight").innerHTML=linkExpress.toFixed(2);
+				  document.getElementById("dt_ord_t2").innerHTML="￥"+ (Number(linkExpress)+linkPrice*productNum-discount-getCash()).toFixed(2);
+				}
+			  }
+			}
+		  }
+		  else {
+		  formData.append("id",{$id});
+			  formData.append("groupnum",{$groupnum});
+			  formData.append("num",{$num});
+			formData.append("op","ck");
+			var url="{php echo app_url('order/orderconfirm')}";
+			xhr.open("post",url,true);												
+			xhr.send(formData); 
+			document.getElementById("freight").innerHTML=ajaxData["0"+"ccc"].toFixed(2);					
+			document.getElementById("dt_ord_t2").innerHTML="￥"+ (Number(ajaxData["0"+"ccc"])+linkPrice*productNum-discount-getCash()).toFixed(2);
+		  }	
+		  couponid = 0;
+		  //$('#freight').html(freight);
+		  //$('#dt_ord_yhjmes').html('请选择或兑换优惠券');
+		  //$('#dt_ord_t2').html('￥'+pay_price);
+		  //$.toast(linkButton1s);
+		});
+		
+		//选中自提，默认选择第一个自提点
+		$('#bdelete').on('click', function (ev) {
+			if (typeof $('#dt_goPay').attr('disabled') != 'undefined') {
+				$('#dt_goPay').removeAttr('disabled').css({'background': '#f97b87'});
+			}
+		  document.getElementById("link_zt").value=link_id;
+		  if (document.getElementById('express')){
+              orderTime.time=1;
+			document.getElementById('express').classList.remove("active");
+		  }
+		  if (document.getElementById("sh")){
+			document.getElementById("sh").classList.remove("active");
+		  }
+		  if (document.getElementById("bdelete")){
+              orderTime.time=1;
+			document.getElementById("bdelete").classList.add("active");
+		  }
+		  for (var i=0;i<linkButton1s.length;i++){
+			linkButton1s[i].classList.remove("link-active");
+		  }
+		  if (linkButton1sLen>0){
+		    linkButton1s[0].classList.add("link-active");	
+			var link_id=linkButton1s[0].id;
+			setT(0, link_id);
+			couponid = 0;
+			//$.toast(link_id);
+			if (ajaxData["1"+"aaa"] === undefined){
+			  console.log(12);
+			  var xhr=new XMLHttpRequest(),
+			  formData=new FormData();
+			  formData.append("id",{$id});
+			  formData.append("sid",link_id);
+			  formData.append("groupnum",{$groupnum});
+			  formData.append("op","zt");
+			  var url="{php echo app_url('order/orderconfirm')}";
+			  xhr.open("post",url,true);												
+			  xhr.send(formData); 						
+			  xhr.onreadystatechange=function(){
+			    if (xhr.readyState==4) {
+				  if ((xhr.status>=200 && xhr.status<300)||xhr.status==304) {
+				    linkExpress=Number(xhr.responseText);
+				    if (linkExpress.length>10){
+					  location.replace(location.href);
+					  return false;
+				    }
+				    ajaxData["1"+"aaa"]=linkExpress
+				    document.getElementById("freight").innerHTML=linkExpress.toFixed(2);
+				    document.getElementById("dt_ord_t2").innerHTML="￥"+ (Number(linkExpress)+linkPrice*productNum-discount-getCash()).toFixed(2);
+				  }
+			    }
+			  }
+			}
+			else {
+			  //console.log(13);
+			  var xhr=new XMLHttpRequest(),
+			  formData=new FormData();
+			  formData.append("id",{$id});
+			  formData.append("sid",link_id);
+			  formData.append("groupnum",{$groupnum});
+			  formData.append("op","zt");
+			  var url="{php echo app_url('order/orderconfirm')}";
+			  xhr.open("post",url,true);												
+			  xhr.send(formData); 
+			  document.getElementById("freight").innerHTML=ajaxData["1"+"aaa"].toFixed(2);
+			  document.getElementById("dt_ord_t2").innerHTML="￥"+ (Number(ajaxData["1"+"aaa"])+linkPrice*productNum-discount-getCash()).toFixed(2);
+			}
+		  }
+		  //$('#freight').html('0.00');
+		  //$('#dt_ord_yhjmes').html('请选择或兑换优惠券');
+		  //$('#dt_ord_t2').html('￥' + (pay_price - freight).toFixed(2));
+		  //$.toast(( freight))
+		});
+		
+		//送货上门可以获取的运费，默认选中第一个，ajax获取送货时间
+		$('#sh').on('click', function () {
+		  if (document.getElementById("link_tod")){
+			selectActive(1);
+		  }
+		  couponid = 0;
+		  if (document.getElementById("bdelete")){
+			document.getElementById("bdelete").classList.remove("active");
+		  }
+		  if (document.getElementById('express')){
+			document.getElementById('express').classList.remove("active");
+		  }
+		  if (document.getElementById("sh")){
+			document.getElementById("sh").classList.add("active");
+		  }
+		  document.getElementById("tab1-2").classList.remove("active");
+		  document.getElementById("tab1-1").classList.remove("active");
+		  document.getElementById("tab1-3").classList.add("active");
+		  $('#freight').html('0.00');
+
+		  {if $kaiguan['area_delivery'] == '1'} //开启送货上门区域配送
+		  	initDeliveryPrice();
+		  {else}
+
+		  if (typeof ajaxData["2"+"bbb"] == 'undefined' ) {
+			var xhr=new XMLHttpRequest(),
+			formData=new FormData();
+			//formData.append("tid",linkButtons[j].id);
+			formData.append("id",{$id});
+			formData.append("op","sh");
+			var url="{php echo app_url('order/orderconfirm')}";
+			xhr.open("post",url,true);													
+			xhr.send(formData); 																	
+			xhr.onreadystatechange=function(){
+			  if (xhr.readyState==4) {
+				if ((xhr.status>=200 && xhr.status<300)||xhr.status==304) {
+				  linkExpress=Number(xhr.responseText);
+				  if (linkExpress.length>10){
+					location.replace(location.href);
+					return false;
+				  }
+				  ajaxData["2"+"bbb"]=linkExpress;
+				  document.getElementById("freight").innerHTML=linkExpress.toFixed(2);
+				  document.getElementById("dt_ord_t2").innerHTML="￥"+ (Number(linkExpress)+linkPrice*productNum-discount-getCash()).toFixed(2);
+				}
+			  }
+			}
+		  }
+		  else {
+			var xhr=new XMLHttpRequest(),
+			  formData=new FormData();
+			//formData.append("tid",linkButtons[j].id);
+			formData.append("id",{$id});
+			formData.append("op","sh");
+			var url="{php echo app_url('order/orderconfirm')}";
+			xhr.open("post",url,true);													
+			xhr.send(formData); 
+			document.getElementById("freight").innerHTML=ajaxData["2"+"bbb"].toFixed(2);;
+			document.getElementById("dt_ord_t2").innerHTML="￥"+ (Number(ajaxData["2"+"bbb"])+linkPrice*productNum-discount-getCash()).toFixed(2);
+		  }
+		  {/if}
+
+
+		  //$('#dt_ord_yhjmes').html('请选择或兑换优惠券');
+		  //$('#dt_ord_t2').html('￥' + (pay_price - freight).toFixed(2));
+		});
+	  });
+	  $.init();
+	});
+
+	function initDeliveryPrice() {
+		$('#dt_goPay').attr('disabled','disabled').css({'background': '#ccc'});
+		var address_txt='';
+		if($('.address_txt').eq(0).html()) {
+            address_txt = $('.address_txt').eq(0).html().trim() + $('.address_txt').eq(1).html().trim();
+        }else{
+            address_txt='北京市';
+        }
+        AMap.service('AMap.Geocoder',function(){//回调函数
+		    //实例化Geocoder
+		    var geocoder = new AMap.Geocoder({
+		        // city: "010"//城市，默认：“全国”
+		    });
+		    //TODO: 使用geocoder 对象完成相关功能
+		})
+        areaDelivery(address_txt, function (res) {
+        	console.log(res);
+        	if (typeof $('#dt_goPay').attr('disabled') != 'undefined') {
+				$('#dt_goPay').removeAttr('disabled').css({'background': '#f97b87'});
+			}
+        	$('#freight').html(Number(res).toFixed(2));
+        	$('#dt_ord_t2').html("￥"+(Number(res)+linkPrice*productNum-discount-getCash()).toFixed(2));
+        },function () {
+        	$.toast('您不在配送范围内，不支持送货上门');
+
+        	$('#dt_goPay').attr('disabled','disabled').css({'background': '#ccc'});
+        	return false;
+        })
+	}
+
+	//区域及配送范围
+	function areaDelivery (address,success, fail) {
+		$.get("{php echo app_url('goods/area_delivery')}",function (res) {
+			res = JSON.parse(res);
+			if(res.status != 1) return;
+			var geocoder = new AMap.Geocoder({
+            	// radius: 1000 //范围，默认：500
+	        });
+	        //地理编码,返回地理编码结果
+	        geocoder.getLocation(address, function(status, result) {
+	            if (status === 'complete' && result.info === 'OK') {
+	            	var check_address = null;
+	            	var geocode = result.geocodes;
+	            	var deliveryPosition = [
+	            		geocode[0].location.getLng(),
+	            		geocode[0].location.getLat()
+	            	];
+	            	console.log(deliveryPosition);
+	     			for(var i = 0, len = res.list.length; i < len; i++) {
+	     				var polygon = new AMap.Polygon({
+						        path: res.list[i].range
+						    });
+		    			check_address = polygon.contains(deliveryPosition);
+		    			if(check_address) {
+		    				var deliveryLngLat = new AMap.LngLat(deliveryPosition[0], deliveryPosition[1]);
+		    				var distance = deliveryLngLat.distance(res.list[i].store_position);
+		    				for(var k = 0, leng = res.list[i].distance.length; k < leng; k++) {
+		    					var start = res.list[i].distance[k].start;
+		    					var end = res.list[i].distance[k].end;
+		    					start = Number(start) * 1000;				//公里转换成米
+		    					end = Number(end) * 1000;
+		    					if(Number(distance) >= start && Number(distance) <= end) {
+		    						success&&success(res.list[i].distance[k].price);
+		    					}else if(Number(distance) > Number(res.list[i].distance[leng-1].end) * 1000) {
+		    						fail&&fail();
+		    					}
+		    				}
+		    				break;
+		    			}
+	     			}
+	     			if(!check_address) {
+	     				fail&&fail();
+	     			}
+	            } else {
+	            	fail&&fail();
+	            }
+	        });
+		})
+	}
+
+
+	//页面初始化，判断页面排元素，然后定义不同元素对象，然后不同加载元素不同的默认初始化选择
+	if (document.getElementById("express")){
+	
+	  var xhr=new XMLHttpRequest(),
+		formData=new FormData();
+	  for (var i=0;i<linkButtonsLen;i++){
+		linkButtons[i].classList.remove("link-active");
+	  }
+	  if (linkButtons.length>0){
+		linkButtons[0].classList.add("link-active");
+		formData.append("tid",linkButtons[0].id);	
+	  }
+	  if (ajaxData["0"+"ccc"]===undefined){	
+formData.append("id",{$id});
+		  formData.append("groupnum",{$groupnum});
+		  formData.append("num",{$num});
+		formData.append("op","ck");
+		var url="{php echo app_url('order/orderconfirm')}";
+		xhr.open("post",url,true);												
+		xhr.send(formData); 												                
+		xhr.onreadystatechange=function(){
+		  if (xhr.readyState==4) {
+		    if ((xhr.status>=200 && xhr.status<300)||xhr.status==304) {
+			  linkExpress=Number(xhr.responseText);
+			  if (linkExpress.length>10){
+			    location.replace(location.href);
+			    return false;
+			  }
+			  ajaxData["0"+"ccc"]=linkExpress;
+			  document.getElementById("freight").innerHTML=linkExpress.toFixed(2);
+			  document.getElementById("dt_ord_t2").innerHTML="￥"+ (Number(linkExpress)+linkPrice*productNum-discount-getCash()).toFixed(2);
+		    }
+		  }
+	    }
+	  }
+	  else {
+	  formData.append("id",{$id});
+		  formData.append("groupnum",{$groupnum});
+		  formData.append("num",{$num});
+		formData.append("op","ck");
+		var url="{php echo app_url('order/orderconfirm')}";
+		xhr.open("post",url,true);												
+		xhr.send(formData); 
+		document.getElementById("freight").innerHTML=ajaxData["0"+"ccc"].toFixed(2);					
+		document.getElementById("dt_ord_t2").innerHTML="￥"+ (Number(ajaxData["0"+"ccc"])+linkPrice*productNum-discount-getCash()).toFixed(2);
+	  }
+	  document.getElementById("express").classList.add("active");
+	  if (linkButtons.length>0){
+		linkButtons[0].classList.add("link-active");
+		clickLinkButton(0);
+	  }
+	  
+	  document.getElementById("tab1-1").classList.add("active");
+	}else if (document.getElementById("bdelete")||(document.getElementById("sh")==null && document.getElementById("express") == null)){
+	  if (document.getElementById("bdelete")){
+	  document.getElementById("bdelete").classList.add("active");}
+	  if (document.getElementById("tab1-2")) {
+	  document.getElementById("tab1-2").classList.add("active");}
+	  for (var i=0;i<linkButton1s.length;i++){
+	    linkButton1s[i].classList.remove("link-active");
+	  }
+	  if (linkButton1s.length>0){
+		linkButton1s[0].classList.add("link-active");
+		var link_id = linkButton1s[0].id;
+		setT(0, link_id);
+	  }		
+	}else if (document.getElementById("sh")){
+	  selectActive(1);
+	  var xhr=new XMLHttpRequest(),
+	  formData=new FormData();
+	  formData.append("id",{$id});
+	  formData.append("op","sh");
+	  var url="{php echo app_url('order/orderconfirm')}";
+	  xhr.open("post",url,true);												
+	  xhr.send(formData); 												                
+	  xhr.onreadystatechange=function(){
+	    if (xhr.readyState==4) {
+		  if ((xhr.status>=200 && xhr.status<300)||xhr.status==304) {
+		  
+			linkExpress=Number(xhr.responseText);
+			document.getElementById("freight").innerHTML =linkExpress.toFixed(2);							
+			document.getElementById("dt_ord_t2").innerHTML ="￥"+ (Number(linkExpress)+linkPrice*productNum-discount-getCash()).toFixed(2);
+		  }
+		}
+	  }
+
+	  document.getElementById("sh").classList.add("active");
+	  document.getElementById("tab1-3").classList.add("active");
+	}
+	if($('.buttons-row a').length==1){//当只有一种配送方式时，隐藏
+		$('.buttons-row a').css('display','none');
+	}
+		function getQueryString(name) {
+			var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
+			var r = window.location.search.substr(1).match(reg);
+			if (r != null) return decodeURI(r[2]); return null;
+		}
+		if(getQueryString('tuan_id')){
+			$('#freight').attr('data-ajax','true');
+		}
+
+	// 次卡选择
+	$('.once-card').eq(0).addClass('once-card-active');
+	$('.once-card').click(function () {
+		$('.once-card-active').removeClass('once-card-active');
+		$(this).addClass('once-card-active');
+	});
+</script>
+
+{php include wl_template('common/footer');}

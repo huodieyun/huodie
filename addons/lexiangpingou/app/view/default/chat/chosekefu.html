@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>{$setting['title']}</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	<meta name="apple-mobile-web-app-status-bar-style" content="black">
+	<meta name="format-detection" content="telephone=no" />
+	<!--标准mui.css-->
+	<link rel="stylesheet" href="{MD_ROOT}static/mui/css/mui.min.css">
+	<link rel="stylesheet" href="{MD_ROOT}static/iconfont/iconfont.css">
+	{php echo register_jssdk(false);}
+</head>
+<body>
+
+<body>
+<header class="mui-bar mui-bar-nav">
+	<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+	<h1 class="mui-title" id="info">{$setting['title']}</h1>
+	<a id="icon-icon-contact" href="{php echo $this->createMobileUrl('mychat');}" class="mui-pull-right mui-icon-right-nav"><span class="mui-icon mui-icon-contact mui-icon-icon-contact-filled"></span></a>
+</header>
+<div class="mui-content">
+	{if $cservicelist || $cservicegrouplist}
+	<div class="mui-card">
+	<ul class="mui-table-view mui-table-view-chevron">
+	{loop $cservicegrouplist $row}
+		<li class="mui-table-view-cell mui-media">
+			<a class="mui-navigate-right" href="{php echo $this->createMobileUrl('groupchat',array('id'=>$row['id']))}">
+				<img class="mui-media-object mui-pull-left" src="{php echo tomedia($row['thumb'])}">
+				<div class="mui-media-body">
+					{$row['name']}
+					<p class="mui-ellipsis"><span class="mui-badge mui-badge-primary">客服组</span></p>
+				</div>
+			</a>
+		</li>
+	{/loop}
+	{loop $cservicelist $row}
+		<li class="mui-table-view-cell mui-media">
+			{if $row['ctype'] == 1}
+			<a class="mui-navigate-right" href="{php echo $this->createMobileUrl('chat',array('toopenid'=>$row['content']))}">
+			{/if}
+			{if $row['ctype'] == 2}
+			<a class="mui-navigate-right" href="http://wpa.qq.com/msgrd?v=3&uin={$row['content']}&site=qq&menu=yes">
+			{/if}
+			{if $row['ctype'] == 3}
+			<a class="mui-navigate-right" href="tel:{$row['content']}">
+			{/if}
+			{if $row['ctype'] == 4}
+			<a class="mui-navigate-right" href="tel:{$row['content']}">
+			{/if}
+				<img class="mui-media-object mui-pull-left" src="{php echo tomedia($row['thumb'])}">
+				<div class="mui-media-body">
+					{$row['name']}
+					<p class="mui-ellipsis">{if $row['ctype'] == 1}微信咨询{/if}{if $row['ctype'] == 2}QQ咨询{/if}{if $row['ctype'] == 3}手机咨询{/if}{if $row['ctype'] == 4}座机咨询{/if}</p>
+				</div>
+			</a>
+		</li>
+	{/loop}
+	</ul>
+	</div>
+	{else}
+	<div style="margin-top:20px;text-align:center;">
+		<span class="mui-icon mui-icon-info" style="color:#ccc;font-size:70px;"></span>
+		<h4 style="color:#ccc;">暂没有客服哦</h4>
+	</div>
+	{/if}
+</div>
+<script src="{MD_ROOT}static/mui/js/mui.min.js"></script>
+<script type="text/javascript">
+wx.ready(function () {
+	sharedata = {
+		title: '{$setting["sharetitle"]}',
+		desc: '{$setting["sharedes"]}',
+		link: '{$setting["shareurl"]}',
+		imgUrl: '{php echo tomedia($setting["sharethumb"]);}',
+		trigger: function (res) {
+			//alert('用户点击发送给朋友');
+		},
+		success: function (res) {
+			//alert('已分享');
+		},
+		cancel: function (res) {
+			//alert('已取消');
+		},
+		fail: function (res) {
+			alert("分享失败");
+		}
+	};
+	wx.onMenuShareAppMessage(sharedata);
+	wx.onMenuShareTimeline(sharedata);
+	wx.onMenuShareQQ(sharedata);
+	wx.onMenuShareWeibo(sharedata);
+});
+</script>
+</body>
+</html>

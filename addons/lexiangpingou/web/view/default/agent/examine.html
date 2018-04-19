@@ -1,0 +1,316 @@
+
+{php include wl_template('common/header');}
+<style>
+	.box{margin-bottom: 10px;}
+	.modal-dialog table{text-align: center;}
+	.layer label{
+		
+	}
+	
+</style>
+<script>
+function showdet(str){
+		var id = str; 
+		 $.ajax({
+             type: "GET",
+             url: "{php echo web_url('agent/examine',array('op' => 'det'))}",
+             data:{"id":id},
+			 dataType: "json",
+             success: function(data){	
+				
+				var a = JSON.stringify(data.log);
+				var b;
+				var html = '<div class="clearfix box"><label class="col-md-2  control-label box">昵称： </label> <div class="col-md-7" style="float:left"><span>'+data.nickname+'</span></div></div>';
+				html +='<div class="clearfix box"><label class="col-md-2 control-label">提现方式： </label><div class="col-md-7" style="float:left"><span>'+data.pstatus+'</span></div></div>';
+				html +='<div class="clearfix box"><label class="col-md-2 control-label">微信号： </label><div class="col-md-7" style="float:left"><span>'+data.openid+'</span></div></div>';
+				html +='<div class="clearfix box"><label class="col-md-2 control-label">提现金额： </label><div class="col-md-7" style="float:left"><span>'+data.money+'</span></div></div>';
+				if(data.cardno != ""){
+					html +='<div class="clearfix box"><label class="col-md-2 control-label">持卡人： </label><div class="col-md-7" style="float:left"><span>'+data.name+'</span></div></div>';
+					html +='<div class="clearfix box"><label class="col-md-2 control-label">开户行： </label><div class="col-md-7" style="float:left"><span>'+data.blank+'</span></div></div>';
+					html +='<div class="clearfix box"><label class="col-md-2 control-label">银行卡号：  </label><div class="col-md-7" style="float:left"><span>'+data.cardno+'</span></div></div>';
+				}
+				html +='<div class="clearfix box"><label class="col-md-2 control-label">申请时间：  </label><div class="col-md-7" style="float:left"><span>'+data.stime+'</span></div></div>';
+				html +='<div class="clearfix box"><label class="col-md-2 control-label">发放时间：  </label><div class="col-md-7" style="float:left"><span>'+data.ftime+'</span></div></div>';
+				if(data.note != null){
+					html +='<div class="clearfix box"><label class="col-md-2 control-label" style="color: red;">失败原因备注：  </label><div class="col-md-7" style="float:left"><span>'+data.note+'</span></div></div>';
+				}
+				html +='<table class="table table-bordered" ><thead><tr><td>订单id</td><td>公众号名称</td><td>支付时间</td><td>订单支付金额</td><td>本次提成</td></tr></thead><tbody>';
+				b = eval(data.log);
+				for(var i=0;i<b.length;i++){
+			         html +='<tr><td>'+b[i].orderno+'</td><td>'+b[i].name+'</td><td>'+b[i].ptime+'</td><td>'+b[i].cash+'元</td><td  style="text-align:center">'+b[i].refund_cash+'元</td></tr>';
+			         }//end read data
+				
+				html +='</tbody></table>';
+				
+				
+				$("#orderWinpop").append(html);
+				$("#layer").trigger("click");
+				
+			 }
+         });
+		$("#orderWinpop").empty();
+	}
+function addfault(sid){
+		var id = sid; 
+		 $.ajax({
+             type: "GET",
+             url: "{php echo web_url('agent/examine',array('op' => 'det'))}",
+             data:{"id":id},
+			 dataType: "json",
+             success: function(data){	
+				
+				var a = JSON.stringify(data.log);
+				var b;
+				var html = '<div class="clearfix box"><label class="col-md-2  control-label box">昵称： </label> <div class="col-md-7" style="float:left"><span>'+data.nickname+'</span></div></div>';
+				html +='<div class="clearfix box"><label class="col-md-2 control-label">提现方式： </label><div class="col-md-7" style="float:left"><span>'+data.pstatus+'</span></div></div>';
+				html +='<div class="clearfix box"><label class="col-md-2 control-label">微信号： </label><div class="col-md-7" style="float:left"><span>'+data.openid+'</span></div></div>';
+				html +='<div class="clearfix box"><label class="col-md-2 control-label">提现金额： </label><div class="col-md-7" style="float:left"><span>'+data.money+'</span></div></div>';
+				html +='<div class="clearfix box"><label class="col-md-2 control-label">持卡人： </label><div class="col-md-7" style="float:left"><span>'+data.name+'</span></div></div>';
+				html +='<div class="clearfix box"><label class="col-md-2 control-label">开户行： </label><div class="col-md-7" style="float:left"><span>'+data.blank+'</span></div></div>';
+				html +='<div class="clearfix box"><label class="col-md-2 control-label">银行卡号：  </label><div class="col-md-7" style="float:left"><span>'+data.cardno+'</span></div></div>';
+				html +='<div class="clearfix box"><label class="col-md-2 control-label">申请时间：  </label><div class="col-md-7" style="float:left"><span>'+data.stime+'</span></div></div>';
+				html +='<div class="clearfix box"><label class="col-md-2 control-label">发放时间：  </label><div class="col-md-7" style="float:left"><span>'+data.ftime+'</span></div></div>';
+				html +='<table class="table table-bordered" ><thead><tr><td>订单id</td><td>公众号名称</td><td>支付时间</td><td>订单支付金额</td><td>本次提成</td></tr></thead><tbody>';
+				b = eval(data.log);
+				for(var i=0;i<b.length;i++){
+			         html +='<tr><td>'+b[i].orderno+'</td><td>'+b[i].name+'</td><td>'+b[i].ptime+'</td><td>'+b[i].cash+'元</td><td  style="text-align:center">'+b[i].refund_cash+'元</td></tr>';
+			         }//end read data
+
+				html +='</tbody></table>';
+				html +='<input type="hidden" name="id" value="'+data.id+'" />';
+				html +='<input type="hidden" name="money" value="'+data.money+'" />';
+				html +='<input type="hidden" name="xssid" value="'+data.record_id+'" />';
+				html +='<input type="hidden" name="openid" value="'+data.openid+'" />';
+				html +='<input type="hidden" name="sstatus" value="-1" />';
+				
+				
+				$("#addfault-list").append(html);
+				$("#addfault").trigger("click");
+				
+			 }
+         });
+		$("#addfault-list").empty();
+	}
+</script>
+<ul class="nav nav-tabs">
+	
+    <li{if $status == '0'} class="active"{/if}>
+        <a href="{php echo web_url('agent/examine', array('op' => 'display', 'status' =>'0'))}">待审核 </a>
+    </li>
+	<li {if $status == '1'} class="active"{/if}>
+        <a href="{php echo web_url('agent/examine', array('op' => 'display', 'status' =>'1'))}">待发放</a>
+    </li>
+	<li {if $status == '2'}class="active"{/if}>
+        <a href="{php echo web_url('agent/examine', array('op' => 'display', 'status' =>'2'))}">已发放</a>
+    </li>
+   	<li {if $status == '3'}class="active"{/if}>
+        <a href="{php echo web_url('agent/examine', array('op' => 'display', 'status' =>'3'))}">全部记录</a>
+    </li>
+  
+</ul>
+<div class="main">
+    <div class="panel panel-info">
+	    <div class="panel-heading">筛选</div>
+	    <div class="panel-body">
+            <form action="{php echo web_url('agent/examine')}" method="get" class="form-horizontal" role="form" id="form1">
+            <input type="hidden" name="c" value="site" />
+            <input type="hidden" name="a" value="entry" />
+            <input type="hidden" name="m" value="lexiangpingou" />
+            <input type="hidden" name="do" value="agent" />
+            <input type="hidden" name="ac" value="examine" />
+            <input type="hidden" name="op" value="display" />
+
+                <div class="form-group">
+                    <label class="col-xs-12 col-sm-2 col-md-2 col-lg-2 control-label">昵称</label>
+                    <div class="col-sm-8 col-lg-9 col-xs-12">
+                        <input class="form-control" name="keyword" id="" type="text" value="{$_GPC['keyword']}" placeholder="可查询昵称">
+                    </div>
+                </div>
+                <div class="form-group">
+                        <label class="col-xs-12 col-sm-2 col-md-2 col-lg-2 control-label">申请时间</label>
+                        <div class="col-sm-5 col-lg-7 col-xs-12">
+                            {php echo tpl_form_field_daterange('time', array('starttime'=>date('Y-m-d', $starttime),'endtime'=>date('Y-m-d', $endtime)));}
+                        </div>
+                        <div class="col-sm-3 col-lg-2" style="text-align:right;"><button class="btn btn-default"><i class="fa fa-search"></i> 搜索</button>
+                        </div>
+                    </div>
+                <div class="form-group">
+                </div>
+            </form>
+			
+          <!--  <a href='{php echo $this->createWebUrl('grouporder', array('op' => 'output','groupstatus'=>$groupstatus,'starttime'=>$starttime,'endtime'=>$endtime))}'><button class="btn btn-info"><i class="fa fa-download"></i> 导出记录</button></a>-->
+	    </div>
+	</div>
+
+	<div class="panel panel-default">
+		<div class="panel-body table-responsive">
+			<table class="table table-hover">
+				<thead class="navbar-inner">
+					<tr>
+						<th style="width:10%;">昵称 </th>
+						<th style="width:10%;">提现方式</th>
+						<th style="width:10%;">状态</th>	
+						<th style="width:10%;">提现金额</th>							
+						<th style="width:17%;">申请时间</th>
+						<th style="width:17%;">发放时间</th>
+						<th style="width:26%;text-align: center;">操作</th>
+					</tr>
+				</thead>
+				<tbody>
+					{loop $alltuan $item}
+					<?php 
+
+			                    $sql3 = 'SELECT * FROM '.tablename('tg_member').' WHERE from_user=:openid and uniacid=:uniacid';
+			
+			                    $params3 = array(':openid'=>$item['openid'],':uniacid'=> 33);
+			
+			                    $good3 = pdo_fetch($sql3, $params3);
+			
+			        ?>
+					<tr style="background-color: #fff; font-size: 12px;">
+					<!--<td class="text-center" style="width:60px;"><input type="checkbox" name="checkbox[]"  value="{$item['id']}" /></td>-->
+				
+						<td class="" >
+							<span>{$good3['nickname']}</span>
+						</td>
+						<td class="" >
+									{if $item['pstatus']==1 }
+										<span class="label label-success">线上提款</span>
+									{/if}
+									{if $item['pstatus']==2 }
+										<span class="label label-info">线下提款</span>
+									{/if}
+									</span>
+								</td>
+						<td class="" >
+							<span>
+								{if $item['status']==-1 }
+									<span class="label label-danger">审核失败</span>
+								{/if}
+								{if $item['status']==0 }
+									<span class="label label-warning">未审核</span>
+								{/if}
+								{if $item['status']==1 }
+									 <span class="label label-primary">待发放</span>
+								{/if}
+								{if $item['status']==2 }
+									 <span class="label label-success">已发放 </span>
+								{/if}
+							</span>
+						</td>
+						<td class="" >
+							<span>{$item['money']}</span>
+						</td>
+						<td class="" >
+							<span>{$item['stime']}</span>
+						</td>
+	
+						<td class="" >
+							{if $item['ftime']=="" }
+									<span>———— </span>
+							{else}
+									<span>{$item['ftime']}</span>	
+							{/if}
+							
+						</td>
+						<td style="text-align: center;">
+						{if $item['status']==0}
+							{if checkstr($_W['user']['perms'],'examine.pass')}
+							<a href="{php echo web_url('agent/examine', array('op' => 'sendcash', 'id' =>$item['id'] ,'sstatus' => 1))}" class="label label-info" >审核通过 </a>
+							{/if}
+							{if checkstr($_W['user']['perms'],'examine.fail')}
+							<a class="label label-warning"  id="seekTel" onclick="addfault({$item['id']})" href="#">审核失败 </a>
+							<button id="addfault" style="display: none;" class="btn btn-default" type="button" onclick="popwin = $('#modal-module-addfault').modal();">隐藏点击</button>
+							{/if}
+						{else if $item['status']==1}
+							{if checkstr($_W['user']['perms'],'examine.grant')}
+							<a href="{php echo web_url('agent/examine', array('op' => 'sendcash', 'id' =>$item['id'] ,'sstatus' => 2))}" class="label label-success" >确认发放</a>
+						{/if}
+						{/if}
+							{if checkstr($_W['user']['perms'],'examine.list')}
+						<button class="btn btn-default btn-xs" type="button" id="seekTel" onclick="showdet({$item['id']})">查看详情</button>
+						<button id="layer" style="display: none;" class="btn btn-default" type="button" onclick="popwin = $('#modal-module-rule').modal();">隐藏点击</button>
+							{/if}
+						<input type="hidden" id="sid" >
+						
+						
+						
+						</td>
+					</tr>
+					{/loop}
+				</tbody>
+			</table>
+		</div>
+	</div>
+</div>
+{$pager}
+
+<div id="modal-module-rule" class="modal fade sc" tabindex="-1">
+							<div class="modal-dialog" style='width:1000px; height:85%;font-size: 14px; text-align: left; padding: 30px; '>
+								<div class="modal-content" style=" padding: 30px; ">
+									<div id="orderWinpop">
+								
+									
+									</div>
+										
+									<p style="text-align: center; margin-top: 20px;">
+										<button type="button" class="btn btn-primary" data-dismiss="modal">
+	 										关闭
+	            						</button>
+									</p>
+									
+								</div>
+							</div>
+						</div>
+
+<div id="modal-module-addfault" class="modal fade sc" tabindex="-1">
+							<div class="modal-dialog" style='width:1000px; height:85%;font-size: 14px; text-align: left; padding: 30px; '>
+								<div class="modal-content" style=" padding: 30px; ">
+									<form action="" method="post" id="form2">
+									<div id="addfault-list">
+								
+									
+									</div>
+									
+										<input type="hidden" name="c" value="site" />
+									    <input type="hidden" name="a" value="entry" />
+									    <input type="hidden" name="m" value="lexiangpingou" />
+									    <input type="hidden" name="do" value="agent" />
+									    <input type="hidden" name="ac" value="examine" />
+									    <input type="hidden" name="op" value="sendcash" />
+									    
+									    
+									
+										<div class="panel panel-default"  style=" background: #fff;border: none;">
+											
+											<div class="panel-body" style="">
+												<label class="col-md-2" style=" float: left; padding: 0; color: red;">失败原因：</label>
+												<div class="col-md-10" style="position:relative">
+														<textarea class="form-control" name="note" id="note" rows="3"  placeholder="此处输入通知内容，可以通过右下角拖拽来使输入框边长。" >{$lists['summary']}</textarea>
+												</div>
+											</div>
+										</div>
+										<p style="text-align: center; margin-top: 20px;">
+											<input type="submit" name="submit" value="提交" class="btn btn-primary" style="float: none;"/>
+											<button type="button" class="btn btn-primary" data-dismiss="modal">
+		 										取消
+		            						</button>
+		            						
+										</p>
+										
+									</form>
+									
+									
+								</div>
+							</div>
+						</div>
+
+<script type="text/javascript">
+	require(['daterangepicker'], function($){
+		$('.daterange').on('apply.daterangepicker', function(ev, picker) {
+			$('#form1')[0].submit() ;
+		});
+	});
+</script>
+
+{php include wl_template('common/footer');}

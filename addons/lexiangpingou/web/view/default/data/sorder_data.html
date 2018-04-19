@@ -1,0 +1,157 @@
+{php include wl_template('common/header');}
+<div>
+	测试
+</div>
+<!--<style>-->
+<!--.table tr td{text-align: center !important;}-->
+<!--.table thead tr th:last-child, table tbody tr td:last-child {-->
+    <!--text-align: center ;-->
+<!--}-->
+<!--</style>-->
+	<!--<div class="order-widget">-->
+		<!--<div class="panel panel-default">-->
+			<!--<div class="panel-heading">-->
+				<!--商品销售统计-->
+			<!--</div>-->
+			<!--<div class="panel-body">-->
+				<!--<ul class="nav nav-tabs" style="border-color: #ddd;"></ul>-->
+				<!--<div class="clearfix" id="clear" style="padding-top: 20px;">-->
+					<!--<div class="clearfix">-->
+						<!--<form action="./index.php" method="get" class="form-horizontal" role="form" id="form1">-->
+							<!--<input type="hidden" name="c" value="site" />-->
+				            <!--<input type="hidden" name="a" value="entry" />-->
+				            <!--<input type="hidden" name="m" value="lexiangpingou" />-->
+				            <!--<input type="hidden" name="do" value="data" />-->
+				            <!--<input type="hidden" name="dispatchtype" value="{$dispatchtype}" />-->
+				            <!--<input type="hidden" name="ac" value="sorder_data" />-->
+				            <!--<input type="hidden" name="op" value="display" />-->
+				            <!--<div class="form-group">-->
+				            	<!--<label class="col-md-4 col-lg-1 control-label">订单类型 </label>-->
+			                    <!--<div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">-->
+			                        <!--<select name="dispatchtype" class="form-control" >-->
+			                            <!--<option value="">&#45;&#45;所有&#45;&#45;</option>                            -->
+			                            <!--<option value="2" {if $_GPC['dispatchtype']==2}selected="selected"{/if}>快递订单</option>-->
+			                            <!--<option value="3" {if $_GPC['dispatchtype']==3}selected="selected"{/if}>自提订单</option>-->
+			                            <!--<option value="1" {if $_GPC['dispatchtype']==1}selected="selected"{/if}>送货上门</option>-->
+			                            <!--<option value="-1" {if $_GPC['dispatchtype']==-1}selected="selected"{/if}>抽奖订单</option>-->
+			                        <!--</select>-->
+			                    <!--</div>-->
+								<!--<label class="col-xs-12 col-sm-2 col-md-2 col-lg-1 control-label">日期</label>-->
+			                    <!--<div class="col-sm-4">-->
+			                        <!--{php echo tpl_form_field_daterange('time', array('starttime'=>date('Y-m-d H:m:s', $starttime),'endtime'=>date('Y-m-d H:m:s', $endtime)),true);}-->
+			                    <!--</div>-->
+							<!--</div>-->
+							<!--<div class="form-group">-->
+								<!--<label class="col-md-4 col-lg-1 control-label">商品名称</label>-->
+								<!--<div class="col-md-4">-->
+			                        <!--<select name="goodsid2" class="form-control">-->
+			                            <!--<option value="">&#45;&#45;所有&#45;&#45;</option>-->
+			                            <!--{loop $allgoods $key $type}-->
+			                            <!--<option value="{$type['id']}" {if $_GPC['goodsid2']==$type['id']}selected="selected"{/if}>{$type['gname']}</option>-->
+			                            <!--{/loop}-->
+			                        <!--</select>-->
+			                   <!--</div>-->
+			                   <!--<label class="col-md-4 col-lg-1 control-label">商品名称</label>-->
+								<!--<div class="col-md-4">        -->
+				                    <!--<input class="form-control" name="keyword" id="" type="text" value="{$_GPC['keyword']}" placeholder="可模糊查询商品名称">-->
+			                  <!--</div>-->
+							<!--</div>-->
+							<!--<div class="form-group">-->
+								<!--<label class="col-md-4 col-lg-1 control-label">自提点 </label>-->
+			                    <!--<div class="col-md-4">-->
+			                        <!--<select name="storeid" class="form-control">-->
+			                            <!--<option value="">&#45;&#45;所有&#45;&#45;</option>-->
+			                            <!--{loop $allstore $key $type}-->
+			                            <!--<option value="{$type['id']}" {if $_GPC['storeid']==$type['id']}selected="selected"{/if}>{$type['storename']}</option>-->
+			                            <!--{/loop}-->
+			                        <!--</select>-->
+			                    <!--</div>-->
+								<!--<label class="col-xs-12 col-sm-4 col-md-4 col-lg-1 control-label">已提/未提</label>-->
+			                    <!--<div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">-->
+			                        <!--<select name="status" class="form-control" >-->
+			                            <!--<option value="">&#45;&#45;所有&#45;&#45;</option>                            -->
+			                            <!--<option value="3" {if $_GPC['status']==3}selected="selected"{/if}>已提</option>-->
+			                           <!--<option value="2" {if $_GPC['status']==1 or $_GPC['status']==2 or $_GPC['status']==8}selected="selected"{/if}>未提</option>-->
+			                        <!--</select>-->
+			                    <!--</div>-->
+							<!--</div>-->
+							<!-- -->
+				            <!--<div class="form-group">-->
+		                        <!--<div class="col-sm-3 col-lg-2" style="text-align:right;">-->
+		                        	<!--<button class="btn btn-default"><i class="fa fa-search"></i> 搜索</button>-->
+		                        <!--</div>-->
+		                       <!-- -->
+		                        	<!--<a  class="btn btn-default" , href='{php echo web_url('data/sorder_data/output',array('goodsid2'=>$_GPC['goodsid2'],'keyword'=>$_GPC['keyword'],'status'=>$_GPC['status'],'time'=>$_GPC['time'],'storeid'=>$_GPC['storeid'],'dispatchtype'=>$_GPC['dispatchtype']))}'>-->
+					            		<!--<i class="fa fa-download"></i> 导出记录-->
+					            	<!--</a>（如果按条件导出请先选择条件后查询，再导出。）-->
+		                        <!-- -->
+		                   <!--</div>-->
+				        <!--</form>-->
+					<!--</div>-->
+					<!--<br>-->
+					<!--<div class="panel-default" style="padding:1em;border-radius: 0px;">-->
+						<!--<nav role="navigation" class="navbar navbar-default navbar-static-top" style="margin: -1em -1em 1em -1em;background-color: #f4f5f9;border: 1px solid #e7e7eb;">-->
+							<!--<div class="container-fluid">-->
+								<!--<div class="navbar-header">-->
+									<!--<a href="javascript:;" class="navbar-brand">商品销售统计</a>-->
+								<!--</div>-->
+							<!--</div>-->
+						<!--</nav>-->
+			<!--<table class="table" style="background-color:#fff">-->
+					<!--<thead style="">-->
+						<!--<tr>-->
+							<!--<th style=" text-align:center;">商品名</th>-->
+							<!--<th style=" text-align:center;">团购价</th>-->
+							<!--<th style=" text-align:center;">单买价</th>-->
+							<!--<th style=" text-align:center;">销售数量</th>-->
+							<!--<th style=" text-align:center;">销售金额</th>-->
+							<!--<th style=" text-align:center;">已提数量</th>-->
+							<!--<th style=" text-align:center;">未提数量</th>-->
+						<!--</tr>-->
+					<!--</thead>-->
+					<!--{loop $list $item}-->
+					<!--<tr style="background-color: #fff;">-->
+							<!--&lt;!&ndash;<td class="text-center" style="width:60px;"><input type="checkbox" name="checkbox[]"  value="{$item['id']}" /></td>&ndash;&gt;-->
+						<!-- -->
+						<!--<td class="" >-->
+							<!--<span>{$item['gname']}</span>-->
+						<!--</td>-->
+						<!-- -->
+						<!--<td class="" >-->
+							<!--<span>{$item['gprice']}</span>-->
+						<!--</td>-->
+						<!--<td class="" >-->
+							<!--<span>{$item['oprice']}</span>-->
+						<!--</td>-->
+						<!--<td class="" >-->
+							<!--<span>{if $item['sumorder']!=""}{$item['sumorder']}{else} 0 {/if}</span>-->
+						<!--</td>-->
+
+						<!--<td class="" >-->
+							<!--<span>{if $item['sumprice']!=""}{$item['sumprice']}{else} 0 {/if}</span>-->
+						<!--</td>-->
+						<!-- -->
+						<!--<td class="" >-->
+							<!--<span>{if $item['yt']!=""} {$item['yt']} {else} 0 {/if}</span>-->
+						<!--</td>-->
+						<!--<td class="" >-->
+							<!--<span>{if $item['wt']!=""} {$item['wt']} {else} 0 {/if}</span>-->
+						<!--</td>-->
+					<!--</tr>-->
+					<!--{/loop}-->
+				<!-- -->
+			<!--</table>-->
+			<!-- -->
+					<!--</div>-->
+			<!--{$pager}-->
+				<!--</div>-->
+			<!--</div>-->
+		<!--</div>-->
+	<!--</div>-->
+<!--<script>-->
+	<!--require(['daterangepicker'], function(c){-->
+	<!--$('.daterange').on('apply.daterangepicker', function(ev, picker) {-->
+		<!--$('#form1')[0].submit();-->
+	<!--})-->
+<!--</script>-->
+{php include wl_template('common/footer');}

@@ -1,0 +1,151 @@
+{php include wl_template('common/header');}
+<style>
+    .container{
+        background:#fff;
+        padding: 10px;
+    }
+    #goumaimsdbt{
+        height: 535px;
+    }
+    .container label{
+        width: 60px;
+        line-height: 34px;
+    }
+    .topGM{
+        width: 100%;
+        margin: 50px 0;
+        text-align: center;
+    }
+    .btn-group>.btn{
+        float: inherit;
+    }
+    .btn-default:focus,.btn-default.active{
+        background-color: #44b549;
+        color: #fff0cc;
+        border-color: #ccc;
+        box-shadow:none;
+    }
+</style>
+
+<div class="container">
+    <div class="btn-group topGM" role="group">
+        <button type="button" class="btn btn-default active">按销售量统计</button><button type="button" class="btn btn-default">按销售额统计</button>
+    </div>
+    <div id="goumaimsdbt"></div>
+</div>
+<script>
+    $('.topGM').on('click','button',function(){
+        if($(this).hasClass('active')){return false;}
+        $('.topGM button').removeClass('active');
+        $(this).addClass('active');
+        if($(this).html()=='按销售额统计'){
+            console.log(legendData);
+            option.title.subtext='成功的订单金额占比数';
+            option.legend.data=legendData;
+            option.series[0].data=seriesData1;
+            option.series[0].name='该模式/总订单金额';
+            RCHARTS(option);
+        }else{
+            option.title.subtext='成功的订单量占比数';
+            option.legend.data=legendData;
+            option.series[0].data=seriesData;
+            option.series[0].name='该模式/总订单量';
+            RCHARTS(option);
+        }
+    });
+    // 路径配置
+    require.config({
+        paths: {
+            echarts: "//www.lexiangpingou.cn/addons/lexiangpingou/web/resource/js/echarts/build/dist"
+        }
+    });
+    var legendData = [];
+    var seriesData = [];
+    var seriesData1 = [];
+    var option={
+        title : {
+            text: '购买模式对比图',
+            subtext: '成功的订单量占比数',
+            x:'center'
+        },
+        tooltip : {
+            trigger: 'item',
+            formatter: "{a} <br/>{b} : {c} ({d}%)"
+        },
+        legend: {
+            orient : 'vertical',
+            x : 'left',
+            data:[]
+        },
+        toolbox: {
+            show : true,
+            feature : {
+                magicType : {
+                    show: true,
+                    type: ['pie', 'funnel'],
+                    option: {
+                        funnel: {
+                            x: '25%',
+                            width: '50%',
+                            funnelAlign: 'left',
+                            max: 1548
+                        }
+                    }
+                },
+                restore : {show: true},
+                saveAsImage : {show: true}
+            }
+        },
+        calculable : true,
+        series : [
+            {
+                name:'该模式/总订单量',
+                type:'pie',
+                radius : '55%',
+                center: ['50%', '60%'],
+                data:[]
+            }
+        ]
+    };
+    $.get(location.origin+'/minapi.php?op=buy_model_data&uniacid={$_W["uniacid"]}',function(res) {
+        var data = JSON.parse(res);
+        console.log(data);
+        for (var i = 0; i < data.data.length; i++) {
+            var obj = {
+                value: data.data[i].total,
+                name: data.data[i].selltype
+            };
+            var obj1 = {
+                value: Number(data.data[i].total_price).toFixed(2),
+                name: data.data[i].selltype
+            };
+            legendData.push(data.data[i].selltype);
+            seriesData.push(obj);
+            seriesData1.push(obj1);
+        }
+        option.legend.data=legendData;
+        option.series[0].data=seriesData;
+        RCHARTS(option);
+    });
+    function RCHARTS(optionCommon){
+        require(
+                [
+                    'echarts',
+                    'echarts/chart/bar', // 使用柱状图就加载bar模块，按需加载
+                    'echarts/chart/line',
+                    'echarts/chart/funnel',
+                    'echarts/chart/pie'
+                ],
+                function (ec) {
+                    // 基于准备好的dom，初始化echarts图表
+                    var myChart = ec.init(document.getElementById('goumaimsdbt'));
+                    // 为echarts对象加载数据
+                    myChart.setOption(optionCommon);
+                }
+        );
+    }
+
+
+
+</script>
+{php include wl_template('common/footer');}

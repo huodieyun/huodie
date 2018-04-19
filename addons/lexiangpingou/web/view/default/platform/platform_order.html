@@ -1,0 +1,61 @@
+{php include wl_template('common/header');}
+<ul class="nav nav-tabs">
+	<li {if $_GPC['op'] == '' || $_GPC['op'] == 'display'}class="active"{/if}><a href="{php echo web_url('platform/platform_order/display');}">商家申请发货订单</a></li>
+    <li {if $_GPC['op'] == 'collect' && intval($_GPC['status']) == 1}class="active"{/if}><a href="{php echo web_url('platform/platform_order/collect' , array('status' => 1));}">商家申请退款订单</a></li>
+	<li {if $_GPC['op'] == 'shop_refund_list' }class="active"{/if}><a href="{php echo web_url('platform/platform_order/shop_refund_list');}">平台向商家打退款单</a></li>
+	<li {if $_GPC['op'] == 'supply_refund_list'}class="active"{/if}><a href="{php echo web_url('platform/platform_order/supply_refund_list');}">平台向供应商申请退款</a></li>
+	<li {if $_GPC['op'] == 'supply_pay_receive'}class="active"{/if}><a href="{php echo web_url('platform/platform_order/supply_pay_receive');}">供应商退款单确认收款</a></li>
+    <li {if $_GPC['op'] == 'collect' && intval($_GPC['status']) == 2}class="active"{/if}><a href="{php echo web_url('platform/platform_order/collect' , array('status' => 2));}">平台已退款订单</a></li>
+    <li {if $_GPC['op'] == 'collect' && intval($_GPC['status']) == 3}class="active"{/if}><a href="{php echo web_url('platform/platform_order/collect' , array('status' => 3));}">供应商已发货订单</a></li>
+    <li {if $_GPC['op'] == 'collect' && intval($_GPC['status']) == 4}class="active"{/if}><a href="{php echo web_url('platform/platform_order/collect' , array('status' => 4));}">可向供应商打款订单</a></li>
+    <li {if $_GPC['op'] == 'collect' && intval($_GPC['status']) == 0}class="active"{/if}><a href="{php echo web_url('platform/platform_order/collect' , array('order_id' => $_GPC['order_id']));}">全部订单</a></li>
+	{if $_GPC['op'] == 'detail'}<li class="active"><a href="{php echo web_url('platform/platform_order/detail');}">订单详情</a></li>{/if}
+</ul>
+{if $_GPC['op'] == '' || $_GPC['op'] == 'display'}
+
+<!--<div class="panel panel-info">-->
+	<!--<div class="panel-heading">筛选</div>-->
+	<!--<div class="panel-body">-->
+		<!--<form action="./index.php" method="get" class="form-horizontal" role="form">-->
+			<!--<input type="hidden" name="c" value="site" />-->
+			<!--<input type="hidden" name="a" value="entry" />-->
+			<!--<input type="hidden" name="m" value="lexiangpingou" />-->
+			<!--<input type="hidden" name="do" value="platform" />-->
+			<!--<input type="hidden" name="ac" value="platform_order" />-->
+			<!--<input type="hidden" name="op" value="display" />-->
+			<!--&lt;!&ndash;<input type="hidden" name="status" value="{$_GPC['status']}">&ndash;&gt;-->
+			<!--<div class="form-group">-->
+
+				<!--<label class="col-xs-12 col-sm-2 col-md-2 col-lg-1 control-label">商品名称</label>-->
+				<!--<div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">-->
+					<!--<input class="form-control" name="keyword" id="" type="text" value="{$_GPC['keyword']}" placeholder="可模糊查询商品名称">-->
+				<!--</div>-->
+				<!--<div class="col-md-2" style="float: right">-->
+					<!--<button class="btn btn-default min-width"><i class="fa fa-search"></i> 搜索</button>-->
+				<!--</div>-->
+			<!--</div>-->
+		<!--</form>-->
+	<!--</div>-->
+<!--</div>-->
+{php include wl_template('platform/commodity_order');}
+
+{elseif $_GPC['op'] == 'shop'}
+    {php include wl_template('platform/orderlist');}
+{elseif $_GPC['op'] == 'order'}
+    {php include wl_template('platform/commodity_order');}
+{elseif $_GPC['op'] == 'collect'}
+    {if $status != 1}
+        {php include wl_template('platform/order_detail');}
+    {else}
+        {php include wl_template('platform/shop_refund_list');}
+    {/if}
+{elseif $_GPC['op'] == 'shop_refund_list'}
+    {php include wl_template('platform/shop_refund_list');}
+{elseif $_GPC['op'] == 'supply_refund_list'}
+    {php include wl_template('platform/supply_refund_list');}
+{elseif $_GPC['op'] == 'supply_pay_receive'}
+    {php include wl_template('platform/supply_pay_receive');}
+{/if}
+
+
+{php include wl_template('common/footer');}

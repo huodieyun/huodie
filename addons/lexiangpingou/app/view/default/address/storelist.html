@@ -1,0 +1,40 @@
+{php include wl_template('common/header');}
+<div onclick='go(this)' lat='{$item["lat"]}' lng ='{$item["lng"]}' data-storename="{$item['storename']}" data-address="{$item['address']}" class="go" style="position: absolute;top:15%;margin: auto;text-align: center;width: 100%">
+    <i class="iconal-shuaxin" style="font-size: 20px;"></i>
+    <p>正在打开地图...</p>
+</div>
+<script>
+    window.onload=function(){
+        console.log(2);
+        $('.go').click()
+    };
+    setTimeout(function(){
+        $('.go').click();
+        console.log(3);
+    },1500);
+    console.log(1);
+    function go(self){
+        if(!$(self).attr('lat')){
+            $.toast('经纬度不为空');
+            return false;
+        }
+        if(!$(self).attr('lng')){
+            $.toast('经纬度不为空');
+            return false;
+        }
+        var lat=Number($(self).attr('lat'));
+        var lng=Number($(self).attr('lng'));
+        console.log(lat);
+        console.log(lng);
+        var storename=$(self).attr('data-storename');
+        wx.openLocation({
+            latitude: lat,
+            longitude: lng,
+            name: storename,
+            address:$(self).attr('data-address'),
+            scale: 24,
+            infoUrl: "{php echo app_url('goods/list')}"
+        });
+    }
+</script>
+{php include wl_template('common/footer');}

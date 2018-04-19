@@ -1,0 +1,163 @@
+{php include wl_template('common/header');}
+<style>
+    .container{
+        background:#fff;
+        padding: 10px;
+    }
+    #dingdanQYFBT{
+        height: 615px;
+    }
+    .container label{
+        width: 60px;
+        line-height: 34px;
+    }
+    .btn-default:focus,.btn-default.active{
+        background-color: #44b549;
+        color: #fff0cc;
+        border-color: #ccc;
+        box-shadow:none;
+    }
+    .topGM{
+        margin-bottom: 20px;
+    }
+    .topGM>button{
+        padding: 6px 24px;
+    }
+</style>
+<div class="container">
+    <div class="btn-group topGM" role="group">
+        <button type="button" class="btn btn-default active">省</button><button type="button" class="btn btn-default">市</button><button type="button" class="btn btn-default">区</button>
+    </div>
+    <div id="dingdanQYFBT"></div>
+
+
+</div>
+
+<script>
+    // 路径配置
+    require.config({
+        paths: {
+            echarts: "//www.lexiangpingou.cn/addons/lexiangpingou/web/resource/js/echarts/build/dist"
+        }
+    });
+
+    $('.topGM').on('click','button',function(){
+        if($(this).hasClass('active')){return false;}
+        $('.topGM button').removeClass('active');
+        $(this).addClass('active');
+        if($(this).html()=='省') {
+            ajaxZHL('province');
+        }else if($(this).html()=='市'){
+            ajaxZHL('city');
+        }else if($(this).html()=='区'){
+            ajaxZHL('county');
+        }
+    });
+
+    ajaxZHL('province');
+
+    function ajaxZHL(a) {
+        $.get(
+                location.origin + '/minapi.php?op=order_area_data&uniacid={$_W["uniacid"]}',
+                {
+                    keyword: a
+                },
+                function (res) {
+                    var data = JSON.parse(res).data;
+                    console.log(data);
+                    var option = {
+                        title : {
+                            text: '用户区域分布图',
+                            subtext: '',
+                            x:'center'
+                        },
+                        tooltip : {
+                            trigger: 'item',
+                            formatter: "{a} <br/>{b} : {c} ({d}%)"
+                        },
+                        legend: {
+                            orient : 'vertical',
+                            x : 'left',
+                            data:[]
+                        },
+                        toolbox: {
+                            show : true,
+                            feature : {
+                                dataView : {show: true, readOnly: false},
+                                magicType : {
+                                    show: true,
+                                    type: ['pie', 'funnel'],
+                                    option: {
+                                        funnel: {
+                                            x: '25%',
+                                            width: '50%',
+                                            funnelAlign: 'left',
+                                            max: 1548
+                                        }
+                                    }
+                                },
+                                restore : {show: true},
+                                saveAsImage : {show: true}
+                            }
+                        },
+                        calculable : true,
+                        series : [
+                            {
+                                name:'分布比例',
+                                type:'pie',
+                                radius : '55%',
+                                center: ['50%', '60%'],
+                                data:[
+//                                    {value:335, name:'上海'}
+                                ]
+                            }
+                        ]
+                    };
+                    var area=[];
+                    var series=[];
+                    for(var i= 0;i<data.length;i++){
+                        area.push(data[i]['area']);
+                        var obj={
+                            value:data[i]['num'],
+                            name:data[i]['area']
+                        };
+                        series.push(obj);
+                    }
+                    option.legend.data=area;
+                    option.series[0].data=series;
+                    if(data.length==0) {
+                        option.series = [{
+                            name: '',
+                            type: '',
+                            radius: '',
+                            center: [],
+                            data: []
+                        }];
+                    }
+                    ajaxEh(option);
+                }
+        );
+    }
+
+    function ajaxEh(option) {
+        require(
+                [
+                    'echarts',
+                    'echarts/chart/bar', // 使用柱状图就加载bar模块，按需加载
+                    'echarts/chart/line',
+                    'echarts/chart/funnel',
+                    'echarts/chart/pie'
+                ],
+                function (ec) {
+                    // 基于准备好的dom，初始化echarts图表
+                    var myChart = ec.init(document.getElementById('dingdanQYFBT'));
+                    myChart.setOption(option);
+                }
+        );
+    }
+
+</script>
+
+
+
+{php include wl_template('common/footer');}

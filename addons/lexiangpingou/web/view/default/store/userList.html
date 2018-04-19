@@ -1,0 +1,1349 @@
+{php include wl_template('common/header');}
+<ul class="nav nav-tabs">
+    <li {if $_GPC['op']==''} class="active"{/if}><a href="{php echo web_url('store/userList');}">商家列表</a></li>
+    {if $_W['user']['merchant_id'] > 0}
+    <li {if $_GPC['op']=='unsettlement'} class="active"{/if}><a href="{php echo web_url('store/userList/unsettlement' , array('id' => $_W['user']['merchant_id']));}">未结算订单</a></li>
+    <li {if $_GPC['op']=='account'} class="active"{/if}><a href="{php echo web_url('store/userList/account' , array('id' => $_W['user']['merchant_id']));}">申请提现</a></li>
+    {/if}
+    <li {if $_GPC['op']=='review'} class="active"{/if}><a href="{php echo web_url('store/userList/review' , array('id' => $_W['user']['merchant_id']));}">待审核记录</a></li>
+    <li {if $_GPC['op']=='give'} class="active"{/if}><a href="{php echo web_url('store/userList/give' , array('id' => $_W['user']['merchant_id']));}">待打款记录</a></li>
+    <li {if $_GPC['op']=='withdraw'} class="active"{/if}><a href="{php echo web_url('store/userList/withdraw' , array('id' => $_W['user']['merchant_id']));}">提现记录</a></li>
+    {if $_W['user']['merchant_id'] == 0}
+    {if $op == 'record'}
+        <li {if $_GPC['op']=='record'} class="active"{/if}><a href="{php echo web_url('store/userList/record' , array('id' => $account['id']));}">审核</a></li>
+    {/if}
+    {if $op == 'play'}
+        <li {if $_GPC['op']=='play'} class="active"{/if}><a href="{php echo web_url('store/userList/play' , array('pid' => $_GPC['pid']));}">打款</a></li>
+    {/if}
+        <li {if $_GPC['op']=='buy_history'}class="active"{/if}><a href="{php echo web_url('store/userList/buy_history');}">多商户购买记录</a></li>
+    {/if}
+</ul>
+{if $_GPC['op']=='display' || $_GPC['op']==''}
+<div class="panel">
+    <div class="panel-body">
+        <form action="" method="get" class="form-horizontal" role="form" id="form1">
+            <input type="hidden" name="c" value="site" />
+            <input type="hidden" name="a" value="entry" />
+            <input type="hidden" name="m" value="lexiangpingou" />
+            <input type="hidden" name="do" value="store" />
+            <input type="hidden" name="ac" value="userList" />
+            <!--<input type="hidden" name="op" value="{$op}"/>-->
+            <div class="form-group">
+                <div class="col-md-12">
+                    <div class="input-group">
+                        <input type="text" name="keyword" class="form-control" value="{$_GPC['keyword']}"  placeholder="可搜索手机号/用户名"/>
+                        <span class="input-group-addon" id="search">搜索</span>
+                    </div>
+                </div>
+            </div>
+        </form>
+
+        <div class="form-group"  style="height: 30px;">
+            <label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label"><span style='color:red'>*</span>商户登陆地址</label>
+            <div class="col-md-6">
+                {php echo $url}
+            </div>
+        </div>
+        {if $_W['user']['merchant_id'] == 0}
+        <div class="form-group">
+            <label class="col-xs-12 col-sm-3 col-md-3 col-lg-3 control-label">总商家数：{php echo $merchant_num}</label>
+            <label class="col-xs-12 col-sm-3 col-md-3 col-lg-3 control-label">当前商家数：{php echo $merchant_now}</label>
+            <label class="col-xs-12 col-sm-3 col-md-3 col-lg-3 control-label">可添加商家数：{php echo $merchant_num - $merchant_now}</label>
+            {if $boom == 1}
+            <a href="{php echo web_url('store/userList/buy_history');}" class="col-xs-12 col-sm-3 col-md-3 col-lg-2 btn btn-danger btn-sm" title="点击查看">有部分商家要到期了</a>
+            {/if}
+        </div>
+        {/if}
+    </div>
+</div>
+
+<div class="panel panel-default">
+    <div class="table-responsive">
+        <table class="table table-hover" style="min-width: 300px;">
+            <thead class="navbar-inner">
+            <tr>
+
+                <th class="col-sm-1" style="width: 12%">商家</th>
+                <th class="col-sm-2" style="width: 9%;">状态</th>
+                <th class="col-sm-1" style="padding-left:0;padding-right:0;width: 5%;">总成交金额</th>
+                <th class="col-sm-1" style="padding-left:0;padding-right:0;width: 5%;">总扣点金额</th>
+                <th class="col-sm-1" style="padding-left:0;padding-right:0;width: 5%;">已发放金额</th>
+                <th class="col-sm-1" style="padding-left:0;padding-right:0;width: 5%;">待发放金额</th>
+                <th class="col-sm-1" style="padding-left:0;padding-right:0;width: 5%;">当前扣点比</th>
+                <th class="col-sm-1" style="padding-left:0;padding-right:0;width: 5%;">上架商品数</th>
+                <th class="col-sm-2" style="text-align:center;width: 20%">操作</th>
+            </tr>
+            </thead>
+            <tbody>
+            {loop $merchants $merchant}
+            <tr>
+                <td><image src="{php echo tomedia($merchant['thumb']);}" style="max-width: 48px; max-height: 48px; border: 1px dotted gray"/><br/>{$merchant['name']}</td>
+                <td>
+                    {if $merchant['status']==0}待审核{else if $merchant['status']==1}审核通过{else if $merchant['status']==2}拒绝入驻{else if $merchant['status']==3}商家下架{else if $merchant['status']==4}商家到期{else if $merchant['status']==5}申请撤离平台{else if $merchant['status']==6}撤离平台{/if}<br>
+                    {if $merchant['status'] == 1 && !empty($merchant['check_time'])}{php echo date('Y-m-d H:i' , $merchant['check_time'])}{/if}
+                </td>
+
+                <td>{if !empty($merchant['amount_total'])}{$merchant['amount_total']}{else}0.00{/if}元</td>
+                <td>{if !empty($merchant['point_total'])}{php echo $merchant['point_total'];}{else}0.00{/if}元</td>
+                <td>{if !empty($merchant['give_total'])}{$merchant['give_total']}{else}0.00{/if}元</td>
+                <td>{if !empty($merchant['commit'])}{$merchant['commit']}{else}0.00{/if}元</td>
+                <td>{if !empty($merchant['percent'])}{$merchant['percent']}%{else}0.00%{/if}</td>
+
+                <td>{$merchant['goodsnum']}</td>
+                <!--<td>{if $merchant['no_money']}{$merchant['no_money']}元{else}0.00元{/if}{if $merchant['delivery']}<br>[包含{$merchant['delivery']}货到付款]{/if}</td>-->
+
+
+                <td style="text-align: center;">
+
+                    {if $merchant['status'] == 0 && $_W['user']['merchant_id'] == 0}
+                    <!--<a href="javascript:;" class="btn btn-default btn-sm js-check-goods" goods-id="{$merchant['id']}" data-toggle="tooltip" data-placement="top" title="审核通过">审核通过</a>-->
+                    <!--<a href="javascript:;" goods-id="{$merchant['id']}" class="btn btn-default btn-sm js-not-check-goods" data-toggle="tooltip" data-placement="top" title="拒绝入驻">拒绝入驻</a>-->
+                    <a href="{php echo web_url('store/user/edit' , array('id' => $merchant['id']))}" class="btn btn-default btn-sm">信息预览</a>
+                    {elseif $merchant['status'] == 1}
+                    <a href="{php echo web_url('store/user', array('op'=>'edit', 'id'=>$merchant['id']));}"  class="btn btn-default btn-sm" data-toggle="tooltip" data-placement="top" title="详情">编辑</a>
+                    {if $merchant['status'] == 1 && $_W['user']['merchant_id'] == 0}
+                    <a href="javascript:;" goods-id="{$merchant['id']}" class="btn btn-default btn-sm js-off-shelves-goods" data-toggle="tooltip" data-placement="top" title="下架">下架</a>
+                    {/if}
+                    {if $_W['user']['merchant_id'] > 0}
+                    <a href="{php echo web_url('store/userList/account', array( 'id'=>$merchant['id']));}" title="申请提现" class="btn btn-default btn-sm">申请提现</a>
+                    {if $merchant['status'] == 1 && $_W['uniacid'] == 53}
+                    <a href="javascript:;" class="btn btn-default btn-sm js-apply-goods" goods-id="{$merchant['id']}" data-toggle="tooltip" data-placement="top" title="申请撤离平台">我要撤离</a>
+                    {/if}
+                    {/if}
+                    <!--{if $_W['user']['merchant_id'] == 0}-->
+                    <!--<a class="btn btn-default" href="{php echo web_url('store/userList/record', array( 'id'=>$merchant['id']));}" title="打款" class="btn btn-default btn-sm">提现</a>-->
+                    <!--{/if}-->
+                    <a href="{php echo web_url('store/userList/withdraw', array( 'id'=>$merchant['id']));}" title="提现记录" class="btn btn-default btn-sm">提现记录</a>
+                    {elseif $merchant['status'] == 3 || $merchant['status'] == 2}
+                    <a href="javascript:;" goods-id="{$merchant['id']}" class="btn btn-default btn-sm js-on-shelves-goods" data-toggle="tooltip" data-placement="top" title="上架">上架</a>
+                    {/if}
+                    {if $merchant['status'] == 5 && $_W['user']['merchant_id'] > 0}
+                    退款申请审核中
+                    {/if}
+                    {if $merchant['status'] == 5 && $_W['user']['merchant_id'] == 0}
+                    <a href="javascript:;" class="btn btn-default btn-sm js-refund-goods" goods-id="{$merchant['id']}" data-toggle="tooltip" data-placement="top" title="通过撤离平台">通过撤离</a>
+                    {/if}
+                    {if !empty($merchant['merchant_batch'])}
+                    <br>批次编号：{$merchant['merchant_batch']}
+                    {/if}
+                </td>
+            </tr>
+            {/loop}
+            {if empty($merchants)}
+            <tr>
+                <td colspan="8">
+                    尚未添加商家
+                </td>
+            </tr>
+            {elseif !empty($pager)}
+            <tr>
+                <td colspan="8">{$pager}</td>
+            </tr>
+            {/if}
+            </tbody>
+        </table>
+    </div>
+</div>
+<script type="text/javascript">
+    $("#search").click(function(){
+        $('#form1')[0].submit();
+    });
+
+    $('.js-apply-goods , .js-refund-goods').click(function(e) {
+        e.stopPropagation();
+        var id = $(this).attr('goods-id');
+        var op = '';
+        var _this = $(this).parent().parent();
+        if ($(this).hasClass('js-apply-goods')) {
+            op = 'apply';
+            status = 1;
+            html = '确认申请撤离平台【撤离平台会退换保证金】?';
+        } else if ($(this).hasClass('js-refund-goods')) {
+            op = 'refund';
+            status = 2;
+            html = '确认通过撤离平台申请【通过将会退换保证金】?';
+        }
+        util.nailConfirm(this, function(state) {
+            if(!state) return;
+            $.post("{php echo web_url('store/merchant_margin')}", {op : op , id : id , status : status}, function(data){
+                if((!(data.errno))){
+                    setTimeout(function () {
+//                        window.location.href = window.location.href
+                    },1000);
+                };
+                util.tips(data.message, 112000);
+            }, 'json');
+        }, {html: html});
+
+    });
+
+    $('.js-check-goods , .js-not-check-goods').click(function(e) {
+        e.stopPropagation();
+        var id = $(this).attr('goods-id');
+        var _this = $(this).parent().parent();
+        if ($(this).hasClass('js-check-goods')) {
+            status = 1;
+            html = '确认通过审核?';
+        } else if ($(this).hasClass('js-not-check-goods')) {
+            status = 2;
+            html = '确认拒绝入驻?';
+        }
+        util.nailConfirm(this, function(state) {
+            if(!state) return;
+            $.post("{php echo web_url('store/user/check')}", {id : id , status : status}, function(data){
+                if(!(data.errno)){
+                    setTimeout(function () {
+                        window.location.href = window.location.href
+                    },1000);
+                };
+                util.tips(data.message, 2000);
+            }, 'json');
+        }, {html: html});
+
+    });
+
+    $('.js-off-shelves-goods, .js-on-shelves-goods').click(function(e) {
+        e.stopPropagation();
+        var id = $(this).attr('goods-id');
+        var _this = $(this).parent().parent();
+        if ($(this).hasClass('js-on-shelves-goods')) {
+            status = 1;
+            html = '确认上架?';
+        } else if ($(this).hasClass('js-off-shelves-goods')) {
+            status = 3;
+            html = '确认下架?';
+        }
+        util.nailConfirm(this, function(state) {
+            if(!state) return;
+            $.post("{php echo web_url('store/userList/shelf')}", {id : id , status : status}, function(data){
+                if(!(data.errno)){
+                    setTimeout(function () {
+                        window.location.href = window.location.href
+                    },1000);
+                };
+                util.tips(data.message, 2000);
+            }, 'json');
+        }, {html: html});
+    });
+</script>
+{elseif $_GPC['op']=='unsettlement'}
+
+<div class="main">
+    {if $_W['user']['merchant_id'] > 0}
+    <div class="panel panel-default">
+        <div class="table-responsive">
+            <table class="table table-hover" style="min-width: 300px;">
+                <tbody>
+                <tr>
+                    <td><image src="{php echo tomedia($merchant['thumb']);}" style="max-width: 48px; max-height: 48px; border: 1px dotted gray"/></td>
+                    <td>商家名称：{$merchant['name']}</td>
+                    <td>未结算总金额：{if $total_price}{$total_price}元{else}0.00元{/if}</td>
+                    <!--<td>扣点比例：{if !empty($merchant['percent'])}{$merchant['percent']}%{else}0.00%{/if}</td>-->
+                    <!--<td>本次总扣点金额：{php echo round(($total_price - $get_total) , 2);}元</td>-->
+                    <!--<td>本次可提现金额：{if $get_total}{$get_total}元{else}0.00元{/if}</td>-->
+                </tr>
+                </tbody>
+            </table>
+
+        </div>
+    </div>
+    {/if}
+    <div class="panel panel-default">
+        <div class="panel-body table-responsive">
+            <table class="table table-hover">
+                <thead class="navbar-inner">
+                <tr>
+                    <th style="width:85px;">订单号</th>
+                    <th style="width:80px;">商品名称</th>
+                    <th style="width:50px;">成交额</th>
+                    <th style="width:50px;">最后修改时间</th>
+                    <!--<th style="width:50px;">扣点金额</th>-->
+                    <!--<th style="width:50px;">结算金额</th>-->
+
+                    <!--<th style="width:80px;">提现手续费金额</th>-->
+                    <th style="width:80px;text-align:center">订单详情</th>
+                </tr>
+                </thead>
+                <tbody>
+                {loop $list $item}
+                <tr>
+                    <td>{$item['orderno']}</td>
+                    <td>{$item['goodsname']}</td>
+                    <td>{$item['price']}元</td>
+                    <td>{if $item['over_time']}{php echo date("Y-m-d H:i:s",$item['over_time'])}{/if}</td>
+                    <td style="text-align: center;"><a style="padding: 6px 10px;" class="btn btn-default" href="{php echo web_url('order/order/detail', array('id' => $item['id']))}">订单详情</a></td>
+                </tr>
+                {/loop}
+                {if empty($list)}
+                <tr>
+                    <td colspan="5" class="text-center" style="text-align: center">
+                        <span style="color:red;font-weight: 700;font-size:18px;">没有未结算的记录</span>
+                    </td>
+                </tr>
+                {elseif empty($pager)}
+                <tr>
+                    <td colspan="5" class="text-center" style="text-align: center">
+                        {$pager}
+                    </td>
+                </tr>
+                {/if}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</div>
+
+{elseif $_GPC['op']=='account'}
+
+<div class="main">
+    {if $_W['user']['merchant_id'] > 0}
+    <div class="panel panel-default">
+        <div class="table-responsive">
+            <table class="table table-hover" style="min-width: 300px;">
+                <tbody>
+                <tr>
+                    <td><image src="{php echo tomedia($merchant['thumb']);}" style="max-width: 48px; max-height: 48px; border: 1px dotted gray"/></td>
+                    <td>商家名称：{$merchant['name']}</td>
+                    <td>本次成交总金额：{if $total_price}{$total_price}元{else}0.00元{/if}</td>
+                    <!--<td>扣点比例：{if !empty($merchant['percent'])}{$merchant['percent']}%{else}0.00%{/if}</td>-->
+                    <td>本次总扣点金额：{php echo round(($total_price - $get_total) , 2);}元</td>
+                    <td>本次可提现金额：{if $get_total}{$get_total}元{else}0.00元{/if}</td>
+                </tr>
+                </tbody>
+            </table>
+
+        </div>
+    </div>
+    {/if}
+
+    <div class="panel panel-default">
+        <div class="panel-body table-responsive">
+            <table class="table table-hover">
+                <thead class="navbar-inner">
+                <tr>
+                    <th style="width:85px;">订单号</th>
+                    <th style="width:80px;">商品名称</th>
+                    <th style="width:50px;">总成交额</th>
+                    <th style="width:50px;">扣点比例</th>
+                    <th style="width:50px;">扣点金额</th>
+                    <th style="width:50px;">结算金额</th>
+
+                    <!--<th style="width:80px;">提现手续费金额</th>-->
+                    <th style="width:80px;text-align:center">结算时间</th>
+                </tr>
+                </thead>
+                <tbody>
+                {loop $list $item}
+                <tr>
+                    <td>{$item['orderno']}</td>
+                    <td>{$item['gname']}</td>
+                    <td>{$item['money']}元</td>
+                    <td>{if $item['percent']}{$item['percent']}{else}0.00{/if}%</td>
+                    <td>{if $item['get_money']}{php echo round(($item['money'] - $item['get_money']) , 2)}{else}0.00{/if}</td>
+                    <td>{$item['get_money']}元</td>
+                    <td>{php echo date("Y-m-d H:i:s",$item['createtime'])}</td>
+                </tr>
+                {/loop}
+                {if empty($list)}
+                <tr>
+                    <td colspan="7" class="text-center" style="text-align: center">
+                        <span style="color:red;font-weight: 700;font-size:18px;">没有可申请提现的记录</span>
+                    </td>
+                </tr>
+                {else}
+                <tr>
+                    <td colspan="6" style="text-align: left">{if !empty($pager)}{$pager}{/if}</td>
+                    <td class="text-right">
+
+                        <form method="post">
+                            <div class="form-group col-md-12">
+                                <input name="submit" type="submit" class="btn btn-primary min-width text-right" value="申请提现"/>
+                                <input type="hidden" name="token" value="{$_W['token']}" />
+                            </div>
+                        </form>
+                    </td>
+                </tr>
+                {/if}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</div>
+
+{elseif $_GPC['op']=='record'}
+<div class="main">
+
+    <div class="panel panel-default">
+        <div class="table-responsive">
+            <table class="table table-hover" style="min-width: 300px;">
+                <tbody>
+                <tr>
+                    <td><image src="{php echo tomedia($merchant['thumb']);}" style="max-width: 48px; max-height: 48px; border: 1px dotted gray"/></td>
+                    <td>商家名称：{$merchant['name']}</td>
+                    <td>本次成交总金额：{if $total_price}{$total_price}元{else}0.00元{/if}</td>
+                    <!--<td>扣点比例：{if !empty($merchant['percent'])}{$merchant['percent']}%{else}0.00%{/if}</td>-->
+                    <td>本次总扣点金额：{php echo round(($total_price - $get_total) , 2);}元</td>
+                    <td>本次可提现金额：{if $get_total}{$get_total}元{else}0.00元{/if}</td>
+                </tr>
+                </tbody>
+            </table>
+
+        </div>
+    </div>
+
+    <div class="panel panel-default">
+        <div class="panel-body table-responsive">
+            <form method="post">
+
+            <table class="table table-hover">
+                <thead class="navbar-inner">
+                <tr>
+                    <!-- <th style="width:40px;">
+                        <input type="checkbox" name="checkall" value="" id="checkall" onclick="var ck = this.checked; $(':checkbox').each(function(){this.checked = ck});"/>
+                    </th> -->
+
+                    <th style="width:50px;">提现状态</th>
+                    <th style="width:100px;">订单号</th>
+                    <th style="width:50px;">商品名称</th>
+                    <th style="width:35px;">总成交额</th>
+                    <th style="width:35px;">扣点比例</th>
+                    <th style="width:35px;">扣点金额</th>
+                    <th style="width:35px;">结算金额</th>
+
+                    <!--<th style="width:80px;">提现手续费金额</th>-->
+                    <th style="width:80px;text-align:center">结算时间</th>
+                    <th style="width:80px;text-align:center">订单详情</th>
+                </tr>
+                </thead>
+                <tbody>
+                {loop $list $item}
+                <tr>
+                    <!--<td><input type="checkbox" id="record_id[]"  name="items[{php echo $i}]" value="{$item['id']}" class="items" /></td>-->
+                    <!-- <td><input type="checkbox" id="gid"  name="items[{php echo $i}]" value="{$item['id']}" class="items" /></td> -->
+                    <td>
+                        {if $item['get_status'] == 0 && $item['uni_status'] == 0}<label class="label label-default label-default">待确认</label>
+                        {elseif $item['get_status'] == 1}<label class="label label-default label-success">已打款</label>
+                        {elseif $item['get_status'] == -1}<label class="label label-default label-danger">拒签</label>
+                        {elseif $item['get_status'] == -2}<label class="label label-default label-danger">强制拒签</label>
+                        {elseif $item['uni_status'] == 1}<label class="label label-default label-success">审核通过</label>
+                        {elseif $item['get_status'] == 2}<label class="label label-default label-success">已确认</label>
+                        {/if}
+                    </td>
+                    <td>{$item['orderno']}</td>
+                    <td>{$item['gname']}</td>
+                    <td>{$item['money']}元</td>
+                    <td>{if $item['percent']}{$item['percent']}{else}0.00{/if}%</td>
+                    <td>{if $item['get_money']}{php echo round(($item['money'] - $item['get_money']) , 2)}{else}0.00{/if}元</td>
+                    <td>{$item['get_money']}元</td>
+                    <td>{php echo date("Y-m-d H:i:s",$item['createtime'])}</td>
+                    <td style="text-align: center">
+                        <a style="padding: 6px 10px;" class="btn btn-default" href="{php echo web_url('order/order/detail', array('id' => $item['orderid']))}">订单详情</a>
+                        {if $_W['user']['merchant_id'] == 0}
+                        {if $item['get_status'] == 0 && $item['uni_status'] == 0}
+                        <a style="padding: 6px 10px;" href="javascript:;" goods-id="{$item['id']}" data_id='0' sta="{if $item['uni_status'] == 1}3{else}{$item['get_status']}{/if}" class="btn btn-default js-change">拒签</a>
+                        {else}
+                        <a style="padding: 6px 10px;" href="javascript:;" goods-id="{$item['id']}" data_id='1' sta="{if $item['uni_status'] == 1}3{else}{$item['get_status']}{/if}" class="btn btn-default js-change">详情</a><br>
+                        {/if}
+                        {if $item['get_status'] == -1}
+                        <a style="padding: 6px 10px;" href="javascript:;" goods-id="{$item['id']}" data_id='-1' sta="{if $item['uni_status'] == 1}3{else}{$item['get_status']}{/if}" class="btn btn-default js-change">允许提现</a>
+                        <a style="padding: 6px 10px;" href="javascript:;" goods-id="{$item['id']}" data_id='-2' sta="{if $item['uni_status'] == 1}3{else}{$item['get_status']}{/if}" class="btn btn-default js-change">强制拒签</a>
+                        {/if}
+                        {/if}
+                        {if $_W['user']['merchant_id'] > 0}
+                        {if $item['get_status'] == -1 || $item['get_status'] == -2 || $item['uni_status'] == 1}
+                        <a style="padding: 6px 10px;" href="javascript:;" goods-id="{$item['id']}" data_id='2' sta="{if $item['uni_status'] == 1}3{else}{$item['get_status']}{/if}" class="btn btn-default js-change">拒提原因</a>
+                        {/if}
+                        {/if}
+                    </td>
+                </tr>
+                {/loop}
+                {if empty($list)}
+                <tr>
+                    <td colspan="9" class="text-center" style="text-align: center">
+                        <span style="color:red;font-weight: 700;font-size:18px;">没有达到提现要求的记录</span>
+                    </td>
+                </tr>
+                {elseif $_W['user']['merchant_id'] == 0 && $account['status'] == 1}
+
+                <tr>
+                    {if !empty($pager)}
+                    <td colspan="8" style="text-align: left">{$pager}</td>
+
+                    <!--<td><input type="checkbox" name="checkall" value="" id="checkall" onclick="var ck = this.checked; $(':checkbox').each(function(){this.checked = ck});" /></td>-->
+                    <td class="text-right">
+                        <div class="form-group col-md-12">
+                            <!--<a href="javascript:;" class="btn btn-primary min-width js-batch">提现确认</a>-->
+                            <input type="submit" name="submit" class="btn btn-primary min-width" value="提现确认"/>
+                            <input type="hidden" name="token" value="{$_W['token']}" />
+                        </div>
+                    </td>
+                    {else}
+                    <td colspan="9" class="text-right">
+                        <div class="form-group col-md-12">
+                            <!--<a href="javascript:;" class="btn btn-primary min-width js-batch">提现确认</a>-->
+                            <input type="submit" name="submit" class="btn btn-primary min-width" value="提现确认"/>
+                            <input type="hidden" name="token" value="{$_W['token']}" />
+                        </div>
+                    </td>
+                    {/if}
+                </tr>
+                {else}
+                <tr>
+                    {if !empty($pager)}
+                    <td colspan="9" style="text-align: right">{$pager}</td>
+                    {/if}
+                </tr>
+                {/if}
+
+                </tbody>
+            </table>
+            </form>
+        </div>
+    </div>
+    <div class="modal-content col-xs-12 col-sm-6 col-md-6 col-lg-6" style="display:none;position: fixed;top: 20%; left: 30%;z-index: 10000;">
+        <div class="modal-header">
+            <button aria-hidden="true" data-dismiss="modal" class="close one close_text" type="button">×</button>
+            <h3>请输入理由</h3></div>
+            <div class="chat_text" style="display: flex;flex-direction: row;justify-content: space-between; padding: 10px 60px;">  
+                    <div class="silde_left_bar">
+                        
+                    </div>
+                    <div class="silde_right_bar">
+                        
+                    </div>
+            </div>
+        <div class="modal-body">
+            <div class="row">
+                
+                <div class="input-group col-xs-12">
+                    <input type="text" class="form-control" name="keyword" value="" id="search-kwd" placeholder="请输入理由">
+                    <!--<span class="input-group-btn"><button type="button" class="btn btn-default" onclick="search_members('saler','search-kwd');">提交</button></span>-->
+                </div>
+            </div>
+            <div id="module-menus" style="padding-top:5px;"></div>
+        </div>
+        <div class="modal-footer"><a href="#" class="btn btn-default submit_text" data-dismiss="modal" aria-hidden="true" id="c1">提交</a></div>
+    </div> 
+</div>
+<script>
+
+    $('.js-batch').click(function(e){
+        e.stopPropagation();
+        var op = 'submit';
+        var id = {$_GPC['id']};
+        var html = '确认提交?【提交后将不能再拒签已确认订单】';
+        var $this = $(this);
+        util.nailConfirm(this, function(state) {
+            if(!state) return;
+            $.post("{php echo web_url('store/userList/record');}", {funcop : op, id : id}, function(data){
+//                if(!data.errno){
+//                    $checkboxes.each(function() {
+//                        $(this).parent().parent().remove();
+//                    });
+//                };
+//                util.tips(data.message, 2000);
+            }, 'json');
+        }, {html: html});
+    });
+    // function show_dialog() {
+    //     $('.modal-content').fadeIn();
+
+    // }
+    // function* detail (event) {
+    //     var that = this;
+    //     var common = $(that).attr('data_id');
+    //     console.log($(that).attr('goods-id'));
+    //     // console.log(item);
+    //     yield (() => {
+    //         that.show_dialog(); 
+    //         var id = $(this).attr('goods-id');
+    //     })()
+    //     yield (() => {
+    //         var _val = $('#search-kwd').val();
+            
+    //         var op = ''; 
+    //         switch (Number(common)) {
+    //             case 0: op = c;
+    //             break;
+    //             case 1: op = detail;
+    //             break;
+    //             case 2: op = reason; 
+    //         }
+    //         that.ajaxDE(op,_val,id);
+    //         $('.modal-content').fadeOut();
+    //     })()
+    // }
+    // var Gen = detail();
+
+    function ajaxDE(op,_val,id) {
+        if(_val == ''){
+            alert('请输入拒签原因');
+        }else {
+//            util.nailConfirm(this, function(state) {
+//                if(!state) return;
+//                $.post("{php echo web_url('store/userList/change')}", {funcop : op, id : id,val : _val}, function(data){
+//                    if(!data.errno){
+//                        $checkboxes.each(function() {
+//                            $(this).parent().parent().remove();
+//                        });
+//                    };
+//                    util.tips(data.message, 2000);
+//                    window.location.reload();
+//                }, 'json');
+//            }, {html: html});
+            $.post("{php echo web_url('store/userList/change')}", {funcop : op, id : id,val : _val}, function(data){
+                if(!data.errno){
+
+                };
+                util.tips(data.message, 2000);
+                window.location.reload();
+            }, 'json');
+        }
+    }
+    function ajaxRE(id) {
+        $.get("{php echo web_url('store/userList/get')}",
+            {id:id},
+            function (res) {
+                var res = JSON.parse(res); 
+                // $('.chat_text').html('');
+                $('.silde_left_bar').html('');
+                $('.silde_right_bar').html('');
+                var html = '';
+                var text = '';
+                if(res.uni == null) return;
+            res.uni.forEach(function (idx) {
+                text += '<p style="padding: 8px;border: 1px solid #999;border-radius: 3px;text-align:center;">'+idx+'</p>'  
+            });
+            if(res.merchant != null) {
+                res.merchant.forEach(function (item) {
+                    html += '<p style="color:red;padding: 8px;border: 1px solid #999;border-radius: 3px;text-align:center;">' + item + '</p>'
+                });
+            }
+            $('.silde_left_bar').append(html);
+            $('.silde_right_bar').append(text);
+            // res.reason.forEach(function (item) {
+            //     if(!item.uni_reason){
+            //         html += '<p>'+item.uni_reason+'<p>'+
+            //             '<p>'+item.merchant_reason+'</p>'
+            //     }
+            // })
+            // $('.chat_text').append(html);
+        })
+    }
+    // $('.js-change').click(function () {
+    //     e.stopPropagation();
+    //     Generator = onshow;
+    // })
+    // var onshow;
+    //     onshow  = (function * (e) {
+    //      e.stopPropagation();
+    //     var id = $(this).attr('goods-id');
+    //     var _this = $(this).parent().parent();
+    //     $('.modal-content').fadeIn();
+    //     yield (() => {
+    //         var _val = $('#search-kwd').val();
+    //         if(_val = ''){
+    //             alert('请输入拒签原因')
+    //         }else {
+    //             util.nailConfirm(this, function(state) {
+    //                 if(!state) return;
+    //                 $.post("{php echo web_url('store/userList/change')}", {funcop : op, id : id}, function(data){
+    //                     if(!data.errno){
+    //                         _this.remove();
+    //                     };
+    //                     util.tips(data.message, 2000);
+    //                 }, 'json');
+    //             }, {html: html});
+    //         }
+    //     })();
+    // })
+    // $('.js-change').click(function(e) {
+    //     e.stopPropagation();
+    //     var id = $(this).attr('goods-id');
+    //     $('.submit_text').attr('goods-id',id);
+    //     var _this = $(this).parent().parent();
+    //     $('.modal-content').fadeIn();
+
+        
+    //     html = '确认拒绝?';
+    //     util.nailConfirm(this, function(state) {
+    //         if(!state) return;
+    //         $.post("{php echo web_url('store/userList/change')}", {funcop : op, id : id}, function(data){
+    //             if(!data.errno){
+    //                 _this.remove();
+    //             };
+    //             util.tips(data.message, 2000);
+    //         }, 'json');
+    //     }, {html: html});
+    // });
+    $('.js-change').click(function () {
+        var data_id = $(this).attr('data_id')
+        var id = $(this).attr('goods-id')
+        $('.submit_text').attr('goods-id',$(this).attr('goods-id'));
+        $('.submit_text').attr('data_id',data_id);
+//        var _sta = $(this).attr('sta');
+        var op = '';
+        if(data_id == '-1' || data_id == '-2'){
+            if(data_id == '-1') {
+                op = 'freed';
+            }else if (data_id == '-2') {
+                op = 'final';
+            }
+            $.post("{php echo web_url('store/userList/change')}", {funcop : op, id : id}, function(data){
+                if(!data.errno){
+
+                };
+                util.tips(data.message, 2000);
+                window.location.reload();
+            }, 'json');
+//            window.ajaxDE($(this).attr('goods-id'));
+            return false;
+        }
+//        if(_sta == 3 || _sta == -2){
+//            $('.modal-body').css({
+//                'display': 'none'
+//            });
+//            $('.modal-footer').css({
+//                'display': 'none'
+//            });
+//            $('modal-header h3').html('历史记录');
+//        }
+        $('.modal-content').fadeIn();
+        window.ajaxRE($(this).attr('goods-id'));
+    })
+    $('.close_text').click(function () {
+        $('.modal-content').fadeOut();
+    })
+    $('.submit_text').click(function () {
+        var _val = $('#search-kwd').val();
+        var id = $(this).attr('goods-id');
+        console.log(id);
+        if(_val == ''){
+            alert('请输入拒签原因');
+        }else {
+            var common = $(this).attr('data_id');
+            switch (Number(common)) {
+                case 0: op = 'c';
+                break;
+                case 1: op = 'detail';
+                break;
+                case 2: op = 'reason';
+                case -1: op = 'freed';
+                break;
+                case -2: op = 'final';
+                break;
+                default: op = 'err';
+                break; 
+            }
+            // $.post("{php echo web_url('store/userList/change')}", {funcop : op, id : id,val : _val}, function(data){
+            //     if(!data.errno){
+            //     };
+            //     util.tips(data.message, 2000);
+            // }, 'json');
+            window.ajaxDE(op,_val,id);
+        }
+    })
+</script>
+{elseif $_GPC['op']=='play'}
+<div class="main">
+    {if $_W['user']['merchant_id'] > 0}
+    <div class="panel panel-default">
+        <div class="table-responsive">
+            <table class="table table-hover" style="min-width: 300px;">
+                <tbody>
+                <tr>
+                    <td><image src="{php echo tomedia($merchant['thumb']);}" style="max-width: 48px; max-height: 48px; border: 1px dotted gray"/></td>
+                    <td>商家名：{$merchant['name']}</td>
+                    <td>申请提现金额：{$account['apply']}元</td>
+                    <td>扣点金额：{$account['point']}元</td>
+                    <td style="text-align: center">需发放金额：{$account['get_amount']}元</td>
+                </tr>
+                </tbody>
+            </table>
+
+        </div>
+    </div>
+    {/if}
+
+    <div class="panel panel-default">
+        <div class="panel-body table-responsive">
+
+            <div class="form-group" style="height: 40px;">
+                <label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label">银行卡类型</label>
+                <div class="col-xs-12 col-sm-10">
+                    <input type="text" readonly class="form-control" value="{$merchant['back_type']}" />
+                </div>
+            </div>
+            <div class="form-group" style="height: 40px;">
+                <label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label">银行卡账号</label>
+                <div class="col-xs-12 col-sm-10">
+                    <input type="text" readonly class="form-control" value="{$merchant['back_account']}" />
+                </div>
+            </div>
+            <div class="form-group" style="height: 40px;">
+                <label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label">银行卡绑定的用户名</label>
+                <div class="col-xs-12 col-sm-10">
+                    <input type="text" readonly class="form-control" value="{$merchant['back_name']}" />
+                </div>
+            </div>
+            <form method="post">
+
+                <div class="form-group" style="height: 40px;">
+                    <label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label">银行流水单号</label>
+                    <div class="col-xs-12 col-sm-10">
+                        <input type="text" name="account[single]" class="form-control" value="{$account['single']}" />
+                    </div>
+                </div>
+                <div class="form-group" style="height: 40px;">
+                    <label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label">银行流水单上传</label>
+                    <div class="col-xs-12 col-sm-10">
+                        {php echo tpl_form_field_image('account[thumb]', $account['thumb']);}
+                        <!--<span class="help-block">图片建议为200*150</span>-->
+                    </div>
+                </div>
+                <div class="form-group col-md-12" style="text-align: right">
+                    <input type="hidden" name="account[merchantid]" class="form-control" value="{$merchant['id']}" />
+                    <input name="submit" type="submit" class="btn btn-primary min-width text-right" value="确认打款"/>
+                    <input type="hidden" name="token" value="{$_W['token']}" />
+                </div>
+
+            </form>
+        </div>
+    </div>
+
+</div>
+{elseif $_GPC['op']=='withdraw'}
+<div class="main">
+    {if $_W['user']['merchant_id'] > 0}
+    <div class="panel panel-default">
+        <div class="table-responsive">
+            <table class="table table-hover" style="min-width: 300px;">
+                <tbody>
+                <tr>
+                    <td style="width: 50px;"><image src="{php echo tomedia($merchant['thumb']);}" style="max-width: 48px; max-height: 48px; border: 1px dotted gray"/></td>
+                    <td style="text-align: left">商家名：{$merchant['name']}</td>
+                    <td>申请提现金额：{$apply_total}元</td>
+                    <td>审批提现金额：{$total}元</td>
+                    <td>扣点金额：{$point_total}元</td>
+                    <td>已发放金额：{$give_total}元</td>
+                    <td style="text-align: center">待发放发放金额：{$commit}元</td>
+                </tr>
+                </tbody>
+            </table>
+
+        </div>
+    </div>
+    {/if}
+
+    <div class="panel panel-default">
+        <div class="panel-body table-responsive">
+            <form method="post">
+            <table class="table table-hover">
+                <thead class="navbar-inner">
+                <tr>
+                    <!--<th style="width:80px;">银行流水单</th>-->
+                    <th style="width:65px;">处理进度</th>
+                    <th style="width:50px;">成交金额</th>
+                    <th style="width:50px;">扣点金额</th>
+                    <th style="width:50px;">申请提现金额</th>
+                    <th style="width:60px;">已审批提现金额</th>
+                    <th style="width:100px;">已发放金额/时间</th>
+                    <th style="width:100px;text-align:center">最后操作时间</th>
+                    <th style="width:80px;">提现详情</th>
+                </tr>
+                </thead>
+                <tbody>
+                {loop $list $item}
+
+                <tr>
+                    <td>
+                        {if $item['status'] == 1}<label class="label label-default label-default">待确认</label>
+                        {elseif $item['status'] == 2}<label class="label label-default label-danger">已确认，待打款</label>
+                        {elseif $item['status'] == 3}<label class="label label-default label-success">已打款</label>
+                        {/if}
+                    </td>
+                    <td>
+                        <input type="hidden" name="record_id[]" value="{$item['id']}"/>
+                        {$item['amount']}元
+                    </td>
+                    <td>{php echo $item['point'];}元</td>
+                    <td>{$item['apply']}元</td>
+                    <td>{$item['get_amount']}元</td>
+                    <td>{$item['give']}元<br>{if !empty($item['give_time'])}{php echo date("Y-m-d H:i:s",$item['give_time'])}{/if}</td>
+                    <td>{if empty($item['updatetime'])}{php echo date("Y-m-d H:i:s",$item['createtime'])}{else}{php echo date("Y-m-d H:i:s",$item['updatetime'])}{/if}</td>
+                    <td style="text-align: center">
+                        {if $_W['user']['merchant_id'] == 0}
+                            {if $item['status'] == 1}
+                            <a class="btn btn-primary min-width" href="{php echo web_url('store/userList' , array('op' => 'record' , 'id' => $item['id']))}">审核</a>
+                            {elseif $item['status'] == 2 && $item['get'] == 1}
+                            <a class="btn btn-success min-width" href="{php echo web_url('store/userList' , array('op' => 'play' , 'id' => $item['id']))}">打款</a>
+                            {elseif $item['get'] == 0}
+                            <label class="label label-default label-danger">暂未达到提款期限</label><br>
+                            <a class="btn btn-success btn-sm" href="{php echo web_url('store/userList' , array('op' => 'record' , 'id' => $item['id']))}" style="margin-top: 10px;">提现详情</a>
+                            {elseif $item['status'] == 3}
+                                <a class="btn btn-success btn-sm" href="{php echo web_url('store/userList' , array('op' => 'record' , 'id' => $item['id']))}">提现详情</a>
+                                <a class="btn {if $item['status'] == 3}btn-success{/if} btn-sm js-change" data-txno="{php echo strval($item['txno']);}" data-single="{$item['single']}" data-thumb="{php echo tomedia($item['thumb']);}" href="javascript:;">流水详情</a>
+                            {/if}
+                        {elseif $_W['user']['merchant_id'] > 0}
+                                <a class="btn {if $item['status'] == 1}btn-primary min-width{elseif $item['status'] == 2}btn-danger min-width{elseif $item['status'] == 3}btn-success btn-sm{/if}" href="{php echo web_url('store/userList' , array('op' => 'record' , 'id' => $item['id']))}">提现详情</a>
+                        {if $item['status'] == 3}
+                        <a class="btn {if $item['status'] == 3}btn-success{/if} btn-sm js-change" data-txno="{php echo strval($item['txno']);}" data-single="{$item['single']}" data-thumb="{php echo tomedia($item['thumb']);}" href="javascript:;">流水详情</a>
+                        {/if}
+                        {/if}
+                    </td>
+                </tr>
+                {/loop}
+                {if empty($list) && $_W['user']['merchant_id'] == 0}
+                <tr>
+                    <td colspan="8" class="text-center" style="text-align: center">
+                        <span style="color:red;font-weight: 700;font-size:18px;">暂无提现记录</span>
+                    </td>
+                </tr>
+                {if !empty($pager) && $_W['user']['merchant_id'] == 0}
+                <tr><td colspan="8">{$pager}</td></tr>
+                {/if}
+                {/if}
+                {if empty($list) && $_W['user']['merchant_id'] > 0}
+                <tr>
+                    <td colspan="8" class="text-center" style="text-align: center">
+                        <span style="color:red;font-weight: 700;font-size:18px;">暂无提现记录</span>
+                    </td>
+                </tr>
+                {if !empty($pager) && $_W['user']['merchant_id'] > 0}
+                <tr><td colspan="8">{$pager}</td></tr>
+                {/if}
+                {/if}
+                </tbody>
+            </table>
+            </form>
+        </div>
+    </div>
+</div>
+<div class="modal-content col-xs-12 col-sm-6 col-md-6 col-lg-6" style="display:none;position: fixed;top: 20%; left: 30%;z-index: 10000;text-align: center;">
+    <div class="modal-header">
+        <button aria-hidden="true" data-dismiss="modal" class="close one close_text" type="button">×</button>
+        <div style="display: inline-block;margin:0 10px 8px 0;font-size: 18px;vertical-align: middle"></div><h3 style="display: inline-block"></h3><br>
+        <div style="display: inline-block;margin:0 10px 4px 0;font-size: 18px;vertical-align: middle">提现单号：</div><h4 style="display: inline-block"></h4>
+    </div>
+    <img src=""/>
+</div>
+<script type="text/javascript">
+    $(".oscrollLoading").scrollLoading();
+    require(['daterangepicker'], function($){
+        $('.daterange').on('apply.daterangepicker', function(ev, picker) {
+            $('#form1')[0].submit();
+        });
+    });
+
+    $(function(){
+
+        $(".scrollLoading").scrollLoading();
+        var $pop = null;
+        $('.scrollLoading').hover(function(){
+            var img = $(this).attr('src');
+            var obj = this;
+            var $pop = util.popover(obj, function($popover, obj){
+                obj.$popover = $popover;
+            }, '<div><img src="'+img+'" style="max-width:200px; max-height:200px;"></div>');
+        }, function(){
+            this.$popover.remove();
+        });
+
+        $('.order-list').delegate('.js-jiesuan', 'click', function(e){
+            e.stopPropagation();
+            var $this = $(this);
+            var id = $this.attr('order-id');
+            var merchantid = "{$merchant['id']}";
+            util.nailConfirm(this, function(state) {
+                if(!state) return;
+                $.post("{php echo web_url('application/merchant/jiesuan')}", { id : id,merchantid : merchantid }, function(data){
+                    util.tips(data.message);
+                }, 'json');
+            }, {html: '确认结算?'});
+        });
+        $('.order-list').delegate('.js-jiesuan-checked','click',function(e){
+            e.stopPropagation();
+            var order_ids = [];
+            var $checks=$('.checkbox:checkbox:checked');
+            $checks.each(function() {
+                if (this.checked) {
+                    order_ids.push(this.value);
+                };
+            });
+            var $this = $(this);
+            var merchantid = "{$merchant['id']}";
+            util.nailConfirm(this, function(state) {
+                if(!state) return;
+                util.message('系统准备结算选择订单,请不要离开页面', "{php echo web_url('application/merchant/jiesuan')}&merchantid="+merchantid+"&order_ids="+order_ids, 'success');
+            }, {html: '确认结算选择订单?'});
+        });
+    });
+
+    $('.js-change').click(function () {
+        var data_single = $(this).attr('data-single');
+        var data_txno = $(this).attr('data-txno');
+        var data_thumb = $(this).attr('data-thumb');
+        $('.modal-header h3').html(data_single);
+        $('.modal-header h4').html(data_txno);
+        $('.modal-content img').attr('src',data_thumb);
+//        var op = '';
+//        if(data_id == '-1' || data_id == '-2'){
+//            if(data_id == '-1') {
+//                op = 'freed';
+//            }else if (data_id == '-2') {
+//                op = 'final';
+//            }
+//            $.post("{php echo web_url('store/userList/change')}", {funcop : op, id : id}, function(data){
+//                if(!data.errno){
+//
+//                };
+//                util.tips(data.message, 2000);
+//                window.location.reload();
+//            }, 'json');
+////            window.ajaxDE($(this).attr('goods-id'));
+//            return false;
+//        }
+        $('.modal-content').fadeIn();
+//        window.ajaxRE($(this).attr('goods-id'));
+    })
+    $('.close_text').click(function () {
+        $('.modal-content').fadeOut();
+    })
+    $('.submit_text').click(function () {
+        var _val = $('#search-kwd').val();
+        var id = $(this).attr('goods-id');
+        console.log(id);
+        if(_val == ''){
+            alert('请输入拒签原因');
+        }else {
+            var common = $(this).attr('data_id');
+            switch (Number(common)) {
+                case 0: op = 'c';
+                    break;
+                case 1: op = 'detail';
+                    break;
+                case 2: op = 'reason';
+                case -1: op = 'freed';
+                    break;
+                case -2: op = 'final';
+                    break;
+                default: op = 'err';
+                    break;
+            }
+            // $.post("{php echo web_url('store/userList/change')}", {funcop : op, id : id,val : _val}, function(data){
+            //     if(!data.errno){
+            //     };
+            //     util.tips(data.message, 2000);
+            // }, 'json');
+            window.ajaxDE(op,_val,id);
+        }
+    })
+
+</script>
+
+{elseif $_GPC['op']=='review'}
+
+<div class="main">
+    {if $_W['user']['merchant_id'] > 0}
+    <div class="panel panel-default">
+        <div class="table-responsive">
+            <table class="table table-hover" style="min-width: 300px;">
+                <tbody>
+                <tr>
+                    <td style="width: 50px;"><image src="{php echo tomedia($merchant['thumb']);}" style="max-width: 48px; max-height: 48px; border: 1px dotted gray"/></td>
+                    <td style="text-align: left">商家名：{$merchant['name']}</td>
+                    <td>申请提现金额：{$apply_total}元</td>
+                    <td>审批提现金额：{$total}元</td>
+                    <td>扣点金额：{$point_total}元</td>
+                    <td>已发放金额：{$give_total}元</td>
+                    <td style="text-align: center">待发放发放金额：{$commit}元</td>
+                </tr>
+                </tbody>
+            </table>
+
+        </div>
+    </div>
+    {/if}
+    <div class="panel panel-default">
+        <div class="panel-body table-responsive">
+            <form method="post">
+                <table class="table table-hover">
+                    <thead class="navbar-inner">
+                    <tr>
+                        <!--<th style="width:80px;">银行流水单</th>-->
+                        <th style="width:65px;">处理进度</th>
+                        <th style="width:50px;">成交金额</th>
+                        <th style="width:50px;">扣点金额</th>
+                        <th style="width:50px;">申请提现金额</th>
+                        <th style="width:60px;">已审批提现金额</th>
+                        <th style="width:100px;">已发放金额/时间</th>
+                        <th style="width:100px;text-align:center">最后操作时间</th>
+                        <th style="width:80px;">提现详情</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {loop $list $item}
+
+                    <tr>
+                        <td>
+                            {if $item['status'] == 1}<label class="label label-default label-default">待确认</label>
+                            {elseif $item['status'] == 2}<label class="label label-default label-danger">已确认，待打款</label>
+                            {elseif $item['status'] == 3}<label class="label label-default label-success">已打款</label>
+                            {/if}
+                        </td>
+                        <td>
+                            <input type="hidden" name="record_id[]" value="{$item['id']}"/>
+                            {$item['amount']}元
+                        </td>
+                        <td>{php echo $item['point'];}元</td>
+                        <td>{$item['apply']}元</td>
+                        <td>{$item['get_amount']}元</td>
+                        <td>{$item['give']}元<br>{if !empty($item['give_time'])}{php echo date("Y-m-d H:i:s",$item['give_time'])}{/if}</td>
+                        <td>{if $_W['user']['merchant_id'] == 0}商家：{$item['name']}<br>{/if}{if empty($item['updatetime'])}{php echo date("Y-m-d H:i:s",$item['createtime'])}{else}{php echo date("Y-m-d H:i:s",$item['updatetime'])}{/if}</td>
+                        <td style="text-align: center">
+                            {if $_W['user']['merchant_id'] == 0}
+                            {if $item['status'] == 1}
+                            <a class="btn btn-primary min-width" href="{php echo web_url('store/userList' , array('op' => 'record' , 'id' => $item['id']))}">审核</a>
+                            {elseif $item['status'] == 2 && $item['get'] == 1}
+                            <a class="btn btn-success min-width" href="{php echo web_url('store/userList' , array('op' => 'play' , 'id' => $item['id']))}">打款</a>
+                            {elseif $item['get'] == 0}
+                            <label class="label label-default label-danger">暂未达到提款期限</label><br>
+                            <a class="btn btn-success btn-sm" href="{php echo web_url('store/userList' , array('op' => 'record' , 'id' => $item['id']))}" style="margin-top: 10px;">提现详情</a>
+                            {elseif $item['status'] == 3}
+                            <a class="btn btn-success btn-sm" href="{php echo web_url('store/userList' , array('op' => 'record' , 'id' => $item['id']))}">提现详情</a>
+                            <a class="btn {if $item['status'] == 3}btn-success{/if} btn-sm js-change" data-single="{$item['single']}" data-thumb="{php echo tomedia($item['thumb']);}" href="javascript:;">流水详情</a>
+                            {/if}
+                            {elseif $_W['user']['merchant_id'] > 0}
+                            <a class="btn {if $item['status'] == 1}btn-primary min-width{elseif $item['status'] == 2}btn-danger min-width{elseif $item['status'] == 3}btn-success btn-sm{/if}" href="{php echo web_url('store/userList' , array('op' => 'record' , 'id' => $item['id']))}">提现详情</a>
+                            {if $item['status'] == 3}
+                            <a class="btn {if $item['status'] == 3}btn-success{/if} btn-sm js-change" data-single="{$item['single']}" data-thumb="{php echo tomedia($item['thumb']);}" href="javascript:;">流水详情</a>
+                            {/if}
+                            {/if}
+                        </td>
+                    </tr>
+                    {/loop}
+                    {if empty($list)}
+                    <tr>
+                        <td colspan="8" class="text-center" style="text-align: center">
+                            <span style="color:red;font-weight: 700;font-size:18px;">暂无待审核记录</span>
+                        </td>
+                    </tr>
+                    {elseif !empty($pager)}
+                    <tr><td colspan="7">{$pager}</td></tr>
+                    {/if}
+
+                    </tbody>
+                </table>
+            </form>
+        </div>
+    </div>
+</div>
+
+{elseif $_GPC['op']=='give'}
+
+<div class="main">
+    {if $_W['user']['merchant_id'] > 0}
+    <div class="panel panel-default">
+        <div class="table-responsive">
+            <table class="table table-hover" style="min-width: 300px;">
+                <tbody>
+                <tr>
+                    <td style="width: 50px;"><image src="{php echo tomedia($merchant['thumb']);}" style="max-width: 48px; max-height: 48px; border: 1px dotted gray"/></td>
+                    <td style="text-align: left">商家名：{$merchant['name']}</td>
+                    <td>申请提现金额：{$apply_total}元</td>
+                    <td>审批提现金额：{$total}元</td>
+                    <td>扣点金额：{$point_total}元</td>
+                    <td>已发放金额：{$give_total}元</td>
+                    <td style="text-align: center">待发放发放金额：{$commit}元</td>
+                </tr>
+                </tbody>
+            </table>
+
+        </div>
+    </div>
+    {/if}
+    <div class="panel panel-default">
+        <div class="panel-body table-responsive">
+            <form method="post">
+                <table class="table table-hover">
+                    <thead class="navbar-inner">
+                    <tr>
+                        <!--<th style="width:80px;">银行流水单</th>-->
+                        <th style="width:65px;">处理进度</th>
+                        <th style="width:50px;">成交金额</th>
+                        <th style="width:50px;">扣点金额</th>
+                        <th style="width:50px;">申请提现金额</th>
+                        <th style="width:60px;">已审批提现金额</th>
+                        <th style="width:100px;">已发放金额/时间</th>
+                        <th style="width:100px;text-align:center">最后操作时间</th>
+                        <th style="width:80px;">提现详情</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {loop $list $item}
+
+                    <tr>
+                        <td>
+                            {if $item['status'] == 1}<label class="label label-default label-default">待确认</label>
+                            {elseif $item['status'] == 2}<label class="label label-default label-danger">已确认，待打款</label>
+                            {elseif $item['status'] == 3}<label class="label label-default label-success">已打款</label>
+                            {/if}
+                        </td>
+                        <td>
+                            <input type="hidden" name="record_id[]" value="{$item['id']}"/>
+                            {$item['amount']}元
+                        </td>
+                        <td>{php echo $item['point'];}元</td>
+                        <td>{$item['apply']}元</td>
+                        <td>{$item['get_amount']}元</td>
+                        <td>{$item['give']}元<br>{if !empty($item['give_time'])}{php echo date("Y-m-d H:i:s",$item['give_time'])}{/if}</td>
+                        <td>{if $_W['user']['merchant_id'] == 0}商家：{$item['name']}<br>{/if}{if empty($item['updatetime'])}{php echo date("Y-m-d H:i:s",$item['createtime'])}{else}{php echo date("Y-m-d H:i:s",$item['updatetime'])}{/if}</td>
+                        <td style="text-align: center">
+                            {if $_W['user']['merchant_id'] == 0}
+                            {if $item['status'] == 1}
+                            <a class="btn btn-primary min-width" href="{php echo web_url('store/userList' , array('op' => 'record' , 'id' => $item['id']))}">审核</a>
+                            {elseif $item['status'] == 2 && $item['get'] == 1}
+                            <a class="btn btn-success min-width js-play-goods" href="javascript:;" goods-id="{$item['id']}">打款</a>
+                            {elseif $item['get'] == 0}
+                            <label class="label label-default label-danger">暂未达到提款期限</label><br>
+                            <a class="btn btn-success btn-sm" href="{php echo web_url('store/userList' , array('op' => 'record' , 'id' => $item['id']))}" style="margin-top: 10px;">提现详情</a>
+                            {elseif $item['status'] == 3}
+                            <a class="btn btn-success btn-sm" href="{php echo web_url('store/userList' , array('op' => 'record' , 'id' => $item['id']))}">提现详情</a>
+                            <a class="btn {if $item['status'] == 3}btn-success{/if} btn-sm js-change" data-single="{$item['single']}" data-thumb="{php echo tomedia($item['thumb']);}" href="javascript:;">流水详情</a>
+                            {/if}
+                            {elseif $_W['user']['merchant_id'] > 0}
+                            <a class="btn {if $item['status'] == 1}btn-primary min-width{elseif $item['status'] == 2}btn-danger min-width{elseif $item['status'] == 3}btn-success btn-sm{/if}" href="{php echo web_url('store/userList' , array('op' => 'record' , 'id' => $item['id']))}">提现详情</a>
+                            {if $item['status'] == 3}
+                            <a class="btn {if $item['status'] == 3}btn-success{/if} btn-sm js-change" data-single="{$item['single']}" data-thumb="{php echo tomedia($item['thumb']);}" href="javascript:;">流水详情</a>
+                            {/if}
+                            {/if}
+                        </td>
+                    </tr>
+                    {/loop}
+                    {if empty($list)}
+                    <tr>
+                        <td colspan="8" class="text-center" style="text-align: center">
+                            <span style="color:red;font-weight: 700;font-size:18px;">暂无待打款记录</span>
+                        </td>
+                    </tr>
+                    {elseif !empty($pager)}
+                    <tr><td colspan="7">{$pager}</td></tr>
+                    {/if}
+
+                    </tbody>
+                </table>
+            </form>
+        </div>
+    </div>
+</div>
+<script>
+    $('.js-play-goods').click(function(e) {
+        e.stopPropagation();
+        var id = $(this).attr('goods-id');
+        var _this = $(this).parent().parent();
+        html = '确认打款?';
+        util.nailConfirm(this, function(state) {
+            if(!state) return;
+//            $.post("{php echo web_url('store/userList' , array('op' => 'play'))}", {pid : id}, function(data){
+//                if(!(data.errno)){
+//                    setTimeout(function () {
+            window.location.href = "{php echo web_url('store/userList' , array('op' => 'play' , 'status' => 1))}&pid=" + id;
+//                    },1000);
+//                };
+//                util.tips(data.message, 2000);
+//            }, 'json');
+        }, {html: html});
+    });
+</script>
+{elseif $op == 'buy_history'}
+
+<div class="main">
+
+    <div class="panel panel-default">
+        <div class="panel-body table-responsive">
+            <form method="post">
+                <table class="table table-hover">
+                    <thead class="navbar-inner">
+                    <tr>
+                        <th style="width:30%;">购买批次</th>
+                        <th class="text-center" style="width:20%;">购买商户数</th>
+                        <th class="text-center" style="width:20%;">剩余商户数</th>
+                        <th class="text-center" style="width:30%;">购买时间/天</th>
+                        <th class="text-center" style="width:30%;">到期时间</th>
+                        <th class="text-center" style="width:20%;text-align: center;">操作</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {loop $list $item}
+
+                    <tr data-toggle="popover" data-trigger="hover" data-placement="left" class="js-goods-img">
+
+                        <td class="line-feed">
+                            {php echo cutstr($item['merchant_batch'], 30, true);}
+                        </td>
+                        <td class="text-center">
+                            <span class="label label-info">{php echo cutstr($item['merchant_num'], 30, true);}</span>
+
+                        </td>
+                        <td class="text-center">
+                            <span class="label label-warning">{php echo cutstr($item['merchant_stock'], 30, true);}</span>
+
+                        </td>
+                        <td class="text-center">
+                            <span class="label label-success">{php echo cutstr($item['addtime'], 30, true);}</span>
+
+                        </td>
+                        <td class="text-center">
+                            <span class="label label-danger">{if !empty($item['endtime'])}{php echo date('Y-m-d H:i:s' , $item['endtime'])}{else}已到期{/if}</span>
+                        </td>
+                        <td class="text-center" style="text-align: center;">
+                            <a data-toggle="modal" data-target="#myModal">续费</a>
+
+                        </td>
+                    </tr>
+                    {/loop}
+                    {if empty($list)}
+                    <tr>
+                        <td colspan="8" class="text-center" style="text-align: center">
+                            <span style="color:red;font-weight: 700;font-size:18px;">暂无购买记录</span>
+                        </td>
+                    </tr>
+                    {elseif $pager > 0}
+                    <tr><td colspan="7">{$pager}</td></tr>
+                    {/if}
+
+                    </tbody>
+                </table>
+            </form>
+        </div>
+    </div>
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                        &times;
+                    </button>
+                    <h4 class="modal-title" id="myModalLabel">
+                        续费
+                    </h4>
+                </div>
+                <div class="modal-body">
+                    请联系你的专属客服，为您续费
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">关闭
+                    </button>
+                    <!--<button type="button" class="btn btn-primary">-->
+                        <!--确定-->
+                    <!--</button>--> 
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal -->
+    </div>
+</div>
+
+{/if}
+{php include wl_template('common/footer');}

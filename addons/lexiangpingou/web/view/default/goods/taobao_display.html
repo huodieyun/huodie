@@ -1,0 +1,21 @@
+{php include wl_template('common/header');}
+<div class="panel panel-info">
+	<div class="panel-heading">筛选</div>
+	<div class="panel-body">
+		<form  action="" method="get" class="form-horizontal" role="form">
+			<input type="hidden" name="c" value="site" />
+            <input type="hidden" name="a" value="entry" />
+            <input type="hidden" name="m" value="lexiangpingou" />
+            <input type="hidden" name="do" value="goods" />
+			<input type="hidden" name="ac" value="taobao" />
+			<input type="hidden" name="op" value="post" />
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-2 col-md-2 col-lg-1 control-label">链接地址:</label>
+                <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
+                    <input class="form-control" name="link" id="" type="text" value="" placeholder="请输入淘宝商品详情链接地址">
+                </div><button class="btn btn-default min-width" name="submit" type="submit"><i class="fa fa-search"></i> 采集</button>
+			</div>
+		</form>
+	</div>
+</div>
+{php include wl_template('common/footer');}

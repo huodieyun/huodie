@@ -1,0 +1,238 @@
+{php include wl_template('common/header');}
+<style>
+    .container{background:#fff;height: 690px;padding: 10px;}
+    .container label{
+        width: 60px;
+        line-height: 34px;
+    }
+    #shangchengZHLTJ{height:500px;}
+    .btn-default:focus,.btn-default.active{
+        background-color: #44b549;
+        color: #fff0cc;
+        border-color: #ccc;
+        box-shadow:none;
+    }
+    .topGM{
+        margin-bottom: 20px;
+    }
+    .loading{
+        position: absolute;
+        top: 0;
+        left: 15px;
+        z-index: 10;
+        background: rgba(0,0,0,0.3);
+        width: 100%;
+        height: 100%;
+        text-align: center;
+        color: #eee;
+        padding-top: 17rem;
+        font-size: 16px;
+    }
+</style>
+<div class="container">
+    <div class="loading">
+        <i class="glyphicon glyphicon-refresh"></i>
+        <span>数据加载中......</span>
+    </div>
+    <div class="btn-group topGM" role="group">
+        <button type="button" class="btn btn-default active">最近七天</button><button type="button" class="btn btn-default">最近20天</button><button type="button" class="btn btn-default">最近30天</button>
+    </div>
+    <div id="shangchengZHLTJ"></div>
+</div>
+<script type="text/javascript">
+    // 路径配置
+    require.config({
+        paths: {
+            echarts: "//www.lexiangpingou.cn/addons/lexiangpingou/web/resource/js/echarts/build/dist"
+        }
+    });
+
+    $('.topGM').on('click','button',function(){
+        if($(this).hasClass('active')){return false;}
+        $('.topGM button').removeClass('active');
+        $(this).addClass('active');
+        if($(this).html()=='最近七天'){
+            $('.loading').css('display','block');
+            ajaxZHL(getBeforeDate(6),getBeforeDate(0),7);
+        }else if($(this).html()=='最近20天'){
+            $('.loading').css('display','block');
+            ajaxZHL(getBeforeDate(19),getBeforeDate(0),20);
+        }else if($(this).html()=='最近30天'){
+            $('.loading').css('display','block');
+            ajaxZHL(getBeforeDate(29),getBeforeDate(0),30);
+        }
+    });
+
+    ajaxZHL(getBeforeDate(6),getBeforeDate(0),7);
+
+
+    function ajaxZHL(a,b,c) {
+        $.get(
+                location.origin + '/minapi.php?op=sczhl_count_data&uniacid={$_W["uniacid"]}',
+                {
+                    stime: a,
+                    etime: b
+                },
+                function (res) {
+                    var data = JSON.parse(res).data;
+                    console.log(data);
+                    var dataTime=[];
+                    if(data.length<Number(c)){
+                        for(var j=c-1;j>=0;j--){
+                            dataTime.push(getBeforeDate(j));
+                        }
+                        console.log(dataTime);
+                    }
+                    var option = {
+                        title: {
+                            text: '商城转化率统计(%)',
+                            subtext: ''
+                        },
+                        tooltip: {
+                            trigger: 'axis'
+                        },
+                        legend: {
+                            data: ['商城转化率', '访问到下单转化率', '下单到支付转化率', '下单到成功转化率']
+                        },
+                        toolbox: {
+                            show : true,
+                            feature : {
+                                magicType : {show: true, type: ['line', 'bar']},
+                                restore : {show: true},
+                                saveAsImage : {show: true}
+                            }
+                        },
+                        calculable : true,
+                        xAxis: [
+                            {
+                                boundaryGap : false,
+                                type: 'category',
+                                data: []
+                            }
+                        ],
+                        yAxis: [
+                            {
+                                type: 'value'
+                            }
+                        ],
+                        series: [
+                            {
+                                smooth:true,
+                                itemStyle: {normal: {areaStyle: {type: 'default'}}},
+                                "name": "商城转化率",
+                                "type": "line",
+                                "data": []
+                            },
+                            {
+                                smooth:true,
+                                itemStyle: {normal: {areaStyle: {type: 'default'}}},
+                                "name": "访问到下单转化率",
+                                "type": "line",
+                                "data": []
+                            },
+                            {
+                                smooth:true,
+                                itemStyle: {normal: {areaStyle: {type: 'default'}}},
+                                "name": "下单到支付转化率",
+                                "type": "line",
+                                "data": []
+                            },
+                            {
+                                smooth:true,
+                                itemStyle: {normal: {areaStyle: {type: 'default'}}},
+                                "name": "下单到成功转化率",
+                                "type": "line",
+                                "data": []
+                            }
+                        ]
+                    };
+
+                    var addtime=[],sczhl=[],sczfzhl=[],zfzhl=[],xdzhl=[];
+                    for(var i= 0,ii=0;i<data.length;i++,ii++){
+                        if(dataTime.length>0&&(dataTime[ii]!=data[i]['addtime'])){
+                            addtime.push(dataTime[ii]);
+                            sczhl.push('0');
+                            sczfzhl.push('0');
+                            zfzhl.push('0');
+                            xdzhl.push('0');
+                            i--;
+                        }else {
+                            addtime.push(data[i]['addtime']);
+                            sczhl.push((data[i]['sczhl']).toFixed(2));
+                            sczfzhl.push((data[i]['xdzhl']).toFixed(2));
+                            zfzhl.push((data[i]['fkzhl']).toFixed(2));
+                            xdzhl.push((data[i]['cgzhl']).toFixed(2));
+                        }
+                    }
+                    if(addtime.length<dataTime.length){
+                        for(var jj=0;jj<(dataTime.length-addtime.length);jj++){
+                            addtime.push(dataTime[addtime.length-1]);
+                            sczhl.push('0');
+                            sczfzhl.push('0');
+                            zfzhl.push('0');
+                            xdzhl.push('0');
+                        }
+                    }
+                    option.xAxis[0].data=addtime;
+                    option.series[0].data=sczhl;
+                    option.series[1].data=sczfzhl;
+                    option.series[2].data=zfzhl;
+                    option.series[3].data=xdzhl;
+                    if(data.length==0) {
+                        option.series[0]=option.series[1]=option.series[2]=option.series[3] = [{
+                            name: '',
+                            type: '',
+                            radius: '',
+                            center: [],
+                            data: []
+                        }];
+                    }
+                    $('.loading').css('display','none');
+                    ajaxEh(option);
+                }
+        );
+    }
+
+    function ajaxEh(option) {
+        require(
+                [
+                    'echarts',
+                    'echarts/chart/bar', // 使用柱状图就加载bar模块，按需加载
+                    'echarts/chart/line',
+                    'echarts/chart/funnel',
+                    'echarts/chart/pie'
+                ],
+                function (ec) {
+                    // 基于准备好的dom，初始化echarts图表
+                    var myChart = ec.init(document.getElementById('shangchengZHLTJ'));
+                    myChart.setOption(option);
+                }
+        );
+    }
+
+    function getBeforeDate(n){
+        var n = n;
+        var d = new Date();
+        var year = d.getFullYear();
+        var mon=d.getMonth()+1;
+        var day=d.getDate();
+        if(day <= n){
+            if(mon>1) {
+                mon=mon-1;
+            }
+            else {
+                year = year-1;
+                mon = 12;
+            }
+        }
+        d.setDate(d.getDate()-n);
+        year = d.getFullYear();
+        mon=d.getMonth()+1;
+        day=d.getDate();
+        s = year+"-"+(mon<10?('0'+mon):mon)+"-"+(day<10?('0'+day):day);
+        return s;
+    }
+
+</script>
+
+{php include wl_template('common/footer');}

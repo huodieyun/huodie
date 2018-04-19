@@ -1,0 +1,535 @@
+{php include wl_template('common/header');}
+<style>
+
+
+    input[type="radio"] {
+        vertical-align: top;
+        margin-right: 4px;
+    }
+    .right_bar {
+        padding-left: 20%;
+    }
+</style>
+<link rel="stylesheet" href="{TG_URL_WRES}css/platform_apply.css">
+<div class="main_hd">
+    <h2 style="background-color: #f4f5f9;margin-top: 0">商家入驻</h2>
+</div>
+<form action="" method="post" class="form-horizontal form" id="form" style="position: relative">
+    <input type="text" name="step" value="1" hidden>
+    <div class="panel panel-default">
+        <div class="main_bd">
+
+            <div id="stepItems">
+                    <ul class="processor_bar grid_line" style="margin-bottom: 0">
+
+                    <li class=" step grid_item size1of5 current">
+                        <h4>1.填写资料</h4>
+                    </li>
+                    {if empty($supplier['openid'])}
+                    <li class=" step grid_item size1of5 next">
+                        <h4>2.扫码绑定</h4>
+                    </li>
+                    {/if}
+                </ul>
+            </div>
+
+            <div id="wxverify"><div class="agreement_box">
+
+                <!--<div class="form-group" style="height:  90px">-->
+                <!--<label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label"><span style='color:red'>*</span>个体工商户资料</label>-->
+                <!--<div class="col-md-12" style="border-bottom: 1px solid #ccc"></div>    -->
+                <!--</div>-->
+                <div class="form-group">
+                    <label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label"><span style='color:red'>*</span>经营类目</label>
+                    <div class="col-md-4 control-label" style="text-align: left;">
+                        <select name="platform[manage_cate_id]" class="categoryI form-control tpl-category-parent" style="margin-right:20px;display: inline-block;">
+                            <option value="0" selected="selected">请选择类目</option>
+                            {loop $manage_cate $item}
+                            <option value="{$item['id']}" {if $supplier['manage_cate_id']==$item['id']}selected="selected"{/if}>{$item['cname']}</option>
+                            {/loop}
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label"><span style='color:red'>*</span>经营者姓名</label>
+                    <div class="col-md-4">
+                        <input type="text" name="platform[realname]" value="{$supplier['realname']}" class="form-control"/>
+                        <span class="help-block col-sm-12">填写个体工商户营业执照上的经营者姓名</span>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label"><span style='color:red'>*</span>开户名称</label>
+                    <div class="col-md-4">
+                        <input type="text" name="platform[bank_name]" class="form-control" value="{$supplier['bank_name']}"/>
+                        <span class="help-block col-sm-12">若有对公账户,填写工商企业账户名称.若无对公账户,填写填写营业执照法人账户</span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label"><span style='color:red'>*</span>银行类型</label>
+                    <div class="col-md-4">
+                        <label class="radio radio-inline">
+                            <input type="radio" name="platform[bank_style]" value="1" {if $supplier['bank_style'] == 1}checked{/if}> 对公
+                        </label>
+                        <label class="radio radio-inline">
+                            <input type="radio" name="platform[bank_style]" value="2" {if $supplier['bank_style'] == 2}checked{/if}> 对私
+                        </label>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label"><span style='color:red'>*</span>开户银行</label>
+                    <div class="col-md-4">
+                        <!--<input type="text" name="platform[bank_type]" class="form-control" value="{$supplier['bank_type']}"/>-->
+                        <!--<select class="categoryI form-control tpl-category-parent" name="platform[bank_type]" id="bank"></select>-->
+                        <input type="text" name="platform[bank_type]" class="form-control" value="{$supplier['bank_type']}"/>
+                        <span class="help-block col-sm-12">备注:请填写银行卡的开户支行名称，如：中国工商银行和平里支行</span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label"><span style='color:red'>*</span>银行账号</label>
+                    <div class="col-md-4">
+                        <input type="text" name="platform[bank_account]" class="form-control" value="{$supplier['bank_account']}"/>
+                        <span class="help-block col-sm-12">退款指定账户，我们会给该账户汇入一笔随机金额对账户进行校验,确保账户正确，以免无法收到退款</span>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label"><span style='color:red'>*</span>联系人姓名</label>
+                    <div class="col-md-4">
+                        <input type="text" name="platform[contact_person]" class="form-control" value="{$supplier['contact_person']}"/>
+
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label"><span style='color:red'>*</span>联系人手机号码</label>
+                    <div class="col-md-4">
+                        <input type="text" name="platform[contact_phone]" class="form-control contact_phone" value="{$supplier['contact_phone']}"/>
+                        <span class="help-block col-sm-12">请填写联系人的手机号码,认证审核过程中将会致电该联系人.验证码有效期10分钟</span>
+                    </div>
+                    {if !$supplier['id']}
+                    <label onclick="window.getCorda(this)" id="getCord" class="btn btn-default" style="height: 34px">获取验证码</label>
+                    {/if}
+                </div>
+                {if !$supplier['id']}
+                <div class="form-group">
+                    <label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label"><span style='color:red'>*</span>短信验证码</label>
+                    <div class="col-md-4">
+                        <input type="text" name="message_code" class="form-control" value=""/>
+                    </div>
+                </div>
+                {/if}
+                <div class="form-group">
+                    <label class="col-xs-12 col-sm-3 col-md-2 control-label"><span style='color:red'>*</span>经营范围</label>
+                    <div class="col-sm-9 col-xs-12">
+                        {php echo tpl_ueditor('platform[scope]', $supplier['scope']);}
+                    </div>
+                    <div style="clear: both"></div>
+                </div>
+
+                <div class="form-group col-sm-12 TJButtonCom">
+
+                    <input type="submit" name="submit" value="{if empty($supplier['openid'])}下一步{else}提交{/if}" id="js_nextBtn" class="btn btn-primary col-lg-1" style="border: none;background-color: #44b549;float: right;position: relative;top: -5px;right: 66px"/>
+                    <input type="hidden" name="token" value="{$_W['token']}"/>
+                    <input type="hidden" name="platform[id]" value="{$supplier['id']}"/>
+
+               </div>
+
+            </div></div>
+
+            <div style="display: none" class="panel-body erweima">
+                <div style="text-align: center">
+                    <img src="" alt="">
+                    <p>请扫码关注该公众号，后期极限单品相关通知将通过此公众号发送</p>
+                </div>
+                <div class="form-group col-sm-12 TJButtonCom">
+                    <!--<input type="submit" name="submit" value="{if $supplier['id']}提交{else}保存{/if}" class="btn btn-primary col-lg-1" style="border: none;background-color: #44b549;float: right;position: relative;"/>-->
+                    <input type="hidden" name="token" value="{$_W['token']}"/>
+                    <input type="hidden" name="platform[id]" value="{$supplier['id']}"/>
+                    <input type="button" value="上一步" class="btn btn-primary col-lg-1 prevBtn1" style="border: none;background-color: #44b549;margin-right: 20px;float: right;position: relative;"/>
+                </div>
+            </div>
+        </div>
+
+        <!--<div class="panel-body editZL" style="display: none">-->
+            <!--<div class="news_box inset wxverify" id="print_xieyi" style="height: 600px">-->
+                <!--<div class="inner">-->
+                    <!--<h3>XXXX平台认证服务协议</h3>-->
+
+
+                <!--</div>-->
+            <!--</div>-->
+            <!--<div class="tool_area" style="padding: 12px 0 20px;">-->
+                <!--&lt;!&ndash;<label for="js_agree" class="frm_checkbox_label selected">&ndash;&gt;-->
+                    <!--&lt;!&ndash;<i class="icon_checkbox"></i>&ndash;&gt;-->
+                    <!--&lt;!&ndash;<input style="position: inherit" type="checkbox" id="js_agree" class="frm_checkbox">&ndash;&gt;-->
+                    <!--&lt;!&ndash;<span class="lbl_content">我同意并遵守上述的《XXXXXX认证服务协议》</span>&ndash;&gt;-->
+                <!--&lt;!&ndash;</label>&ndash;&gt;-->
+                <!--<a href="javascript:;" type="button" onclick="print()" class="btn btn_primary"  id="down_button" style="float: right">点击下载协议</a>-->
+            <!--</div>-->
+            <!--<div class="form-group" style="height:inherit;margin-bottom: 50px">-->
+                <!--<label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label"><span style='color:red'>*</span>上传协议</label>-->
+                <!--<div class="col-md-4">-->
+
+                    <!--<span class="help-block col-sm-12">协议需要盖章，签名后才有效</span>-->
+                <!--</div>-->
+                <!--<div class="col-md-12" style="border-bottom: 1px solid #ccc"></div>-->
+            <!--</div>-->
+            <!--<div class="form-group col-sm-12 TJButtonCom">-->
+
+                <!--<input type="submit" name="submit" value="{if $supplier['id']}提交{else}保存{/if}" class="tj btn btn-primary col-lg-1" style="border: none;background-color: #44b549;float: right;position: relative;"/>-->
+                <!--<input type="hidden" name="token" value="{$_W['token']}"/>-->
+                <!--<input type="hidden" name="platform[id]" value="{$supplier['id']}"/>-->
+
+                <!--<input type="button" value="上一步" class="btn btn-primary col-lg-1 prevBtn" style="border: none;background-color: #44b549;margin-right: 20px;float: right;position: relative;"/>-->
+            <!--</div>-->
+        <!--</div>-->
+    </div>
+</form>
+<div class="paydetail" style="position: fixed;z-index:10;top: 0;left: 0;background-color: rgba(0,0,0,0.7); width: 100%;height: 100%;display: none">
+    <div class="panel panel-default" style="position: absolute;top: 5%;left: 25%;width: 50%;max-height: 80%">
+        <div class="panel-heading">营业执照
+            <a onclick="$('.paydetail').fadeOut()" style="cursor:pointer; float:right; margin-right:10px; font-weight:bold;" href="javascript:;">X</a>
+        </div>
+        <div class="panel-body" style="text-align: center">
+            <img style="width: 450px;" src="{TG_URL_WRES}images/platform/zhizhao.png" alt="">
+        </div>
+    </div>
+</div>
+<script type="text/javascript" src="//html2canvas.hertzen.com/build/html2canvas.js"></script>
+<script type="text/javascript">
+
+    function print(){
+        html2canvas( $("#print_xieyi") ,{
+            onrendered: function(canvas){
+                $('#down_button').attr( 'href' , canvas.toDataURL() ) ;
+                $('#down_button').attr( 'download' , 'myjobdeer.png' ) ;
+            },
+            height:9000,
+            allowTaint: true, //避免一些不识别的图片干扰，默认为false，遇到不识别的图片干扰则会停止处理html2canvas
+            background: "#fff"
+        });
+    }
+</script>
+<script>
+    if("{$_GPC['step']}"=='2'){
+        $('#wxverify').css('display','none');
+        $('.erweima').css('display','block');
+        $('.processor_bar li:first-child').removeClass('current');
+        $('.processor_bar li:nth-child(2)').addClass('current');
+    }
+
+
+    $(function () {
+        //银行名称
+        var bank=[
+            '中国工商银行','招商银行','中国农业银行','中国建设银行',
+            '中国银行','中国民生银行','中国光大银行','中信银行','交通银行',
+            '兴业银行','上海浦东发展银行','中国人民银行','华夏银行','深圳发展银行',
+            '广东发展银行','国家开发银行','中国邮政储蓄银行',
+            '中国农业发展银行','中国银行香港分行','北京银行',
+            '北京农村商业银行','天津银行','上海银行','上海农村商业银行','南京银行','宁波银行','浙江省农商银行',
+            '杭州市商业银行','深圳平安银行','深圳农村商业银行','温州银行',
+            '厦门国际银行','济南市商业银行','重庆银行','哈尔滨银行',
+            '成都市商业银行','包头市商业银行','南昌市商业银行','贵阳商业银行',
+            '兰州市商业银行','常熟农村商业银行','青岛市商业银行','徽商银行'
+        ];
+        var options='';
+//        if("{$supplier['bank_type']}"!=''){
+//            options='<option value="{$supplier['bank_type']}">{$supplier['bank_type']}</option>';
+//        }
+//        for(var i=0;i<bank.length;i++){
+//            options+='<option value="'+bank[i]+'">'+bank[i]+'</option>';
+//        }
+//        $('#bank').html(options);
+
+        //上一步
+        $('.prevBtn1').click(function(){
+            $('#wxverify').css('display','block');
+            $('.erweima').css('display','none');
+            $('.processor_bar li:first-child').addClass('current');
+            $('.processor_bar li:nth-child(2)').removeClass('current');
+        });
+        //下一步
+        $('#js_nextBtn').click(function () {
+            if($('[name="platform[manage_cate_id]"]').val()=='0'){
+                util.tips('请选择所属类目');
+                return false;
+            }
+            if($('input[name="platform[uniname]"]').val()==''){
+                util.tips('请填写工商户名称');
+                return false;
+            }
+            if($('input[name="platform[uni_license]"]').val()==''){
+                util.tips('请填写工商营业执照上的注册号');
+                return false;
+            }
+            if($('input[name="platform[license_img]"]').val()==''){
+                util.tips('请上传工商执照');
+                return false;
+            }
+            if($('input[name="platform[realname]"]').val()==''){
+                util.tips('请填写经营者姓名');
+                return false;
+            }
+            if($('input[name="platform[id_card]"]').val()==''){
+                util.tips('请填写经营者身份证号');
+                return false;
+            }
+            if($('input[name="platform[id_card_img]"]').val()==''){
+                util.tips('请上传经营者身份证');
+                return false;
+            }
+            if($('input[name="platform[bank_name]"]').val()==''){
+                util.tips('请填写开户姓名');
+                return false;
+            }
+            if(!$('input[name="platform[bank_style]"]:checked').val()){
+                util.tips('请选择银行类型');
+                return false;
+            }
+            if($('input[name="platform[bank_type]"]').val()==''){
+                util.tips('请填写开户银行');
+                return false;
+            }
+            if($('input[name="platform[bank_account]"]').val()==''){
+                util.tips('请填写银行账号');
+                return false;
+            }
+
+            if($('input[name="platform[contact_person]"]').val()==''){
+                util.tips('请填写联系人姓名');
+                return false;
+            }
+            if($('input[name="platform[contact_phone]"]').val()==''){
+                util.tips('请填写联系人手机号码');
+                return false;
+            }
+            {if !$supplier['id']}
+            if($('input[name="message_code"]')){
+                if($('input[name="message_code"]').val()!=localStorage.getItem('mobile_code')){
+                    util.tips('验证码不正确');
+                    return false;
+                }
+            }
+            {/if}
+                {if empty($supplier['openid'])}
+            $('[name="step"]').val(2);
+                {/if}
+
+        });
+    });
+//    //    //是否同意按钮
+//    $("#js_agree").click(function(){
+//        if($("#js_agree")[0].checked){
+//            $('.tj').removeAttr('disabled');
+//        }else{
+//            $('.tj').attr('disabled','disabled');
+//        }
+//    });
+    //下一步按钮
+    $('#js_nextBtn').click(function(){
+        if($('[name="platform[manage_cate_id]"]').val()=='0'){
+            util.tips('请选择所属类目');
+            return false;
+        }
+        if($('input[name="platform[uniname]"]').val()==''){
+            util.tips('请填写工商户名称');
+            return false;
+        }
+        if($('input[name="platform[uni_license]"]').val()==''){
+            util.tips('请填写工商营业执照上的注册号');
+            return false;
+        }
+        if($('input[name="platform[license_img]"]').val()==''){
+            util.tips('请上传工商执照');
+            return false;
+        }
+        if($('input[name="platform[realname]"]').val()==''){
+            util.tips('请填写经营者姓名');
+            return false;
+        }
+        if($('input[name="platform[id_card]"]').val()==''){
+            util.tips('请填写经营者身份证号');
+            return false;
+        }
+        if($('input[name="platform[id_card_img]"]').val()==''){
+            util.tips('请上传经营者身份证');
+            return false;
+        }
+        if($('input[name="platform[bank_name]"]').val()==''){
+            util.tips('请填写开户姓名');
+            return false;
+        }
+        if(!$('input[name="platform[bank_style]"]:checked').val()){
+            util.tips('请选择银行类型');
+            return false;
+        }
+        if($('input[name="platform[bank_type]"]').val()==''){
+            util.tips('请填写开户银行');
+            return false;
+        }
+        if($('input[name="platform[bank_account]"]').val()==''){
+            util.tips('请填写银行账号');
+            return false;
+        }
+
+        if($('input[name="platform[contact_person]"]').val()==''){
+            util.tips('请填写联系人姓名');
+            return false;
+        }
+        if($('input[name="platform[contact_phone]"]').val()==''){
+            util.tips('请填写联系人手机号码');
+            return false;
+        }
+        {if !$supplier['id']}
+        if($('input[name="message_code"]')){
+            if($('input[name="message_code"]').val()!=localStorage.getItem('mobile_code')){
+                util.tips('验证码不正确');
+                return false;
+            }
+        }
+        {/if}
+        $('#wxverify').css('display','none');
+        $('.editZL').css('display','block');
+        $('.processor_bar li:first-child').removeClass('current');
+        $('.processor_bar li:last-child').addClass('current');
+
+    });
+    //上一步按钮
+    $('.prevBtn').click(function(){
+        $('.editZL').css('display','none');
+        $('#wxverify').css('display','block');
+        $('.processor_bar li:last-child').removeClass('current');
+        $('.processor_bar li:first-child').addClass('current');
+    });
+
+    //open营业执照打开
+    $('.yyzz').click(function(){
+        $('.paydetail').fadeIn()
+    });
+
+    {if !$supplier['id']}
+    //短信验证码
+    var url = "{php echo web_url('platform/platform_shop')}&op=code&uniacid=33";
+    var getCord = document.getElementById("getCord");
+    function getCorda(ev) {
+        if ($('#getCord').html() == '获取验证码' || $('#getCord').html() == '发送失败' || $('#getCord').html() == '重新发送验证码') {
+            ajaxData(0, url);
+        }else {
+            // var num = $(".code").val();
+            // console.log(num);
+            // ajaxData(num, url);
+            util.tips('倒计时还未结束');
+            return;
+        }
+
+    };
+
+    function ajaxData(num, url){
+
+        var mobile = $(".contact_phone").val();
+
+        if(!(/^1[34578]\d{9}$/.test(mobile))){
+            util.tips('手机号码不正确');
+            return false;
+        }
+        //去除单击事件，防止多次点击
+        $('#getCord').attr('onclick','');
+        var xhr = new XMLHttpRequest();
+        var formData = new FormData();
+
+        formData.append('num', num);
+        if (num == 0) {
+            formData.append("mobile", mobile);
+            formData.append('retrieve', 1);
+        }
+        else if (num.length == 6) {
+            formData.append('retrieve', 2);
+        }
+        else {
+            util.tips("验证码不正确");
+            return false;
+        }
+        xhr.open('post', url, true);
+        xhr.send(formData);
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState == 4) {
+                if ((xhr.status >= 200 && xhr.status < 300) || xhr.status == 304) {
+                    var res = JSON.parse(xhr.responseText);
+                    if(res.result){
+                        util.tips(res.result);
+                        return false;
+                    }
+                    if (res['status'] == 1) {
+                        window.localStorage.setItem('mobile_code',res['code'])
+//                        $.toast(res['code']);
+                        util.tips('短信发送成功');
+                        var a = 180;
+                        var timp = setInterval(function () {
+                            a--;
+                            $('#getCord').html( a + '秒');
+                            if (a == 0) {
+                                $('#getCord').attr('onclick','getCorda(this)');
+                                $('#getCord').html('重新发送验证码');
+                                clearInterval(timp);
+                            }
+                        }, 1000);
+                    }else if(res['status'] == -1){
+                        util.tips(res.result);
+                    }else if(res['status'] == 2){
+                        util.tips(res.result);
+                        window.history(-1);
+                    }
+                }
+            }
+        }
+    }
+    {/if}
+
+
+
+        var is_fans;
+        //提交审核
+        if("{$_GPC['step']}"=='2'){
+            $.get("{php echo web_url('platform/platform_apply/qr')}",function(res){
+                console.log(res);
+                var data=JSON.parse(res);
+                if(data.url){
+                    $('.erweima img').attr('src',data.url).attr('data-code',data.code);
+                    is_fans=setInterval(function(){
+                        isFans(data.code,{php echo intval($supplier['id'])});
+                    },1500)
+                }
+            });
+
+            $('#uniname').html($('[name="platform[uniname]"]').val());
+            $('#wxverify').css('display','none');
+            $('.erweima').css('display','block');
+            $('.processor_bar li:first-child').removeClass('current');
+            $('.processor_bar li:last-child').addClass('current');
+        }
+        //定时器，判断用户是否关注公众号
+        function isFans(code,id){
+            $.get(
+                "{php echo web_url('platform/platform_shop_list/sub_check')}",
+                {   'id': id,
+                    'status': 0,
+                    'code':code
+                },
+                function(res){
+                    console.log(res);
+                    var data=JSON.parse(res);
+                    if(data.errno=='1'){
+                        clearInterval(is_fans);
+                        util.tips(data.message);
+                        setTimeout(function(){
+                            location.href = "{php echo web_url('platform/platform_shop_list')}";
+                        },1000)
+                    }
+                }
+            )
+        }
+</script>
+
+{php include wl_template('common/footer');}

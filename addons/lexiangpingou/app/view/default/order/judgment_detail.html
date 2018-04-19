@@ -1,0 +1,649 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta name = "format-detection" content = "telephone=no">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>商品评价</title>
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1">
+	<meta name="viewport" content="width=device-width,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <link rel="stylesheet" href="{TG_URL_ARES}css/weui.css"/>
+    {php echo register_jssdk();}
+    <script src="http://cdn.bootcss.com/jquery/2.1.3/jquery.min.js"></script>
+    <script type="text/javascript" src="{TG_URL_ARES}js/jquery-1.11.3.js"></script>
+	<script type="text/javascript" src="{TG_URL_ARES}js/modify.js?time=New Date()"></script>
+	<script type="text/javascript" src="{TG_URL_ARES}js/modify.js?time=New Date()"></script>
+    <script type="text/javascript" src="{MODULE_URL}app/resource/layer/layer.js" ></script>
+    <script type='text/javascript' src='{TG_URL_ARES}js/global.js' charset='utf-8'></script>
+    <script type='text/javascript' src='{TG_URL_ARES}js/laytpl.js' charset='utf-8'></script>
+	<script type='text/javascript' src='{TG_URL_ARES}components/light/light7.min.js' charset='utf-8'></script>
+	<script type='text/javascript' src='{TG_URL_ARES}components/swiper/swiper.min.js' charset='utf-8'></script>
+	<script type='text/javascript' src='{TG_URL_ARES}components/light/light7-city-picker.js' charset='utf-8'></script>
+	
+	<script>
+		$(function(){
+			if(typeof (ds) == "function") {
+				ds = function(){};
+			}
+		});
+	  	function escapeHtml(text) {
+			var a=text.replace(/(\&lt;)/g,"<");
+			var b=a.replace(/(\&gt;)/g,">");
+			var c=b.replace(/(\&amp;)/g,"\&");
+			var d=c.replace(/(\&quot;)/g,"\"");
+			return d;
+		}
+</script>
+	  <style>
+		  textarea{
+			  border:1px solid #ddd;
+			  width: 100%;
+			  height: 100px;
+			  padding:2px;
+		  }
+		  #btn_judement_again,#btn_judement{
+			  padding: 5px 10px;
+			  background: #f99b00;
+			  border-radius: 6px;
+			  color: #fff;
+		  }
+		  .weui_textarea_counter{
+			  float: left;
+		  }
+		  .modal-in{
+			  margin: 0!important;
+			  position: fixed;
+			  top: 25%;
+			  left: 22%;
+			  width: 52%;
+			  height: 20%;
+			  background: rgba(0,0,0,0.8);
+			  color:#fff!important;
+			  border-radius: 5px;
+		  }
+		  .modal>div{
+			  position: relative;
+			  top: 25%;
+			  left: 25%;
+		  }
+		  .modal span{
+			  padding: 2px 6px;
+			  margin-left: 3px;
+		  }
+		  .choose li{
+			  float:left;
+			  width:21%;
+			  height:25px;
+			  text-align: center;
+			  line-height: 25px;
+			  background: #f99b00;
+			  border-radius: 5px;
+			  margin:5px;
+			  list-style: none;
+			  font-size: 12px;
+			  color: #111;
+			  opacity: 0.6;
+		  }
+		  .choose li.active{
+			  opacity: 1;
+		  }
+		  .weui_uploader{
+			  display: none;
+		  }
+		  .zhuiping{
+			  font-size: 12px;
+			  background: #aaa;
+			  padding: 3px 6px;
+			  border-radius: 4px;
+			  color: #fff;
+		  }
+		  .toast{
+			  width:50%;
+			  height:50px;
+			  line-height: 50px;
+			  text-align: center;
+		  }
+		  .modal-out{
+			  display: none!important;
+		  }
+		  .PL img{
+			  margin-right:10px;
+			  float:left;
+			  width:40px;
+			  height:40px;
+			  border-radius: 50%;
+		  }
+		  .PL span{
+			  display: block;
+			  color: #aaa;
+			  font-size: 12px;
+			  margin-top: 5px;
+		  }
+	  </style>
+</head>
+
+<body>
+
+<div style="background: #fff;">
+{if empty($iswrite)}
+	{if $order['g_id']>0}
+	<?php 
+			$gs=pdo_fetch("select * from ".tablename('tg_goods')." where  id=:id",array('id'=>$order['g_id']));
+			$si=0;
+			?>
+		<div style="padding: 20px;">
+		<!--<span class="name text-overflow-ellipsis-2">{$goods['gname']}</span>-->
+	    <!--<span class="price" >{if $order['is_tuan']==0}{$goods['oprice']}{elseif $order['is_tuan']==1}{$goods['gprice']}{/if}×{$order['gnum']}</span>-->
+	    	<!--<div style="width: 20%; display: block;">-->
+	            <!--<a href="{php echo app_url('goods/detail', array('id' => $gs['id']))}" class="external goItemPage"><img src="{php echo tomedia($gs['gimg']);}" style="max-height: 100%; max-width: 100%;" alt=""></a>    -->
+	       	<!--</div>-->
+
+			<dl class="commodity_info">
+				<dt style="margin-right:10px;float:left;background-position:4px 0;height:85px;"><img src="{php echo tomedia($gs['gimg']);}" width="85" height="85" alt=""></dt>
+				<dd style="font-size: 14px;height:85px;">
+					<div>{$goods['gname']}</div>
+					<div class="attr" id="ord_imes">
+						<span style="display:block;color:#aaa">单价：￥{if $order['is_tuan']==0}{$goods['oprice']}{elseif $order['is_tuan']==1}{$goods['gprice']}{/if}</span>
+					</div>
+					<span style="margin-left:0px; margin-top:1em;color:#aaa;" class="spec_items options" id="in">
+					<span style="margin-left: 0px;"><span color="#888" size="2">数量：{$order['gnum']}</span></span>
+					</span>
+				</dd>
+			</dl>
+			<div class="choose">
+				<ul>
+					<li data-name="ishaoyong">好用</li>
+					<li data-name="iszhengpin">正品</li>
+					<li data-name="ispianyi">便宜</li>
+					<li data-name="iswuliu">物流快</li>
+					<li data-name="iszhiliang">质量好</li>
+					<li data-name="isfuwu">服务好</li>
+					<li data-name="isqita">其他</li>
+				</ul>
+			</div>
+			<div style="clear: both;"></div>
+	       	<div class="judement_content">
+				<div class="weui_cell">
+					<div class="weui_cell_bd weui_cell_primary">
+						<textarea onKeyUp="textCounter('judement_content',this)"  name="judement_content" id="content{$si}" class="weui_textarea txt" placeholder="请输入评论" rows="3" maxlength="200"></textarea>
+						<div class="weui_textarea_counter"><span>0</span>/200</div>
+					</div>
+				</div>
+	      	</div>
+				<div class="weui_cell_bd weui_cell_primary" >
+					<div class="weui_uploader">
+						<div class="weui_uploader_hd weui_cell">
+							<div class="weui_cell_bd weui_cell_primary">图片上传</div>
+							<div class="weui_cell_ft">0/2</div>
+						</div>
+						<div class="weui_uploader_bd">
+							<div class="weui_uploader_input_wrp">
+								<input class="weui_uploader_input" type="file" accept="image/jpg,image/jpeg,image/png,image/gif" multiple />
+							</div>
+						</div>
+					</div>
+				</div>
+			<div class="button_sp_area">
+	        	 <a class="weui_btn weui_btn_plain weui_btn_warn " id="btn_judement" style="float: right;" >提交</a>
+	        	<a class="weui_btn weui_btn_plain weui_btn_warn " id="sub{$si}" style="display: none;" orderno="{$order['orderno']}" openid="{$order['openid']}" style="float: right;" uniacid="{$order['uniacid']}" gid="{$gs['id']}">提交</a>
+	        </div>
+		</div>
+		{php $si++;}
+	{else}
+	<?php 
+			$col=pdo_fetchall("select * from ".tablename('tg_collect')." where  orderno=:orderno",array('orderno'=>$order['orderno']));
+			$si=0;
+			?>
+			 {loop $col $v}
+			 <?php 
+			$gs=pdo_fetch("select * from ".tablename('tg_goods')." where  id=:id",array('id'=>$v['sid']));
+			
+			?>
+		
+	
+	    <div style="padding: 20px;">
+		<!--<span class="name text-overflow-ellipsis-2">{$gs['id']}</span>-->
+	    <!--<span class="name text-overflow-ellipsis-2">{$gs['gname']}</span>-->
+		<!--<span class="name text-overflow-ellipsis-2">规格：{$v['item']}22</span>-->
+	    <!--<span class="price" >{$v['oprice']}×{$v['num']}</span>-->
+	    	<!--<div style="width: 20%; display: block;">-->
+	            <!--<a href="{php echo app_url('goods/detail', array('id' => $gs['id']))}" class="external goItemPage"><img src="{php echo tomedia($gs['gimg']);}" style="max-height: 100%; max-width: 100%;" alt=""></a>    -->
+	       	<!--</div>-->
+			<div class="commodity_info">
+				<dt style="height:85px;margin-right:10px;float:left;background-position:4px 0;"><img src="{php echo tomedia($gs['gimg']);}" width="85" height="85" alt=""></dt>
+				<dd style="font-size: 14px;height:85px;">
+					<div>{$gs['gname']}</div>
+					<div class="attr" id="ord_imes">
+						<span style="display:block; color:#aaa;">单价：￥{if $v['is_tuan']==0}{$gs['oprice']}{elseif $v['is_tuan']==1}{$gs['gprice']}{/if}</span>
+					</div>
+					<span style="margin-left:0px; margin-top:1em;color:#aaa;" class="spec_items options" id="in">
+					<span style="margin-left: 0px;"><span color="#888" size="2">数量：{$v['num']}</span></span>
+					</span>
+				</dd>
+			</div>
+			<div class="choose">
+				<ul>
+					<li data-name="ishaoyong">好用</li>
+					<li data-name="iszhengpin">正品</li>
+					<li data-name="ispianyi">便宜</li>
+					<li data-name="iswuliu">物流快</li>
+					<li data-name="iszhiliang">质量好</li>
+					<li data-name="isfuwu">服务好</li>
+					<li data-name="isqita">其他</li>
+				</ul>
+			</div>
+			<div style="clear: both;"></div>
+			<div class="judement_content">
+				<div class="weui_cell">
+					<div class="weui_cell_bd weui_cell_primary">
+						<textarea onKeyUp="textCounter('judement_content',this)"  name="judement_content" id="content{$si}" class="weui_textarea txt" placeholder="请输入评论" rows="3" maxlength="200"></textarea>
+						<div class="weui_textarea_counter"><span>0</span>/200</div>
+					</div>
+				</div>
+	      	</div>
+	
+
+	      	
+	      	<div class="page">
+			   
+			    <div class="page__bd">
+			        <div class="weui-gallery" id="gallery">
+			            <span class="weui-gallery__img" id="galleryImg"></span>
+			            <div class="weui-gallery__opr">
+			                <a href="javascript:" class="weui-gallery__del">
+			                    <i class="weui-icon-delete weui-icon_gallery-delete"></i>
+			                </a>
+			            </div>
+			        </div>
+			
+			        <div class="weui-cells weui-cells_form">
+			            <div class="weui-cell" style="display: none">
+			                <div class="weui-cell__bd">
+			                    <div class="weui-uploader">
+			                        <div class="weui-uploader__hd">
+			                            <p class="weui-uploader__title">图片上传</p>
+			                            <div class="weui-uploader__info">0/2</div>
+			                        </div>
+			                        <div class="weui-uploader__bd">
+			                            <ul class="weui-uploader__files" id="uploaderFiles">
+			                                <li class="weui-uploader__file" style="background-image:url(./images/pic_160.png)"></li>
+			                                <li class="weui-uploader__file" style="background-image:url(./images/pic_160.png)"></li>
+			                                <li class="weui-uploader__file" style="background-image:url(./images/pic_160.png)"></li>
+			                                <li class="weui-uploader__file weui-uploader__file_status" style="background-image:url(./images/pic_160.png)">
+			                                    <div class="weui-uploader__file-content">
+			                                        <i class="weui-icon-warn"></i>
+			                                    </div>
+			                                </li>
+			                                <li class="weui-uploader__file weui-uploader__file_status" style="background-image:url(./images/pic_160.png)">
+			                                    <div class="weui-uploader__file-content">50%</div>
+			                                </li>
+			                            </ul>
+			                            <div class="weui-uploader__input-box">
+			                                <input id="uploaderInput" class="weui-uploader__input" type="file" accept="image/*" multiple />
+			                            </div>
+			                        </div>
+			                    </div>
+			                </div>
+			            </div>
+			        </div>
+			    </div>
+			
+			</div>
+	      	
+            <!--<div class="weui_cell_bd weui_cell_primary">
+                <div class="weui_uploader">
+                    <div class="weui_uploader_hd weui_cell">
+                        <div class="weui_cell_bd weui_cell_primary">图片上22传</div>
+                        <div class="weui_cell_ft"></div>
+                    </div>
+                    <div class="weui_uploader_bd">
+                        <ul class="weui_uploader_files"  id='img{$si}'>
+                        
+                        
+                        </ul>
+                        <div class="weui_uploader_input_wrp">
+                            <input class="weui_uploader_input" type="file"  accept="image/jpg,image/jpeg,image/png,image/gif"   multiple />
+                            
+                        </div>
+                    </div>
+                </div>
+            </div>-->
+			<div class="button_sp_area">
+	      		<a class="weui_btn weui_btn_plain weui_btn_warn " id="sub{$si}" orderno="{$order['orderno']}" style="display: none;" openid="{$order['openid']}"  uniacid="{$order['uniacid']}" gid="{$gs['id']}" item="{$v['item']}">sub{$si}</a>
+
+			</div>
+		</div>
+		{php $si++;}
+			 {/loop}
+			 <a class="weui_btn weui_btn_plain weui_btn_warn " id="btn_judement" style="float: right;" >提交</a>
+	{/if}
+{else}
+	{if $order['g_id']>0}
+	<?php 
+			$gs=pdo_fetch("select * from ".tablename('tg_goods')." where  id=:id",array('id'=>$order['g_id']));
+			$si=0;
+			?>
+		<div style="padding: 20px;">
+		<!--<span class="name text-overflow-ellipsis-2">{$goods['gname']}</span>-->
+	    <!--<span class="price" >{if $order['is_tuan']==0}{$goods['oprice']}{elseif $order['is_tuan']==1}{$goods['gprice']}{/if}×{$order['gnum']}</span>-->
+	    	<!--<div style="clear: both;"></div>  -->
+	    	<!--<div style="width: 20%; display: block;">-->
+	            <!--<a href="{php echo app_url('goods/detail', array('id' => $gs['id']))}" class="external goItemPage"><img src="{php echo tomedia($gs['gimg']);}" style="max-height: 100%; max-width: 100%;" alt=""></a>    -->
+	       	<!--</div>	-->
+			<dl class="commodity_info">
+				<dt style="height:85px;float:left;margin-right:10px;background-position:4px 0;"><img src="{php echo tomedia($gs['gimg']);}" width="85" height="85" alt=""></dt>
+				<dd style="font-size: 14px;height:85px;">
+					<div>{$goods['gname']}</div>
+					<div class="attr" id="ord_imes">
+						<span style="display:block;color:#aaa;">单价：{if $order['is_tuan']==0}{$goods['oprice']}{elseif $order['is_tuan']==1}{$goods['gprice']}{/if}</span>
+					</div>
+					<span style="margin-left:0px; margin-top:1em;" class="spec_items options" id="in">
+					<span style="margin-left: 0px;"><span style="color:#aaa;" size="2">数量：{$order['gnum']}</span></span>
+					</span>
+				</dd>
+			</dl>
+	       	
+	       	
+	       	<?php 
+			$jud_id = pdo_fetch("select * from ".tablename('tg_judgment')." where orderno=:orderno and gid=:gid  ",array('orderno'=>$order['orderno'],'gid'=>$gs['id']));
+	       	
+			$main_content = pdo_fetch("select * from ".tablename('tg_judgment_content')." where  judgment_id=:judgment_id order by update_time asc ",array('judgment_id'=>$iswrite['judgment_id']));	
+			$allcontent = pdo_fetchall("select * from ".tablename('tg_judgment_content')." where  judgment_id=:judgment_id and content_id <> '". $main_content['content_id'] ."'  order by update_time asc ",array('judgment_id'=>$iswrite['judgment_id']));
+			?>
+			<div class="PL">
+				<img src="{$jud_id['avatar']}" alt=""/>
+				<span>{$jud_id['openname']}</span>
+				<span>{php echo date('Y-m-d H:i:s',$jud_id['create_time'])}</span>
+			</div>
+			<div style="font-size: 14px; font-weight: 400;">{$main_content['content']}</div>
+			{loop $allcontent $content}
+				{if $content['who']== 1}<label class="zhuiping">商家回复</label>{/if}
+				{if $content['who']== 0}<label class="zhuiping">用户追评</label>{/if}<span style="margin-left:20px; color: #b8c0cc; font-size: 12px;"><?php echo date('Y-m-d H:i:s',$content['update_time']); ?></span>
+				<div style="margin-left:10px;font-size: 12px; font-weight: 400;word-break: break-all;">{$content['content']}</div>
+				<?php 
+					$imgs = pdo_fetchall("select img_url from" . tablename('tg_judgment_img') . "where content_id = :content_id order by id desc", array(':content_id' => $content['content_id']));
+				?>		
+				{if !empty($imgs)}
+					<div class="clearfix"></div>
+		
+		
+					<div style="padding: 3px;">
+					{loop $imgs $img}
+						<a style="" onclick="img_big('{$_W['attachurl']}{$img['img_url']}')"><img  style="border: 1px solid  #cccccc; padding: 5px; -moz-border-radius: 3px; -webkit-border-radius: 3px; border-radius: 3px; background: #fff; width: 40px; height:40px; margin-left: 2px; margin-right: 2px;" onerror="this.src='resource/images/gw-wx.gif'" src="{$_W['attachurl']}{$img['img_url']}"></a>
+					{/loop}
+					</div>
+	
+				{/if}
+	       	{/loop}
+	       	
+	      	<span class="name text-overflow-ellipsis-2">追加评论</span>
+			<div style="clear: both;"></div>
+		       	<div class="judement_content">
+					<div class="weui_cell">
+						<div class="weui_cell_bd weui_cell_primary">
+							<textarea onKeyUp="textCounter('judement_content',this)"  name="judement_content" id="content{$si}" class="weui_textarea txt" placeholder="请输入评论" rows="3" maxlength="200"></textarea>
+							<div class="weui_textarea_counter"><span>0</span>/200</div>
+						</div>
+					</div>
+		      	</div>
+				<div class="weui_cell_bd weui_cell_primary" style="display: none" >
+					<div class="weui_uploader">
+						<div class="weui_uploader_hd weui_cell">
+							<div class="weui_cell_bd weui_cell_primary">图片上传</div>
+							<div class="weui_cell_ft">0/2</div>
+						</div>
+						<div class="weui_uploader_bd">
+							<div class="weui_uploader_input_wrp">
+								<input class="weui_uploader_input" type="file" accept="image/jpg,image/jpeg,image/png,image/gif" multiple />
+							</div>
+						</div>
+					</div>
+				</div>
+			<div class="button_sp_area">
+				<a class="weui_btn weui_btn_plain weui_btn_warn " id="sub{$si}" judgment_id="{$iswrite['judgment_id']}" style="display: none;">sub{$si}</a>
+	        	<a class="weui_btn weui_btn_plain weui_btn_warn " id="btn_judement_again" style="float: right" >提交</a>
+	        </div>
+			<div style="height:50px;"></div>
+		</div>
+		{php $si++;}
+	{else}
+	<?php 
+			$col=pdo_fetchall("select * from ".tablename('tg_collect')." where  orderno=:orderno",array('orderno'=>$order['orderno']));
+			$si=0;
+			?>
+			 {loop $col $v}
+			 <?php 
+			$gs=pdo_fetch("select * from ".tablename('tg_goods')." where  id=:id",array('id'=>$v['sid']));
+			
+			?>
+	
+	
+	    <div style="padding: 20px;">
+		<!--<span class="name text-overflow-ellipsis-2">{$gs['id']}</span>-->
+	    <!--<span class="name text-overflow-ellipsis-2">{$gs['gname']}</span>-->
+		<!--<span class="name text-overflow-ellipsis-2">规格：{$v['item']}</span>-->
+	    <!--<span class="price" >{$v['oprice']}×{$v['num']}</span>-->
+	    	<!--<div style="clear: both;"></div>  -->
+	    	<!--<div style="width: 20%; display: block;">-->
+	            <!--<a href="{php echo app_url('goods/detail', array('id' => $gs['id']))}" class="external goItemPage"><img src="{php echo tomedia($gs['gimg']);}" style="max-height: 100%; max-width: 100%;" alt=""></a>    -->
+	       <!--</div>	-->
+			<div class="commodity_info">
+				<dt style="height:85px;margin-right:10px;float:left;background-position:4px 0;"><img src="{php echo tomedia($gs['gimg']);}" width="85" height="85" alt=""></dt>
+				<dd style="font-size: 14px;height:85px;">
+					<div>{$gs['gname']}</div>
+					<div class="attr" id="ord_imes">
+						<span style="display:block; color:#aaa;">单价：￥{if $v['is_tuan']==0}{$gs['oprice']}{elseif $v['is_tuan']==1}{$gs['gprice']}{/if}</span>
+					</div>
+					<span style="margin-left:0px; margin-top:1em;color:#aaa;" class="spec_items options" id="in">
+					<span style="margin-left: 0px;"><span color="#888" size="2">数量：{$v['num']}</span></span>
+					</span>
+				</dd>
+			</div>
+	       	<?php 
+	       		$jud_id = pdo_fetch("select * from ".tablename('tg_judgment')." where orderno=:orderno and gid=:gid  ",array('orderno'=>$order['orderno'],'gid'=>$gs['id']));
+	       		
+			$main_content = pdo_fetch("select * from ".tablename('tg_judgment_content')." where  judgment_id=:judgment_id order by update_time asc ",array('judgment_id'=>$jud_id['judgment_id']));	
+			$allcontent = pdo_fetchall("select * from ".tablename('tg_judgment_content')." where  judgment_id=:judgment_id and content_id <> '". $main_content['content_id'] ."'  order by update_time asc ",array('judgment_id'=>$jud_id['judgment_id']));
+			?>
+			<div class="PL">
+				<img src="{$jud_id['avatar']}" alt=""/>
+				<span>{$jud_id['openname']}</span>
+				<span>{php echo date('Y-m-d H:i:s',$jud_id['create_time'])}</span>
+			</div>
+			<div style="font-size: 14px; font-weight: 400;">{$main_content['content']}</div>
+			{loop $allcontent $content}
+			{if $content['who']== 1}<label class="zhuiping">商家回复{$order['orderno']}{$jud_id}</label>{/if}
+			{if $content['who']== 0}<label class="zhuiping">用户追评</label>{/if}<span style="margin-left:20px; color: #b8c0cc; font-size: 12px;"><?php echo date('Y-m-d H:i:s',$content['update_time']); ?></span>
+			<div style="margin-left:10px;font-size: 12px; font-weight: 400;word-break: break-all;">{$content['content']}</div>
+			<?php 
+				$imgs = pdo_fetchall("select img_url from" . tablename('tg_judgment_img') . "where content_id = :content_id order by id desc", array(':content_id' => $content['content_id']));
+			?>		
+			{if !empty($imgs)}
+			<div class="clearfix"></div>
+
+
+			<div style="padding: 3px;">
+			{loop $imgs $img}
+				<a style="" onclick="img_big('{$_W['attachurl']}{$img['img_url']}')"><img  style="border: 1px solid  #cccccc; padding: 5px; -moz-border-radius: 3px; -webkit-border-radius: 3px; border-radius: 3px; background: #fff; width: 40px; height:40px; margin-left: 2px; margin-right: 2px;" onerror="this.src='resource/images/gw-wx.gif'" src="{$_W['attachurl']}{$img['img_url']}"></a>
+			{/loop}
+			</div>
+
+			{/if}
+			
+			{/loop}
+	       	
+	       <span class="name text-overflow-ellipsis-2">追加评论</span>
+		    	<div style="clear: both;"></div>  
+		       	<div class="judement_content">
+					<div class="weui_cell">
+						<div class="weui_cell_bd weui_cell_primary">
+							<textarea onKeyUp="textCounter('judement_content',this)" maxlength="200" name="judement_content" id="content{$si}" class="weui_textarea txt" placeholder="请输入评论" rows="3"></textarea>
+							<div class="weui_textarea_counter"><span>0</span>/200</div>
+						</div>
+					</div>
+		      	</div>
+				<div class="weui_cell_bd weui_cell_primary" >
+					<div class="weui_uploader">
+						<div class="weui_uploader_hd weui_cell">
+							<div class="weui_cell_bd weui_cell_primary">图片上传</div>
+							<div class="weui_cell_ft">0/2</div>
+						</div>
+						<div class="weui_uploader_bd">
+							<div class="weui_uploader_input_wrp">
+								<input class="weui_uploader_input" type="file" accept="image/jpg,image/jpeg,image/png,image/gif" multiple />
+							</div>
+						</div>
+					</div>
+				</div>
+			<div class="button_sp_area">
+				<a class="weui_btn weui_btn_plain weui_btn_warn " id="sub{$si}" judgment_id="{$jud_id['judgment_id']}" style="display: none;">sub{$si}</a>
+	        </div>
+		</div>
+		{php $si++;}
+			 {/loop}
+		<a class="weui_btn weui_btn_plain weui_btn_warn " id="btn_judement_again" style="float: right;margin-right: 10px" >提交</a>
+	{/if}
+{/if}
+</div>
+<div style="height:100px;"></div>
+<script>
+$(function(){
+        var tmpl = '<li class="weui-uploader__file" style="background-image:url(#url#)"></li>',
+            $gallery = $("#gallery"), $galleryImg = $("#galleryImg"),
+            $uploaderInput = $("#uploaderInput"),
+            $uploaderFiles = $("#uploaderFiles")
+            ;
+
+        $uploaderInput.on("change", function(e){
+            var src, url = window.URL || window.webkitURL || window.mozURL, files = e.target.files;
+            for (var i = 0, len = files.length; i < len; ++i) {
+                var file = files[i];
+
+                if (url) {
+                    src = url.createObjectURL(file);
+                } else {
+                    src = e.target.result;
+                }
+                $uploaderFiles.append($(tmpl.replace('#url#', src)));
+            }
+        });
+        $uploaderFiles.on("click", "li", function(){
+            $galleryImg.attr("style", this.getAttribute("style"));
+            $gallery.fadeIn(100);
+        });
+        $gallery.on("click", function(){
+            $gallery.fadeOut(100);
+        });
+    });
+
+$('.choose').on('click','ul li',function(e){
+	if(e.currentTarget.className==''){
+		e.currentTarget.className='active';
+	}else{
+		e.currentTarget.className='';
+	}
+});
+
+
+	$('#btn_judement').on('click',function(){
+	var si = {$si};
+	var alldate = [];
+	var img_s = new Array();
+	for(var i=0;i<si;i++){
+		var gid = $("#sub"+i).attr('gid');
+		var orderno = $("#sub"+i).attr('orderno');
+		var openid = $("#sub"+i).attr('openid');
+		var uniacid = $("#sub"+i).attr('uniacid');
+		var item = $("#sub"+i).attr('item');
+		var content = $("#content"+i).val();
+		var xv =0;
+		$(".imgs"+i).each(function(){
+
+		    var imgs = $(this).attr('src');//修改图片路径
+
+
+		    img_s[xv] = {"img":imgs};
+
+		    xv=xv+1;
+		})
+		var jud_date = {"gid": gid, "orderno": orderno,"openid": openid,"uniacid": uniacid,"item": item,"content": content,"img_s":img_s};
+		$('li[data-name="ishaoyong"]')[0].className==''?jud_date["ishaoyong"]=0:jud_date["ishaoyong"]=1;
+		$('li[data-name="iszhengpin"]')[0].className==''?jud_date["iszhengpin"]=0:jud_date["iszhengpin"]=1;
+		$('li[data-name="ispianyi"]')[0].className==''?jud_date["ispianyi"]=0:jud_date["ispianyi"]=1;
+		$('li[data-name="iswuliu"]')[0].className==''?jud_date["iswuliu"]=0:jud_date["iswuliu"]=1;
+		$('li[data-name="iszhiliang"]')[0].className==''?jud_date["iszhiliang"]=0:jud_date["iszhiliang"]=1;
+		$('li[data-name="isfuwu"]')[0].className==''?jud_date["isfuwu"]=0:jud_date["isfuwu"]=1;
+		$('li[data-name="isqita"]')[0].className==''?jud_date["isqita"]=0:jud_date["isqita"]=1;
+		alldate[i] = jud_date;
+		console.log(alldate);
+	}
+	var last=JSON.stringify(alldate);
+
+//方法二	var contentt = $(this).siblings('.judement_content').children().val(); 
+//	$.confirm('是否发布评价？',
+//	        function () {
+	        	$.ajax({
+	             type: "post",
+	             url: "{php echo app_url('order/order',array('op' => 'judement_submit'))}",
+	             data:{"jud_date":alldate,"si":si},
+				 dataType: "json",
+	             success: function(data){
+					var a = JSON.stringify(data);
+					 $.toast('评价成功');
+					 setTimeout(function(){  //使用  setTimeout（）方法设定定时2000毫秒
+						 history.back();//返回上一页
+					 },1000);
+				 }
+	         	});
+//	        }
+//	    );
+	});
+
+	
+	$('#btn_judement_again').on('click',function(){
+		var si = {$si};
+		var alldate = [];
+		for(var i=0;i<si;i++){
+			var judgment_id = $("#sub"+i).attr('judgment_id');
+			var content = $("#content"+i).val();
+			var jud_date = {"judgment_id": judgment_id, "content": content};
+			alldate[i] = jud_date;
+	}
+	var last=JSON.stringify(alldate);
+
+//方法二	var contentt = $(this).siblings('.judement_content').children().val();
+//	$.confirm('是否发布评价？',
+//	        function () {
+//				$('.modal').remove();
+	        	$.ajax({
+	             type: "post",
+	             url: "{php echo app_url('order/order',array('op' => 'judement_again'))}",
+	             data:{"jud_date":alldate,"si":si},
+				 dataType: "json",
+	             success: function(data){
+					var a = JSON.stringify(data);
+					 $.toast('评价成功');
+					setTimeout(function(){  //使用  setTimeout（）方法设定定时2000毫秒
+						history.back();//返回上一页
+					},1000);
+
+				 }
+	         });
+//	        }
+//	    );
+	});
+function textCounter(field,e) {
+	console.log($(e).val());
+	// 函数，3个参数，表单名字，表单域元素名，限制字符；
+	if ($(e).val().length > 200) {
+		//如果元素区字符数大于最大字符数，按照最大字符数截断；
+		field.value = field.value.substring(0, 200);
+	} else {
+		//在记数区文本框内显示剩余的字符数；
+		$(e).next().children('span').html($(e).val().length);
+	}
+}
+</script>
+{php include wl_template('common/footer');}

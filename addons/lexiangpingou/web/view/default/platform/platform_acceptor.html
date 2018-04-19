@@ -1,0 +1,155 @@
+{php include wl_template('common/header');}
+
+<ul class="nav nav-tabs">
+
+    <li {if $opp == 'display'} class="active"{/if}>
+    <a href="{php echo web_url('platform/platform_acceptor')}">平台消息接受员管理</a>
+    </li>
+</ul>
+
+<form action="" method="post" onsubmit="return formcheck(this)">
+    <div class='panel panel-default'>
+        <div class='panel-heading' style="position: relative">
+            <button id="aaa" type="button" onclick="$('.hxyImg').fadeIn()" class="btn btn-default" data-container="body"
+                    data-toggle="popover" data-placement="right"
+                    data-content="Vivamus sagittis lacus vel augue laoreet rutrum faucibus.">
+                平台消息接受员二维码下载
+            </button>
+            <div class="hxyImg" onclick="$(this).css('display','none')"
+                 style="display:none;position: fixed;top: 0;left: 0;width: 100%;height: 100%;background: rgba(0,0,0,0.7);z-index: 10;">
+                <div style="top: 30%;position: absolute;left: 40%;">
+                    <div class='erweima' style="text-align: center">
+                        <img src="" alt="">
+                        <p>请扫码关注该公众号，后期极限单品相关通知将通过此公众号发送</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class='panel-body'>
+            <table class="table">
+                <thead>
+                <tr>
+                    <th>消息接受员</th>
+                    <th>状态</th>
+                    <th>添加时间</th>
+                    <th>操作</th>
+                </tr>
+                </thead>
+                <tbody>
+                {loop $list $row}
+                <tr>
+                    <td style="text-align:left;"><img src="{$row['avatar']}" style="width:30px;height:30px;padding1px;border:1px solid #ccc" id="avatar"/> {$row['nickname']}
+                    </td>
+                    <td>
+                         <input class="status" name="status" data-id="{$row['id']}" type="checkbox" value="{$row['status']}" {if $row['status'] == 1}checked="checked"{/if} />
+                    </td>
+                    <td>{php echo date('Y-m-d H:i:s' , $row['createtime'])}</td>
+                    <td>
+                        <!--<a class='btn btn-default' href="{php echo web_url('platform/platform_acceptor', array('opp'=>'change','id' => $row['id']))}"><i class='fa fa-edit'></i></a>-->
+                        <a class='btn btn-default platform_acceptor' ><i class='fa fa-remove'></i></a>
+                    </td>
+                </tr>
+                {/loop}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</form>
+
+<script>
+    $('.platform_acceptor').click(function (e) {
+
+        e.stopPropagation();
+        var html = "确定删除消息接收员？";
+        var id = $(this).parent().parent().find('input[name="status"]').attr('data-id');
+        util.nailConfirm(this, function (state) {
+            if (!state) return;
+            $.post("{php echo web_url('platform/platform_acceptor', array('opp'=>'change', 'status'=>-1))}", {id: id}, function (data) {
+                util.tips(data.message, 1000);
+                if(data.status == '1') {
+                    setTimeout(function () {
+                        location.reload();
+                    },1000);
+                }     
+            }, 'json');
+        }, {html: html});
+    });
+
+
+	$('#aaa').click(function(){
+		var is_fans;
+        //提交审核
+
+        $.get("{php echo web_url('platform/platform_apply/qr')}", function (res) {
+            console.log(res);
+            var data = JSON.parse(res);
+            if (data.url) {
+                $('.erweima img').attr('src', data.url).attr('data-code', data.code);
+	                if($('.hxyImg').css('display') == 'block'){
+	                	is_fans = setInterval(function () {
+	                    isFans(data.code);
+	                }, 1500)
+                }
+            }
+        });
+
+        // $('#uniname').html($('[name="platform[uniname]"]').val());
+        // $('#wxverify').css('display','none');
+        // $('.erweima').css('display','block');
+        // $('.processor_bar li:first-child').removeClass('current');
+        // $('.processor_bar li:last-child').addClass('current');
+
+        //定时器，判断用户是否关注公众号
+        function isFans(code) {
+            $.get(
+                "{php echo web_url('platform/platform_acceptor/sub_check')}",
+                {
+                    'code': code
+                },
+                function (res) {
+                    console.log(res);
+                    var data = JSON.parse(res);
+                    if (data.errno == '1') {
+                        clearInterval(is_fans);
+                        util.tips(data.message);
+                        setTimeout(function () {
+                            location.href = "{php echo web_url('platform/platform_acceptor')}";
+                        }, 1000)
+                    } else if (data.errno == '-1') {
+                        clearInterval(is_fans);
+                        util.tips(data.message);
+                        setTimeout(function () {
+                            location.href = "{php echo web_url('platform/platform_acceptor')}";
+                        }, 3000)
+                    }
+                }
+            )
+        }
+	})
+        
+	$(function() {
+        require(['bootstrap.switch'], function ($) {
+            // 启用状态
+            $('.status:checkbox').bootstrapSwitch({onText: '开启', offText: '关闭'});
+            $('.status:checkbox').on('switchChange.bootstrapSwitch', function (event, state) {
+//                var status_id = $(this).attr('status-id');
+                var status = state ? 1 : 0;
+                var id = $(this).attr('data-id');
+                console.log(status);
+
+                $.post("{php echo web_url('platform/platform_acceptor' , array('opp' => 'change'));}", {
+                    id: id,
+                    status: status
+                }, function (data) {
+                        setTimeout(function () {
+//                            location.reload();
+                        },1000);
+                    util.tips(data.message, 1000);
+                }, 'json');
+            });
+
+        });
+    })
+</script>
+
+{php include wl_template('common/footer');}

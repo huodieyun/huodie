@@ -1,0 +1,57 @@
+<!-- 
+followed.html
+ 判断是否已经关注该微信公众号，引导关注
+Created by Administrator on 2016-02-29.
+Copyright 2016 Administrator. All rights reserved.
+-->
+
+{if $config['base']['order_alert']==1}
+<!--订单提醒-->
+<style>
+    .orderlist{position:fixed;top:20px;background:black;z-index:1000;opacity:0.75;color:white;border-radius:13px;height: 25px;overflow: hidden;left: 3%;}
+    .orderlist img{ border-radius:50%} 
+</style>
+
+
+<script>
+function randSec(){   //随机函数
+		 var randSec=parseInt(Math.random()*10);
+		 if(randSec<6){return 6;}else{return randSec;}
+		 }
+		 
+    function funcTest(){
+		 
+		timelyFun(function(){
+		 var i=0;
+		 var len=Number(data1.length-1);
+		 var randName=setInterval(function(){
+
+			if(("city" in data1[i])){
+			$("#shuoming").text("最新订单来自"+data1[i].city+"的"+data1[i].nickname);
+			}else{
+			$("#shuoming").text("最新订单来自"+data1[i].nickname);
+		   	}
+		    $("#sec").html(data1[i].sec+"秒前"+"  ");
+            $("#headpic").attr("src",data1[i].avatar);
+			 $(".orderlist").show(1);
+        	if(i<len){i++;}else{i=0}
+			setTimeout("$('.orderlist').hide(1)",3000);
+           },4000);
+		
+		 });
+    }
+    function timelyFun(callback){
+          $.post("{php echo app_url('order/order/tip')}",function(data){
+			data1=data;	
+			callback();
+		},'JSON').error(function(xhr,errorText,errorType){console.log('访问者名单获取失败');return false;});
+    }
+   window.onload = funcTest();
+</script>     
+
+      
+<div class="orderlist" style="font-size:14px;display: none"><img id="headpic" src="http://m.vipgouyouhui.com/qweiqin/attachment/images/2/2016/03/xVLGPP8Spp1pAlEK1LmECLLV8LzsUu.png" width="25">
+    <span id="shuoming" style="margin-left:3%;line-height:25px;font-size:12px;">最新订单来自盐城的哈哈</span>
+    <span id="sec" style="font-size:12px;margin-right:12px;display: inline;padding-right: 3%;">5秒前</span>
+</div>
+{/if}

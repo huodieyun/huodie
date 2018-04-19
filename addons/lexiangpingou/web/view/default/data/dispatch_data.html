@@ -1,0 +1,107 @@
+{php include wl_template('common/header');}
+<style>
+    .container{
+        background:#fff;
+        padding: 10px;
+    }
+    #peisongfsdbt{
+        height: 670px;
+    }
+    .container label{
+        width: 60px;
+        line-height: 34px;
+    }
+</style>
+<div class="container">
+    <div id="peisongfsdbt"></div>
+</div>
+<script>
+    // 路径配置
+    require.config({
+        paths: {
+            echarts: "//www.lexiangpingou.cn/addons/lexiangpingou/web/resource/js/echarts/build/dist"
+        }
+    });
+    var option={};
+    $.get(location.origin+'/minapi.php?op=dispatch_data&uniacid={$_W["uniacid"]}',function(res) {
+        var data = JSON.parse(res);
+        console.log(data);
+        var legendData = [];
+        var seriesData = [];
+        for (var i = 0; i < data.data.length; i++) {
+            var obj = {
+                value: data.data[i].total,
+                name: data.data[i].dispatchtype==0?'无':data.data[i].dispatchtype
+            };
+            legendData.push(data.data[i].dispatchtype==0?'无':data.data[i].dispatchtype);
+            seriesData.push(obj);
+        }
+        option= {
+            title : {
+                text: '配送方式对比图',
+                subtext: '',
+                x:'center'
+            },
+            tooltip : {
+                trigger: 'item',
+                formatter: "{a} <br/>{b} : {c} ({d}%)"
+            },
+            legend: {
+                orient : 'vertical',
+                x : 'left',
+                data:legendData
+            },
+            toolbox: {
+                show : true,
+                feature : {
+                    magicType : {
+                        show: true,
+                        type: ['pie', 'funnel'],
+                        option: {
+                            funnel: {
+                                x: '25%',
+                                width: '50%',
+                                funnelAlign: 'left',
+                                max: 1548
+                            }
+                        }
+                    },
+                    restore : {show: true},
+                    saveAsImage : {show: true}
+                }
+            },
+            calculable : true,
+            series : [
+                {
+                    name:'订单量',
+                    type:'pie',
+                    radius : '55%',
+                    center: ['50%', '60%'],
+                    data:seriesData
+                }
+            ]
+        };
+        RCHARTS(option);
+    });
+    function RCHARTS(optionCommon){
+        require(
+                [
+                    'echarts',
+                    'echarts/chart/bar', // 使用柱状图就加载bar模块，按需加载
+                    'echarts/chart/line',
+                    'echarts/chart/funnel',
+                    'echarts/chart/pie'
+                ],
+                function (ec) {
+                    // 基于准备好的dom，初始化echarts图表
+                    var myChart = ec.init(document.getElementById('peisongfsdbt'));
+                    // 为echarts对象加载数据
+                    myChart.setOption(optionCommon);
+                }
+        );
+    }
+
+
+
+</script>
+{php include wl_template('common/footer');}

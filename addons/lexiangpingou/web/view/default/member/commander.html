@@ -1,0 +1,482 @@
+{php include wl_template('common/header');}
+
+<ul class="nav nav-tabs">
+    {if $op == 'display' || $op == 'group_detail' || $op == 'base' || $op == 'unapply'}
+    <li {if $op == 'base'}class="active"{/if}>
+    <a href="{php echo web_url('member/commander', array('op' => 'base'))}">基本设置</a>
+    </li>
+    <li {if $op == 'unapply' && $_GPC['groupstatus'] == 9}class="active"{/if}>
+    <a href="{php echo web_url('member/commander', array('op' => 'unapply', 'groupstatus' => '9'))}">全部记录</a>
+    </li>
+    <li {if $op == 'display' && $_GPC['groupstatus'] == 0}class="active"{/if}>
+        <a href="{php echo web_url('member/commander', array('op' => 'display', 'groupstatus' => '0'))}">待审核</a>
+    </li>
+    <li {if $op == 'display' && $_GPC['groupstatus'] == 1}class="active"{/if}>
+        <a href="{php echo web_url('member/commander', array('op' => 'display', 'groupstatus' => '1'))}">已通过</a>
+    </li>
+    <li {if $op == 'display' && $_GPC['groupstatus'] == -1}class="active"{/if}>
+        <a href="{php echo web_url('member/commander', array('op' => 'display', 'groupstatus' => '-1'))}">已取消</a>
+    </li>
+    {/if}
+    {if $op == 'group_detail'}
+    <li class="active">
+        <a href="#">订单明细</a>
+    </li>
+    {/if}
+    {if $op == 'withdraw'}
+    <li {if $status == 0}class="active"{/if}>
+        <a href="{php echo web_url('member/commander', array('op' => 'withdraw', 'status' => '0'))}">待审核</a>
+    </li>
+    <li {if $status == 1}class="active"{/if}>
+        <a href="{php echo web_url('member/commander', array('op' => 'withdraw', 'status' => '1'))}">已发放</a>
+    </li>
+    <!--<li {if $status == -1}class="active"{/if}>-->
+        <!--<a href="{php echo web_url('member/commander', array('op' => 'withdraw', 'status' => '-1'))}">拒绝打款</a>-->
+    <!--</li>-->
+
+    {/if}
+    {if $op == 'web_cash'}
+    <li class="active">
+        <a href="{php echo web_url('member/commander/web_cash')}">线下打款</a>
+    </li>
+    {/if}
+
+</ul>
+{if $op == 'display' || $op == 'unapply'}
+<div class="main">
+    <div class="panel panel-info">
+        <div class="panel-heading">筛选</div>
+        <div class="panel-body">
+            <form action="{php echo web_url('member/commander', array('op' => $_GPC['op']))}" method="post" class="form-horizontal" role="form" id="form1">
+                <div class="form-group">
+                    <label class="col-xs-12 col-sm-2 col-md-2 col-lg-2 control-label">昵称</label>
+                    <div class="col-sm-6 col-lg-6 col-xs-8">
+                        <input class="form-control" name="keyword" id="" type="text" value="{$_GPC['keyword']}" placeholder="可查询昵称">
+                        <input class="form-control" name="groupstatus" id="" type="hidden" value="{$_GPC['groupstatus']}" placeholder="可查询昵称">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-xs-12 col-sm-2 col-md-2 col-lg-2 control-label">时间:</label>
+                    <div class="col-xs-3 col-sm-3">
+                        <label class="radio radio-inline">
+                            <input type="radio" name="type" value="0" {if intval($_GPC['type'] == 0)}checked="checked"{/if}">关
+                        </label>
+                        <label class="radio radio-inline">
+                            <input type="radio" name="type" value="1" {if intval($_GPC['type']) == 1}checked="checked"{/if}">申请时间
+                        </label>
+                        <label class="radio radio-inline">
+                            <input type="radio" name="type" value="2" {if intval($_GPC['type']) == 2}checked="checked"{/if}">审核时间
+                        </label>
+                    </div>
+                    <div class="col-sm-5 col-lg-5 col-xs-12">
+                        {php echo tpl_form_field_daterange('time', array('starttime'=>date('Y-m-d',$starttime),'endtime'=>date('Y-m-d', $endtime)));}
+                    </div>
+                    <div class="col-sm-3 col-lg-2" style="text-align:left;">
+                        <button class="btn btn-default"><i class="fa fa-search"></i> 搜索</button>
+                    </div>
+                </div>
+                <div class="form-group">
+                </div>
+            </form>
+
+            <!--  <a href='{php echo $this->createWebUrl('grouporder', array('op' => 'output','groupstatus'=>$groupstatus,'starttime'=>$starttime,'endtime'=>$endtime))}'><button class="btn btn-info"><i class="fa fa-download"></i> 导出记录</button></a>-->
+        </div>
+    </div>
+    <div class="panel panel-default">
+        <div class="panel-body table-responsive">
+            <table class="table table-hover">
+                <thead class="navbar-inner">
+                <tr>
+                    <th style="width:10%;"></th>
+                    <th style="width:10%;">姓名</th>
+                    <th style="width:10%;">状态</th>
+                    <th style="width:10%;">手机号</th>
+                    <th style="width:15%;">申请时间</th>
+                    <th style="width:15%;">审核时间</th>
+                    <th style="width:10%;">待提现</th>
+                    <th style="width:10%;">未结算</th>
+                    <th style="width:25%; text-align:right;">操作</th>
+                </tr>
+                </thead>
+                <tbody>
+                {loop $members $key $item}
+                <tr>
+                    <td>
+                        <img src="{$item['avatar']}" style='width:30px;height:30px;padding1px;border:1px solid #ccc' />
+                    </td>
+                    <td>{$item['name']}</td>
+                    <td>
+                        {if $item['apply_status'] == 0}
+                            {if $item['apply'] == 1}
+                                <label class="control-label label label-warning">待审核</label>
+                            {else}
+                                <label class="control-label label label-info">待申请</label>
+                            {/if}
+                        {elseif $item['apply_status'] == 1}
+                            <label class="control-label label label-success">已通过</label>
+                        {elseif $item['apply_status'] == -1}
+                            <label class="control-label label label-danger">已取消</label>
+                        {/if}
+                    </td>
+                    <td>{$item['addmobile']}</td>
+                    <td>{if $item['apply_time']}{php echo date('Y-m-d H:i' , $item['apply_time'])}{else}-{/if}</td>
+                    <td>{if $item['shenhetime']}{php echo date('Y-m-d H:i' , $item['shenhetime'])}{else}-{/if}</td>
+                    <td>￥{php echo number_format($item['commander_settled'] - $item['commander_apply'] - $item['commander_withdraw'],3)}</td>
+                    <td>￥{$item['unprice']}</td>
+                    <td style="text-align:right;">
+                        {if $item['apply'] == 1}
+                            {if $item['apply_status'] != 1}
+                                <a class="btn btn-sm btn-success" href="{php echo web_url('member/commander', array('op' => 'checked','id'=>$item['id']))}" style="margin-bottom:5px"> 审核通过</a>
+                            {/if}
+                            {if $item['apply_status'] != -1}
+                                <a class="btn btn-sm btn-danger cancelJ" href="{php echo web_url('member/commander', array('op' => 'unchecked','id'=>$item['id']))}" style="margin-bottom:5px"> 取消兼职</a>
+                            {/if}
+                        {else}
+                            <label class="btn btn-sm btn-info">未开审核开团</label>
+                        {/if}
+                        <a class="btn btn-sm btn-default" href="{php echo web_url('member/commander', array('op' => 'group_detail','openid'=>$item['openid']))}" style="margin-bottom:5px"> 佣金明细</a>
+                    </td>
+                </tr>
+                {/loop}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{$pager}
+<script type="text/javascript">
+    require(['daterangepicker'], function ($) {
+        $('.daterange').on('apply.daterangepicker', function (ev, picker) {
+            $('#form1')[0].submit();
+        });
+    });
+    if (document.getElementsByClassName("cancelJ").length > 0) {
+        var cancelJs = document.getElementsByClassName("cancelJ");
+        for (var i = 0; i < cancelJs.length; i++) {
+            cancelJs[i].onclick = function (event) {
+                event.preventDefault();
+                if (confirm("取消兼职后该兼职人员将不能获取团长外快，确定取消吗？")) {
+                    location.href = event.target.href;
+                }
+            }
+        }
+    }
+</script>
+{elseif $op == 'base'}
+
+<div class="panel panel-default">
+    <div class="panel-body table-responsive" style="padding: 0px;">
+        <div class="main_bd">
+            <div class="plugins_wrp">
+                <dl>
+                    <dd>
+                        <ul id="js_plugins1">
+                            <li class="item_wrp" style="width: 100%;">
+                                <div class="plugin_item">
+                                    <div class="plugin_icon"><img src="{TG_URL_WRES}images/function/fans/tuanzhang.png"></div>
+                                    <div class="plugin_status">
+                                        <i class="access"></i>
+                                        <span class="status_txt">
+										<input class="flag1" type="checkbox" name="apply" value="{$setting['apply']}" {if $setting['apply'] == 1}checked{/if} />
+									</span>
+                                    </div>
+                                    <div class="plugin_content">
+                                        <h3 class="title">团长佣金申请</h3>
+                                        <p class="desc" style="width: 100%;">
+                                            启用团长佣金申请功能后，只有申请团长并审核通过的团长开佣金团才能获得佣金。
+                                        </p>
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
+                    </dd>
+                </dl>
+            </div>
+        </div>
+        <div class="main_bd">
+            <div class="plugins_wrp">
+                <dl>
+                    <dd>
+                        <ul id="js_plugins2">
+                            <li class="item_wrp" style="width: 100%;">
+                                <div class="plugin_item">
+                                    <div class="plugin_icon"><img src="{TG_URL_WRES}images/function/fans/duanxin.png"></div>
+                                    <div class="plugin_status">
+                                        <i class="access"></i>
+                                        <span class="status_txt">
+										<input class="flag2" type="checkbox" name="smscode" value="{$setting['smscode']}" {if $setting['smscode'] == 1}checked{/if} />
+									</span>
+                                    </div>
+                                    <div class="plugin_content">
+                                        <h3 class="title">短信验证</h3>
+                                        <p class="desc" style="width: 100%;">
+                                            启用短信验证功能后，兼职人员申请时，需要通过短信验证码来申请。短信需要商家购买数量，当数量不足时，将无法获取短信验证码。
+                                        </p>
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
+                    </dd>
+                </dl>
+            </div>
+        </div>
+        <!--<div class="main_bd">-->
+            <!--<form action="" method="post" class="form-horizontal form" id="form" style="overflow: hidden; padding: 10px">-->
+                <!--<div class="plugins_wrp">-->
+                    <!--<dl>-->
+                        <!--<dd>-->
+                            <!--<ul id="js_commission">-->
+                                <!--<li class="item_wrp" style="width: 100%;">-->
+                                    <!--<div class="plugin_item">-->
+
+                                        <!--<div class="plugin_icon"><img src="{TG_URL_WRES}images/function/helpbuy.png"></div>-->
+                                        <!--&lt;!&ndash;<div class="plugin_status">&ndash;&gt;-->
+                                        <!--&lt;!&ndash;<i class="access"></i>&ndash;&gt;-->
+                                        <!--&lt;!&ndash;<span class="status_txt input-group col-sm-8">&ndash;&gt;-->
+                                        <!--&lt;!&ndash;<input type="number" name="commission_time" class="form-control" value="{$acc['commission_time']}" />&ndash;&gt;-->
+                                        <!--&lt;!&ndash;<span class="input-group-addon">天</span>&ndash;&gt;-->
+                                        <!--&lt;!&ndash;</span>&ndash;&gt;-->
+                                        <!--&lt;!&ndash;</div>&ndash;&gt;-->
+                                        <!--&lt;!&ndash;<div class="plugin_content">&ndash;&gt;-->
+                                        <!--&lt;!&ndash;<h3 class="title">提现周期</h3>&ndash;&gt;-->
+                                        <!--&lt;!&ndash;<p class="desc" style="width: 100%;">&ndash;&gt;-->
+                                        <!--&lt;!&ndash;兼职人员下级确认收货多少天可申请提现&ndash;&gt;-->
+                                        <!--&lt;!&ndash;</p>&ndash;&gt;-->
+                                        <!--&lt;!&ndash;</div>&ndash;&gt;-->
+                                        <!--&lt;!&ndash;<div class="col-sm-4">&ndash;&gt;-->
+                                        <!--&lt;!&ndash;<div class="input-group">&ndash;&gt;-->
+                                        <!--&lt;!&ndash;<input type="number" name="commission_time" class="form-control" value="{$acc['commission_time']}" />&ndash;&gt;-->
+                                        <!--&lt;!&ndash;<span class="input-group-addon">天</span>&ndash;&gt;-->
+                                        <!--&lt;!&ndash;</div>&ndash;&gt;-->
+                                        <!--&lt;!&ndash;<input type="submit" name="submit" value="提交" class="btn btn-primary col-lg-10"/>&ndash;&gt;-->
+                                        <!--&lt;!&ndash;<input type="hidden" name="token" value="{$_W['token']}"/>&ndash;&gt;-->
+                                        <!--&lt;!&ndash;</div>&ndash;&gt;-->
+
+                                        <!--<div class="plugin_status" style="width: 14%;padding-right: 0px;">-->
+                                            <!--<input type="submit" name="submit" value="提交" class="btn btn-primary col-lg-10"/>-->
+                                            <!--<input type="hidden" name="token" value="{$_W['token']}"/>-->
+                                            <!--</span>-->
+                                        <!--</div>-->
+                                        <!--<div class="plugin_content" style="width: 35%;margin-top: 18px;">-->
+                                            <!--<label>兼职人员下级确认收货多少天后可结算并提现</label>-->
+                                            <!--<div class="input-group">-->
+
+                                                <!--<input type="number" name="commission_time" class="form-control" value="{$acc['commission_time']}" />-->
+                                                <!--<span class="input-group-addon">天</span>-->
+                                            <!--</div>-->
+                                        <!--</div>-->
+                                    <!--</div>-->
+                                <!--</li>-->
+                            <!--</ul>-->
+                        <!--</dd>-->
+                    <!--</dl>-->
+                <!--</div>-->
+            <!--</form>-->
+        <!--</div>-->
+    </div>
+</div>
+<script>
+    $(function () {
+        require(['bootstrap.switch'], function ($) {
+            $('.flag1:checkbox').bootstrapSwitch({onText: '启用', offText: '禁用'});
+            $('#js_plugins1 .bootstrap-switch-wrapper').click(function (e) {
+                e.stopPropagation();
+                $.post("{php echo web_url('member/commander/ajax' , array('apply' => 1))}", function (d) {
+                    if (!d.errno) {
+                        util.tips(d.message);
+                        setTimeout(function(){location.href = "{php echo web_url('member/commander/base');}";},1000);
+                    }
+                }, "json");
+            });
+        });
+    });
+    $(function () {
+        require(['bootstrap.switch'], function ($) {
+            $('.flag2:checkbox').bootstrapSwitch({onText: '启用', offText: '禁用'});
+            $('#js_plugins2 .bootstrap-switch-wrapper').click(function (e) {
+                e.stopPropagation();
+                $.post("{php echo web_url('member/commander/ajax' , array('smscode' => 1))}", function (d) {
+                    if (!d.errno) {
+                        util.tips(d.message);
+                        setTimeout(function(){location.href = "{php echo web_url('member/commander/base');}";},1000);
+                    }
+                }, "json");
+            });
+        });
+    });
+</script>
+{elseif $op == 'withdraw'}
+<div class="main">
+    <div class="panel panel-info">
+        <div class="panel-heading">筛选</div>
+        <div class="panel-body">
+            <form action="{php echo web_url('member/commander', array('op' => 'withdraw'))}" method="post" class="form-horizontal" role="form" id="form1">
+                <input type="hidden" name="status" value="{$status}"/>
+                <div class="form-group">
+                    <label class="col-xs-12 col-sm-2 col-md-2 col-lg-2 control-label">昵称</label>
+                    <div class="col-sm-8 col-lg-9 col-xs-12">
+                        <input class="form-control" name="keyword" id="" type="text" value="{$_GPC['keyword']}" placeholder="可查询昵称">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-xs-12 col-sm-2 col-md-2 col-lg-2 control-label">申请时间</label>
+                    <div class="col-sm-5 col-lg-7 col-xs-12">
+                        {php echo tpl_form_field_daterange('time', array('starttime'=>date('Y-m-d',$starttime),'endtime'=>date('Y-m-d', $endtime)));}
+                    </div>
+                    <div class="col-sm-3 col-lg-2" style="text-align:right;">
+                        <button class="btn btn-default"><i class="fa fa-search"></i> 搜索</button>
+                    </div>
+                </div>
+                <div class="form-group">
+                </div>
+            </form>
+
+        </div>
+    </div>
+    <div class="panel panel-default">
+        <div class="panel-body table-responsive">
+            <table class="table table-hover">
+                <thead class="navbar-inner">
+                <tr>
+                    <th style="width:10%;"></th>
+                    <th style="width:10%;">昵称</th>
+                    <th style="width:10%;">申请提现金额</th>
+                    <th style="width:20%;">申请时间</th>
+                    <th style="width:20%;">状态</th>
+                    <th style="width:20%; text-align:right;">操作</th>
+                </tr>
+                </thead>
+                <tbody>
+                {loop $list $key $item}
+                <tr>
+                    <td>
+                        <img src="{$item['member']['avatar']}" style='width:30px;height:30px;padding1px;border:1px solid #ccc' />
+                    </td>
+                    <td>{$item['member']['nickname']}</td>
+                    <td>￥{php echo number_format($item['price'],3)}</td>
+                    <td>{php echo date('Y-m-d H:i:s' , $item['createtime'])}</td>
+                    <td>{if $item['status'] == 0}<label class="control-label label label-warning">待审核</label>{elseif $item['status'] == 1}<label class="control-label label label-success">已发放</label>{elseif $item['status'] == -1}<label class="control-label label label-danger">拒绝打款</label>{/if}</td>
+                    <td style="text-align:right;">
+                        {if $item['status'] != 1}
+                        <a class="control-label label label-success cash" href="{php echo web_url('member/commander', array('op' => 'cash' , 'id' => $item['id']))}">佣金发放</a>
+                        <a class="control-label label label-warning cash_add" href="{php echo web_url('member/commander', array('op' => 'cash_add' , 'id' => $item['id']))}">线下打款</a>
+                        {else}
+                        <label class="control-label label label-warning">{if $item['web_cash'] == 0}线上打款{else}线下打款{/if}</label><br>
+                        {php echo date('Y-m-d H:i:s' , $item['updatetime'])}
+                        {/if}
+                    </td>
+                </tr>
+                {/loop}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{$pager}
+<script type="text/javascript">
+    if (document.getElementsByClassName("cash").length > 0) {
+        var cancelJs = document.getElementsByClassName("cash");
+        for (var i = 0; i < cancelJs.length; i++) {
+            cancelJs[i].onclick = function (event) {
+                event.preventDefault();
+                if (confirm("发放佣金将直接打款至粉丝的微信账号，确定发放吗？")) {
+                    location.href = event.target.href;
+                }
+            }
+        }
+    }
+    if (document.getElementsByClassName("cash_add").length > 0) {
+        var cancelJs = document.getElementsByClassName("cash_add");
+        for (var i = 0; i < cancelJs.length; i++) {
+            cancelJs[i].onclick = function (event) {
+                event.preventDefault();
+                if (confirm("确认线下打款，线下打款会直接将记录修改为已发放，请确定已在线下打款至粉丝账户")) {
+                    location.href = event.target.href;
+                }
+            }
+        }
+    }
+    require(['daterangepicker'], function ($) {
+        $('.daterange').on('apply.daterangepicker', function (ev, picker) {
+            $('#form1')[0].submit();
+        });
+    });
+
+</script>
+
+{/if}
+
+
+{if $op == 'group_detail'}
+<style type="text/css">
+    .main .form-horizontal .form-group {
+        margin-bottom: 0;
+    }
+
+    .main .form-horizontal .modal .form-group {
+        margin-bottom: 15px;
+    }
+
+    #modal-confirmsend .control-label {
+        margin-top: 0;
+    }
+</style>
+<div class="main">
+    <form class="form-horizontal form" action="" method="post" enctype="multipart/form-data" onsubmit="return formcheck(this)">
+        <input type="hidden" name="dispatchid" value="{$dispatch['id']}"/>
+
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                订单明细
+            </div>
+            <div class="panel-body table-responsive">
+                <table class="table table-hover">
+                    <thead class="navbar-inner">
+                    <tr>
+                        <th style="width:80px;">团id</th>
+                        <th style="width:70px;">团人数</th>
+                        <th style="width:100px;">已签收人数</th>
+                        <th style="width:100px;">佣金提成模式</th>
+                        <th style="width:100px;">每人可提成佣金</th>
+                        <th style="width:70px;">未结算金额</th>
+                        <th style="width:80px;">最终提成</th>
+                        <th style="width:100px;text-align: center">创建时间</th>
+                        <!--<th style="width:80px;">团完成时间</th>-->
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {loop $orderlist $item}
+
+                    <tr>
+                        <td>{$item['tuan_id']}</td>
+                        <td>{$item['tuan_num']}</td>
+                        <td>{$item['success_num']}</td>
+                        <td>{if $item['commissiontype'] == 2}固定金额{elseif $item['commissiontype'] == 1}百分比{/if}</td>
+                        <td>{if $item['commissiontype'] == 2}{$item['commission']}{elseif $item['commissiontype'] == 1}{$item['commission']}%{/if}</td>
+                        <td>{if $item['commissiontype'] == 2}{php echo ($item['tuan_num']-$item['success_num'])*$item['commission']}{elseif $item['commissiontype'] == 1}{php echo $item['un_price']*$item['commission']/100}{/if}
+                            </td>
+                        <td>￥{$item['withdraw']}</td>
+                        <td>{php echo date('Y-m-d H:i' , $item['createtime'])}</td>
+                        <!--<td>{if !empty($item['successtime'])}{php echo date('Y-m-d H:i' , $item['successtime'])}{else}未完成{/if}</td>-->
+                    </tr>
+
+                    {/loop}
+                    <!--<tr>-->
+                        <!--<td></td>-->
+                        <!--<td></td>-->
+                        <!--<td></td>-->
+                        <!--<td></td>-->
+                        <!--<td></td>-->
+                        <!--<td>已结算:{$billnum}</td>-->
+                        <!--<td>未结算:{$nobillnum}</td>-->
+                    <!--</tr>-->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        {$pager}
+    </form>
+</div>
+{/if}
+
+{php include wl_template('common/footer');}

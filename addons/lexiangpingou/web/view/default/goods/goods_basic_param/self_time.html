@@ -1,0 +1,34 @@
+<!-- 自提时间start -->
+<div class="form-group">
+    <label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label">自提时间</label>
+    <div class="col-xs-12 col-sm-8">
+        <div class="input-group">
+            <label class="radio radio-inline">
+                <input type="radio" name="goods[is_self_time]" value="1" {if $goods["is_self_time"] == 1}checked="checked"{/if}> 开
+            </label>
+            <label class="radio radio-inline">
+                <input type="radio" name="goods[is_self_time]" value="0" {if $goods["is_self_time"] == 0}checked="checked"{/if}> 关
+            </label>
+        </div>
+    </div>
+</div>
+<div id="self-time" class="form-group" {if intval($goods['is_self_time']) == 2 || empty($goods['is_self_time'])}hidden{/if}>
+    <label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label">自提时间</label>
+    <div class="col-xs-12 col-sm-8">
+        <div class="input-group">
+            {php echo tpl_form_field_daterange('selfTime', array('starttime' => date('Y-m-d', $goods['self_time_start'] == 0 ? time() : $goods['self_time_start']), 'endtime'=> date('Y-m-d', $goods['self_time_end'] == 0 ? time() : $goods['self_time_end'])));}
+        </div>
+    </div>
+</div>
+<!-- 自提时间end -->
+<script type="text/javascript">
+    /* 自提时间 */
+    $("input[name='goods[is_self_time]']").click(function () {
+        var is_true = $(this).val();
+        if (is_true == 1){
+            $("#self-time").show();
+        }else {
+            $("#self-time").hide();
+        }
+    });
+</script>

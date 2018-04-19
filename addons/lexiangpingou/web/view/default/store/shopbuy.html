@@ -1,0 +1,148 @@
+{php include wl_template('common/header');}
+
+<!--<div class="panel panel-default">
+    <div class="panel-body table-responsive" style="padding: 0px;">
+        <div class="main_bd">
+            <div class="plugins_wrp">
+                <dl>
+                    <dd>
+                        <ul id="js_plugins">
+                            <li class="item_wrp" style="width: 100%;">
+                                <div class="plugin_item">
+                                    <div class="plugin_icon"><img src="{TG_URL_WRES}images/function/helpbuy.png"></div>
+                                    <div class="plugin_status">
+                                        <i class="access"></i>
+                                        <span class="status_txt">
+										{if $merchant['is_merchant']}
+										<input class="flag" type="checkbox" name="help" value="{$merchant['is_merchant']}"
+                                               {if $merchant['is_merchant'] == 1}checked{/if} />
+										<span style="display:block;margin-left:60px;margin-top:2px;color:#888;font-size:14px;">
+                                            截止日期：{php echo date('Y-m-d', $merchant['expire_time'])}
+                                            <span id="renewal" style="background-color:#ea5919;color:white;cursor:pointer;margin-left:15px;border-radius:2px;font-size:12px;padding-left:3px;padding-right:3px;padding-bottom:1px;padding-top:1px;">
+                                                续费
+                                            </span>
+                                        </span>
+										
+										{else}
+										
+										<div id="buyDaifu"
+                                             style="font-size:20px;margin-top:-20px;width: 60px;height:60px;border-radius:50%;font-weight:900;background-color:#ff5466;color:white;margin-right: -25px;text-align:center;line-height:60px;cursor:pointer;">购买</div>
+										{/if}
+									</span>
+                                    </div>
+                                    <div class="plugin_content">
+                                        <h3 class="title">多商户购买</h3>
+                                        <p class="desc" style="    width: 100%;">
+                                        </p>
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
+                    </dd>
+                </dl>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .inner__content {
+        background: #eee none repeat scroll 0 0;
+        border-top: 1px solid #dcdcdc;
+        box-sizing: border-box;
+        color: #666;
+        margin-top: 10px;
+        margin-bottom: 10px;
+        min-width: 100%;
+        padding: 10px 5px;
+        width: auto;
+        text-align: center;
+    }
+</style>
+<script>
+
+    $(function () {
+        require(['bootstrap.switch'], function ($) {
+            $('.flag:checkbox').bootstrapSwitch({onText: '启用', offText: '禁用'});
+            $('.bootstrap-switch-wrapper').click(function (e) {
+                e.stopPropagation();
+                $.post("{php echo web_url('store/shopbuy/ajax')}", function (d) {
+                    if (!d.errno) {
+                        util.tips(d.message);
+                    }
+                }, "json");
+            });
+        });
+        $(".scrollLoading").scrollLoading();
+        var $pop = null;
+        $('.scrollLoading').hover(function () {
+            var img = $(this).attr('src');
+            var obj = this;
+            var $pop = util.popover(obj, function ($popover, obj) {
+                obj.$popover = $popover;
+            }, '<div><img src="' + img + '" style="max-width:200px; max-height:200px;"></div>');
+        }, function () {
+            this.$popover.remove();
+        });
+    });
+</script>-->
+<div class="col-xs-12 col-sm-9 col-lg-10">
+    <ul class="nav nav-tabs">
+        <li class="active"><a href="#">多商户已购买记录</a></li>
+
+        <li><a href="#">多商户购买</a></li>
+
+    </ul>
+    {if false}
+    <div class="panel panel-default">
+
+        <div class="panel-heading">多商户购买记录</div>
+        <div class="panel-body">
+            <div>
+                <table class="table table-hover" style="width: 80%;margin: 0 auto;margin-bottom: 20px;">
+                    <tr>
+                        <th>商品名称</th>
+                        <th>时间</th>
+                        <th>支付方式</th>
+                        <th>支付金额</th>
+                    </tr>
+                    {loop $list $item}
+                    <tr>
+                        <td>{$item['name']}</td>
+                        <td>{$item['time']}</td>
+                        <td>微信支付</td>
+                        <td>{$item['money']}元</td>
+                    </tr>
+                    {/loop}
+                </table>
+            </div>
+        </div>
+    </div>
+    {/if} 
+    <div class="panel panel-default">
+
+        <div class="panel-heading">多商户购买</div>
+        <div class="panel-body">
+            <div>
+                <div class="form-group">
+
+                    <label class="col-xs-12 col-sm-3 col-md-2 control-label">视频播放次数购买</label>
+
+                    <div class="col-sm-10 list">
+                        {loop $shop_list  $item}
+                        <label class="radio-inline"><input data-num="{$item['number']}" data-id="{$item['id']}" data-money="{$item['money']}" type="radio" name="smsnum" >{$item['name']}</label>
+                        {/loop}
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+</div>
+
+
+
+
+{php include wl_template('common/footer');}

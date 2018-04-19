@@ -1,0 +1,348 @@
+{php include wl_template('common/header');}
+<!--<a href="https://api.weixin.qq.com/cgi-bin/template/get_all_private_template?access_token={$access_token}">模板消息列表</a>-->
+<ul class="nav nav-tabs">
+    <li {if $op == 'upsave'}class="active" {/if}>
+        <a href="{php echo web_url('member/time', array('op'=>'upsave' , 'id' => $_GPC['id']));}">
+            群发管理
+        </a>
+    </li>
+    {if $op == 'save' && !empty($_GPC['id'])}
+    <li class="active">
+        <a href="{php echo $this->createWebUrl('bulk', array('op'=>'save', 'id'=>intval($_GPC['id'])));}">新增群发</a>
+    </li>
+    {/if} {if $op == 'update'}
+    <li class="active">
+        <a href="{php echo $this->createWebUrl('bulk', array('op'=>'update', 'id'=>intval($_GPC['id'])));}">编辑群发</a>
+    </li>
+    {/if}
+</ul>
+
+<div class="main">
+    {if $op == 'upsave'}
+
+    <form action="" method="post" class="form-horizontal form" id="form1">
+        <div class="panel panel-default">
+            <!--<div class="panel-heading">新增群发</div>-->
+            <div class="panel-body">
+                <div class="form-group">
+                    <label class="col-xs-12 col-sm-3 col-md-2 control-label">
+						<span class="text-danger">*</span>
+						群发方式
+					</label>
+                    <div class="col-xs-12 col-sm-9 col-md-10">
+                        <label class="radio-inline">
+							<input type="radio" name="type" value="0" checked="" />全部粉丝
+						</label>
+                        <label class="radio-inline">
+							<input type="radio" name="type" value="1"/>选择分组
+						</label>
+                        <!--<label class="radio-inline">-->
+							<!--<input type="radio" name="type" value="2"/>指定粉丝-->
+						<!--</label>-->
+                    </div>
+                </div>
+                <div id="J_GROUP" class="form-group" style="display: none;">
+                    <label class="col-xs-12 col-sm-3 col-md-2 control-label">
+						<span class="text-danger">*</span>
+						分组
+					</label>
+                    <div class="col-xs-12 col-sm-9 col-md-10">
+                        <select class="form-control" name="group">
+							{loop $groups $group}
+								<option value="{$group['id']}" {if $tplmsg['group'] === $group['id']} selected=""{/if}>{$group['name']}</option>
+							{/loop}
+						</select>
+                    </div>
+                </div>
+                <div id="J_FAN" class="form-group" style="display: none;">
+                    <label class="col-xs-12 col-sm-3 col-md-2 control-label">
+						<span class="text-danger">*</span>
+						粉丝
+					</label>
+                    <div class="col-xs-12 col-sm-9 col-md-10">
+                        <textarea name="openids" class="form-control" rows="6">{$settings['openids']}</textarea>
+                        <div class="help-block">
+                            每个粉丝编号一行，粉丝编号可从
+                            <a href="{php echo url('mc/fans');}" target="_blank">本链接获取</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-xs-12 col-sm-3 col-md-2 control-label">
+						<span class="text-danger">*</span>
+						基础内容
+					</label>
+                    <div class="col-xs-12 col-sm-9 col-md-10">
+                        <textarea class="form-control" readonly="" rows="8">{$tplmsg['content']}</textarea>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-xs-12 col-sm-3 col-md-2 control-label">
+						<span class="text-danger">*</span>
+						参数
+					</label>
+                    <div class="col-xs-12 col-sm-9 col-md-10">
+                        {loop $tplmsg['data'] $key $item}
+                        <div class="form-inline" style="margin-bottom:5px;">
+                            <input class="form-control" readonly="" value="{$key}" placeholder="键" /> :
+                            <input class="form-control" readonly="" placeholder="默认值" value="{$item['value']}" /> :
+                            <input class="form-control" readonly="" placeholder="颜色" value="{$item['color']}" />
+                        </div>
+                        {/loop}
+                        <div class="help-block">温馨提示：请填写完整且有效的参数，避免群发失败。如需更改请前往模板管理编辑。</div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-xs-12 col-sm-3 col-md-2 control-label">
+						<span class="text-danger">*</span>
+						跳转链接
+					</label>
+                    <div class="col-xs-12 col-sm-9 col-md-10">
+                        <input class="form-control" readonly="" value="{$tplmsg['url']}" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-xs-12 col-sm-3 col-md-2 control-label">
+						<span class="text-danger">*</span>
+						备注
+					</label>
+                    <div class="col-xs-12 col-sm-9 col-md-10">
+                        <input class="form-control" type="text" name="remark" value="" placeholder="便于以后识别该群发的目的" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-4 col-md-10 col-sm-offset-2 col-md-offset-2">
+                        <input type="hidden" name="token" value="{$_W['token']}" />
+                        <input type="hidden" name="mid" value="{$tplmsg['id']}" />
+                        <button type="submit" name="submit" class="btn btn-primary" value="1">确认群发</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+    <script type="text/javascript">
+        require(['jquery'], function() {
+            $(function() {
+                $('[name=type]').on('change', function() {
+                    if ($(this).val() == 1) {
+                        $('#J_FAN').hide();
+                        $('#J_GROUP').show();
+                    } else if ($(this).val() == 2) {
+                        $('#J_GROUP').hide();
+                        $('#J_FAN').show();
+                    } else {
+                        $('#J_GROUP').hide();
+                        $('#J_FAN').hide();
+                    }
+                });
+            });
+        });
+    </script>
+    {elseif $op == 'update'}
+    <form action="" method="post" class="form-horizontal form" id="form1">
+        <div class="panel panel-default">
+            <div class="panel-heading">编辑群发</div>
+            <div class="panel-body">
+                <div class="form-group">
+                    <label class="col-xs-12 col-sm-3 col-md-2 control-label">
+						<span class="text-danger">*</span>
+						群发方式
+					</label>
+                    <div class="col-xs-12 col-sm-9 col-md-10">
+                        <label class="radio-inline">
+							<input type="radio" name="type" value="0" {if $bulk['type'] == 0}checked=""{/if} disabled=""/>全部粉丝
+						</label>
+                        <label class="radio-inline">
+							<input type="radio" name="type" value="1" {if $bulk['type'] == 1}checked=""{/if} disabled=""/>选择分组
+						</label>
+                        <label class="radio-inline">
+							<input type="radio" name="type" value="2" {if $bulk['type'] == 2}checked=""{/if} disabled=""/>指定粉丝
+						</label>
+                    </div>
+                </div>
+                <div id="J_GROUP" class="form-group" style="{if $bulk['type'] == 1}display: block;{else}display: none;{/if}">
+                    <label class="col-xs-12 col-sm-3 col-md-2 control-label">
+						<span class="text-danger">*</span>
+						分组
+					</label>
+                    <div class="col-xs-12 col-sm-9 col-md-10">
+                        <select class="form-control" name="group" disabled="">
+							{loop $groups $group}
+								<option value="{$group['id']}" {if $bulk['group'] == $group['id']} selected=""{/if}>{$group['name']}</option>
+							{/loop}
+						</select>
+                    </div>
+                </div>
+                <div id="J_FAN" class="form-group" style="{if $bulk['type'] == 2}display: block;{else}display: none;{/if}">
+                    <label class="col-xs-12 col-sm-3 col-md-2 control-label">
+						<span class="text-danger">*</span>
+						粉丝
+					</label>
+                    <div class="col-xs-12 col-sm-9 col-md-10">
+                        <textarea name="openids" class="form-control" rows="6" disabled="">{$bulk['openids']}</textarea>
+                        <div class="help-block">
+                            每个粉丝编号一行，粉丝编号可从
+                            <a href="{php echo url('mc/fans');}" target="_blank">本链接获取</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-xs-12 col-sm-3 col-md-2 control-label">
+						<span class="text-danger">*</span>
+						基础内容
+					</label>
+                    <div class="col-xs-12 col-sm-9 col-md-10">
+                        <textarea class="form-control" readonly="" rows="8">{$tplmsg['content']}</textarea>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-xs-12 col-sm-3 col-md-2 control-label">
+						<span class="text-danger">*</span>
+						参数
+					</label>
+                    <div class="col-xs-12 col-sm-9 col-md-10">
+                        {loop $tplmsg['data'] $key $item}
+                        <div class="form-inline" style="margin-bottom:5px;">
+                            <input class="form-control" readonly="" value="{$key}" placeholder="键" /> :
+                            <input class="form-control" readonly="" placeholder="默认值" value="{$item['value']}" /> :
+                            <input class="form-control" readonly="" placeholder="颜色" value="{$item['color']}" />
+                        </div>
+                        {/loop}
+                        <div class="help-block">温馨提示：请填写完整且有效的参数，避免群发失败。如需更改请前往模板管理编辑。</div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-xs-12 col-sm-3 col-md-2 control-label">
+						<span class="text-danger">*</span>
+						跳转链接
+					</label>
+                    <div class="col-xs-12 col-sm-9 col-md-10">
+                        <input class="form-control" readonly="" value="{$tplmsg['url']}" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-xs-12 col-sm-3 col-md-2 control-label">
+						<span class="text-danger">*</span>
+						备注
+					</label>
+                    <div class="col-xs-12 col-sm-9 col-md-10">
+                        <input class="form-control" type="text" name="remark" value="{$bulk['remark']}" placeholder="便于以后识别该群发的目的" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-4 col-md-10 col-sm-offset-2 col-md-offset-2">
+                        <input type="hidden" name="token" value="{$_W['token']}" />
+                        <input type="hidden" name="mid" value="{$tplmsg['id']}" />
+                        <input type="hidden" name="id" value="{$bulk['id']}" />
+                        <button type="submit" name="submit" class="btn btn-primary" value="1">编辑群发</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+    {else}
+    <form class="form-horizontal" role="form" method="get" action="">
+        <div class="panel panel-info">
+            <div class="panel-heading">
+                <div>筛选查询</div>
+            </div>
+            <div class="panel-body">
+                <div class="form-group">
+                    <label class="col-sm-2 col-md-2 control-label">备注</label>
+                    <div class="col-sm-4 col-md-10">
+                        <input class="form-control" name="remark" type="text" value="{$_GPC['remark']}" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 col-md-2 control-label">状态</label>
+                    <div class="col-sm-4 col-md-10">
+                        <label class="radio-inline">
+							<input type="radio" name="status" value="0" {if $_GPC['status'] == 0}checked{/if}/> 待群发
+						</label>
+                        <label class="radio-inline">
+							<input type="radio" name="status" value="1" {if $_GPC['status'] == 1}checked{/if}/> 群发中
+						</label>
+                        <label class="radio-inline">
+							<input type="radio" name="status" value="2" {if $_GPC['status'] == 2}checked{/if}/> 已群发
+						</label>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-4 col-md-10 col-sm-offset-2 col-md-offset-2">
+                        <!--<input type="hidden" name="token" value="{$_W['token']}"/>-->
+                        <!--<input type="hidden" name="c" value="site"/>-->
+                        <!--<input type="hidden" name="a" value="entry"/>-->
+                        <!--<input type="hidden" name="do" value="bulk"/>-->
+                        <!--<input type="hidden" name="m" value="healer_tplmsg"/>-->
+                        <!--<input type="hidden" name="token" value="{$_W['token']}" />-->
+                        <input type="hidden" name="c" value="site" />
+                        <input type="hidden" name="a" value="entry" />
+                        <input type="hidden" name="m" value="lexiangpingou" />
+                        <input type="hidden" name="do" value="member" />
+                        <input type="hidden" name="ac" value="time" />
+                        <input type="hidden" name="op" value="upindex" />
+                        <!--<input type="hidden" name="status" value="$_GPC['status']"/>-->
+                        <!--<input type="hidden" name="remark" value="{$_GPC['remark']}" />-->
+                        <button type="submit" class="btn btn-info"> <i class="fa fa-search"></i>
+							搜索
+						</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <table class="table table-hover table-responsive">
+                <thead class="navbar-inner">
+                    <tr>
+                        <th class="text-center" width="60">序号</th>
+                        <th class="text-left">备注</th>
+                        <th class="text-left">状态</th>
+                        <th class="text-right" width="120">操作</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {loop $list $key $item}
+                    <tr class="text-center">
+                        <td>{php echo ++$key;}</td>
+                        <td class="text-left">{$item['remark']}</td>
+                        <td class="text-left">
+                            {if $item['status'] == 0}
+                            <label class="label label-danger">待群发</label> {elseif $item['status'] == 1}
+                            <label class="label label-info">群发中</label> {elseif $item['status'] == 2}
+                            <label class="label label-success">已群发</label> {/if}
+                        </td>
+                        <td class="text-right">
+                            {if $item['status'] == 0}
+                            <a onclick="if(!confirm(确定进行群发吗?')) return false;" href="{php echo web_url('member/time', array('op'=>'send', 'id'=>$item['id']));}" class="btn btn-info btn-sm" data-toggle="tooltip" data-placement="top" title="" data-original-title="群发"> <i class="fa fa-send"></i>
+                            </a>
+                            {/if}
+                            <!--<a href="{php echo web_url('member/time', array('op'=>'update', 'id'=>$item['id']));}" class="btn btn-default btn-sm" data-toggle="tooltip" data-placement="top" title="" data-original-title="修改"> <i class="fa fa-edit"></i></a>-->
+                            <a onclick="if(!confirm('删除后将不可恢复,确定删除吗?')) return false;" href="{php echo web_url('member/time', array('op'=>'updel', 'id'=>$item['id']));}" class="btn btn-default btn-danger btn-sm" data-toggle="tooltip" data-placement="top" title="" data-original-title="删除">
+                                <i class="fa fa-times"></i>
+                            </a>
+                        </td>
+                    </tr>
+                    {/loop} {if empty($list)}
+                    <tr>
+                        <td colspan="4">未创建群发任务</td>
+                    </tr>
+                    {/if}
+                </tbody>
+            </table>
+            {$pager}
+        </div>
+    </div>
+    {/if}
+</div>
+<script type="text/javascript">
+    require(['jquery', 'util'], function($, util) {
+        $('.btn').hover(function() {
+            $(this).tooltip('show');
+        }, function() {
+            $(this).tooltip('hide');
+        });
+    });
+</script>
+{php include wl_template('common/footer');}

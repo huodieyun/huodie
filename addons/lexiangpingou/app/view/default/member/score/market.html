@@ -1,0 +1,254 @@
+{php include wl_template('common/header');}
+<style>
+    .voucher-main{overflow:hidden;}
+    .voucher-main .list-cash-coupon{padding:10px 0 0 0; list-style:none; margin:10px auto;}
+    .voucher-main .list-cash-coupon li{margin:10px 0;position: relative;height: 119px;}
+    .voucher-main .list-cash-coupon a{display:block;width:214px;height:109px;margin:auto;background:url('resource/images/voucher.png') no-repeat 0 -9px;-webkit-background-size:575px auto;position:relative;float: left;margin-left: 10px;}
+    .voucher-main .list-cash-coupon a>p{position: absolute;max-width:200px;height:20px;color:#FFF;-webkit-box-sizing:border-box;}
+    .voucher-main .list-cash-coupon a>p:nth-of-type(1){left:25px;top:20px;font-size:14px;}
+    .voucher-main .list-cash-coupon a>p:nth-of-type(1)>span{font-size:30px;}
+    .voucher-main .list-cash-coupon a>p:nth-of-type(2){left: 26px;top: 62px;font-size: 14px;}
+    .voucher-main .list-cash-coupon a>p:nth-of-type(2):first-letter{font-size:14px;margin-right:3px;}
+    .voucher-main .list-cash-coupon a>p:nth-of-type(3){left: 26px;top: 83px;font-size: 12px;}
+    .voucher-main .list-cash-coupon a>p:nth-of-type(4){left: 160px;top: 42px;font-size: 11px;}
+    .voucher-main .list-cash-coupon a>p:nth-of-type(5){right: 12px;top:18px;font-size:14px;width:25px; line-height:18px;}
+    .voucher-main .list-cash-coupon li:nth-of-type(4n+2) a, .list-cash-coupon li .a2{background-position: 0 -133px;}
+    .voucher-main .list-cash-coupon li:nth-of-type(4n+3) a, .list-cash-coupon li .a3{background-position: 0 -256px;}
+    .voucher-main .list-cash-coupon li:nth-of-type(4n) a, .list-cash-coupon li .a4{background-position: 0 -378px;}
+    .voucher-main .list-cash-coupon li[disabled] a{background-position: 0 -502px;}
+    .voucher-main .list-cash-coupon li[disabled] a:after{content: "";-webkit-background-size: 110px auto;position: absolute;top: 0;left: 0;width: 100%;height: 100%;z-index: 100;pointer-events: none;}
+    .voucher-main .list-cash-coupon li[disabled="expire"] a:after{background-image: url('resource/images/voucher02.png'); background-repeat: no-repeat; background-position:50px 15px;}
+    .voucher-main .list-cash-coupon li[disabled] a>p{color:rgba(255,255,255,0.85)!important;}
+    .voucher-main .list-cash-coupon li.used a{background-position-x:right!important;}
+    .voucher-main .list-cash-coupon li.used:nth-of-type(4n+1) a>p:nth-of-type(5){color:#ee5375;}
+    .voucher-main .list-cash-coupon li.used:nth-of-type(4n+2) a>p:nth-of-type(5){color:#ffa619;}
+    .voucher-main .list-cash-coupon li.used:nth-of-type(4n+3) a>p:nth-of-type(5){color:#92c427;}
+    .voucher-main .list-cash-coupon li.used:nth-of-type(4n) a>p:nth-of-type(5){color:#2f9abd;}
+    .voucher-main .read-coupon .list-cash-coupon a>p:nth-of-type(3){left:210px; top:65px; font-size:10px;}
+    .score-num {
+        width: 30%;
+        float: left;
+        height: 109px;
+        border-bottom-right-radius: 5px;
+        border-bottom-left-radius: 5px;
+        background: #fff;
+        padding-left: 10px;
+        padding-right: 5px;
+    }
+    .score-num .top {
+        background: #f99b00;
+        text-align: center;
+        border-top-right-radius: 5px;
+    }
+    .score-num .bottom {
+        margin-top: 20px;
+        text-align: center;
+        font-size: 14px;
+        color: #333;
+        border-bottom-right-radius: 5px;
+    }
+    .score-num .bottom.time {
+        margin-top: 5px;
+    }
+    .score-num .bottom p {
+        background: #f97b87;
+        color: #fff;
+        border-radius: 5px;
+        padding: 5px 0;
+    }
+    .box-left {
+        width: 70%;
+    }
+    .title {
+        border-top: 2px solid #EE5509;
+    }
+    .pay_dialog {
+        position: fixed;
+        top: 0;
+        left: 0;
+        display: none;
+        width: 100%;
+        height: 100%;
+        color: #333;
+        background: rgba(0,0,0,0.4);
+        z-index: 9998;
+    }
+    .pay_dialog .dialog_container {
+        margin: 40% auto 0;
+        width: 85%;
+        background: #FFF;
+        border-radius: 8px;
+    }
+    .pay_dialog .dialog_container h3{
+        text-align: center;
+        padding: 15px;
+        margin-bottom: 0;
+        font-size: 16px;
+        line-height: 1.5;
+    }
+    .pay_dialog .dialog_container a {
+        display: block;
+        width: 100%;
+        height: auto;
+        color: #1f80e9;
+    }
+    .pay_dialog .dialog_container .dialog_btn {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
+        display: -webkit-flex;
+        -webkit-flex-direction: row;
+        -webkit-align-items: center;
+        -webkit-justify-content: center;
+    }
+    .pay_dialog .dialog_container .dialog_btn a {
+        text-align: center;
+        border: 1px solid #1f80e9;
+        margin: 10px 20px;
+        border-radius: 5px;
+        padding: 5px;
+    }
+</style>
+<div class="page-group">
+    <header class="bar bar-nav">
+        <h1 class="title">我的可用积分：<span class="num">{$member['score_balance']}</span></h1>
+    </header>
+    <div class="content native-scroll">
+        <div class="buttons-tab">
+          <a href="#tab1" class="tab-link button active">可兑换商品</a>
+          <a href="#tab2" class="tab-link button">已兑换商品</a>
+          <a href="#tab3" class="tab-link button">全部商品</a>
+        </div>
+        <div class="tabs">
+          <div id="tab1" class="tab active">
+            <div class="voucher-main">
+                <ul class="list-cash-coupon">
+                    {loop $list $item}
+                        {if $member['score_balance'] >= $item['score']}
+                            <li disabled item="{$item['id']}">
+                                <div class="box-left">
+                                    <a href="javascript:;" style="margin-bottom:20px;background-position:0 -10px;">
+                                        <p>¥<span>{$item['value']}</span>元</p>
+                                        <p>{$item['name']}</p>
+                                        <p>有效期至{php echo date("Y-m-d", $item['end_time'])}</p>
+                                    </a>
+                                </div>
+                                <div class="score-num">
+                                    <div class="top">
+                                        <p>所需积分数</p>
+                                        <p class="need">{$item['score']}</p>
+                                    </div>
+                                    <div class="bottom">
+                                        <p onclick="change(this)">兑换</p>
+                                    </div>
+                                </div>
+                            </li>
+                        {/if}
+                    {/loop}
+                </ul>
+            </div>
+          </div>
+          <div id="tab2" class="tab">
+            <div class="voucher-main">
+                <ul class="list-cash-coupon">
+                    {loop $exchanges $item}
+                    <li disabled>
+                        <div class="box-left">
+                            <a href="javascript:;" style="margin-bottom:20px;background-position:0 -256px;">
+                                <p>¥<span>{$item['cash']}</span>元</p>
+                                <p>{$item['name']}</p>
+                                <p>有效期至{php echo date("Y-m-d", $item['end_time'])}</p>
+                            </a>
+                        </div>
+                        <div class="score-num">
+                            <div class="top">
+                                <p>使用积分</p>
+                                <p>{$item['score']}</p>
+                            </div>
+                            <div class="bottom time">
+                                <p>{php echo date("Y-m-d H:i", $item['created_at'])}</p>
+                            </div>
+                        </div>
+                    </li>
+                    {/loop}
+                </ul>
+            </div>
+          </div>
+          <div id="tab3" class="tab">
+            <div class="voucher-main">
+                <ul class="list-cash-coupon">
+                    {loop $list $item}
+                    <li disabled item="{$item['id']}">
+                        <a href="javascript:;" style="margin-bottom:20px;background-position:0 -379px;">
+                            <p>¥<span>{$item['value']}</span>元</p>
+                            <p>{$item['name']}</p>
+                            <p>有效期至{php echo date("Y-m-d", $item['end_time'])}</p>
+                        </a>
+                        <div class="score-num">
+                            <div class="top">
+                                <p>所需积分数</p>
+                                <p class="need">{$item['score']}</p>
+                            </div>
+                            <div class="bottom">
+                                <p onclick="change(this)">兑换</p>
+                            </div>
+                        </div>
+                    </li>
+                    {/loop}
+                </ul>
+            </div>
+          </div>
+        </div>
+    </div>
+    <div class="confirm pay_dialog">
+        <div class="dialog_container">
+            <h3></h3>
+            <div class="dialog_btn">
+                <a href="javascript:void(0);" onclick="$('.confirm').hide();">取消</a>
+                <a href="javascript:void(0);" onclick="balancePayment()">确认</a>
+            </div>
+        </div>
+    </div>
+    <div class="tip pay_dialog">
+        <div class="dialog_container">
+            <h3></h3>
+            <div class="dialog_btn">
+                <a href="javascript:void(0);" onclick="$('.tip').hide();">确定</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    function change(e) {
+        var num = parseFloat($(e).parents('li').find('.need').text());
+        var myscore = parseFloat($('.title .num').text());
+        if (myscore >= num) {
+            $('.confirm').attr('juan', $(e).parents('li').attr('item'));
+            $('.confirm').find('h3').text('确定用'+ num + '积分换取优惠券？');
+            $('.confirm').show();
+        } else {
+            $('.tip h3').text('可用积分数不够！');
+            $('.tip').show();
+        }
+    }
+    function balancePayment() {
+        $.post('{php echo app_url("member/score/exchange")}', {id: $('.confirm').attr('juan')}, function (res) {
+            res = JSON.parse(res);
+            if (res.status) {
+                $('.dialog_btn').remove();
+                $('.tip h3').text('兑换成功');
+                $('.tip').show();
+                setTimeout(function () {
+                    location.href = "{php echo app_url('member/score/market')}";
+                },1000);
+                return false;
+            } else {
+                $('.tip h3').text(res.msg);
+                $('.tip').show();
+            }
+        });
+    }
+</script>
+{php include wl_template('common/footer');}

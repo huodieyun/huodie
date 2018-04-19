@@ -1,0 +1,150 @@
+{php include wl_template('common/header');}
+<style>
+    .container{background:#fff;}
+    .table>tbody>tr>td{line-height:3;padding: 8px 2px;}
+    th,table thead tr th:last-child, table tbody tr td:last-child{text-align:center;}
+    table>tr:first-child{height:42px;}
+    .table>tbody>tr>th{line-height: 2.5}
+
+    .container label{
+        width: 60px;
+        line-height: 34px;
+    }
+    #shangchengZHL{height:500px;}
+    table.SJ{
+        margin-bottom: 50px;
+    }
+    .title{
+        padding: 20px 0;
+        text-align: center;
+        font-size: 20px;
+        font-weight: 600;
+    }
+    .btn-default:focus,.btn-default.active{
+        background-color: #44b549;
+        color: #fff0cc;
+        border-color: #ccc;
+        box-shadow:none;
+    }
+</style>
+<div class="container">
+    <div class="title">自提点商品分析</div>
+    <div class="btn-group topGM" role="group">
+        <button type="button" class="btn btn-default active data">今日实时</button><button type="button" class="btn btn-default data">昨日</button><button type="button" class="btn btn-default data">最近7天</button><button type="button" class="btn btn-default data">最近30天</button>
+    </div>
+    <div style="margin-top: 20px">
+        <label style="float: left;"><span style='color:red'>*</span>自提点</label>
+        <div class="col-sm-6 col-xs-12">
+            <select name="store_id" class="form-control">
+                <option value="0">请选择自提点</option>
+                {loop $since_store $row}
+                <option value="{$row['id']}" {if $store_id==$row['id']}selected="selected"{/if}>{$row['storename']}</option>
+                {/loop}}
+            </select>
+        </div>
+    </div>
+    <table class="table">
+        <thead>
+        <tr>
+            <th>商品名称</th>
+            <th>下单商品数量</th>
+            <th>支付商品数量</th>
+            <!--<th>退款商品数量</th>-->
+            <th>支付金额</th>
+            <!--<th>退款金额</th>-->
+            <th>签收金额</th>
+        </tr>
+        </thead>
+        <tbody class="SJ" style="text-align: center">
+
+        </tbody>
+    </table>
+</div>
+
+<script>
+
+
+    $('.topGM').on('click','button',function(){
+        if($(this).hasClass('active')){return false;}
+
+        $('.topGM button').removeClass('active');
+        $(this).addClass('active');
+        var store_id = $('select[name=store_id]').val();
+        if(store_id == 0){
+            util.tips('请先选择自提点');
+            return false;
+        }
+        if($(this).html()=='今日实时'){
+            ajaxInfo(store_id,getBeforeDate(0),getBeforeDate(0));
+        }else if($(this).html()=='昨日'){
+            ajaxInfo(store_id,getBeforeDate(1),getBeforeDate(1));
+        }else if($(this).html()=='最近7天'){
+            ajaxInfo(store_id,getBeforeDate(6),getBeforeDate(0));
+        }
+    });
+    $('select[name=store_id]').on('change',function () {
+        var store_id = $('select[name=store_id]').val();
+        if($('.data.active').html()=='今日实时'){
+            ajaxInfo(store_id,getBeforeDate(0),getBeforeDate(0));
+        }else if($('.data.active').html()=='昨日'){
+            ajaxInfo(store_id,getBeforeDate(1),getBeforeDate(1));
+        }else if($('.data.active').html()=='最近7天'){
+            ajaxInfo(store_id,getBeforeDate(6),getBeforeDate(0));
+        }else if($('.data.active').html()=='最近30天'){
+            ajaxInfo(store_id,getBeforeDate(29),getBeforeDate(0));
+        }
+
+    })
+
+    function  ajaxInfo(store_id,a,b) {
+        $.get(
+            location.origin + '/minapi.php?op=since_data_info&uniacid={$_W["uniacid"]}',
+            {
+                stime: a,
+                etime: b,
+                store_id:store_id
+            },
+            function (res) {
+                var data=JSON.parse(res);
+                console.log(data);
+                if(data.length != 0 ){
+                    var html="";
+                    for(var i in data){
+                        if(!data[i]){
+                            html += '<tr id="'+data[i]["g_id"]+'"><td>' + data[i]["gname"] + '</td><td>0</td><td>0</td><td>0</td><td>0</td>';
+                        }else{
+                            html += '<tr id="'+data[i]["g_id"]+'"><td>' + data[i]["gname"] + '</td><td>' + (data[i]["order_total"]||"0") + '</td><td>'+(data[i]["order_pay"]||"0")+'</td><td>'+(data[i]["pay_price"]||"0")+'</td><td>'+(data[i]["success_price"]||"0")+'</td></tr>';
+                        }
+                    }
+                    $('.SJ').html(html);
+                }else{
+                    $('.SJ').html('<span style="font-size: 17px;color: red;text-align: center">暂无数据</span>');
+                }
+
+            }
+        );
+    }
+    function getBeforeDate(n){
+        var n = n;
+        var d = new Date();
+        var year = d.getFullYear();
+        var mon=d.getMonth()+1;
+        var day=d.getDate();
+        if(day <= n){
+            if(mon>1) {
+                mon=mon-1;
+            }
+            else {
+                year = year-1;
+                mon = 12;
+            }
+        }
+        d.setDate(d.getDate()-n);
+        year = d.getFullYear();
+        mon=d.getMonth()+1;
+        day=d.getDate();
+        s = year+"-"+(mon<10?('0'+mon):mon)+"-"+(day<10?('0'+day):day);
+        return s;
+    }
+</script>
+{php include wl_template('common/footer');}

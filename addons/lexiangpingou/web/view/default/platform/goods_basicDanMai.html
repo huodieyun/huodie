@@ -1,0 +1,448 @@
+
+<div class="panel panel-default" >
+    <div class="panel-heading">商品信息
+        <a target="_blank" style="cursor:pointer; float:right; font-weight:bold;" href="http://v.youku.com/v_show/id_XMTc0OTkwNTU4NA==.html?from=s1.8-1-1.2&spm=a2h0k.8191407.0.0">视频演示>></a>
+        <a target="_blank" style="cursor:pointer; float:right; margin-right:10px; font-weight:bold;" href="http://doc.lexiangpingou.cn/releaseProduct.html#jbxx">图文说明>></a>
+    </div>
+    <div class="panel-body">
+        <div class="panel-body">
+            <div class="form-group" style="display:none;">
+            <label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label">排序</label>
+            <div class="col-md-6">
+                <input type="text" name="goods[displayorder]" class="form-control" value="{$goods['displayorder']}" />
+            </div>
+        </div>
+        <div class="form-group" style="display:none;">
+            <label class="col-xs-12 col-sm-3 col-md-2 control-label"><span style='color:red'>*</span>所属商家</label>
+            <div class="col-md-6">
+                <select name="goods[merchantid]" class="form-control">
+                    <option value="" {if empty($goods['merchantid'])}selected="selected"{/if}>{$_W['account']['name']}</option>
+                    {loop $merchants $row}
+                    <option value="{$row['id']}" {if $goods['merchantid']==$row['id']}selected="selected"{/if}>{$row['name']}</option>
+                    {/loop}}
+                </select>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label"><span style='color:red'>*</span>商品名称</label>
+            <div class="col-md-6">
+                <input type="text" placeholder="为保证支付正常，商品名称字数不能大于30个字" name="goods[gname]" class="form-control" value="{$goods['name']}" />
+            </div>
+        </div>
+            <div class="form-group">
+                <label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label"><span style='color:red'>*</span>商品性质</label>
+                <div class="col-xs-12 col-sm-8">
+                    <div class="input-group">
+                        <label class="radio radio-inline">
+                            <input type="radio" name="goods[goods_style]" {if $goods['goods_style'] == '0'}checked{/if} value="0">价格低
+                        </label>
+                        <label class="radio radio-inline">
+                            <input type="radio" name="goods[goods_style]" {if $goods['goods_style'] == '1'}checked{/if} value="1">利润高
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+        <div class="form-group">
+            <label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label"><span style='color:red'>*</span>技术服务费</label>
+            <div class="col-md-6" style="position: relative">
+                <div class="input-group">
+                    <input type="text" name="goods[taxrate]" class="form-control" value="{$goods['taxrate']}"  onkeyup="this.value=this.value.replace(/[^\d.]/g,'')"/>
+                    <span class="input-group-addon">%</span>
+                </div>
+                <div class="glyphicon glyphicon-question-sign" style="position: absolute;top: 0;right: -4%;padding: 10px;cursor: pointer;"></div>
+                <div style="position: absolute;top: 6px; right:-42%;width:200px;border:1px solid rgb(221, 221, 221); padding:10px;border-radius:5px;display: none">技术服务费：指在乐享拼购NBE系统后台极限单品栏目交易所产生的服务器费用、流量费用、平台服务客服等费用，技术服务费采用灵活的打赏模式，您想给多少就给多少！</div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label">销量</label>
+            <div class="col-md-6">
+                <div class="input-group">
+                    <input type="number" name="goods[salenum]" class="form-control" value="{$goods['salenum']}" />
+                    <span class="input-group-addon">件</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label"><span style='color:red'>*</span>售价</label>
+            <div class="col-md-6">
+                <div class="input-group">
+                    <input type="text" name="goods[oprice]" class="form-control" value="{$goods['oprice']}" />
+                    <span class="input-group-addon">元</span>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label">价格类型</label>
+            <div class="col-xs-12 col-sm-8">
+                <div class="input-group">
+                    <label class="radio radio-inline">
+                        <input type="radio" name="goods[ctype]" value="1" {if intval($goods['ctype']) ==1 }checked="checked"{/if} onclick="$('.min_num').show()">整件批发
+                    </label>
+                    <label class="radio radio-inline">
+                        <input type="radio" name="goods[ctype]" value="0" {if intval($goods['ctype']) ==0}checked="checked"{/if} onclick="$('.min_num').hide()">一件代发
+                    </label>
+                </div>
+            </div>
+        </div>
+        <div class="form-group min_num" style="{if intval($goods['ctype']) ==0}display: none{/if}">
+            <label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label"><span style='color:red'>*</span>起订量</label>
+            <div class="col-md-6">
+                <div class="input-group">
+                    <input type="number" name="goods[min_num]" class="form-control" value="{$goods['min_num']}" />
+                    <span class="input-group-addon">件</span>
+                </div>
+            </div>
+        </div>
+        <div class="form-group ctype">
+            <label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label"><span style='color:red'>*</span>供应价</label>
+            <div class="col-md-6">
+                <div class="input-group">
+                    <input type="text" name="goods[mprice]" class="form-control" value="{$goods['mprice']}" />
+                    <span class="input-group-addon">元</span>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label"><span style='color:red'>*</span>单位</label>
+            <div class="col-md-6">
+                <input maxlength="4" placeholder="最大字符为4个" type="text" name="goods[unit]" class="form-control" value="{$goods['unit']}" />
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label"><span style='color:red'>*</span>库存</label>
+            <div class="col-md-6">
+                <div class="input-group">
+                    <input type="number" name="goods[gnum]" class="form-control" value="{$goods['gnum']}"/>
+                    <span class="input-group-addon">件</span>
+                </div>
+            </div>
+        </div>
+        <input type="hidden" name="id" value="{$goods['id']}">
+        <div class="form-group">
+            <label class="col-xs-12 col-sm-3 col-md-2 control-label">重量</label>
+            <div class="col-sm-6 col-xs-12">
+
+                <div class="input-group">
+                    <input type="text" name="goods[weight]" id="weight" class="form-control" value="{$goods['weight']}" />
+                    <span class="input-group-addon">克</span>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label"><span style='color:red'>*</span>首页图片</label>
+            <div class="col-md-6">
+                {php echo tpl_form_field_image('goods[gimg]', $goods['gimg']);}
+                <span class="help-block">图片建议为640X300</span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label">广告图</label>
+            <div class="col-md-6">
+                {php echo tpl_form_field_image('goods[advert_img]', $goods['advert_img']);}
+                <span class="help-block">图片建议为640X300</span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-xs-12 col-sm-3 col-md-2 control-label">图集</label>
+            <div class="col-sm-6">
+                {php echo tpl_form_field_multi_image('img',$piclist);}
+                <span class="help-block">商品详情幻灯片，建议640X350</span>
+            </div>
+        </div>
+
+        <div class="form-group" style="display: block">
+            <label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label">首页视频</label>
+            <div class="col-md-6">
+                <input type="text" name="index_video" value="{$goods['index_video']}" class="form-control">
+                <span class="help-block">视频尺寸建议为640X300!请输入视频地址</span>
+            </div>
+        </div>
+            <div class="form-group" style="display: block">
+                <label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label">活动结束时间</label>
+                <div class="col-md-6">
+                    <?php if(!$activetime) $activetime = TIMESTAMP + 30 * 24 * 60 * 60 ?>
+                    {php echo tpl_form_field_date('activetime', date('Y-m-d H:i:s', $activetime),true);}
+                    <span class="help-block">即商家开始评分时间</span>
+                </div>
+            </div>
+
+    </div>
+</div>
+</div>
+<div class="panel panel-default">
+    <div class="panel-heading">控制开关</div>
+    <div class="panel-body">
+        <div class="panel-body">
+
+            <div class="form-group" {if $_W['user']['merchant_id'] > 0}style="display:none;"{/if}>
+            <label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label">首页显示</label>
+            <div class="col-xs-12 col-sm-8">
+                <div class="input-group">
+                    <label class="radio radio-inline">
+                        <input type="radio" name="goods[showindex]" value="0" {if !empty($goods) && $goods['showindex'] == 0}checked{/if}> 开
+                    </label>
+                    <label class="radio radio-inline">
+                        <input type="radio" name="goods[showindex]" value="1" {if empty($goods) || $goods['showindex'] == 1}checked{/if}> 关
+                    </label>
+
+                </div>
+            </div>
+        </div>
+
+{if $isshop==1}
+<div class="form-group type" style="display:none;">
+    <label class="col-xs-12 col-sm-3 col-md-2 control-label">商品属性</label>
+    <div class="col-sm-9 col-xs-12" >
+        <label  class="radio radio-inline" onclick="$('.chageprice').hide();$('.limittime').hide();" style="display:none;">
+            <input type="radio" name="goods[type]" value="1" id="type" {if $goods['type'] == 1}checked="true"{/if} > 新用户专享</input>
+        </label>
+        <label  class="radio radio-inline" onclick="$('.chageprice').hide();$('.limittime').show();" style="display:none;">
+            <input type="radio" name="goods[type]" value="4" id="type" {if $goods['type'] == 4}checked="true"{/if} > 限时卖</input>
+        </label>
+        <label  class="radio radio-inline" >
+            <input type="radio" name="goods[type]" value="5" id="type" {if $goods['type'] == 5||intval($goods['type'])==0}checked="true"{/if} > 正常</input>
+        </label>
+    </div>
+</div>
+{/if}
+{if $isjudgment['status']}
+<div class="form-group">
+    <label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label">商品评价</label>
+    <div class="col-xs-12 col-sm-8">
+        <div class="input-group">
+            <label class="radio radio-inline">
+                <input type="radio" name="goods[isjudgment]" value="1" {if intval($goods['isjudgment']) ==1 }checked="checked"{/if}> 开
+            </label>
+            <label class="radio radio-inline">
+                <input type="radio" name="goods[isjudgment]" value="0" {if intval($goods['isjudgment']) ==0}checked="checked"{/if}> 关
+            </label>
+        </div>
+    </div>
+</div>
+{/if}
+<div class="form-group">
+    <label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label">显示详情</label>
+    <div class="col-xs-12 col-sm-8">
+        <div class="input-group">
+            <!--默认0显示1不显示-->
+            <label class="radio radio-inline">
+                <input type="radio" name="goods[issharedesc]" value="0" {if intval($goods['issharedesc']) ==0}checked="checked"{/if}>开
+            </label>
+            <label class="radio radio-inline">
+                <input type="radio" name="goods[issharedesc]" value="1" {if intval($goods['issharedesc']) ==1 }checked="checked"{/if}> 关
+            </label>
+        </div>
+    </div>
+</div>
+<div class="form-group">
+    <label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label">包邮</label>
+    <div class="col-xs-12 col-sm-8">
+        <div class="input-group">
+            <label class="radio radio-inline">
+                <input type="radio" name="goods[isfree]" value="1" {if intval($goods['isfree']) ==1 }checked="checked"{/if} onclick="$('#isfree').fadeOut();">开
+            </label>
+            <label class="radio radio-inline">
+                <input type="radio" name="goods[isfree]" value="0" {if intval($goods['isfree']) ==0}checked="checked"{/if} onclick="$('#isfree').fadeIn();"> 关
+            </label>
+        </div>
+    </div>
+</div>
+        <div class="form-group" id="isfree" {if $goods['isfree']==1}style="display: none;"{/if}>
+            <label class="col-xs-12 col-sm-3 col-md-2 control-label">运费模板选择</label>
+            <div class="col-sm-9 col-xs-12 chks">
+                <div class='input-group'>
+                    <input type="text" name="dispatchs" maxlength="30" value="{loop $dispatchs $dispatch} {$dispatch['nickname']}; {/loop}" id="dispatchs" class="form-control" readonly />
+                    <div class='input-group-btn'>
+                        <button class="btn btn-default" type="button" onclick="popwin = $('#modal-module-menus1').modal();">选择运费模板</button>
+                    </div>
+                </div>
+
+                <div style="margin-top:.5em;" class="input-group multi-audio-details clear-fix" id='dispatch'>
+                    {loop $dispatch_list $store}
+                    <div style="height: 40px; position:relative; float: left; margin-right: 18px;" class="multi-audio-item" dispatchid="{$store['id']}">
+                        <div class="input-group">
+                            <input type="hidden" value="{$store['id']}" name="dispatchs[]">
+                            <input type="text" value="{$store['name']}" readonly="" class="form-control">
+                            <div class="input-group-btn">
+                                <button type="button" onclick="remove_dispatch(this)" class="btn btn-default"><i class="fa fa-remove"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                    {/loop}
+                </div>
+                <span class='help-block'>不包邮时,必须最少选择一个运费模板</span>
+
+                <div id="modal-module-menus1" class="modal fade" tabindex="-1">
+                    <div class="modal-dialog" style='width: 920px;'>
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button aria-hidden="true" data-dismiss="modal" class="close" type="button">×</button>
+                                <h3>选择运费模板</h3></div>
+                            <div class="modal-body">
+                                <div class="row">
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" name="keyword1" value="" id="search-kwd1" placeholder="请输入运费模板" />
+                                        <span class='input-group-btn'><button type="button" class="btn btn-default" onclick="search_dispatch();">搜索</button></span>
+                                    </div>
+                                </div>
+                                <div id="module-menus1" style="padding-top:5px;"></div>
+                            </div>
+                            <div class="modal-footer"><a href="#" class="btn btn-default" data-dismiss="modal" aria-hidden="true">关闭</a></div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+        </div>
+<!--<div class="form-group" id="isfree" {if $goods['isfree']==1}style="display: none;"{/if}>-->
+    <!--<label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label"><span style='color:red'>*</span>邮费</label>-->
+    <!--<div class="col-md-2">-->
+        <!--<div class="input-group">-->
+            <!--<input type="number" name="goods[goods_freight]" class="form-control" value="{$goods['goods_freight']}" />-->
+            <!--<span class="input-group-addon">元</span>-->
+        <!--</div>-->
+    <!--</div>-->
+<!--</div>-->
+
+<div class="form-group">
+    <label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label">显示发货记录</label>
+    <div class="col-xs-12 col-sm-8">
+        <div class="input-group">
+            <label class="radio radio-inline">
+                <input type="radio" name="goods[isshowsend]" value="1" {if intval($goods['isshowsend']) ==1}checked="checked"{/if}> 开
+            </label>
+
+            <label class="radio radio-inline">
+                <input type="radio" name="goods[isshowsend]" value="0" {if intval($goods['isshowsend']) ==0 }checked="checked"{/if}> 关
+            </label>
+        </div>
+    </div>
+</div>
+<!--<div class="form-group" style="display:none;">-->
+    <!--<label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label">状态</label>-->
+    <!--<div class="col-md-6">-->
+        <!--<label class="radio radio-inline">-->
+            <!--<input type="radio" name="goods[isshow]" value="1" {if intval($goods['isshow']) ==1 || empty($goods['isshow'])}checked="checked"{/if}> 上架-->
+        <!--</label>-->
+        <!--<label class="radio radio-inline">-->
+            <!--<input type="radio" name="goods[isshow]" value="2" {if intval($goods['isshow']) ==2}checked="checked"{/if}> 下架-->
+        <!--</label>-->
+        <!--<label class="radio radio-inline">-->
+            <!--<input type="radio" name="goods[isshow]" value="3" {if intval($goods['isshow']) ==3}checked="checked"{/if}> 售罄-->
+        <!--</label>-->
+    <!--</div>-->
+<!--</div>-->
+</div>
+</div>
+</div>
+<style>
+    button.saler_close {
+        -webkit-appearance: none;
+        padding: 0;
+        cursor: pointer;
+        background: 0 0;
+        border: 0;
+    }
+
+    .saler_close {
+        float: right;
+        font-size: 21px;
+        font-weight: 700;
+        line-height: 1;
+        color: #000;
+        text-shadow: 0 1px 0 #fff;
+        filter: alpha(opacity=20);
+        opacity: .2;
+    }
+</style>
+<script language='javascript'>
+    $('.glyphicon-question-sign').mouseover(function () {
+        $(this).next().show();
+    });
+    $('.glyphicon-question-sign').mouseout(function () {
+        $(this).next().hide();
+    });
+
+    function search_members2() {
+        if( $.trim($('#search-kwd2').val())==''){
+            Tip.focus('#search-kwd2','请输入关键词');
+            return;
+        }
+
+        $("#module-menus2").html("正在搜索....")
+        $.get("{php echo web_url('store/bdelete/display',array('op'=>'selectsaler'))}", {
+            keyword: $.trim($('#search-kwd2').val())
+        }, function(dat){
+            $('#module-menus2').html(dat);
+        })
+    }
+    function search_members() {
+        if( $.trim($('#search-kwd').val())==''){
+            Tip.focus('#search-kwd','请输入关键词');
+            return;
+        }
+
+        $("#module-menus").html("正在搜索....")
+        $.get("{php echo web_url('store/bdelete/display',array('op'=>'selectsaler'))}", {
+            keyword: $.trim($('#search-kwd').val())
+        }, function(dat){
+            $('#module-menus').html(dat);
+        });
+    }
+    function select_member(o) {
+        $("#openid").val(o.openid);
+        $("#saler").val(o.nickname);
+        $("#avatar").attr('src', o.avatar);
+        $(".saler_close").click();
+    }
+    $(function(){
+        $('#form').submit(function(self){
+            var isfree = $('input[name="goods[isfree]"]:checked').val();  //包邮
+            if(isfree == '0' && $('input[name="dispatchs[]"]').length == 0) {
+                util.message('请填写运费模版');
+                return false;
+            }
+            var media_id = $("input[name=wechat-video]").attr("meadia_id");//获取mediaid
+            $("#media_id").attr("value",media_id);
+            //获取url
+            var url = $("input[name=wechat-video]").attr("url");
+            $("#video_url").attr("value",url);
+            checkStoreVal();
+            return true;
+        });
+    });
+
+</script>
+<script language='javascript'>
+    function search_dispatch() {
+        $("#module-menus1").html("正在搜索....")
+        $.get('{php echo web_url('application/bdelete/selectdispatch')}', {
+            keyword: $.trim($('#search-kwd1').val())
+        }, function(dat){
+            $('#module-menus1').html(dat);
+        });
+    }
+    function remove_dispatch(obj){
+        var dispatchid = $(obj).closest('.multi-audio-item').attr('dispatchid');
+        $('.multi-audio-item[dispatchid="' + dispatchid +'"]').remove();
+    }
+    function select_dispatch(o) {
+        if($('.multi-audio-item[dispatchid="' + o.id +'"]').length>0){
+            return;
+        }
+        var html ='<div style="height: 40px; position:relative; float: left; margin-right: 18px;" class="multi-audio-item" dispatchid="' + o.id +'">';
+        html+='<div class="input-group">';
+        html+='<input type="hidden" value="' + o.id +'" name="dispatchs[]">';
+        html+='<input type="text" value="' + o.name +'" readonly="" class="form-control">';
+        html+='<div class="input-group-btn"><button type="button" onclick="remove_dispatch(this)" class="btn btn-default"><i class="fa fa-remove"></i></button></div>';
+        html+='</div></div>';
+        $('#dispatch').append(html);
+    }
+</script>

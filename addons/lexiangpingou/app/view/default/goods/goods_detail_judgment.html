@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta name = "format-detection" content = "telephone=no">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>商品评价</title>
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <!--<link rel="stylesheet" href="{TG_URL_ARES}components/light/light7.min.css">
+    <link rel="stylesheet" href="{TG_URL_ARES}components/weui/weui.css">
+    <link rel="stylesheet" href="{TG_URL_ARES}components/icon/iconfont.css">
+    <link rel="stylesheet" href="{TG_URL_ARES}css/common.css?time=New Date()">
+    <link rel="stylesheet" href="http://cdn.bootcss.com/font-awesome/4.4.0/css/font-awesome.min.css" >-->
+    {php echo register_jssdk();}
+	<script src="http://cdn.bootcss.com/jquery/2.1.3/jquery.min.js"></script>
+	<script>
+
+		$(function(){
+			if(typeof (ds) == "function") {
+			ds = function(){};
+		}
+		});
+	</script>
+	<script>
+  function escapeHtml(text) {
+		var a=text.replace(/(\&lt;)/g,"<");
+		var b=a.replace(/(\&gt;)/g,">");
+		var c=b.replace(/(\&amp;)/g,"\&");
+		var d=c.replace(/(\&quot;)/g,"\"");
+		return d;
+	}
+</script>
+<style>
+	.choose li{
+		float:left;
+		width:21%;
+		height:25px;
+		text-align: center;
+		line-height: 25px;
+		background: #f99b00;
+		border-radius: 5px;
+		margin:5px;
+		list-style: none;
+		font-size: 12px;
+		color: #111;
+		opacity: 0.6;
+	}
+	.choose li.active{
+		opacity: 1;
+	}
+	.choose>ul{
+		padding: 0;
+	}
+	.main label{
+		font-size: 12px;
+		padding: 2px 5px;
+		background: #aaa;
+		color:#fff;
+		border-radius: 5px;
+	}
+</style>
+</head>
+
+<body>
+<div class="choose">
+	<ul>
+		<li data-name="isquanbu" class="active">全部({$totalnum})</li>
+		<li data-name="iszhuijia">追加({$totaliszhuijianum})</li>
+		<li data-name="ishaoyong">好用({$totalishaoyongnum})</li>
+		<li data-name="iszhengpin">正品({$totaliszhengpinnum})</li>
+		<li data-name="ispianyi">便宜({$totalispianyinum})</li>
+		<li data-name="iswuliu">物流快({$totaliswuliunum})</li>
+		<li data-name="iszhiliang">质量好({$totaliszhiliangnum})</li>
+		<li data-name="isfuwu">服务好({$totalisfuwunum})</li>
+	</ul>
+</div>
+<div style="clear: both;"></div>
+<!--<link rel="stylesheet" href="{TG_URL_ARES}jz/weui.css"/>
+  <link rel="stylesheet" href="{TG_URL_ARES}jz/weui2.css"/>
+  <link rel="stylesheet" href="{TG_URL_ARES}jz/weui3.css"/>-->
+      <script src="{TG_URL_ARES}jz/zepto.min.js"></script> <script src="{TG_URL_ARES}jz/updown.js"></script><script src="{TG_URL_ARES}jz/lazyimg.js"></script>
+<div class="main">
+{loop $list $item}
+<div style="clear: both; padding:10px; padding-bottom:0px; text-align: justify; border-bottom: 1px solid #f0f0f0;">
+	<div style="width: 12%; float: left;">
+		<img style="max-height: 100%; max-width: 100%;border-radius: 50%" src="{$item['avatar']}" >
+	</div>
+	<div style="width: 80%; float:left;margin-left: 10px; ">
+		<span style="color: #666;">{$item['openname']}</span><br>
+		<span style="color: #666; font-size: 12px; ">{$item['time']}</span>
+	</div>
+	<div style="clear: both;"></div>
+	<?php
+	$main_content = pdo_fetch("select * from ".tablename('tg_judgment_content')." where  judgment_id=:judgment_id order by update_time asc ",array('judgment_id'=>$item['judgment_id']));
+	$allcontent = pdo_fetchall("select * from ".tablename('tg_judgment_content')." where  judgment_id=:judgment_id and content_id <> '". $main_content['content_id'] ."'  order by update_time asc ",array('judgment_id'=>$item['judgment_id']));
+	?>
+	<div style="font-size: 0.9em; padding-top: 3px; padding-bottom: 3px; color: #1a1a1a;">{$main_content['content']}</div>
+	{loop $allcontent $content}
+		{if $content['who']== 1}<label>商家回复</label>{/if}{if $content['who']== 0}<label>用户追评</label>{/if}<span style="margin-left:10px; color: #b8c0cc; font-size: 12px;"><?php echo date('Y-m-d H:i:s',$content['update_time']); ?></span>
+		<div style="font-size: 12px; font-weight: 400;padding: 3px 0;">{$content['content']}</div>
+
+	{/loop}
+
+	</div>
+{/loop}
+</div>
+ <script type="text/javascript">
+	 var num=2;
+	 var choosename="";
+	 $(window).scroll(function () {
+		 var scrollTop = $(this).scrollTop();
+		 var scrollHeight = $(document).height();
+		 var windowHeight = $(this).height();
+		 if (scrollTop + windowHeight == scrollHeight) {
+			 $.get("{php echo app_url('goods/judgment_list',array('op' => 'ajax'))}",
+				 {
+					 name:choosename,
+					 page:num,
+					 gid:{$gid},
+					 pagesize:10
+				 },
+				 function(data) {
+					 if(JSON.parse(data).length>0) {
+						 $('#follow').html('----数据玩命加载中----');
+						 $('.main').append(addhtml(data));
+						 num++;
+					 }else{
+						 $('#follow').html('----全部数据加载完毕----');
+					 }
+				 }
+			 )
+		 }
+	 });
+	 $('.choose').on('click','ul li',function(){
+		 if($(this).hasClass('active'))return;
+		 $(this).addClass('active').siblings().removeClass('active');
+		 $('#follow').html('数据玩命加载中');
+		 choosename=$(this).attr('data-name');
+		 num=1;
+		 $.post("{php echo app_url('goods/judgment_list',array('op' => 'ajax'))}",
+			 {
+				 name:choosename,
+				 page:num,
+				 gid:{$gid},
+				 pagesize:10
+			 },
+			 function(data){
+				 if(JSON.parse(data).length==0){
+					 $('.main').html('');
+					 $('#follow').html('----暂无数据----');
+				 }else {
+					 $('.main').html(addhtml(data));
+					 num++;
+				 }
+			 }
+		 )
+	 });
+	 function addhtml(data){
+		 var ajaxHtml="";
+		 var data = JSON.parse(data);
+		 if (data.length == 0) {
+			 return '<div style="text-align:center;margin:10px 0;">----全部数据加载完毕----</div>';
+		 } else {
+			 for (var i = 0; i < data.length; i++) {
+				 ajaxHtml += '<div style="clear: both; padding:10px; padding-bottom:0px; text-align: justify; border-bottom: 1px solid #f0f0f0;"><div style="width: 12%; float: left;"><img style="max-height: 100%; max-width: 100%;border-radius: 50%" src="' + data[i].avatar + '"></div><div style="width: 80%; float:left;margin-left: 10px; "><span style="color: #666;">' + data[i].openname + '</span><br><span style="color: #666; font-size: 12px; ">' + data[i].time + '</span></div><div style="clear: both;"></div><div style="font-size: 0.9em; padding-top: 3px; padding-bottom: 3px; color: #1a1a1a;">' + data[i].main_content + '</div></div>';
+				 if (data[i].contents.length > 0) {
+					 var pinglunHtml = "";
+					 for (var j = 0; j < data[i].contents.length; j++) {
+						 if (data[i].contents[j].who == '1') {
+							 pinglunHtml += '<label>商家回复</label>';
+						 } else {
+							 pinglunHtml += '<label>用户追平</label>';
+						 }
+						 pinglunHtml += ' <span style="color: #b8c0cc; font-size: 12px;">' + data[i].contents[j].time + '</span> <div style="font-size: 12px; font-weight: 400;padding: 3px 0;">' + data[i].contents[j].content + '</div>';
+					 }
+					 ajaxHtml+=pinglunHtml;
+				 }
+			 }
+			 return ajaxHtml+'</div>';
+		 }
+	 }
+</script>
+	<div id="follow" style="opacity:0.7;text-align: center;padding:10px 0 20px 0"><i class="icon_load"></i>----数据玩命加载中----</div>
+{php include wl_template('common/footer');}

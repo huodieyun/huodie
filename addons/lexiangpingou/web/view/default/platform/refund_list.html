@@ -1,0 +1,582 @@
+<form action="./index.php" method="get" class="form-horizontal" role="form" style="background-color: #fff;padding: 10px 0;margin-bottom: 20px;">
+    <input type="hidden" name="c" value="site" />
+    <input type="hidden" name="a" value="entry" />
+    <input type="hidden" name="m" value="lexiangpingou" />
+    <input type="hidden" name="do" value="platform" />
+    <input type="hidden" name="ac" value="{$_GPC['ac']}" />
+    <input type="hidden" name="op" value="{$_GPC['op']}" />
+    <!--<input type="hidden" name="platform_status" value="{$_GPC['platform_status']}">-->
+    <div class="form-group">
+        <label class="col-xs-12 col-sm-2 col-md-2 col-lg-1 control-label">搜索条件</label>
+        <select name="con_type" class="categoryI form-control tpl-category-parent" style="margin-right:20px;display: inline-block;width: 20%;float: left;">
+            <option value="1" {if $_GPC['con_type']==1} selected=true{/if}>商品名称</option>
+            <option value="2" {if $_GPC['con_type']==2} selected=true{/if}>极限单品单号</option>
+            <option value="3" {if $_GPC['con_type']==3} selected=true{/if}>支付单号</option>
+        </select>
+        <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
+            <input class="form-control" name="keyword" id="" type="text" value="{$_GPC['keyword']}" placeholder="请输入搜索关键词">
+        </div>
+        <div class="col-md-2" style="float: right">
+            <button class="btn btn-default min-width"><i class="fa fa-search"></i> 搜索</button>
+        </div>
+    </div>
+    <div class="form-group">
+        <script type="text/javascript">
+            require(["daterangepicker"], function($){
+                $(function(){
+                    $(".daterange.daterange-time").each(function(){
+                        var elm = this;
+                        $(this).daterangepicker({
+                            startDate: $(elm).prev().prev().val(),
+                            endDate: $(elm).prev().val(),
+                            format: "YYYY-MM-DD HH:mm",
+                            timePicker: true,
+                            timePicker12Hour : false,
+                            timePickerIncrement: 1,
+                            minuteStep: 1
+                        }, function(start, end){
+                            $(elm).find(".date-title").html(start.toDateTimeStr() + " 至 " + end.toDateTimeStr());
+                            $(elm).prev().prev().val(start.toDateTimeStr());
+                            $(elm).prev().val(end.toDateTimeStr());
+                        });
+                    });
+                });
+            });
+        </script>
+        <label class="col-xs-12 col-sm-2 col-md-2 col-lg-1 control-label">搜索时间</label>
+        <input name="time[start]" type="hidden" value="2017-10-14 09:05:29">
+        <input name="time[end]" type="hidden" value="2017-10-21 09:05:29">
+        <button class="btn btn-default daterange daterange-time" type="button"><span class="date-title">2017-10-14 09:05:29 至 2017-10-21 09:05:29</span> <i class="fa fa-calendar"></i></button>
+    </div>
+</form>
+<div class="order-list">
+    <div class="panel-body table-responsive collapse in" id="order-template-item-4" style="padding: 0;">
+        <button id="module-judgment" style="display:none" class="btn btn-default" type="button"
+                onclick="popwin = $('#modal-module-judgment').modal();">隐藏点击
+        </button>
+
+    </div>
+    {if empty($list)}
+        <div style="text-align: center;padding: 90px 0;" class="panel panel-default">暂无数据~</div>
+    {else}
+        <div class="panel panel-default">
+
+        <table class="table" style="background-color:#888">
+            <thead style="">
+            <tr>
+                <!--<th style="width:60px;" class="text-center"><input type="checkbox" onclick="var ck = this.checked;$(':checkbox').each(function(){this.checked = ck});" />全选</th>-->
+                <!--<th style="width: 100px">批次号</th>-->
+                <th style="width: 180px">极限单品单号/极限单品名称</th>
+
+                <th style="text-align:center;">订单总价</th>
+                <th style="text-align:center;">申请时间</th>
+                <th style="text-align:center;">处理状态/时间</th>
+                <th style="text-align:center;">支付方式/单号/价格</th>
+                <th style="text-align:center;">支付银行流水图</th>
+                <th style="text-align:center;width: 80px">操作</th>
+
+            </tr>
+            </thead>
+
+            <!--</table>-->
+
+            <div class="panel-body table-responsive" style="padding: 0px;">
+                <!--<table class="table table-bordered">-->
+                <tbody style="background-color: #fff;">
+                {loop $list $item}
+                <tr>
+                    <!--<td class="goods-info line-feed" style="padding-left: 10px;width: 100px">{$item['pici']}</td>-->
+                    <td class="goods-info line-feed" style="width: 180px">{if $_W['uniacid'] == 33 }{$item['uni_name']}<br>{/if}{$item['gname']}<br>{$item['singleno']}</td>
+                    <td class="goods-info line-feed" style="padding-left: 10px;">{$item['price']}</td>
+                    <!--<td class="text-center" style="width:60px;"><input type="checkbox" name="checkbox[]"  value="{$item['id']}" /></td>-->
+                    <td class="goods-info line-feed" style="padding-left: 10px;">{php echo date('Y-m-d',$item['createtime'])}
+                    </td>
+
+                    <!--	<td class="text-center" style="width:80px;">{if empty($item['merchant']['name'])}{$_W['account']['name']}{else}{$item['merchant']['name']}{/if}</td>-->
+                    <td class="text-left" style="overflow: inherit">
+                        <!--支付方式:<span class="label label-primary"> {$item['paytype']}</span><br>-->
+
+                        <p>
+                            {if $item['uni_pay'] == '0' }
+                            <span class="label label-warning">待付款</span><br><br>
+                            {elseif $item['uni_pay'] == '1'}
+                            <span class="label label-info">部分支付</span>
+                            {php echo date('Y-m-d', $item['uni_paytime'])}<br><br>
+                            {elseif $item['uni_pay'] == '2' }
+                            <span class="label label-info">全额支付</span>
+                            {php echo date('Y-m-d', $item['uni_paytime'])}<br><br>
+                            {/if}
+
+                            {if $item['platform_status'] == '0'}
+                            <span class="label label-warning">待审核</span><br>
+                            {elseif  $item['platform_status'] == '1'}
+                            <span class="label label-warning">已审核</span>
+                            {php echo date('Y-m-d', $item['supply_time'])}<br><br>
+                            {elseif  $item['platform_status'] == '-1'}
+                            <span class="label label-danger">拒绝发货</span>
+                            {php echo date('Y-m-d', $item['platform_time'])}<br><br>
+                            {/if}
+
+                            {if $item['supply_status'] == '0' }
+                            <span class="label label-warning">待发货</span><br><br>
+                            {elseif $item['supply_status'] == '1' }
+                            <span class="label label-info">已发货</span>
+                            {php echo date('Y-m-d', $item['supply_time'])}<br><br>
+                            {elseif $item['supply_status'] == '2' }
+                            <span class="label label-info">已签收</span>
+                            {php echo date('Y-m-d', $item['supply_time'])}<br><br>
+                            {/if}
+
+                            {if $item['refund'] == '1' }
+                            <span class="label label-warning">已申请平台退款</span>
+                            {php echo date('Y-m-d', $item['refund_time'])}<br><br>
+                            {elseif $item['refund'] == '2' }
+                            <span class="label label-info">平台退款完成</span>
+                            {php echo date('Y-m-d', $item['refund_update_time'])}<br><br>
+                            {/if}
+
+                            {if $item['order_status'] == '10' }
+                            <span class="label label-warning">粉丝订单 待退款</span><br>
+                            {elseif $item['order_status'] == '7' }
+                            <span class="label label-info">粉丝订单 退款完成</span><br>
+                            {elseif $item['order_status'] == '8' }
+                            <span class="label label-info">粉丝订单 待发货</span><br>
+                            {elseif $item['order_status'] == '3' }
+                            <span class="label label-info">粉丝订单 已签收</span><br>
+                            {elseif $item['order_status'] == '2' }
+                            <span class="label label-info">粉丝订单 待签收</span><br>
+                            {/if}
+                        </p>
+
+                    </td>
+                    <td class="text-center" style="width: 180px">
+                        {if intval($item['uni_pay']) > 0}
+                        <p>{if $item['uni_paytype']==0}微信支付{/if}{if $item['uni_paytype']==1}银行卡支付{/if}</p>
+                        <p>{if intval($item['uni_pay']) > 0} {$item['uni_payno']}{/if}</p>
+                        <p>{$item['uni_payprice']}</p>
+                        {/if}
+                    </td>
+                    <td class="text-center" style="text-align:center;position: relative">
+                        {if !empty($item['uni_payimg'])}
+                        <img class="payimg" style="width: 50px;height: 50px" src="{$item['uni_payimg']}" alt="">
+                        {/if}
+                    </td>
+                    <td class="text-center" style="text-align:center;width: 80px">
+                        <a href="{php echo web_url('platform' , array('ac' => $_GPC['ac'],'op' => 'collect','collect_id' => $item['id']))}">查看详情</a><br/>
+                        {if $item['uni_pay'] != '2' && $item['platform_status'] == 0 && $_GPC['ac'] == 'shop_order'}
+                        <a onclick="openSQ({$item['id']},{$item['price']})"
+                           data-id="{$item['id']}" href="javascript:;">申请发货</a><br/>
+                        {/if}
+                        {if $item['supply_status'] == 0 && $_GPC['ac'] == 'platform_order'}
+                        <a onclick="openSH({$item['id']})" href="javascript:;">发货审核</a>
+                        {/if}
+
+                        {if $item['platform_status'] == 1 && $item['order_status'] == '7' && $item['refund'] == '0' }
+                        <a href="javascript:;" data-toggle="modal" data-target="#modal-refund" onclick="$('.refund_money').html({$item['price']}).attr('data-id',{$item['id']})">申请平台退款</a>
+
+                        {/if}
+                    </td>
+                </tr>
+                {/loop}
+                </tbody>
+        </table>
+    </div>
+        </div>
+        {$pager}
+    {/if}
+</div>
+<div id="modal-refund" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true" style="width:600px;margin:0px auto;">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button aria-hidden="true" data-dismiss="modal" class="close" type="button">×</button>
+                <h3>退款</h3>
+            </div>
+            <div class="modal-body">
+                <label>可退款金额</label>
+                <label class="refund_money" style="color: #5cb85c"></label>
+                <label>退款金额</label>
+                <input class="form-control" id="refundnum" name="refundnum" autocomplete="off"></input>
+                <label>是否全退</label>
+                <label class="radio radio-inline" style="margin-top:0px;">
+                    <input type="radio" name="refundall" value="1" checked="checked"> 是
+                </label>
+                <label class="radio radio-inline">
+                    <input type="radio" name="refundall" value="0"checked="checked"> 否
+                </label>
+                <div></div>
+                <label>退款原因</label>
+                <input class="form-control" id="refund_res" name="refund_res" placeholder="为空默认为组团失败退款" />
+                <div class="form-group">
+                    <label>截图凭据</label>
+                    {php echo tpl_form_field_multi_image('refund_img');}
+                    <div style="clear: both"></div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-success js-refund1" >退款</button>
+                <!--<button type="submit" class="btn btn-primary" name="refunds" value="yes">退款</button>-->
+                <a href="#" class="btn btn-default" data-dismiss="modal" aria-hidden="true">关闭</a>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="imgB" style="display:none;position: absolute;top: 10px;left: 40px"><img src="{$item['uni_payimg']}" alt=""></div>
+<div class="paydetail" style="z-index: 10;position: fixed;top: 0;left: 0;background-color: rgba(0,0,0,0.7); width: 100%;height: 100%;display: none">
+    <div class="panel panel-default" style="position: absolute;top: 15%;left: 25%;width: 50%">
+        <div class="panel-heading">申请发货（请尽量全额付款，未全额付款可能会导致发货异常？？？？）
+            <a onclick="closeSQ()" style="cursor:pointer; float:right; margin-right:10px; font-weight:bold;" href="javascript:;">X</a>
+        </div>
+        <div class="panel-body">
+            <div class="panel-body">
+                <div class="form-group" style="height: 60px;">
+                    <label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label">付款方式</label>
+                    <div class="col-xs-12 col-sm-8">
+                        <div class="input-group">
+                            <label style="margin: 0;" class="radio radio-inline" onclick="$('.wx').css('display','none');$('.card').css('display','block');$('.sqfh').attr('disabled','')">
+                                <input type="radio" name="uni_paytype" value="1" checked>银行卡
+                            </label>
+                            <label class="radio radio-inline" onclick="wx_pay();$('.sqfh').attr('disabled','disabled')">
+                                <input type="radio" name="uni_paytype" value="0" >微信
+                            </label>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="wx" style="text-align: center">
+                    <img id="payimage" src="" alt="" style="width: 200px;">
+                </div>
+                <div class="card">
+                    <div class="form-group" style="height: 60px;">
+                        <label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label">支付金额</label>
+                        <div class="col-md-8">
+                            <input type="number" name="uni_payprice" class="form-control" value=""/>
+                        </div>
+                    </div>
+                    <div class="form-group" style="height: 60px;">
+                        <label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label">银行流水单号</label>
+                        <div class="col-md-8">
+                            <input type="text" name="uni_payno" class="form-control" value=""/>
+                        </div>
+                    </div>
+                    <div class="form-group" style="height: 145px;">
+                        <label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label">银行流水详情图</label>
+                        <div class="col-md-8">
+                            {php echo tpl_form_field_image('uni_payimg');}
+                            <!--<span class="help-block">34图片建议为640X300</span>-->
+                        </div>
+                    </div>
+                </div>
+                <!--<div class="form-group" style="height: 30px;">-->
+                <!--<label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label">备注</label>-->
+                <!--<div class="col-md-8">-->
+                <!---->
+                <!--</div>-->
+                <!--</div>-->
+            </div>
+        </div>
+        <div class="panel-footer" style="height: 60px">
+            <input onclick="sqfh(this)" type="submit" name="submit" value="提交" class="btn btn-primary col-lg-1 sqfh"
+                   style="float: right;">
+        </div>
+    </div>
+</div>
+<div class="paydetail1" style="z-index: 10;position: fixed;top: 0;left: 0;background-color: rgba(0,0,0,0.7); width: 100%;height: 100%;display: none">
+    <div class="panel panel-default" style="position: absolute;top: 15%;left: 25%;width: 50%">
+        <div class="panel-heading">发货审核
+            <a onclick="closeSQ1()" style="cursor:pointer; float:right; margin-right:10px; font-weight:bold;" href="javascript:;">X</a>
+        </div>
+        <div class="panel-body">
+            <div class="panel-body">
+                <div class="form-group" style="height: 60px;">
+                    <label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label">结果</label>
+                    <div class="col-xs-12 col-sm-8">
+                        <div class="input-group">
+                            <label style="margin: 0" class="radio radio-inline">
+                                <input type="radio" name="success" value="1" checked>通过
+                            </label>
+                            <label class="radio radio-inline">
+                                <input type="radio" name="success" value="-1">不通过
+                            </label>
+
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <div class="form-group" style="height: 60px;">
+                        <label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label">原因</label>
+                        <div class="col-md-8">
+                            <input type="text" name="reason" class="form-control" value=""/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="panel-footer" style="height: 60px">
+            <input onclick="shsq(this)" type="submit" name="submit" value="提交" class="btn btn-primary col-lg-1 shsq" style="float: right;">
+        </div>
+    </div>
+</div>
+<script>
+    function ajaxdetail(id) {
+        $.get("{php echo web_url('platform/shop_order/detail')}", {"id": id}, function (res) {
+            var data = JSON.parse(res);
+            if (data.status == 1) {
+                $('.page-trade-order.detail').fadeIn();
+
+            } else {
+                util.tips(data.data);
+                return false;
+            }
+        })
+    }
+
+    function openSQ(id,money){
+        $('.paydetail').show();
+        $('.sqfh').attr('data-id',id);
+        $('input[name="uni_paytype"]').attr('data-money',money);
+//        wx_pay();
+    }
+
+    function openSH(id) {
+        $('.paydetail1').show();
+        $('.shsq').attr('data-id',id);
+    }
+
+    function wx_pay() {
+        var money=$('input[name="uni_paytype"]').attr('data-money');
+        var orderid=$('.sqfh').attr('data-id');
+        $('.card').css('display','none');
+        $('.wx').css('display','block').css('text-align','center');
+        $.post("{php echo web_url('platform/platform_pay/pay');}", {money: money,orderid:orderid}, function (res) {
+            var data = JSON.parse(res);
+            console.log(data);
+            if (data.status == 'success') {
+                $("#payimage").attr('src', urlC + data.data.url);
+                timeJS(data.data.order_id,orderid);
+            }
+        });
+    }
+    //关闭申请界面，清空val()
+    function closeSQ() {
+        $('.paydetail').fadeOut();
+        $('input[name="uni_payprice"]').val('');
+        $('input[name="uni_payno"]').val('');
+        $('input[name="uni_payimg"]').val('');
+    }
+    function closeSQ1() {
+        $('.paydetail1').fadeOut();
+//        $('input[name="uni_payprice"]').val('');
+//        $('input[name="uni_payno"]').val('');
+//        $('input[name="uni_payimg"]').val('');
+    }
+
+    //申请发货
+    function sqfh(self) {
+        if ($('input[name="uni_payprice"]').val() == '') {
+            util.tips('请填写支付金额');
+            return false;
+        }
+        if ($('input[name="uni_payno"]').val() == '') {
+            util.tips('请填写银行流水单号');
+            return false;
+        }
+        if ($('input[name="uni_payimg"]').val() == '') {
+            util.tips('请上传银行流水详情图');
+            return false;
+        }
+        $.post(
+            "{php echo web_url('platform/shop_order/order_submit');}",
+            {
+                order_id: $(self).attr('data-id'),
+                uni_paytype: 1,
+                uni_payprice: $('input[name="uni_payprice"]').val(),
+                uni_payno: $('input[name="uni_payno"]').val(),
+                uni_payimg: $('input[name="uni_payimg"]').val()
+            },
+            function (res) {
+                var data = JSON.parse(res);
+                if (data.status == 1) {
+                    util.tips(data.message);
+                    setTimeout(function () {
+                        location.reload()
+                    }, 1000)
+                } else {
+                    util.tips(data.message);
+                }
+            }
+        )
+    }
+
+    //发货审核
+    function shsq(self) {
+        if($('.paydetail1 input:checked').val()=='-1'&&$('input[name="reason"]').val()==''){
+            util.tips('请填写原因');
+            return false;
+        }
+        $.post("{php echo web_url('platform/platform_order/ship_review')}",
+            {
+                id:$(self).attr('data-id'),
+                status:$('.paydetail1 input:checked').val(),
+                platform_reason:$('input[name="reason"]').val()
+            },
+            function(res){
+                var data = JSON.parse(res);
+                if (data.status == 1) {
+                    util.tips(data.message);
+                    setTimeout(function () {
+                        location.reload()
+                    }, 1000)
+                } else {
+                    util.tips(data.message);
+                }
+            })
+    }
+
+
+    //流水图片hover事件
+    $('.payimg').hover(function () {
+        console.log($(this).attr('src'));
+        var img=$(this).attr('src');
+        $('.imgB img').attr('src',img);
+        $('.imgB').fadeIn();
+    });
+    $('.payimg').mouseout(function () {
+        var img=$(this).attr('src');
+        $('.imgB img').attr('src',img);
+        $('.imgB').fadeOut();
+    })
+    
+    //立即退款
+    $('button.js-refund1').click(function(){
+        var radiorefundall=$('[name="refundall"]:checked').val();
+        if(radiorefundall==0&&$('#refundnum').val()==''){
+            util.tips('请输入退款金额');
+            return;
+        }
+        if(!$('[name="refund_img[]"]')){
+            util.tips('请上传截图凭据');
+            return;
+        }
+        var refund_price=($('[name="refundall"]:checked').val()==1)?$('.refund_money').html():$('#refundnum').val();
+        var imgs=[];
+        for(var i=0;i<$('[name="refund_img[]"]').length;i++){
+            imgs.push($('[name="refund_img[]"]')[i].value);
+        }
+        $.get(
+            "{php echo web_url('platform/shop_order/refund');}",
+            {
+               'id':$('.refund_money').attr('data-id'),
+                'refund_price':refund_price,
+               'refund_reason':$('#refund_res').val(),
+               'img':imgs
+            },
+            function(res){
+                console.log(res);
+                if(JSON.parse(res).status==1){
+                    util.tips(data.message);
+                    setTimeout(function(){
+                        location.reload();
+                    },1000);
+                }else{
+                    util.tips(data.message);
+                    return;
+                }
+            }
+        )
+    });
+</script>
+<script>
+    var urlC = 'http://paysdk.weixin.qq.com/example/qrcode.php?data=';
+    $(function () {
+
+//        var money = {$account['margin']};
+//        $.post("{php echo web_url('store/merchant_margin/pay');}", {money: money}, function (res) {
+//            var data = JSON.parse(res);
+//            console.log(data);
+//            if (data.status == 'success') {
+//                $("#payimage").attr('src', urlC + data.data.url);
+//                timeJS(data.data.order_id);
+//            }
+//        });
+    });
+    var myIntval;
+    function timeJS(order_id,orderid) {
+        //设置每隔1000毫秒执行一次load() 方法
+        myIntval = setInterval(function () {
+            load()
+        }, 1000);
+        function load() {
+//            document.getElementById("timer").innerHTML=parseInt(document.getElementById("timer").innerHTML)+1;
+            var xmlhttp;
+            if (window.XMLHttpRequest) {
+                // code for IE7+, Firefox, Chrome, Opera, Safari
+                xmlhttp = new XMLHttpRequest();
+            } else {
+                // code for IE6, IE5
+                xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+            }
+            xmlhttp.onreadystatechange = function () {
+//                clearInterval(myIntval);
+                if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+                    trade_state = xmlhttp.responseText;
+                    console.log(trade_state);
+                    if (trade_state == 'SUCCESS') {
+//                        document.getElementById("myDiv").innerHTML = '支付成功';
+                        util.tips('支付成功');
+                        clearInterval(myIntval);
+
+                        //alert(transaction_id);
+                        //延迟3000毫秒执行tz() 方法
+
+                        //setTimeout("location.href='http://www.baidu.com'",3000);
+                        var num = order_id;
+                        $.ajax({
+                            url: "{php echo web_url('platform/platform_pay',array('op'=>'check_success'))}",
+                            type: "post",
+                            data: {
+                                order_id: String(num),
+                                orderid:orderid
+                            },
+                            success: function (res) {
+//                                clearInterval(myIntval);
+//                                setTimeout(function () {
+                                location.reload();
+//                                }, 700);
+                            },
+                            error: function (res) {
+                                alert('error');
+                            }
+                        });
+
+                    } else if (trade_state == 'REFUND') {
+//                        document.getElementById("myDiv").innerHTML = '转入退款';
+                        clearInterval(myIntval);
+                    } else if (trade_state == 'NOTPAY') {
+//                        document.getElementById("myDiv").innerHTML = '请扫码支付';
+
+                    } else if (trade_state == 'CLOSED') {
+//                        document.getElementById("myDiv").innerHTML = '已关闭';
+                        clearInterval(myIntval);
+                    } else if (trade_state == 'REVOKED') {
+//                        document.getElementById("myDiv").innerHTML = '已撤销';
+                        clearInterval(myIntval);
+                    } else if (trade_state == 'USERPAYING') {
+//                        document.getElementById("myDiv").innerHTML = '用户支付中';
+                    } else if (trade_state == 'PAYERROR') {
+//                        document.getElementById("myDiv").innerHTML = '支付失败';
+                        clearInterval(myIntval);
+                    }
+
+                }
+            };
+            //orderquery.php 文件返回订单状态，通过订单状态确定支付状态
+            xmlhttp.open("POST", "{php echo web_url('platform/platform_pay',array('op'=>'check'))}", false);
+            //下面这句话必须有
+            //把标签/值对添加到要发送的头文件。
+            xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+            xmlhttp.send("out_trade_no=" + order_id);
+        }
+
+    }
+</script>

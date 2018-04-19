@@ -1,0 +1,428 @@
+{php include wl_template('common/header');}
+<style>
+    .tit>i{
+        font-size: 16px;
+        margin-right: 10px;
+    }
+</style>
+
+<link rel="stylesheet" href="{TG_URL_ARES}weiui/weui.min.css">
+<script src="{TG_URL_ARES}weiui/jquery-weui.min.css"></script>
+
+<form name='form' method="post" onsubmit="return toVaild()">
+    <div class="mod_container">
+        <div class="wx_bar">
+
+
+            {if $mem['type']==1&&$mem['enable']!=1}
+            <div class="wx_bar_back" style="text-align:center;margin-top:30px;">
+                <img src="{$mem['avatar']}" style='width:80px;height:80px;padding1px;border:1px solid #ccc' />
+            </div>
+            <span style="font-size:16px;display:block;width:200px;margin:auto;text-align:center;margin-top:20px;">
+	  
+		您好{$mem['name']},您提交的申请已经在审批中,请耐心等候!
+	  </span>
+            <a style="display:block;width:200px;height:40px;background-color:#6fbfd8;color:white;font-weight:700;font-size:1.5em;line-height:40px;text-align:center;margin:auto;border-radius:5px;margin-top:80px;"
+               id="closewindow">确定</a>
+            {/if}
+        </div>
+        <div class="wx_wrap">
+            <div class="address_new" style="text-align:center;margin-top:30px;"><INPUT id="address_regionId"
+                                                                                       type="hidden">
+                {if ($mem['enable']==0||empty($mem['enable']))&&empty($mem['type'])}
+                <p class="row">
+                    <LABEL for="name"><SPAN class="tit"><i class="icon icon-me"></i>姓 名</SPAN>
+                        <INPUT name="name" id="name" type="text" placeholder="名字" value="{$mem['name']}">
+
+                    </LABEL>
+                </p>
+                {if $setting['shop_switch'] == 1}
+                <p class="row">
+                    <LABEL for="shopname"><SPAN class="tit"><i class="icon icon-home"></i>店铺名</SPAN>
+                        <INPUT name="shopname" id="shopname" type="text" placeholder="店铺名称" value="{$mem['shopname']}">
+
+                    </LABEL>
+                </p>
+                {/if}
+                <p class="row">
+                    <LABEL for="mobile"><SPAN class="tit"><i class="icon icon-phone"></i>手机号</SPAN>
+
+                        <input required="" id="mobile" placeholder="手机号码" name="mobile" maxlength="11" minlength="11"
+                               class="block input" tabindex="2" type="tel" value="{$mem['addmobile']}"/>
+                    </LABEL>
+                </p>
+
+                {if $setting['jobsmscode'] == 1}
+                <p class="row">
+                    <LABEL for="code"><SPAN class="tit"><i class="icon icon-message"></i>验证码</SPAN>
+                        <input id="code"  class="weui-input code" type="text"
+                               placeholder="短信验证码">
+                        <input onclick="getCorda(this)" type="button" value="点击获得验证码" id="getCord"
+                               class="weui-btn weui-btn_primary getCord"/>
+                    </LABEL>
+                </p>
+                {/if}
+
+                <p class="action">
+
+                    <button name="submit" value="yes" id='submit1' class="pay2_btn">
+                    申请兼职
+                    </button>
+                    <input type="hidden" name="token" value="{$_W['token']}"/>
+                </p>
+                <img style="width: 40%;height:auto;margin:auto;margin-top: 50px;" src="{$slogo}" alt=""
+                     class="img-rounded">
+                {/if}
+            </div>
+            <style>
+                .wx_wrap .imgby2wm {
+                    position: absolute;
+                    top: 50%;
+                    left: 35%;
+                    width: 30%
+                }
+                .address_new .row {
+                    box-sizing:border-box; 
+                }
+                .address_new .row label{
+                    display: flex;
+                    display: -webkit-flex;
+                    box-sizing: border-box; 
+                    padding: 0 20px;
+                    flex-direction: row;
+                    -webkit-flex-direction: row;
+                    justify-content: space-between;
+                    -webkit-justify-content: space-between;
+                    align-items: center;
+                    -webkit-align-items: center;
+                    height: 40px;
+                    background-color: #fff;
+                    border-bottom: 1px solid #ccc;
+                }
+                .address_new .row label span {
+                    width: 90px;
+
+                }
+                .address_new .row label input {
+                    flex:1;
+                    -webkit-box-flex: 1;      /* OLD - iOS 6-, Safari 3.1-6 */
+                    -moz-box-flex: 1;         /* OLD - Firefox 19- */
+                    width: 20%;               /* For old syntax, otherwise collapses. */
+                    -webkit-flex: 1;          /* Chrome */
+                    -ms-flex: 1;              /* IE 10 */
+                    border: none;
+                }
+                .address_new .row .code {
+                    display: inline-block
+                    width: 60%;
+                } 
+                .address_new .row .getCord {
+                    float:right;
+                    height: 35px;
+                    width:40%;
+                    font-size:12px;
+                    background-color: #6fbfd8;
+                }
+                .address_new .action .pay2_btn{
+                    margin: 0 auto;
+                    margin-top: 60px;
+                    box-shadow:  0 0 5px #aaa; 
+                    width: 90%;
+                    border-radius: 5px;
+                    background-color:#6fbfd8;
+                    color: #fff;
+                }
+            </style>
+
+            {if $mem['enable']==1}
+            <?php
+		/*二维码*/
+		wl_load()->classs('qrcode');
+            $createqrcode = new creat_qrcode();
+            $createqrcode->creatshareQrcode($mem['id']);
+            ?>
+            {if !empty($config['tginfo']['saler_img'])}
+            <div style="margin-top: -30px;" id="imgBox"></div>
+            <div style="text-align:center;padding: 10px 0">长按保存图片</div>
+            {else}
+            <div class="mod_footer">
+                <div class="mod_footer_logo" style="position:relative;width: 230px;height: 230px;margin: 0 auto;">
+                    <p style="font-size:18px;text-align: center">我的推广二维码</p>
+                    <img style="width: 100%" src="{TG_URL}qrcode/{$_W['uniacid']}/share_qrcode_new_{$mem['id']}.png" alt="推广二维码"
+                         class="img-rounded">
+                    <div style="text-align:center;">长按二维码图片识别或保存</div>
+                </div>
+            </div>
+            <div style="height:100px;"></div>
+            {/if}
+            {/if}
+
+
+        </div>
+    </div>
+</form>
+{if $setting['jobsmscode'] == 1}
+<script>
+
+    var url = "{php echo $_W['siteroot']}/minapi.php?op=code&uniacid={$_W['uniacid']}";
+    var getCord = document.getElementById("getCord");
+    getCord.onclick = function (ev) {
+        if (getCord.value == '点击获得验证码' || getCord.value == '发送失败' || getCord.value == '重新发送验证码') {
+            ajaxData(0, url);
+        }else {
+            // var num = $(".code").val();
+            // console.log(num);
+            // ajaxData(num, url);
+            $.toast('倒计时还未结束',1000);
+            return;
+        }
+
+    };
+
+    function ajaxData(num, url){
+
+        var mobile = $("#mobile").val();
+
+        if(!(/^1[34578]\d{9}$/.test(mobile))){
+            $.toast('手机号码不正确');
+            return false;
+        }
+        //去除单击事件，防止多次点击
+        $('#getCord').attr('onclick','');
+        var xhr = new XMLHttpRequest();
+        var formData = new FormData();
+
+        formData.append('num', num);
+        if (num == 0) {
+            formData.append("mobile", mobile);
+            formData.append('retrieve', 1);
+        }
+        else if (num.length == 6) {
+            formData.append('retrieve', 2);
+        }
+        else {
+            $.toast("验证码不正确");
+//            alert("验证码不正确");
+            return false;
+        }
+        xhr.open('post', url, true);
+        xhr.send(formData);
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState == 4) {
+                if ((xhr.status >= 200 && xhr.status < 300) || xhr.status == 304) {
+                    var res = JSON.parse(xhr.responseText);
+                    if(res.result){
+                        $.toast(res.result);
+                        return false;
+                    }
+                    if (res['status'] == 1) {
+                        window.sessionStorage.setItem('infojob',res['code'])
+//                        $.toast(res['code']);
+                        var a = 60;
+                        var timp = setInterval(function () {
+                            a--;
+                            getCord.value = a + '秒';
+                            if (a == 0) {
+                                $('#getCord').attr('onclick','getCorda(this)');
+                                getCord.value = '重新发送验证码';
+                                clearInterval(timp);
+                            }
+                        }, 1000);
+                    }else if(res['status'] == -1){
+                        $.toast(res.result);
+                    }else if(res['status'] == 2){
+                        $.toast(res.result);
+                        window.history(-1);
+                    }
+                }
+            }
+        }
+    }
+
+</script>
+{/if}
+<script>
+    function displayUrl(lurl, surl) {
+        require(['jquery', 'util'], function ($, u) {
+            var content = '<p class="form-control-static" style="word-break:break-all">菜单使用链接(需要oAuth): <br>' + lurl + '</p>';
+            content += '<p class="form-control-static" style="word-break:break-all">自动回复使用链接: <br>' + surl + '</p>';
+            var footer =
+                '<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>' +
+                '<button type="button" class="btn btn-primary">复制菜单链接</button>' +
+                '<button type="button" class="btn btn-success">复制自动回复链接</button>';
+            var diaobj = u.dialog('查看URL', content, footer);
+            diaobj.find('.btn-default').click(function () {
+                diaobj.modal('hide');
+            });
+            diaobj.on('shown.bs.modal', function () {
+                u.clip(diaobj.find('.btn-primary')[0], lurl);
+                u.clip(diaobj.find('.btn-success')[0], surl);
+            });
+            diaobj.modal('show');
+        });
+    }
+    function displayQr(url) {
+        require(['jquery', 'util'], function ($, u) {
+            var content = '<div class="panel panel-default text-center"><img src="' + url + '" alt="文章地址二维码" class="img-rounded"></div>';
+            var footer =
+                '<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>';
+            var diaobj = u.dialog('查看URL二维码', content, footer);
+            diaobj.find('.btn-default').click(function () {
+                diaobj.modal('hide');
+            });
+            diaobj.modal('show');
+        });
+    }
+</script>
+<script>
+    wx.ready(function () {
+        var shareData = {
+            title: "申请兼职",
+            desc: "{$share_indexdesc}",
+            link: "{$to_url}",
+            imgUrl: "{php echo tomedia($share_images)}",
+        };
+//分享朋友
+        wx.onMenuShareAppMessage({
+            title: shareData.title,
+            desc: shareData.desc,
+            link: shareData.link,
+            imgUrl: shareData.imgUrl,
+            trigger: function (res) {
+            },
+            success: function (res) {
+                window.location.href = adurl;
+            },
+            cancel: function (res) {
+            },
+            fail: function (res) {
+                alert(JSON.stringify(res));
+            }
+        });
+//朋友圈
+        wx.onMenuShareTimeline({
+            title: shareData.title,
+            link: shareData.link,
+            imgUrl: shareData.imgUrl,
+            trigger: function (res) {
+            },
+            success: function (res) {
+                window.location.href = adurl;
+            },
+            cancel: function (res) {
+            },
+            fail: function (res) {
+                alert(JSON.stringify(res));
+            }
+        });
+        wx.ready(function () {
+            $('#closewindow').click(function () {
+                wx.closeWindow();
+            });
+        });
+    });
+
+    $('#submit1').click(function () {
+        if ($('#name').val() == '') {
+            $.toast('请输入姓名');
+            return false;
+        }
+        {if $setting['shop_switch'] == 1}
+        if ($('#shopname').val() == '') {
+            $.toast('请输入店铺名称');
+            return false;
+        }
+        {/if}
+        if ($('#mobile').val() == '') {
+            $.toast('请输电话号码');
+            return false;
+        }
+        var mobile = $("#mobile").val();
+        if(!(/^1[34578]\d{9}$/.test(mobile))){
+            $.toast('手机号码不正确');
+            return false;
+        }
+        {if $setting['jobsmscode'] == 1}
+        if ($('#code').val() == '') {
+            $.toast('请输入短信验证码');
+            return false;
+        }
+
+        if(sessionStorage.getItem('infojob')!=$('#code').val()){
+            $.toast('短信验证码有误');
+            return false;
+        }
+        {/if}
+        $.post(
+            location.origin + '/minapi.php?op=update_member&uniacid={$_W["uniacid"]}'
+            , {
+                id: "{$mem['id']}",
+                name: $('#name').val(),
+                shopname: $('#shopname').val(),
+                weixinnumber: $('#weixinnumber').val(),
+                mobile: $('#mobile').val()
+            },
+            function (data) {
+                if (data == 1) {
+                    $.toast('申请成功');
+                    setTimeout(function () {
+                        location.reload();
+                    }, 1000);
+
+                }
+            }
+        )
+    });
+
+    var data = ["{php echo $aaurl}", "{TG_URL}qrcode/{$_W['uniacid']}/share_qrcode_new_{$mem['id']}.png"],
+//    var data=["https://imgcache.qq.com/open_proj/proj_qcloud_v2/gateway/domain/event/domain-addbuy/css/img/a11.png","https://imgcache.qq.com/open_proj/proj_qcloud_v2/gateway/domain/event/domain-addbuy/css/img/a11.png"],
+        base64 = [];
+
+    hecheng();
+    //canvas 图片合成
+    function hecheng() {
+        draw(function () {
+            document.getElementById('imgBox').innerHTML = '<img src="' + base64[0] + '">';
+        })
+    }
+
+
+    function draw(fn) {
+        var c = document.createElement('canvas'),
+            ctx = c.getContext('2d'),
+            len = data.length;
+        c.width = screen.width;
+        c.height = screen.height - 90;
+        ctx.rect(0, 0, c.width, c.height);
+        ctx.fillStyle = '#fff';
+
+        ctx.fill();
+        function drawing(n) {
+            if (n < len) {
+
+                var img = new Image;
+
+                img.src = data[n];
+
+                img.onload = function () {
+                    if (n == 0) {
+                        ctx.drawImage(img, 0, 0, c.width, c.height);//距 left  top  width   height
+                    } else {
+                        ctx.drawImage(img, c.width - 125, c.height - 125, 120, 120);
+                    }
+                    drawing(n + 1);//递归
+                }
+                img.crossOrigin = 'Anonymous'; //解决跨域
+            } else {
+                //保存生成作品图片
+                base64.push(c.toDataURL("image/jpeg", 1));
+                //alert(JSON.stringify(base64));
+                fn();
+            }
+        }
+
+        drawing(0);
+    }
+</script>
+
+{php include wl_template('common/footer');}

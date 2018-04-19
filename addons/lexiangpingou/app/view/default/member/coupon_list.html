@@ -1,0 +1,186 @@
+{php include wl_template('common/header');}
+<style>
+.voucher-main{overflow:hidden;}
+	.voucher-main .list-cash-coupon{padding:10px 0 0 0; list-style:none; margin:10px auto;}
+	.voucher-main .list-cash-coupon li{margin:10px 0;}
+	.voucher-main .list-cash-coupon a{display:block;width:281px;height:109px;margin:auto;background:url('resource/images/voucher.png') no-repeat 0 -9px;-webkit-background-size:575px auto;position:relative;}
+	.voucher-main .list-cash-coupon a>p{position: absolute;max-width:200px;height:20px;color:#FFF;-webkit-box-sizing:border-box;}
+	.voucher-main .list-cash-coupon a>p:nth-of-type(1){left:25px;top:20px;font-size:14px;}
+	.voucher-main .list-cash-coupon a>p:nth-of-type(1)>span{font-size:30px;}
+	.voucher-main .list-cash-coupon a>p:nth-of-type(2){left: 26px;top: 62px;font-size: 14px;}
+	.voucher-main .list-cash-coupon a>p:nth-of-type(2):first-letter{font-size:14px;margin-right:3px;}
+	.voucher-main .list-cash-coupon a>p:nth-of-type(3){left: 26px;top: 83px;font-size: 12px;}
+	.voucher-main .list-cash-coupon a>p:nth-of-type(4){left: 160px;top: 42px;font-size: 11px;}
+	.voucher-main .list-cash-coupon a>p:nth-of-type(5){right: 12px;top:18px;font-size:14px;width:25px; line-height:18px;}
+	.voucher-main .list-cash-coupon li:nth-of-type(4n+2) a, .list-cash-coupon li .a2{background-position: 0 -133px;}
+	.voucher-main .list-cash-coupon li:nth-of-type(4n+3) a, .list-cash-coupon li .a3{background-position: 0 -256px;}
+	.voucher-main .list-cash-coupon li:nth-of-type(4n) a, .list-cash-coupon li .a4{background-position: 0 -378px;}
+	.voucher-main .list-cash-coupon li[disabled] a{background-position: 0 -502px;}
+	.voucher-main .list-cash-coupon li[disabled] a:after{content: "";-webkit-background-size: 110px auto;position: absolute;top: 0;left: 0;width: 100%;height: 100%;z-index: 100;pointer-events: none;}
+	.voucher-main .list-cash-coupon li[disabled="expire"] a:after{background-image: url('resource/images/voucher02.png'); background-repeat: no-repeat; background-position:50px 15px;}
+	.voucher-main .list-cash-coupon li[disabled] a>p{color:rgba(255,255,255,0.85)!important;}
+	.voucher-main .list-cash-coupon li.used a{background-position-x:right!important;}
+	.voucher-main .list-cash-coupon li.used:nth-of-type(4n+1) a>p:nth-of-type(5){color:#ee5375;}
+	.voucher-main .list-cash-coupon li.used:nth-of-type(4n+2) a>p:nth-of-type(5){color:#ffa619;}
+	.voucher-main .list-cash-coupon li.used:nth-of-type(4n+3) a>p:nth-of-type(5){color:#92c427;}
+	.voucher-main .list-cash-coupon li.used:nth-of-type(4n) a>p:nth-of-type(5){color:#2f9abd;}
+	.voucher-main .read-coupon .list-cash-coupon a>p:nth-of-type(3){left:210px; top:65px; font-size:10px;}</style>
+<div class="page-group">
+    <div class="page page-current" id="page-coupon-list">
+    	<header class="bar bar-nav">
+		    <a class="button button-link button-nav pull-left back" href="{php echo app_url('member/home')}">
+		      <span class="icon icon-left"></span>返回
+		    </a>
+		    <h1 class="title">我的优惠券</h1>
+		</header>
+		<div class="content native-scroll">
+		    <div class="buttons-tab">
+		      <a href="#tab1" class="tab-link button active">未使用</a>
+		      <a href="#tab2" class="tab-link button">已使用</a>
+		      <a href="#tab3" class="tab-link button">已过期</a>
+		    </div>
+		    <div class="tabs">
+		      <div id="tab1" class="tab active">
+		      </div>
+		      <div id="tab2" class="tab">
+		      </div>
+		      <div id="tab3" class="tab">
+		      </div>
+		    </div>
+	<!--			<div class="voucher-main">
+						<ul class="list-cash-coupon">
+								<li disabled>
+									<a href="javascript:;" style="margin-bottom:20px;background-position:0 -10px;">
+										<p><span>12</span>元</p>
+										<p>★订单满6}元可使用</p>
+										<p>有效期至2017-6-6</p>
+										<p>已使用6张</p>
+										<p>已经使用</p>
+									</a>								
+									<a href="javascript:;" style="margin-bottom:20px;background-position:0 -133px;">
+										<p><span>12</span>元</p>
+										<p>★订单满6}元可使用</p>
+										<p>有效期至2017-6-6</p>
+										<p>已使用6张</p>
+										<p>已经使用</p>
+									</a>
+									
+									<a href="javascript:;"  style="margin-bottom:20px;background-position:0 -256px;">
+										<p><span>12</span>元</p>
+										<p>★订单满6}元可使用</p>
+										<p>有效期至2017-6-6</p>
+										<p>已使用6张</p>
+										<p>已经使用</p>
+									</a>
+									
+									<a href="javascript:;"  style="margin-bottom:20px;background-position:0 -379px;">
+										<p><span>12</span>元</p>
+										<p>★订单满6}元可使用</p>
+										<p>有效期至2017-6-6</p>
+										<p>已使用6张</p>
+										<p>已经使用</p>
+									</a>
+									
+									<a href="javascript:;"  style="margin-bottom:20px;background-position:0 -500px;">
+										<p><span>12</span>元</p>
+										<p>★订单满6}元可使用</p>
+										<p>有效期至2017-6-6</p>
+										<p>已使用6张</p>
+										<p>已经使用</p>
+									</a>
+
+							</li>
+
+					</ul>
+				</div>-->
+		</div>
+	</div>
+
+</div>
+<script type="text/html" id="couponlist">
+{{# for(var i = 0, len = d.length; i < len; i++){ }} 
+		<div class="voucher-main">
+			<ul class="list-cash-coupon">
+				<li disabled style="position:relative;">
+					<a {{# if(d[i].use_time == 0&&Date.parse(d[i].end_time)>Date.parse(new Date())){ }}data-href="{php echo app_url('member/coupon/detail')}id={{ d[i].id }}" onclick="goto(this)" href="javascript:;"{{# } }} style="{{# if(i%4 == 0){ }}background-position:0 -10px;{{# }else if(i%4 == 1){ }}background-position:0 -133px;{{# }else if(i%4 == 2){ }}background-position:0 -256px;{{# }else{ }}background-position:0 -379px;{{# } }}">
+						<p><span>￥ {{ d[i].cash }}</span>元</p>
+						<p>{{ d[i].name }}</p>
+						<p>截止时间：{{d[i].end_time}}</p>
+						<p></p>
+						<p style="top:8px;">支付时使用</p>
+						<!--src="{TG_URL_ARES}images/dated.png"-->
+						{{# if(d[i].use_time == 0&&Date.parse(d[i].end_time)<Date.parse(new Date())){ }}<img src="{TG_URL_ARES}images/dated.png" style="width:90px;height:90px;position:absolute;left:40%;top:10%;border-radius:50%;">{{# } }}
+						{{# if(d[i].use_time > 0){ }}<img src="{TG_URL_ARES}images/used.png" style="width:90px;height:90px;position:absolute;left:40%;top:10%;border-radius:50%;">{{# } }}
+						<!--<div style="width:80px;height:80px;border:4px solid black;position:absolute;left:40%;top:10%;border-radius:50%;transform:rotate(-30deg)">
+							<div style="width:60px;height:60px;padding-top:10px;line-height:20px;border:1px dotted black;position:absolute;border-radius:50%;margin:auto;left:0;right:0;top:0;bottom:0;text-align:center;">
+								已经<br/>使用
+							</div>
+						</div>-->
+					</a>								
+				</li>
+			</ul>	
+		</div>
+
+{{# } }}
+</script>
+<script>
+$(function () {
+  'use strict';
+	$(document).on("pageInit", "#page-coupon-list", function(e, id, page) {
+		var gettpl = document.getElementById('couponlist').innerHTML;
+		var emphtml = '<div class="m-cart" id="s"><div class="empty" id="pro-view-6">暂无优惠券，<a href="{php echo app_url('goods/index')}" class="external">马上去逛逛~</a></div></div>';
+		laytpl(gettpl).render({php echo json_encode($coupon3)}, function(html){
+			if(html.length < 10){
+				$("#tab1").append(emphtml);
+			}else{
+				$("#tab1").append(html);
+			}
+		});
+		laytpl(gettpl).render({php echo json_encode($coupon1)}, function(html){
+			if(html.length < 10){
+				$("#tab2").append(emphtml);
+			}else{
+				$("#tab2").append(html);
+			}
+		});
+		laytpl(gettpl).render({php echo json_encode($coupon2)}, function(html){
+			if(html.length < 10){
+				$("#tab3").append(emphtml);
+			}else{
+				$("#tab3").append(html);
+			}
+		});
+	});
+  $.init();
+});
+	function goto(e){
+		location.href=$(e).attr('data-href');
+	}
+</script>
+<!--原来的优惠卷<div class="card" style="border-radius: .2rem;">
+  <div class="card-content" style="border-radius: .2rem .2rem 0 0;color: white;{{# if(i%3 == 0){ }}background-color: #4dd6b1;{{# }else if(i%3 == 1){ }}background-color: #6eb3e8;{{# }else{ }}background-color: #ffb600;{{# } }}">
+    <div class="list-block media-list">
+      <ul>
+      	<a class="external" href="{php echo app_url('member/coupon/detail')}id={{ d[i].id }}">
+        <li class="item-content">
+          <div class="item-media">
+            <img src="{php echo tomedia($config['tginfo']['slogo'])}" width="50" style="border-radius: 25px;">
+          </div>
+          <div class="item-inner">
+            <div class="item-title-row">
+              <div class="item-title">{{ d[i].name }}</div>
+            </div>
+            <div class="item-subtitle">￥ {{ d[i].cash }}</div>
+          </div>
+        </li>
+        </a>
+      </ul>
+    </div>
+  </div>
+  <div class="card-footer">
+    <span>截止时间：{{ d[i].end_time }}</span>
+    <span style="display: flex;"><a href="{php echo app_url('member/coupon/detail')}id={{ d[i].id }}" class="weui_btn weui_btn_mini weui_btn_default external">查看详情</a></span>
+  </div>
+</div>-->
+<style>	
+{php include wl_template('common/footer');}

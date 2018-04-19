@@ -1,0 +1,83 @@
+{php include wl_template('common/header');}
+<div class="page-group">
+    <div class="page page-current" id="page-order-check">
+        <div class="content infinite-scroll" >
+            {if $result=='success'}
+            <div class="msg">
+                <div class="weui_msg">
+                    <div class="weui_icon_area"><i class="weui_icon_success weui_icon_msg"></i></div>
+                    <div class="weui_text_area">
+                        <h2 class="weui_msg_title">申请成功</h2>
+                        <p class="weui_msg_desc">点击确定，可返回微信</p>
+                    </div>
+                    <div class="weui_opr_area">
+                        <p class="weui_btn_area">
+                            <a id="closewindow" class="weui_btn weui_btn_primary">确定</a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+            {else}
+            <div class="list-block cards-list" style="margin: 0;">
+                <ul>
+                    <li class="card" style="border-radius: .2rem;">
+                        <div class="card-header"><h3 class="font-size-14">核销员申请</h3></div>
+                        <div class="card-content">
+                            <div class="card-content-inner">
+
+                                <div class="voucher-address font-size-14" style="margin-top:-10px;">
+
+                                    <label>选择门店：<select id= "actualAdress" name="actualAdress" style="display: inline;width: auto;height: 28px;" >
+                                        <option value="">请点击选择门店</option>
+                                        {loop $storelist $item}
+                                        <option value="{$item['id']}">{$item['storename']}</option>
+                                        {/loop}
+
+                                    </select>
+                                </div>
+
+
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+            <div class="weui_btn_area">
+                <a id="conbdel"  class="weui_btn weui_btn_primary">立即申请</a>
+                <a id="closewindow" class="weui_btn weui_btn_default">返回微信</a>
+            </div>
+            {/if}
+
+        </div>
+    </div>
+</div>
+<script>
+    $(document).on('click','#conbdel',function(){
+        var id = document.getElementById("actualAdress").value;
+        if (id == '') {
+            $.toast("未选择门店");
+            return;
+        }
+        var merchant_id = "{$_GPC['merchant_id']}";
+        $.confirm('此操作不可恢复，确认申请？',
+                function () {
+
+                    $.post("{php echo app_url('home/info_saler')}",{id:id , 'merchant_id':merchant_id},function(d){
+
+                        if(d.status == 1){
+                            location.href = "{php echo app_url('home/info_saler',array('result' => 'success'))}";
+                        }else{
+                            $.toast(d.result);
+                        }
+                    },"json");
+                }
+        );
+    });
+
+    wx.ready(function(){
+        $('#closewindow').click(function(){
+            wx.closeWindow();
+        });
+    });
+</script>
+{php include wl_template('common/footer');}

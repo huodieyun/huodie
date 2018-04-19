@@ -1,0 +1,59 @@
+
+<div class="form-group">
+    <label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label">商品服务</label>
+    <div class="col-md-9">
+        <table class="table table-hover">
+            <thead>
+            <tr>
+                <th style='width:50px;'></th>
+                <th>服务标题</th>
+                <th>服务内容</th>
+            </tr>
+            </thead>
+            <tbody id="item-servies">
+                {loop $goodsServies $gs}
+                <tr>
+                    <td>
+                        <a href="javascript:;" class="fa fa-move" title="拖动调整此显示顺序"><i class="fa fa-arrows"></i></a>&nbsp;
+                        <a href="javascript:;" onclick="deleteServer(this)" style="margin-top:10px;" title="删除"><i class='fa fa-remove'></i></a>
+                    </td>
+                    <td>
+                        <input name="goods_service_name[]" value="{$gs['goods_service_name']}" type="text" class="form-control server_title"/>
+                    </td>
+                    <td>
+                        <input name="goods_service_content[]" value="{$gs['goods_service_content']}" type="text" class="form-control server_value"/>
+                    </td>
+                </tr>
+                {/loop}
+            </tbody>
+            <tbody>
+                <tr>
+                    <td colspan="3">
+                        <a href="javascript:;" style="margin-top:10px;"  onclick="addServer()" title="添加服务">添加服务 <i class='fa fa-plus'></i></a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script language="javascript">
+    function addServer() {
+        $('#item-servies').append(
+            '<tr>'
+                +'<td>'
+                    +'<a href="javascript:;" class="fa fa-move" title="拖动调整此显示顺序"><i class="fa fa-arrows"></i></a>&nbsp;'
+                    +'<a href="javascript:;" onclick="deleteServer(this)" style="margin-top:10px;" title="删除"><i class="fa fa-remove"></i></a>'
+                +'</td>'
+                +'<td>'
+                    +'<input name="goods_service_name[]" value="" type="text" class="form-control server_title"/>'
+                +'</td>'
+                +'<td>'
+                    +'<input name="goods_service_content[]" value="" type="text" class="form-control server_value"/>'
+                +'</td>'
+            +'</tr>');
+    }
+    function deleteServer(o) {
+        $(o).parent().parent().remove();
+    }
+</script>

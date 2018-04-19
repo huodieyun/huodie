@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta name = "format-detection" content = "telephone=no">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+   <title>{if empty($_Session['btitle'])}{$pagetitle}{else}{$_Session['btitle']}{/if}</title>
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <link rel="stylesheet" href="{TG_URL_ARES}components/light/light7.min.css">
+    <link rel="stylesheet" href="{TG_URL_ARES}components/weui/weui.css">
+    <link rel="stylesheet" href="{TG_URL_ARES}components/icon/iconfont.css">
+    <link rel="stylesheet" href="{TG_URL_ARES}css/aliicon/font.css?time=New Date()">
+    <link rel="stylesheet" href="{TG_URL_ARES}css/common.css?time=15">
+    <link href="{TG_URL_WRES}css/font-awesome.min.css" rel="stylesheet">
+    {php echo register_jssdk();}
+    <script src="{TG_URL_ARES}js/jquery-1.11.3.js"></script>
+	
+	<script type="text/javascript" src="{TG_URL_ARES}js/modify.js?time=New Date()"></script>
+    <script type="text/javascript" src="{MODULE_URL}app/resource/layer/layer.js" ></script>
+    <script type='text/javascript' src='{TG_URL_ARES}js/global.js' charset='utf-8'></script>
+    <script type='text/javascript' src='{TG_URL_ARES}js/laytpl.js' charset='utf-8'></script>
+	<script type='text/javascript' src='{TG_URL_ARES}components/light/light7.min.js' charset='utf-8'></script>
+	<script type='text/javascript' src='{TG_URL_ARES}components/swiper/swiper.min.js' charset='utf-8'></script>
+	<script type='text/javascript' src='{TG_URL_ARES}components/light/light7-city-picker.js' charset='utf-8'></script>
+  <!-- 高德地图api -->
+  <script src="//webapi.amap.com/maps?v=1.3&key=68cea1fa9bee514f9c9d6afcefb477b8&plugin=AMap.MouseTool"></script>
+  <script type="text/javascript" src="//cache.amap.com/lbs/static/addToolbar.js"></script>
+  <!-- 百度地图api -->
+  <script type="text/javascript" src="https://api.map.baidu.com/api?v=1.4"></script>
+  <script src="//webapi.amap.com/maps?v=1.3&key=68cea1fa9bee514f9c9d6afcefb477b8&plugin=AMap.MouseTool"></script>
+	<script>
+  function escapeHtml(text) {
+		var a=text.replace(/(\&lt;)/g,"<");
+		var b=a.replace(/(\&gt;)/g,">");
+		var c=b.replace(/(\&amp;)/g,"\&");
+		var d=c.replace(/(\&quot;)/g,"\"");
+		return d;
+	}
+	$('#animationS').click(function(){$(this).css('display','none')});
+  //获取URL参数
+  function GetQueryString(name) {
+      var reg = new RegExp("(^|&)"+ name +"=([^&]*)(&|$)");
+      var r = window.location.search.substr(1).match(reg);
+      if(r!=null)return  unescape(r[2]); return null;
+  }
+</script>
+  <style>
+		
+      .preloader-indicator-overlay,.preloader-indicator-modal,.preloader-indicator-modal .preloader{
+          display: none!important;
+      }
+  </style>
+</head>
+
+<body>

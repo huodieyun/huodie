@@ -1,0 +1,269 @@
+{php include wl_template('common/header');}
+<script type="text/javascript" src="{TG_URL_ARES}js/qrcode.js"></script>
+<style>
+    #tips-box { position: fixed; top: 0; left: 0; display: none; width: 100%; height: 100%; color: #333; background: rgba(0,0,0,0.4); z-index: 9998; }
+    #tips-box div.alert-wrap { margin: 20% auto 0; width: 85%;  background: #FFF; border-radius: 8px; }
+    #tips-box div.alert-wrap h3 { padding: 15px; margin-bottom: 0; font-size: 16px; line-height: 1.5; }
+    #tips-box div.alert-wrap p {  height: 45px; margin: 0 auto; border-top: solid 1px #dcdcdc; line-height: 45px; color: #1f80e9;  font-size: 16px;  text-align: center; }
+    #tips-box div.alert-wrap p a { display: block; width: 100%; height: auto; color: #1f80e9; }
+    #tips-box div.alert-wrap p:hover { color: #1f80e9; background: rgba(0,0,0,0.08); }
+    #tips-box div.alert-wrap p:active { color: #1f80e9; background: rgba(0,0,0,0.08); }
+    #tips-box div.alert-wrap p:visited { color: #1f80e9; }
+    #tips-box div.confirm-wrap { margin: 20% auto 0; width: 85%;  background: #FFF; border-radius: 8px; }
+    #tips-box div.confirm-wrap h3 { padding: 15px; margin-bottom: 0; font-size: 16px; line-height: 1.5; }
+    #tips-box div.confirm-wrap table { width: 100%; }
+    #tips-box div.confirm-wrap table tr td:first-child { border-right: solid 1px #dcdcdc; }
+    #tips-box div.confirm-wrap table tr td { height: 45px; margin: 0 auto; border-top: solid 1px #dcdcdc; line-height: 45px; font-size: 16px;  text-align: center; }
+    #tips-box div.confirm-wrap table tr td a { display: block; width: 100%; height: auto; color: #1f80e9; }
+    #tips-box div.confirm-wrap table tr td a:hover { color: #1f80e9; background: rgba(0,0,0,0.08); }
+    #tips-box div.confirm-wrap table tr td a:active { color: #1f80e9; background: rgba(0,0,0,0.08); }
+    #tips-box div.confirm-wrap table tr td a:visited { color: #1f80e9; }
+    .message-container{width: 100%;position: relative;height: 154px;background-size: cover;background-position: center top;}
+    .avatar{display:inline-block;width:70px;height:70px;margin:0 auto;position:relative}
+    .avatar img{display:block;width:70px;height:70px;margin:0 auto;margin-top: 20px;}
+    .avatar p{font-size:12px;margin-top:0;margin-bottom:-1px;margin-top: 20px;}
+    .avatar p>span{padding:5px 15px;background-color:#809843;border-radius:13px;color:#fff;display: table;margin: 0 auto;}
+    .avatar.avatar-peerpay{width:100%;height:120px}
+    .bottom-arrow{position: absolute;bottom: 0;left: 0;z-index: 10;width: 100%;height: 7px;background: url("{TG_URL_ARES}images/block_gray.png") no-repeat center center;background-size: auto 7px;}
+    .circular{border-radius: 50px;}
+    .weui_extra_area {font-size: 14px;color: #888;}
+    .weui_extra_area a {color: #61749B;}
+
+
+    .erweimatc{
+        display: none;
+        width: 100%;
+        position: absolute;
+        top: 0;
+        z-index: 10099;
+        height: 100%;
+        background: rgba(0,0,0,0.75);
+        left: 0;
+    }
+    .erweimatc>p{
+        text-align: center;
+        margin-top: 25%;
+    }
+    .erweimatc>div{
+        text-align: center;
+        margin: 10px;
+        color: #fff;
+    }
+</style>
+<div class="page-group">
+    <div class="page page-current" id="page-pay">
+        <!--<header class="bar bar-nav">
+            <h1 class="title">支付订单</h1>
+        </header>-->
+        <div class="content" style="background-color: #F9F9F9;">
+
+
+            <div class="content-block-title" style="margin: .5rem .75rem .5rem;">订单编号</div>
+            <div class="list-block">
+                <ul>
+                    <li>
+                        <div class="item-content">
+                            <div class="item-inner">
+                                <div class="item-title label">团单号</div>
+                                <div class="item-input">
+                                    {$group['groupnumber']}
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="item-content">
+                            <div class="item-inner">
+                                <div class="item-title label">订单编号</div>
+                                <div class="item-input">
+                                    {$master_order['orderno']}
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="item-content">
+                            <div class="item-inner">
+                                <div class="item-title label">商品名称</div>
+                                <div class="item-input">
+                                    {$group['goodsname']}
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+
+                    <li>
+                        <div class="item-content">
+                            <div class="item-inner">
+                                <div class="item-title label">补款金额</div>
+                                <div class="item-input">
+                                    ￥{$pay_price}
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+
+                </ul>
+            </div>
+                <div class="weui_btn_area">
+                <div class="weui_btn weui_btn_primary" href="javascript:" id="wechatpay">微信支付</div>
+            </div>
+            <div class="weui_btn_area" {if  $config['base']['bukuan_status']==0||$master_order['dispatchtype']!=3}style="display: none"{/if}>
+                <div class="weui_btn weui_btn_primary" href="javascript:" id="xianxiapay">到店补款</div>
+                <div class="erweimatc">
+                    <p></p>
+                    <!--<img src="{TG_URL}data/qrcode/{$_W['uniacid']}/{$master_order['orderno']}.png" alt=""/>-->
+                    <div>请将本二维码出示给核销员</div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+
+</div>
+
+<script type="text/javascript">
+    $(function() {
+        'use strict';
+        $(document).on("pageInit", "#page-pay", function(e, id, page) {
+
+            var orderno = "{$master_order['orderno']}";
+            var paytype = "wechat";
+
+            function payButton(){
+                $("#wechatpay").off("click",payButton);
+                $.post("{php echo app_url('order/master_orderconfirm')}",{master_orderno:orderno,op:"ajax"},function(k){
+                    console.log(k);
+                  if(k.status==1){
+                      var order_no= k.result['orderno'];
+                     
+                      $.post("{php echo app_url('pay/cash')}",{orderno: order_no,paytype:paytype},function(m){
+
+                          if(!m.errno){
+                              m.data.timeStamp = String(m.data.timeStamp);
+                              WeixinJSBridge.invoke('getBrandWCPayRequest', {
+                                  'appId': m.data.appid ? m.data.appid : m.data.appId,
+                                  'timeStamp': m.data.timeStamp,
+                                  'nonceStr': m.data.nonceStr,
+                                  'package': m.data.package,
+                                  'signType': m.data.signType,
+                                  'paySign': m.data.paySign,
+                              }, function(res) {
+                                  if(res.err_msg == 'get_brand_wcpay_request:ok') {
+                                      location.href = "{php echo app_url('pay/cash')}&orderno="+order_no+"&paytype="+paytype+"&done=1";
+                                  } else {
+                                      $.post("{php echo app_url('pay/paytype')}",{orderno:order_no,op:"ajax",checkpay:"8"},function(m){
+                                          $.toast("已取消支付");
+                                          $("#wechatpay").on("click",payButton);
+                                      },"json");
+                                  }
+                              });
+                          }else{
+                              $.confirm(m.message, function () {
+                                  history.go(-1);
+                              })
+                          }
+                      },"json");
+                  }
+                },"json");
+            }
+
+            $("#wechatpay").on("click",payButton);
+
+        });
+        $.init();
+
+
+
+    });
+    //二维码弹窗
+    $(".erweimatc").on('click',function(){
+        $(this).css('display','none');
+    });
+
+    $("#xianxiapay").on('click',function(){
+        $(".erweimatc").css('display','block');
+    });
+
+
+    //转二维码
+    $('canvas').remove();
+    var erweimatcurl="{php echo app_url('order/check',array('mid'=>$master_order['orderno']))}";
+    $('.erweimatc p').qrcode({text:erweimatcurl});
+</script>
+<script type="text/javascript">
+    var _system={
+        $:function(id){return document.getElementById(id);},
+        _client:function(){
+            return {w:document.documentElement.scrollWidth,h:document.documentElement.scrollHeight,bw:document.documentElement.clientWidth,bh:document.documentElement.clientHeight};
+        },
+        _scroll:function(){
+            return {x:document.documentElement.scrollLeft?document.documentElement.scrollLeft:document.body.scrollLeft,y:document.documentElement.scrollTop?document.documentElement.scrollTop:document.body.scrollTop};
+        },
+        _cover:function(show){
+            if(show){
+                this.$("cover").style.display="block";
+                this.$("cover").style.width=(this._client().bw>this._client().w?this._client().bw:this._client().w)+"px";
+                this.$("cover").style.height=(this._client().bh>this._client().h?this._client().bh:this._client().h)+"px";
+            }else{
+                this.$("cover").style.display="none";
+            }
+        },
+        _guide:function(click){
+            this._cover(true);
+            this.$("guide").style.display="block";
+            this.$("guide").style.top=(_system._scroll().y+5)+"px";
+            window.onresize=function(){_system._cover(true);_system.$("guide").style.top=(_system._scroll().y+5)+"px";};
+            if(click){_system.$("cover").onclick=function(){
+                _system._cover();
+                _system.$("guide").style.display="none";
+                _system.$("cover").onclick=null;
+                window.onresize=null;
+            };}
+        }
+    }
+    pushHistory();
+    setTimeout(function () {
+        window.addEventListener("popstate", function(e) {
+            showBox("再按一次退出程序", 1000, function() {
+                pushHistory();
+            });
+        }, true);
+    }, 1000);
+
+    function pushHistory() {
+        var state = { title: "title", url: "#" };
+        window.history.pushState(state, "title", "#");
+    }
+
+    function showBox(msg, timeOut, onTimeOut) {
+        if (typeof timeOut === "undefined") timeOut = 2000;
+        setTimeout(function() {
+
+            if (typeof onTimeOut !== "undefined") {  onTimeOut();
+                tipsBox.createPayBox();
+            }
+        }, timeOut);
+    }
+
+    var tipsBox = {}
+    tipsBox.container = '#tips-box';
+    tipsBox.createPayBox = function() {
+        var tips = '{$_W['uniaccount']['name']}提醒您，您的订单已生成，但未支付成功，您确定返回吗？'
+        var html = '<div class="confirm-wrap"><h3>'+tips+'</h3><table border-collapse="0" border-spacing="0"><tr><td><a href="{php echo $this->createMobileUrl('index')}">返回首页</a></td><td><a href="javascript:void(0);" onclick="tipsBox.hideTipsBox()">继续支付</a></td></tr></tabel></div></div>';
+        $(tipsBox.container).html(html);
+        $(tipsBox.container).show();
+        tipsBox.tipsBoxCenter(tipsBox.container + ' > div.confirm-wrap');
+    }
+    tipsBox.hideTipsBox = function() { //关闭提提示框
+        $(tipsBox.container).hide();
+    }
+    tipsBox.tipsBoxCenter = function(_this) { //提示框居中
+        var windowHeight = $(window).height();
+        var _thisHeight = $(_this).css('height').replace('px','');
+        var top = parseFloat(windowHeight - _thisHeight) / 2;
+        $(_this).css('marginTop',top);
+    }
+</script>
+{php include wl_template('common/footer');}

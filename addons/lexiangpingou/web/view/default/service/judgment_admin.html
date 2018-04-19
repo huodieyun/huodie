@@ -1,0 +1,107 @@
+{php include wl_template('common/header');}
+<ul class="nav nav-tabs" style="margin-bottom: 0px;">
+	<li class="active"><a href="{php echo url('platform/special/display')}">系统通知 </a></li>
+</ul>
+
+<div class="clearfix">
+	<div class="panel panel-default" style="background: none;  padding: 0px; border: none !important;">
+				{loop $list $item}
+
+				<div class="panel panel-default" style="padding: 15px !important; margin-top: 20px; margin-bottom: 0px !important;">
+					<img src="{$item['avatar']}" width="40px" height="40px" class="pp_list_avatar"><span style="margin-left: 6px; font-weight: bold;">{$item['openname']}</span><br/>
+					<?php 
+					$main_content = pdo_fetch("select * from ".tablename('tg_judgment_content')." where  judgment_id=:judgment_id order by update_time desc ",array('judgment_id'=>$item['judgment_id']));	
+					$allcontent = pdo_fetchall("select * from ".tablename('tg_judgment_content')." where  judgment_id=:judgment_id and content_id <> '". $main_content['content_id'] ."'  order by update_time asc ",array('judgment_id'=>$item['judgment_id']));
+					?>
+					<div style="font-size: 14px; padding: 10px; font-weight: 400;">{$main_content['content']}</div>
+					{loop $allcontent $content}
+					{if $content['who']== 1}<label>[ 商家回复  ]</label>{/if}
+					{if $content['who']== 0}<label>[ 用户追评  ]</label>{/if}<span style="margin-left:20px; color: #b8c0cc; font-size: 12px;"><?php echo date('Y-m-d H:i:s',$content['update_time']); ?></span>
+					<div style="font-size: 12px; padding: 10px; font-weight: 400;">{$content['content']}</div>
+					<?php 
+						$imgs = pdo_fetchall("select img_url from" . tablename('tg_judgment_img') . "where content_id = :content_id order by id desc", array(':content_id' => $content['content_id']));
+					?>		
+					{if !empty($imgs)}
+					<div class="clearfix"></div>
+
+		
+					<div style="padding: 3px;">
+					{loop $imgs $img}
+						<a style="" onclick="img_big('{$_W['attachurl']}{$img['img_url']}')"><img  style="border: 1px solid  #cccccc; padding: 5px; -moz-border-radius: 3px; -webkit-border-radius: 3px; border-radius: 3px; background: #fff; width: 40px; height:40px; margin-left: 2px; margin-right: 2px;" onerror="this.src='resource/images/gw-wx.gif'" src="{$_W['attachurl']}{$img['img_url']}"></a>
+					{/loop}
+					</div>
+
+					{/if}
+					
+					{/loop}
+					
+					<span style="color: darkgrey; font-size: 12px; font-weight: bold;">{$item['time']}</span>
+					{if $item['item'] != ""}<span class="name text-overflow-ellipsis-2">规格：{$item['item']}</span>{/if}
+					<a onclick="$('#{$item['judgment_id']}').show();">回复</a>
+					<a href="{php echo web_url('gzhset/notification',array('op' => 'delete','id' => $item['id']))}">删除 </a>
+					
+				</div>
+				<form class="form form-horizontal" action="./index.php" method="post" role="form" id="form1" style="padding: 15px;">
+					<input type="hidden" name="c" value="site" />
+		            <input type="hidden" name="a" value="entry" />
+		            <input type="hidden" name="m" value="lexiangpingou" />
+		            <input type="hidden" name="do" value="service" />
+		            <input type="hidden" name="ac" value="judgment_admin" />
+		            <input type="hidden" name="op" value="replay" />
+		            <input type="hidden" name="jid" value="{$item['judgment_id']}" />
+				<div class="panel-body" id="{$item['judgment_id']}" style="display: none; padding: 0px; margin-top: 2px;">
+					<div class="form-group" >
+						<div class="col-md-12" style="position:relative; padding: 0px;">
+							<div  style="position:relative; padding-left: 0px;">
+								<textarea class="form-control" required oninvalid="setCustomValidity('请填写回复内容')" oninput="setCustomValidity('')" required="required" name="content" id="content" rows="3"  placeholder="在此回复。" ></textarea>
+							</div>
+						</div>
+					</div>
+					<div class="form-group">
+				        <div class="col-sm-12" style="padding: 0px;">
+				           {php echo tpl_form_field_multi_image('img',$piclist);}
+
+				        </div>
+				    </div>
+				    <input style="float: right;" onclick="submitAction(); return false;" type="submit" name="submit" value="提交" class="btn btn-primary col-lg-1" />
+			    </div>
+			    </form>
+				{/loop}
+				
+
+	</div>
+	{$pager}
+</div>
+
+<div id="modal-module-img" class="modal fade sc" tabindex="-1">
+							<div class="modal-dialog" style='width:1000px;  height:85%;font-size: 14px; text-align: left; padding: 30px; '>
+								<a class="closeBtn" style="position: absolute; top:40px; right:40px; z-index: 9999999;" data-dismiss="modal"><font color="ff0000">x</font></a>
+								<div class="modal-content" style=" padding: 30px; ">
+									
+								
+									<div id="img_show" style=""></div>
+									
+
+										
+									<p style="text-align: center; margin-top: 20px;">
+										<button type="button" class="btn btn-primary" data-dismiss="modal">
+	 										关闭
+	            						</button>
+									</p>
+									
+								</div>
+							</div>
+						</div>
+<script>
+
+	function img_big(img_url){
+		var img_url =img_url;
+
+		$("#img_show").html('<img src="'+img_url+'">'); 
+		$('#modal-module-img').modal();
+
+	}
+	
+	
+</script>
+{php include wl_template('common/footer');}

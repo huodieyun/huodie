@@ -1,0 +1,32 @@
+{php include wl_template('common/header');}
+<div class="page-group">
+    <div class="page page-current" id="page-order-check">
+        <div class="content infinite-scroll" >
+            <div class="msg">
+                <div class="weui_msg">
+                    <div class="weui_icon_area"><i class="weui_icon_warn weui_icon_msg"></i></div>
+                    <div class="weui_text_area">
+                        <h2 class="weui_msg_title">
+                            由于您多次超时提货，<br>系统无法继续给您提供服务！<br>
+                            非常抱歉给您带来不便，<br>如需恢复服务请联系客服！
+                        </h2>
+                        <p class="weui_msg_desc">点击确定，可返回微信</p>
+                    </div>
+                    <div class="weui_opr_area">
+                        <p class="weui_btn_area">
+                            <a id="closewindow" class="weui_btn weui_btn_primary">确定</a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+		</div>
+	</div>
+</div>
+<script>
+    wx.ready(function(){
+        $('#closewindow').click(function(){
+            wx.closeWindow();
+        });
+    });
+</script>
+{php include wl_template('common/footer');}

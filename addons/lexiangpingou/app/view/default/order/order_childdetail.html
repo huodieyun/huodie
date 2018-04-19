@@ -1,0 +1,256 @@
+{php include wl_template('common/header');}
+<script type="text/javascript" src="{TG_URL_ARES}js/qrcode.js"></script>
+<style>
+    .timline-block-arrow{
+        border-top: 1px solid transparent;
+        border-left: 1px solid transparent;
+    }
+    .timeline-block{
+        border:1px solid transparent!important;
+    }
+    .bottombar-buttonwrap-3 button, .bottombar-buttonwrap-3 a{
+        width: inherit;
+    }
+    .back {
+        color:#f99b00;
+    }
+    .back .p-16 {
+        font-size: 16px;
+    }
+</style>
+<div class="page-group">
+    <div class="page page-current" id="page-order-detail">
+        <header class="bar bar-nav">
+            <a class="pull-left back" href="{php echo app_url('order/order/childlist')}orderno={$detail['orderno']}">
+                <span class="icon icon-left"><span class="p-16">返回</span></span>
+            </a>
+            <h1 class="title">订单详情</h1>
+            <a class="pull-right" href="{php echo app_url('order/order/list')}">
+                <span class="icon back"><span class="p-16">所有订单</span></span>
+            </a>
+        </header>
+
+        <div class="content" style="overflow-x: hidden;">
+            <div id="order-detail">
+                <div class="orderregion">
+                    <a class="status-hotelname" href="#">
+                        <i class="icon1-detail status-hotelname-icon"></i>
+                        <label class="status-hotelname-name">{$merchantname}</label>
+                        <i class="icon-arrow-right-thin status-hotelname-back"></i>
+                    </a>
+                </div>
+
+                <div class="orderregion">
+                    <h1 class="orderregion-title">
+                        <i class="icon1-detail status-detail-icon"></i>
+                        <label class="status-name">商品</label>
+                    </h1>
+                    <ul class="orderregion-entries">
+                        {loop $goods $item}
+                            <li class="orderregion-entry">
+                                <span class="name text-overflow-ellipsis-2">{$item['goodsname']}</span>
+                                <span class="price">x{$item['num']}</span>
+                            </li>
+                        {/loop}
+                    </ul>
+                </div>
+                {if $detail['status'] == 2}
+                <div class="orderregion">
+                    <h1 class="orderregion-title">
+                        <i class="icon1-detail status-detail-icon"></i>
+                        <label class="status-name">配送信息</label>
+                    </h1>
+                    <ul class="orderregion-entries-compact">
+                        <li class="orderregion-entry-compact">
+                            <span class="label">收货人：</span>{$detail['addname']}&nbsp; {$detail['mobile']}
+                        </li>
+                        <li class="orderregion-entry-compact">
+                            <span class="label">收货地址：</span>{$detail['address']}
+                        </li>
+                    </ul>
+                </div>
+                {/if}
+
+                <div class="orderregion">
+                    <h1 class="orderregion-title">
+                        <i class="icon1-detail status-detail-icon"></i>
+                        <label class="status-name">订单详情</label>
+                    </h1>
+                    <ul class="orderregion-entries-compact">
+                        <li class="orderregion-entry-compact">
+                            <span class="label">主订单号：</span>{$order['orderno']}
+                        </li>
+                        <li class="orderregion-entry-compact">
+                            <span class="label">子订单号：</span>{$detail['c_orderno']}
+                        </li>
+                        <li class="orderregion-entry-compact">
+                            <span class="label">发货时间：</span>{php echo date('Y-m-d H:i:s', $detail['createtime']);}
+                        </li>
+                        <li class="orderregion-entry-compact">
+                            <span class="label">支付方式：</span>{if $detail['pay_type'] == 9}会员余额{else}微信{/if}支付
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="buy-again-placeholder"></div>
+            </div>
+            <div class="bottombar-down">
+                <div class="bottombar">
+
+                    <div class="bottombar-main" style="margin-left:15px;">
+                        <div class="bottombar-buttonwrap bottombar-buttonwrap-3" style="overflow: hidden;">
+                            {if $detail['status'] == 2 && $detail['dispatchtype'] == 1 && $detail['storeid']}
+                            <button class="combtn bottombar-btn-red open-popup" id="qrcode" data-popup=".popup-qrcode"style="width:90px;text-align:center;"><i class="fa fa-qrcode" ></i>&nbsp确认收货</button>
+                            {elseif $detail['status'] == 2}
+                            <button id="btn-received" class="combtn bottombar-btn-red" fid="{$order['orderno']}" oid="{$detail['id']}">确认收货</button>
+                            <button id="btn-hasten" class="combtn bottombar-btn-dark">物流信息</button>
+                            {elseif ($detail['status'] == 8 || $detail['status'] == 2) && $detail['dispatchtype']==3}
+
+                            <button class="combtn bottombar-btn-red open-popup" id="qrcode" data-popup=".popup-qrcode"style="width:85px;text-align:center;"><i class="fa fa-qrcode" ></i>&nbsp到店核销</button>
+                            {elseif $detail['dispatchtype'] == 3 && $detail['status'] == 3}
+                            <button class="combtn bottombar-btn-red open-popup" id="reqrcode" data-popup=".popup-qrcode"style="width:85px;text-align:center;"><i class="fa fa-qrcode" ></i>&nbsp到店退货</button>
+                            {else}
+                            <button class="combtn bottombar-btn-red" style="width: 23%;" onclick="location.href='{php echo app_url('goods/list');}'">更多商品</button>
+                            {/if}
+                            {if $detail['is_tuan']==1 && $detail['status']!=5}
+                            <button class="combtn bottombar-btn-dark" onclick="location.href='{php echo app_url('order/group', array('tuan_id'=>$detail['tuan_id']));}'" style="width:85px;">查看团详情</button>
+                            {/if}
+                            {if $detail['godluck']==0 && $detail['status']==7}
+                            <button class="combtn bottombar-btn-dark" onclick="location.href='{php echo app_url('member/coupon');}'" style="width:82px;">查看优惠券</button>
+                            {/if}
+
+                            {if ($sto["lag"] !="default" || $sto["lng"] != "default") && $detail['dispatchtype'] == 3}
+                            <div class="combtn bottombar-btn-red" style="float: right;margin-right: 20px;width: 90px;height:30px;line-height:30px;text-align: center;border-radius: 2px">
+                                <i class="iconal-location"></i>
+                                <label id="openLocation">门店导航</label>
+                            </div>
+                            {/if}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="popup popup-qrcode">
+    <div class="content" style="background: #eee;">
+        <div class="list-block cards-list">
+          <ul>
+            <li class="card" style="border-radius: .2rem;">
+              <div class="card-header"><h3 class="font-size-14">{if $detail['dispatchtype'] == 3 && $detail['status'] == 8}到店自提{elseif $detail['dispatchtype'] == 3 && $detail['status'] == 3}到店退货{elseif $detail['dispatchtype'] == 1}送货上门{/if}核销凭证</h3></div>
+              <div class="card-content" style="border-top: 1px solid #e5e5e5">
+                <div id="nav" class="nav">
+                    <p class="nav-wrap">
+                        <span class="j-nav-item j-nav-qrcode nav-item nav-choose" {if $detail['dispatchtype'] == 1 || $detail['status'] == 3}style="width:100%;"{/if}>手机微信核销码 </span>
+                        {if $detail['dispatchtype'] == 3 && $detail['status'] == 8}
+                        <span class="j-nav-item j-nav-pcqrcode nav-item " >收银台扫描枪核销码</span>
+                        <label class="j-nav-code-bottomline nav-bottomline"></label>
+                        {/if}
+                    </p>
+                </div>
+                <div class="card-content-inner">
+                     <p style="text-align: center; font-size: 1.1em; ">请将本二维码出示给{if $detail['dispatchtype'] == 3}核销员{elseif $detail['dispatchtype'] == 1}派送员{/if}</p>
+                        <p id="qrcode_pic" style="text-align: center">
+                            <!--<img style=" width: 100%;" src="{php echo app_url('order/order/qr' , array('url' => $detail['short_url']))}" id="qrsrc" alt="">-->
+
+                        </p>
+
+
+                        <p id="pcqrcode_pic" style="display: none;text-align: center">
+
+                            <!--<img style=" width: 100%;" src="{php echo app_url('order/order/qr' , array('url' => $detail['orderno']))}" alt="">-->
+                        </p>
+                    <div class="voucher-address font-size-14">
+                        {if $detail['dispatchtype'] == 1}
+                        <p>派送员昵称：{$sto['nickname']}</p>
+                        <!--<p>提货地址：{$sto['address']}</p>-->
+                        <!--&lt;!&ndash;<p>到店时间：尽快到店提货</p>&ndash;&gt;-->
+                        <p>联系电话：{$sto['tel']}</p>
+                        {else}
+                        <p>提货点：{$sto['storename']}</p>
+                        <p>提货地址：{$sto['address']}</p>
+                        <!--<p>到店时间：尽快到店提货</p>-->
+                        <p>联系电话：{$sto['tel']}</p>
+                        {/if}
+            <!--  <li style="width:94%;padding:5px;border:1px dashed red;margin:8px auto;border-radius:5px;overflow:hidden;"><p style="font-size:0.7rem;color:#DE5246;text-indent:1rem;">{$config['content_set']}<p></li>
+-->
+        </div>
+                    {if $detail['g_id']>0}
+                    <div class="voucher-goods-info font-size-14">
+                        <p>商品名称：{$goods['gname']} </p>
+                        {if !empty($detail['optionname'])}<p>商品规格：{$detail['optionname']} </p>{/if}
+                        <p>数量：{$detail['gnum']}</p>
+                        <p>实付金额：{$detail['price']}元</p>
+                        </div>
+
+                    {else}
+
+                   <?php
+                                $col=pdo_fetchall("select * from ".tablename('tg_collect')." where  orderno=:orderno",array('orderno'=>$detail['orderno']));
+                                ?>
+                                 {loop $col $v}
+                                 <?php
+                                $gs=pdo_fetch("select * from ".tablename('tg_goods')." where  id=:id",array('id'=>$v['sid']));
+                                ?>
+
+                                     <div class="voucher-goods-info font-size-14">
+                                        <p>{$gs['gname']}</p>
+                                        <p>{if !empty($v['item'])}规格：{$v['item']},{/if}</p>
+                                        <p>数量:{$v['num']},单价:{$v['oprice']}</p>
+
+                                        <hr style="margin-top: 10px;margin-bottom: 0px;"/>
+                                    </div>
+
+                                 {/loop}
+                    {/if}
+                     </div>
+              </div>
+            </li>
+          </ul>
+        </div>
+        <div class="weui_btn_area">
+            <a class="weui_btn weui_btn_warn close-popup">关闭</a>
+        </div>
+    </div>
+</div>
+<script>
+    var detail = {php echo json_encode($detail)};
+    var goods = {php echo json_encode($goods)};
+    console.log(detail);
+    console.log(goods);
+    $(document).on('click','#btn-received',function(){
+        var orderno = $(this).attr('fid');
+        var id = $(this).attr('oid');
+        $.confirm('是否确认收货？',
+            function () {
+                $.post("{php echo app_url('order/order/childconfirm')}",{orderno:orderno, id:id},function(d){
+                    if(d.errCode == 1){
+                        $.toast('确认收货成功！');
+                        setTimeout(function () {
+                            location.href = "{php echo app_url('order/order/childlist')}"+'orderno='+orderno;
+                        }, 1000);
+                    }else{
+                        $.toast('发生错误');
+                    }
+                },"json");
+            }
+        );
+    });
+
+    $(document).on('click','#btn-hasten',function(){
+        $.showIndicator();
+        setTimeout(function () {
+            location.href = "http://m.kuaidi100.com/index_all.html?type={$detail['express']}&postid={$detail['expresssn']}#input";
+        }, 1000);
+    });
+
+
+
+    //转二维码
+    $('canvas').remove();
+    var longurl="{php echo $detail['longurl']}";
+    var orderurl="{php echo $detail['orderno']}";
+    $('#qrcode_pic').qrcode({text:longurl});
+    $('#pcqrcode_pic').qrcode({text:orderurl});
+</script>
+{php include wl_template('common/footer');}

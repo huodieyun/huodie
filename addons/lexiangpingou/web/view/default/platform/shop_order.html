@@ -1,0 +1,358 @@
+{php include wl_template('common/header');}
+<ul class="nav nav-tabs">
+	<li {if $_GPC['op'] == '' || $_GPC['op'] == 'display'}class="active"{/if}><a href="{php echo web_url('platform/shop_order/display');}">我的商品</a></li>
+	{if $_GPC['op'] == 'shop'}<li class="active"><a href="{php echo web_url('platform/shop_order/shop' , array('id' => $_GPC['id']));}">商品订单</a></li>{/if}
+    <li {if $_GPC['op'] == 'order' && intval($_GPC['status']) == 1}class="active"{/if}><a href="{php echo web_url('platform/shop_order/order' , array('status' => 1));}">待处理订单</a></li>
+	<li {if $_GPC['op'] == 'order' && intval($_GPC['supply_status']) == 1 && intval($_GPC['platform_status']) == 1}class="active"{/if}><a href="{php echo web_url('platform/shop_order/order' , array('status' => 2,'platform_status'=>1,'supply_status'=>1));}">供应商待发货订单</a></li>
+	<li {if $_GPC['op'] == 'order' && intval($_GPC['supply_status']) == 2}class="active"{/if}><a href="{php echo web_url('platform/shop_order/order' , array('status' => 2,'supply_status'=>2));}">供应商已发货订单</a></li>
+	<li {if $_GPC['op'] == 'refund_order' }class="active"{/if}><a href="{php echo web_url('platform/shop_order/refund_order' , array('platform_status'=>1,'refund'=>1));}">退款订单</a></li>
+	<li {if $_GPC['op'] == 'order' && intval($_GPC['status']) == 0}class="active"{/if}><a href="{php echo web_url('platform/shop_order/order' , array('order_id' => $_GPC['order_id']));}">全部订单</a></li>
+    {if $_GPC['op'] == 'collect'}<li class="active"><a href="{php echo web_url('platform/shop_order/collect' , array('collect_id' => $_GPC['collect_id']));}">订单列表</a></li>{/if}
+	{if $_GPC['op'] == 'detail'}<li class="active"><a href="{php echo web_url('platform/shop_order/detail');}">订单详情</a></li>{/if}
+</ul>
+{if $_GPC['op'] == '' || $_GPC['op'] == 'display'}
+
+<div class="panel panel-info">
+	<div class="panel-heading">筛选</div>
+	<div class="panel-body">
+		<form action="./index.php" method="get" class="form-horizontal" role="form">
+			<input type="hidden" name="c" value="site" />
+			<input type="hidden" name="a" value="entry" />
+			<input type="hidden" name="m" value="lexiangpingou" />
+			<input type="hidden" name="do" value="platform" />
+			<input type="hidden" name="ac" value="shop_order" />
+			<input type="hidden" name="op" value="display" />
+			<!--<input type="hidden" name="status" value="{$_GPC['status']}">-->
+			<div class="form-group">
+
+				<label class="col-xs-12 col-sm-2 col-md-2 col-lg-1 control-label">搜索条件</label>
+				<select name="con_type" class="categoryI form-control tpl-category-parent" style="margin-right:20px;display: inline-block;width: 20%;float: left;">
+					<option value="1" {if $_GPC['con_type']==1} selected=true{/if}>商品名称</option>
+					<option value="2" {if $_GPC['con_type']==2} selected=true{/if}>批次号</option>
+					<option value="3" {if $_GPC['con_type']==3} selected=true{/if}>需发货商品</option>
+				</select>
+				<div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
+					<input class="form-control" name="keyword" id="" type="text" value="{$_GPC['keyword']}" placeholder="请输入搜索关键词">
+				</div>
+				<div class="col-md-2" style="float: right">
+					<button class="btn btn-default min-width"><i class="fa fa-search"></i> 搜索</button>
+				</div>
+			</div>
+		</form>
+	</div>
+</div>
+{if empty($goodses)}
+<div style="text-align: center;padding: 100px 0;" class="panel panel-default">暂无数据~</div>
+{else}
+<div class="panel panel-default">
+	<div class="table-responsive">
+		<table class="table table-hover" >
+			<thead>
+			<tr>
+				<!--<th style="width:30px;">-->
+					<!--<input type="checkbox" name="checkall" value="" id="checkall" onclick="var ck = this.checked; $(':checkbox').each(function(){this.checked = ck});"/>-->
+				<!--</th>-->
+				<th class="text-center" style="width:150px;">批次号</th>
+				<th style="width:180px;">商品图/商品名</th>
+				<th class="text-center" style="width:120px;">单买价</th>
+				<th class="text-center" style="width:80px;">销量</th>
+				<th class="text-center" style="width:100px;">待发货总数</th>
+				<th class="text-center" style="width:100px;">已申请发货</th>
+				<!--<th class="text-center" style="width:100px;">需申请发货</th>-->
+				<th class="text-center" style="width:230px;">操作</th>
+			</tr>
+			</thead>
+			<tbody>
+			<!-- 模态框（Modal） -->
+			<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+				<div class="modal-dialog">
+					<div class="modal-content">
+						<div class="modal-header">
+							<button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+								&times;
+							</button>
+							<h4 class="modal-title" id="myModalLabel">
+								审核此商品
+							</h4>
+						</div>
+						<div class="modal-body">
+							请选择审核成功/拒绝!
+						</div>
+						<div class="modal-footer">
+							<button type="button" class="btn btn-default" data-dismiss="modal" id="yunxu" onclick="yunxu()">拒绝审核</button>
+							<button type="button" class="btn btn-primary" id="jujue" onclick="jujue()">审核通过</button>
+						</div>
+					</div><!-- /.modal-content -->
+				</div><!-- /.modal -->
+			</div>
+			<script>
+                function check(self) {
+                    var gid =  $(self).attr('data-id');
+                    var op = $(self).attr('id');  //你下面op都写死了  你在干嘛
+                    $('#yunxu').attr('data-id',gid);
+                };
+
+                function yunxu() {
+                    $.ajax({
+                        url:"{php echo web_url('platform/goods_list')}",
+                        type:'post',
+                        dataType:"json",
+                        data:{
+                            'id': $('#yunxu').attr('data-id'),
+                            "op":"check",
+                            "status":2,
+                        },
+                        success:function (res) {
+                            window.location.reload();
+                        },
+                        error:function (res) {
+
+                        }
+                    });
+                }
+                //失败处理
+                function jujue() {
+                    $.ajax({
+                        url:"{php echo web_url('platform/goods_list')}",
+                        type:'post',
+                        dataType:"json",
+                        data:{
+                            'id':$('#yunxu').attr('data-id'),
+                            "op":"check",
+                            "status":1
+                        },
+                        success:function (res) {
+                            window.location.reload();
+                        },
+                        error:function (res) {
+
+                        }
+                    });
+                }
+			</script>
+			{php $i=0;}
+			{loop $goodses $goods}
+
+			<tr data-toggle="popover" data-trigger="hover" data-placement="left" class="js-goods-img" >
+				<!--<td><input type="checkbox" id="gid"  name="items[{php echo $i}]" value="{$goods['id']}" class="items" /></td>-->
+				<td class="text-center">{$goods['pici']}</td>
+				<td class="line-feed" style="word-wrap:break-word;line-height:25px;">
+					<img class="scrollLoading" src="{IMAGE_PIXEL}" data-url="{php echo tomedia($goods['gimg'])}" onerror="this.src='{IMAGE_NOPIC_SMALL}'" height="50" width="70"/><br>	<span class="label label-info">{$goods['gname']}</span><br>
+				</td>
+
+				<td class="text-center" style="line-height:25px;">
+					<span class="label label-info">售价：￥{php echo number_format($goods['oprice'], 2)}</span>
+				</td>
+				<td class="text-center" style="line-height:25px;">
+					<!--<span class="label label-warning">库存：{$goods['stock']}</span><br>-->
+					<span class="label label-info">销量：{$goods['salenum']}</span>
+
+				</td>
+
+				<td class="text-center" style="line-height:25px;">
+					<span class="label label-info">{$goods['send_count']}</span>
+				</td>
+				<td class="text-center" style="line-height:25px;">
+					<span class="label label-info">{$goods['check_send_count']}</span>
+				</td>
+				<!--<td class="text-center" style="line-height:25px;">-->
+					<!--<span class="label label-info">{$goods['need_send_count']}</span>-->
+				<!--</td>-->
+				<td class="text-center" style="position:relative;">
+					<!--<a href="javascript:;" data-id="{$goods['id']}"  data-url="{php echo web_app_url('goods/detail',array('id'=>$goods['id']))}" id="js-copy{$goods['id']}" class="js-copy">复制链接</a>-->
+					<a href="{php echo web_url('platform/shop_order', array('op' => 'shop','id' => $goods['id']))}" class="btn btn-default btn-sm">商品订单列表</a>
+					<!--<a href="javascript:;" data-toggle="modal" data-target="#modal-refund" class="btn btn-default btn-sm">退款</a>-->
+
+				</td>
+			</tr>
+
+			{php $i++;}
+			{/loop}
+			</tbody>
+		</table>
+	</div>
+</div>
+{/if}
+{$pager}
+<div id="modal-refund" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true" style="margin:0px auto;">
+	<div class="modal-dialog" style="width: 35%">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button aria-hidden="true" data-dismiss="modal" class="close" type="button">×</button>
+				<h3>退款</h3>
+			</div>
+			<div class="modal-body">
+				<label>可退款金额</label>
+				{$mfee}
+				<label>退款金额</label>
+				<input class="form-control" id="refundnum" name="refundnum" autocomplete="off"></input>
+				<div id="module-menus"></div>
+				<label>是否全退</label>
+				<label class="radio radio-inline" style="margin-top:0px;">
+					<input type="radio" name="refundall" value="1" checked="checked"> 是
+				</label>
+				<label class="radio radio-inline">
+					<input type="radio" name="refundall" value="0"checked="checked"> 否
+				</label>
+				<div id="module-menus"></div>
+				<label>退款原因</label>
+				<input class="form-control" id="refund_res" name="refund_res" placeholder="" />
+				<div class="form-group" style="margin-top: 15px">
+					<div style="padding: 0">退款图集</div>
+					<div>
+						{php echo tpl_form_field_multi_image('refund_imgs');}
+					</div>
+					<div style="clear: both"></div>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button class="btn btn-success js-refund1">退款</button>
+				<!--<button type="submit" class="btn btn-primary" name="refunds" value="yes">退款</button>-->
+				<a href="#" class="btn btn-default" data-dismiss="modal" aria-hidden="true">关闭</a>
+			</div>
+		</div>
+	</div>
+</div>
+<script type="text/javascript">
+    require(['jquery', 'util'], function($, util){
+        $('.js-copy').each(function(){
+            var id=$(this).attr('data-id');
+            util.clip($("#js-copy"+id), $(this).attr('data-url'));
+        });
+    });
+    $(".js-goods-copy").click(function (e) {
+
+        e.stopPropagation();
+        var html = "复制本商品,将保存在【商品列表】【下架的商品】中！";
+        var id = $(this).attr('goods-id');
+        util.nailConfirm(this, function (state) {
+            if (!state) return;
+            $.post("{php echo web_url('goods/goods/copy',array('copy'=>1));}", {id: id}, function (data) {
+                if (!data.errno) {
+                    util.tips("复制成功");
+                    location.href = "{php echo web_url('goods/goods/display',array('status'=>2));}";
+                }
+                ;
+            }, 'json');
+        }, {html: html});
+    });
+</script>
+<script>
+
+    if("{$_GPC['category']['parentid']}") {
+        setTimeout(function () {
+            var parentV = "{$_GPC['category']['parentid']}";
+            var childV = "{$_GPC['category']['childid']}";
+            $('option[value="' + parentV + '"]').attr('selected', 'selected');
+            $('option[value="' + childV + '"]').attr('selected', 'selected');
+        }, 700);
+    }
+
+
+    $(function(){
+        $(".scrollLoading").scrollLoading();
+        $(".js-displayorder").blur(function(e){
+            e.stopPropagation();
+            var $this = $(this);
+            var good_id = $this.data("id");
+            var displayorder = parseInt($this.val());
+            if (isNaN(displayorder)) {
+                $this.parent().addClass('has-error');
+                util.tips('必须为数字', 2000);
+                return false;
+            };
+            $.post("{php echo url('goods/goods/display/displayorder');}", {good_id : good_id, displayorder : displayorder}, function(data){
+                $this.parent().removeClass('has-error');
+                util.tips(data.message, 2000);
+            },'json');
+        });
+
+        $('.js-batch').click(function(e){
+            e.stopPropagation();
+            var goods_ids = [];
+            var $checkboxes = $('.items:checkbox:checked');
+            $checkboxes.each(function() {
+                if (this.checked) {
+                    goods_ids.push(this.value);
+                };
+            });
+
+            if (goods_ids.length == 0) {
+                util.tips('请选择要操作的商品!', 2000);
+                return false;
+            }
+            var op = '';
+            var html = '';
+            if ($(this).hasClass('js-delete')) {
+                op = 'delete';
+                html = '确认删除?';
+            } else if ($(this).hasClass('js-remove')) {
+                op = 'remove';
+                html = '确认选中彻底删除?';
+            }
+            else if ($(this).hasClass('js-shenhe')) {
+                op = 'shenhe';
+                html = '确认审核选中商品?';
+            }
+            var $this = $(this);
+            util.nailConfirm(this, function(state) {
+                if(!state) return;
+                $.post("{php echo web_url('goods/goods/batch');}", {funcop : op, goods_ids : goods_ids}, function(data){
+                    if(!data.errno){
+                        $checkboxes.each(function() {
+                            $(this).parent().parent().remove();
+                        });
+                    };
+                    util.tips(data.message, 2000);
+                }, 'json');
+            }, {html: html});
+        });
+
+        $('.js-delete-goods, .js-off-shelves-goods, .js-on-shelves-goods, .js-remove-goods,.js-sellout-goods').click(function(e) {
+            e.stopPropagation();
+            var id = $(this).attr('goods-id');
+            var _this = $(this).parent().parent();
+            if ($(this).hasClass('js-delete-goods')) {
+                op = 'delete';
+                html = '确认删除?';
+            } else if ($(this).hasClass('js-remove-goods')) {
+                op = 'remove';
+                html = '确认选中彻底删除?';
+            } else if ($(this).hasClass('js-sellout-goods')) {
+                op = 'sellout';
+                html = '确认设置售罄?';
+            }
+            util.nailConfirm(this, function(state) {
+                if(!state) return;
+                $.post("{php echo web_url('goods/goods/single_op')}", {funcop : op, id : id}, function(data){
+                    if(!data.errno){
+                        _this.remove();
+                    };
+                    util.tips(data.message, 2000);
+                }, 'json');
+            }, {html: html});
+        });
+        var $pop = null;
+        $('.scrollLoading').hover(function(){
+            var img = $(this).attr('src');
+            var obj = this;
+            var $pop = util.popover(obj, function($popover, obj){
+                obj.$popover = $popover;
+            }, '<div><img src="'+img+'" style="max-width:200px; max-height:200px;"></div>');
+        }, function(){
+            this.$popover.remove();
+        });
+    });
+</script>
+{elseif $_GPC['op']=='refund_order'}
+	{php include wl_template('platform/refund_list');}
+{elseif $_GPC['op'] == 'shop'}
+	{php include wl_template('platform/orderlist');}
+{elseif $_GPC['op'] == 'order'}
+	{php include wl_template('platform/commodity_order');}
+{elseif $_GPC['op'] == 'collect'}
+	{php include wl_template('platform/order_detail');}
+{/if}
+
+
+{php include wl_template('common/footer');}

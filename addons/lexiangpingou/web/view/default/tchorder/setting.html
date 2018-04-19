@@ -1,0 +1,242 @@
+{php include wl_template('common/header');}
+<style>
+ .form-horizontal {
+    margin: 10px;
+    overflow: hidden;
+ }
+ .form-horizontal input[name="submit"] {
+    float: right;
+ }
+</style>
+<div class="panel panel-info">
+<div class="panel-heading">电子面单参数设置</div>
+<form action="{php echo web_url('order/tchorder',array('op'=>'set_appkey'))}" method="post" class="form-horizontal">
+{if !empty($res['appkey'])}
+    <div class="form-group">
+        <label for="firstname" class="col-sm-2 control-label">合作用户账号</label>
+        <div class="col-sm-10">
+          <input type="text" name="appkey" class="form-control" value="{$res['appkey']}" placeholder="合作用户账号">
+        </div>
+    </div>  
+{else}
+    <div class="form-group">
+        <label for="firstname" class="col-sm-2 control-label">合作用户账号</label>
+        <div class="col-sm-10">
+          <input type="text" name="appkey" class="form-control" value="{$res['appkey']}" placeholder="合作用户账号">
+        </div>
+    </div>  
+{/if}
+    {if !empty($res['EBusinessID'])}
+    <div class="form-group">
+        <label for="firstname" class="col-sm-2 control-label">合作用户密码 </label>
+        <div class="col-sm-10">
+          <input type="text" name="EBusinessID" class="form-control" value="{$res['EBusinessID']}" placeholder="合作用户密码">
+        </div>
+    </div>  
+    {else}
+    <div class="form-group">
+        <label for="firstname" class="col-sm-2 control-label">合作用户密码 </label>
+        <div class="col-sm-10">
+          <input type="text" name="EBusinessID" class="form-control" value="{$res['EBusinessID']}" placeholder="合作用户密码">
+        </div>
+    </div>  
+    {/if}
+    {if !empty($res['send_name'])}
+    <div class="form-group">
+        <label for="firstname" class="col-sm-2 control-label">send_name</label>
+        <div class="col-sm-10">
+          <input type="text" name="send_name" class="form-control" value="{$res['send_name']}" placeholder="send_name">
+        </div>
+    </div>  
+    {else}
+    <div class="form-group">
+        <label for="firstname" class="col-sm-2 control-label">send_name</label>
+        <div class="col-sm-10">
+          <input type="text" name="send_name" class="form-control" value="{$res['send_name']}" placeholder="send_name">
+        </div>
+    </div>  
+    {/if}
+    {if !empty($res['send_provinceName'])}
+    <div class="form-group">
+        <label for="firstname" class="col-sm-2 control-label">send_provinceName</label>
+        <div class="col-sm-10">
+          <input type="text" name="send_provinceName" class="form-control" value="{$res['send_provinceName']}" placeholder="send_provinceName">
+        </div>
+    </div>  
+    {else}
+    <div class="form-group">
+        <label for="firstname" class="col-sm-2 control-label">send_provinceName</label>
+        <div class="col-sm-10">
+          <input type="text" name="send_provinceName" class="form-control" value="{$res['send_provinceName']}" placeholder="send_provinceName">
+        </div>
+    </div>  
+    {/if}
+
+    {if !empty($res['send_cityName'])}
+    <div class="form-group">
+        <label for="firstname" class="col-sm-2 control-label">send_cityName </label>
+        <div class="col-sm-10">
+          <input type="text" name="send_cityName" class="form-control" value="{$res['send_cityName']}" placeholder="send_cityName">
+        </div>
+    </div>  
+    {else}
+    <div class="form-group">
+        <label for="firstname" class="col-sm-2 control-label">send_cityName </label>
+        <div class="col-sm-10">
+            <input type="text" name="send_cityName" class="form-control" value="{$res['send_cityName']}" placeholder="send_cityName">
+        </div>
+    </div>  
+    {/if}
+
+    {if !empty($res['send_expAreaName'])}
+    <div class="form-group">
+        <label for="firstname" class="col-sm-2 control-label">send_expAreaName </label>
+        <div class="col-sm-10">
+            <input type="text" name="send_expAreaName" class="form-control" value="{$res['send_expAreaName']}" placeholder="send_expAreaName">
+        </div>
+    </div>  
+    {else}
+    <div class="form-group">
+        <label for="firstname" class="col-sm-2 control-label">send_expAreaName </label>
+        <div class="col-sm-10">
+            <input type="text" name="send_expAreaName" class="form-control" value="{$res['send_expAreaName']}" placeholder="send_expAreaName">
+        </div>
+    </div>  
+    {/if}
+
+    {if !empty($res['send_address'])}
+    <div class="form-group">
+        <label for="firstname" class="col-sm-2 control-label">send_address</label>
+        <div class="col-sm-10">
+            <input type="text" name="send_address" class="form-control" value="{$res['send_address']}" placeholder="send_address">
+        </div>
+    </div>  
+    {else}
+    <div class="form-group">
+        <label for="firstname" class="col-sm-2 control-label">send_address</label>
+        <div class="col-sm-10">
+            <input type="text" name="send_address" class="form-control" value="{$res['send_address']}" placeholder="send_address">
+        </div>
+    </div>  
+
+    {/if}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    {if !empty($res['kd_option'])}
+    <div class="form-group">
+        <label for="firstname" class="col-sm-2 control-label">kd_option </label>
+        <div class="col-sm-10">
+           <select name="kd_option" id="" class="form-control">
+            <option value="SF" {if $res['kd_option'] == 'SF'} selected = 'selected' {/if}>顺丰</option>
+            <option value="YD" {if $res['kd_option'] == 'YD'} selected = 'selected' {/if}>韵达</option>
+            <option value="ZT" {if $res['kd_option'] == 'ZT'} selected = 'selected' {/if}>中通</option>
+            <option value="YT" {if $res['kd_option'] == 'YT'} selected = 'selected' {/if}>圆通</option>
+            <option value="ST" {if $res['kd_option'] == 'ST'} selected = 'selected' {/if}>申通</option>
+            <option value="TT" {if $res['kd_option'] == 'TT'} selected = 'selected' {/if}>天天</option>
+            <option value="BS" {if $res['kd_option'] == 'BS'} selected = 'selected' {/if}>百世</option>
+        </select>
+        </div>
+    </div>
+    {/if}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
+    {if !empty($res['PayType'])}
+    <div class="form-group">
+        <label for="firstname" class="col-sm-2 control-label">PayType</label>
+        <div class="col-sm-10">
+            <input type="text" name="PayType" class="form-control" value="{$res['PayType']}" placeholder="PayType">
+        </div>
+    </div>  
+    {else}
+    <div class="form-group">
+        <label for="firstname" class="col-sm-2 control-label">PayType</label>
+        <div class="col-sm-10">
+           <input type="text" name="PayType" class="form-control" value="{$res['PayType']}" placeholder="PayType">
+        </div>
+    </div>
+    {/if}
+
+    {if !empty($res['ExpType'])}
+    <div class="form-group">
+        <label for="firstname" class="col-sm-2 control-label">ExpType</label>
+        <div class="col-sm-10">
+           <input type="text" name="ExpType" class="form-control" value="{$res['ExpType']}" placeholder="ExpType">
+        </div>
+    </div> 
+    {else}
+    <div class="form-group">
+        <label for="firstname" class="col-sm-2 control-label">ExpType</label>
+        <div class="col-sm-10">
+           <input type="text" name="ExpType" class="form-control" value="{$res['ExpType']}" placeholder="ExpType">
+        </div>
+    </div>
+        
+    {/if}
+    <input type="submit" name="submit" value="提交" class="btn btn-primary btn-lg">
+</form>
+</div>
+{php include wl_template('common/footer');}

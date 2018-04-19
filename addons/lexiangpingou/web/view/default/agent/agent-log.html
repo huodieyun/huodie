@@ -1,0 +1,327 @@
+{php include wl_template('common/header');}
+<style>
+
+.modal-dialog table{text-align: center;}
+@media screen and (min-width: 1400px) { 
+	.sc .modal-dialog{
+		width: 1366px; height: 95%;
+		margin-top: 2%;
+	}
+	.sc .modal-content {
+	    width: 1366px; height: 95%;
+	}
+} 
+@media screen and (max-width: 1400px) { 
+	.sc .modal-dialog{
+		width: 1000px; height: 87%;
+		margin-top: 2%;
+	}
+	.sc .modal-content {
+	    width: 1000px; height: 87%;
+	}
+} 
+</style>
+<script>
+	function share(){
+		var referral = $("#Referral").val();
+
+		$.ajax({
+             type: "GET",
+             url: "{php echo web_url('agent/examine',array('op' => 'share'))}",
+             data:{"referral":referral},
+			 dataType: "json",
+             success: function(data){	
+				
+				
+			 }
+        });
+	}
+</script>
+
+<ul class="nav nav-tabs">
+	<li class="active"><a>代理详情</a></li>
+</ul>
+<div class="clearfix">
+ 
+<form >
+	<input type="hidden" name="acid" value="{$acid}">
+	<div class="panel panel-default">
+		<div class="panel-body table-responsive">
+			<div class="row">
+				<div class="panel panel-default" style="width: 33%; float: left;">
+				    <div class="panel-body sc" style="padding-top: 24px; padding-bottom: 24px;">
+				    	<input type="hidden" id="Referral" name="Referral" value="{$message['Referral']}">
+						<span>我的推荐码：{$message['Referral']}</span> <button id="layeee" class="btn btn-default" type="button" onclick="popwin = $('#modal-module-rule').modal();">规则</button>
+						<a id="showurl"  onclick="popwin = $('#modal-module-url').modal();"   id="copy"  >专属链接</a>
+						<div id="modal-module-rule" class="modal fade" tabindex="-1">
+							<div class="modal-dialog" style='padding: 30px; '>
+								<div class="modal-content" style=" padding: 30px; overflow-y:auto;">
+									<span style="font-size: 1.1em !important; line-height: 1.8em !important;">
+										<h2 style="text-align: center;font-size: 1.3em; font-weight:bold; margin: 20px;">乐享拼购推荐码推广活动规则</h2>
+<span style="font-weight:bold;">第一条 适用范围</span><br>
+1.1. 乐享拼购将通过向推广者发放推荐码的方式委托推广者向用户推广乐享拼购的服务/产品，为更好规范乐享拼购(即委托人)、推广者和用户的行为，明确各方的权利义务，并为更好的向广大用户推广乐享拼购的服务/产品，特拟定本规则。推广者通过乐享拼购推荐码推广乐享拼购的服务/产品，以及用户通过推荐码订购服务的，应遵守本规则。<br>
+<br>
+<span style="font-weight:bold;">第二条 推荐码的申请</span><br>
+2.1. 推广者提出申请，并经乐享拼购同意的，乐享拼购将向推广者提供推荐码。<br>
+2.1.1乐享拼购优先考虑目前在使用vip套餐的用户<br>
+2.1.2乐享拼购优先考虑对新零售拼团模式了解的个人、团队、公司<br>
+2.1.3乐享拼购优先考虑能对推荐商家提供简易操作培训的个人、团队、公司<br>
+2.2. 乐享拼购有权利根据推广者的情况及所提交的申请资料，独立审慎的判断是否通过推广者的推荐码申请。<br>
+2.3. 推广者因申请推荐码而向乐享拼购提交的申请材料应当真实、准确。<br>
+2.4. 推荐码将发送至推广者申请推荐码的乐享拼购账号。推广者应使用自己的账号向乐享拼购提出推荐码申请，如因借用、租用或因其他账号共用情形引起的纠纷，乐享拼购将不承担任何责任。<br>
+<br>
+第三条 推荐码的推广<br>
+3.1. 推广者可以通过推广者有合法使用权利的推广空间或其他合法方式，推广推荐码。<br>
+3.2. 推广者应通过正当手段推广乐享拼购推荐码，不采用任何欺骗或虚假性质的行为，不虚假、或扩大陈述乐享拼购的推广政策及优惠。<br>
+3.3. 推广者不应擅自修改推荐码，而致使他人将第三方及推广者与乐享拼购的身份或产品/服务相混淆。<br>
+3.4. 推广推荐码过程中实施的所有行为均遵守国家法律、法规等规范性文件、本规则及乐享拼购在官网相关页面公布和展示的关于推荐码推广的各项规则的规定和要求，不违背社会公共利益或公共道德，不损害他人的合法权益，不进行任何破坏乐享拼购推荐码推广活动的正常、公平交易秩序、交易规则以及任何损害乐享拼购利益的行为。<br>
+3.6. 以上3.2至3.4条所述行为一经出现，乐享拼购将终止与推广者的推广合作，乐享拼购同时有权向推广者追偿给乐享拼购造成的损失，且因此产生的任何法律后果，推广者应以自己的名义独立承担所有的法律责任。<br>
+<br>
+第四条 推荐码的使用<br>
+4.1. 通过推广者推广的尚在有效期的推荐码，用户在乐享拼购官网(www.lexiangpingou.cn)首次购买乐享拼购后台任意增值服务时，将享受服务费用9.5折的优惠。<br>
+<br>
+第五条 推广奖励<br>
+5.1．使用乐享拼购推荐码销售每一元为一个经验值，完成对应的经验值，系统将自动升级下一个等级！所有的获取的经验值可累计增加，季度增加经验为0将自动降1级直至青铜级别！绑定的标准为新用户在注册时填写的推荐码，他所产生的消费将自动转成对应的经验值！提现可以转入个人微信号或者个人银行卡<br>
+<p style="text-align: center; padding: 30px;"><img style="width: 70%;" src="{TG_URL_WRES}images/shuoming.png" /></p>
+5.2． 有效的推广业绩为，通过推广者推广注册时填入推荐码，用户在乐享拼购后台购买的任意功能实际支付金额。<br>
+5.3． 就推广者各月的有效推广业绩，乐享拼购将在订制15日之后予以统计，并自动将充值到可提现金额中。<br>
+5.4． 提现申请可支持线上微信红包方式发放或者个人银行卡转账，微信红包发放最小金额不能低于1元。<br>
+<br>
+第六条 推广活动的终止<br>
+6.1. 不论乐享拼购与推广者之间的推广合作因何原因以何方式终止，推广者了解并同意乐享拼购有权：<br>
+① 保存或不保存推广者因申请推荐码、进行推广而提交的材料，如保存的，乐享拼购承诺保密；<br>
+② 对于推广者在推广活动终止前实施的违法或违约行为，乐享拼购有追索权。<br>
+<br>
+第七条 其他<br>
+7.1. 定义<br>
+推广者：即推广者，是指取得乐享拼购账户的，并经乐享拼购同意发放推荐码的单位或个人。<br>
+用户：订购乐享拼购官网产品服务的客户。<br>
+推广空间：是指推广者合法运营或享有使用权的信息发布空间，包括但不限于网站网页、应用界面和/或即时通讯等软件空间及乐享拼购认可的其他媒体形式。<br>
+推荐码：是指乐享拼购通过技术生成的、在乐享拼购平台具有唯一识别性的数字和字母组合。乐享拼购保留对推荐码及展现形式进行自主调整的权利，该调整不以通知推广者为必要。<br>
+7.2. 乐享拼购有权随时修改本规则的相关内容，只需公示于乐享拼购官网，并通知推广者，而无需征得推广者的事先同意。修改后的规则应于公示、通知时或公示通知指定的时间即时生效。在乐享拼购修改本规则后，推广者如不同意相关变更的，应停止与乐享拼购的相关合作，否则如继续推广，应被视作已接受了修改后的规则。除非得到乐享拼购的书面授权，任何人将不得修改本规则。<br>
+7.3. 本规则的标题仅为方便阅读所设，非对条款的定义、限制、解释或描述其范围或界限。<br>
+7.4. 乐享拼购将在乐享拼购网站上公布并不时修订本规则及相关规则（包含隐私权政策），相关规则构成本协议的有效组成部分。<br>
+7.5. 乐享拼购有权在法律允许的范围内对本规则做出合理的解释。<br>
+7.6. 本规则自发放之日（2016年11月30日）生效。<br>
+
+									</span>
+									<p style="text-align: center; margin-top: 20px;">
+										<button type="button" class="btn btn-primary" data-dismiss="modal">
+	 										我已阅读 
+	            						</button>
+									</p>
+									
+								</div>
+							</div>
+						</div>
+						
+				    </div>
+				</div>
+				<div class="panel panel-default" style="margin-left: 2%; width: 65%; float: left;">
+				    <div class="panel-body">
+				    	<div class="row" style="margin-bottom: 10px; line-height: 20px;">
+
+					    	<div class="" style="float: left;"><span style="padding-top:10px ;">当前等级：<img style=" margin-right:5px; width:20px; height: 20px;" src="{if $message['level']==""}{TG_URL_WRES}images/lev1.png{else}{TG_URL_WRES}{$message['img']}{/if}" />{if $message['level']==""}青铜推客{/if}{$message['level']}</span></div>
+					    	<div class="col-md-3" style=" position: relative;">
+					    	
+					    		<a id="t1" onMouseOver="$('#mydiv2').show();" onMouseOut="$('#mydiv2').hide();" style="decoration:none;cursor:default;">
+					    			<div class="progress" style="margin: 0; ">
+								    	<div class="progress-bar" role="progressbar" aria-valuenow="{$message['bl']}" aria-valuemin="0" aria-valuemax="100" style=" width: {$message['bl']}%; min-width: 14%;">
+								    		{php echo number_format($message['bl'])}%
+								    		
+								    	</div>
+								    	
+									</div>
+								</a>
+								<div id="mydiv2" style="position:absolute ; z-index: 999; left:8%; bottom:30px; display: none;">
+					    			<div style="position:relative;left:8%;width: 140px;height: 20px;background:#428bca; color:#fff;text-align: center; position: relative; -moz-border-radius: 3px; -webkit-border-radius: 3px; border-radius:3px;">
+					    				{if $message['level']==""}0{/if}{$message['sum']}/{if $message['level']==""}30000{/if}{$message['maxprice']}.00
+					    				<div style="position: absolute;top:20px;left:65px;width: 0;height: 0;border-top: 10px solid #428bca;border-left: 6px solid transparent;border-right: 6px solid transparent; z-index: 999;"> 
+										</div>
+					    			</div>
+								</div> 
+					    	</div>
+						    <span>提成比例：{if $message['level']==""}10{/if}{$message['commission']}%</span><a class="btn btn-primary btn-xs" style="margin-left:20px ;" href="{php echo web_url('agent/agent',array('ops' =>'tx'))}">申请提现</a>
+				    	</div>
+				    	<span>累计获取提成：￥{php echo number_format($message['sum_r'],2)}</span>
+				    	<span style="margin-left: 20px;">累计已提金额：￥{php echo number_format($message['yt'],2)}</span>
+						<span style="margin-left: 20px;">未提余额：￥{php echo number_format($message['wt'],2)}</span>
+				    </div>
+				</div>
+			</div>
+			
+			<ul  class="nav nav-tabs">
+	            <li >
+	              <a href="{php echo web_url('agent/agent',array('ops' =>'post'))}" >推广订单 </a>
+	            </li>
+	            <li class="active">
+	              <a href="{php echo web_url('agent/agent',array('op' =>'log'))}" >提成记录</a>
+	            </li>
+	        </ul>
+			<div >
+				<div >
+					<table class="table" style="width: 100%; ">
+						<thead style="font-size: 14px;">
+							<tr>
+								<th style="line-height: 24px; text-align: center;">昵称 </th>
+								<th style="line-height: 24px; text-align: center;">提现方式</th>
+								<th style="line-height: 24px; text-align: center;">状态</th>
+								<th style="line-height: 24px; text-align: center;">提现金额</th>
+								<th style="line-height: 24px; text-align: center;">申请时间</th>
+								<th style="line-height: 24px; text-align: center;">发放时间 </th>
+							</tr>
+						</thead>
+						<tbody>
+							{loop $log $item}
+							<?php 
+
+			                    $sql3 = 'SELECT * FROM '.tablename('tg_member').' WHERE from_user=:openid and uniacid=:uniacid';
+			
+			                    $params3 = array(':openid'=>$item['openid'],':uniacid'=> 33);
+			
+			                    $good3 = pdo_fetch($sql3, $params3);
+			
+			      			?>
+							<tr style="background-color: #fff; font-size: 12px;">
+							<!--<td class="text-center" style="width:60px;"><input type="checkbox" name="checkbox[]"  value="{$item['id']}" /></td>-->
+						
+								<td class="" >
+									<span>{$item['nickname']}</span>
+								</td>
+								<td class="" style="text-align: left; padding-left: 3%;">
+									<span>
+									{if $item['pstatus']==1 }
+										<span class="label label-success">线上提款</span>
+									{/if}
+									{if $item['pstatus']==2 }
+										<span class="label label-info">线下提款</span>
+									{/if}
+									</span>
+									<button id="layer" style="display: none;" class="btn btn-default" type="button" onclick="popwin = $('#modal-module-rule_1').modal();">隐藏点击</button>
+									<button class="btn btn-default btn-xs" type="button" id="seekTel" onclick="showdet({$item['id']})">查看详情</button>
+								</td>
+								<td class="" >
+									<span>
+										{if $item['status']==-1 }
+											<span class="label label-danger">审核失败</span>
+										{/if}
+										{if $item['status']==0 }
+											<span class="label label-warning">未审核</span>
+										{/if}
+										{if $item['status']==1 }
+											 <span class="label label-primary">待发放</span>
+										{/if}
+										{if $item['status']==2 }
+											 <span class="label label-success">已发放</span>
+										{/if}
+									</span>
+								</td>
+								<td class="" >
+									<span>{$item['money']}</span>
+								</td>
+								<td class="" >
+									<span>{$item['stime']}</span>
+								</td>
+		
+								<td class="" style="text-align: center">
+									{if $item['ftime']=="" }
+											<span>————</span>
+									{else}
+											<span>{$item['ftime']}</span>	
+									{/if}
+								</td>
+							</tr>
+							{/loop}
+						</tbody>
+						
+					</table>
+					{$pager}
+				</div>
+			</div>
+			
+		</div>
+	</div>
+</form>
+
+</div>
+{php include wl_template('common/footer');}
+<div id="modal-module-rule_1" class="modal fade" tabindex="-1">
+							<div class="modal-dialog" style='width:1000px; height:85%; font-size: 14px; text-align: left; padding: 30px; '>
+								<div class="modal-content" style="  padding: 30px; ">
+									<div id="orderWinpop">
+								
+									
+									</div>
+										
+									<p style="text-align: center; margin-top: 20px;">
+										<button type="button" class="btn btn-primary" data-dismiss="modal">
+	 										关闭 
+	            						</button>
+									</p>
+									
+								</div>
+							</div>
+						</div>
+<div id="modal-module-url" class="modal fade " tabindex="-1">
+							<div class="modal-dialog" style='width:1000px; margin-top: 10%; height:85%;font-size: 14px; text-align: left; padding: 30px; '>
+								<div class="modal-content" style=" padding: 30px; ">
+									<h4 style="text-align: center; margin-bottom: 40px;">我的专属分享链接</h4>
+									<div id="xurl" style="text-align: center; font-size: 14px; color: red;">
+										<label>http://w9.huodiesoft.com/web/index.php?Referral={$message['Referral']}</label>
+									
+									</div>
+									<div id="xurl" style="text-align: center; font-size: 14px; margin-top: 20px;">
+										<label>注：用户若用此链接访问网站并注册，将自动填写您的推荐码，推荐就是这么简单！</label>
+									
+									</div>
+									<p style="text-align: center; margin-top: 20px;">
+										<button type="button" class="btn btn-primary" data-dismiss="modal">
+	 										关闭
+	            						</button>
+									</p>
+									
+								</div>
+							</div>
+						</div>
+<script>
+function showdet(str){
+		var id = str; 
+		 $.ajax({
+             type: "GET",
+             url: "{php echo web_url('agent/examine',array('op' => 'det'))}",
+             data:{"id":id},
+			 dataType: "json",
+             success: function(data){	
+				var a = JSON.stringify(data.log);
+				var b;
+				var html = '<div class="clearfix box"><label class="col-md-2  control-label box">昵称： </label> <div class="col-md-7" style="float:left"><span>'+data.nickname+'</span></div></div>';
+				html +='<div class="clearfix box"><label class="col-md-2 control-label">提现方式： </label><div class="col-md-7" style="float:left"><span>'+data.pstatus+'</span></div></div>';
+				html +='<div class="clearfix box"><label class="col-md-2 control-label">微信号： </label><div class="col-md-7" style="float:left"><span>'+data.openid+'</span></div></div>';
+				html +='<div class="clearfix box"><label class="col-md-2 control-label">提现金额： </label><div class="col-md-7" style="float:left"><span>'+data.money+'</span></div></div>';
+				if(data.cardno != ""){
+					html +='<div class="clearfix box"><label class="col-md-2 control-label">持卡人： </label><div class="col-md-7" style="float:left"><span>'+data.name+'</span></div></div>';
+					html +='<div class="clearfix box"><label class="col-md-2 control-label">开户行： </label><div class="col-md-7" style="float:left"><span>'+data.blank+'</span></div></div>';
+					html +='<div class="clearfix box"><label class="col-md-2 control-label">银行卡号：  </label><div class="col-md-7" style="float:left"><span>'+data.cardno+'</span></div></div>';
+				}
+				html +='<div class="clearfix box"><label class="col-md-2 control-label">申请时间：  </label><div class="col-md-7" style="float:left"><span>'+data.stime+'</span></div></div>';
+				html +='<div class="clearfix box"><label class="col-md-2 control-label">发放时间：  </label><div class="col-md-7" style="float:left"><span>'+data.ftime+'</span></div></div>';
+				if(data.note != null){
+					html +='<div class="clearfix box"><label class="col-md-2 control-label" style="color: red;">失败原因备注：  </label><div class="col-md-7" style="float:left"><span>'+data.note+'</span></div></div>';
+				}
+				html +='<table class="table table-bordered" ><thead><tr><td>订单id</td><td>公众号名称</td><td>支付时间</td><td>订单支付金额</td><td>本次提成</td></tr></thead><tbody>';
+				b = eval(data.log);
+				for(var i=0;i<b.length;i++){
+			         html +='<tr><td>'+b[i].orderno+'</td><td>'+b[i].name+'</td><td>'+b[i].ptime+'</td><td>'+b[i].cash+'元</td><td  style="text-align:center">'+b[i].refund_cash+'元</td></tr>';
+			         }//end read data
+				
+				html +='</tbody></table>';
+				
+				
+				$("#orderWinpop").append(html);
+				$("#layer").trigger("click");
+				
+			 }
+         });
+		$("#orderWinpop").empty();
+	}
+</script>

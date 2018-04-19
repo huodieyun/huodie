@@ -1,0 +1,196 @@
+{php include wl_template('common/header');}
+
+<style>
+    .container{
+        background:#fff;
+        padding: 10px;
+        height:652px;
+    }
+    #shangchengZHL{
+        height: 500px;
+    }
+    .container label{
+        width: 60px;
+        line-height: 34px;
+    }
+</style>
+<div class="container">
+    <div class="col-xs-6">
+        <table class="table table-striped">
+            <tr>
+                <th>
+                    <label class="col-xs-12 col-sm-2 col-md-2 col-lg-1 control-label">日期</label>
+                    <div class="col-sm-4">
+                        <script type="text/javascript">
+                            require(["daterangepicker"], function($){
+                                $(function(){
+                                    $(".daterange.daterange-date").each(function(){
+                                        var elm = this;
+                                        $(this).daterangepicker({
+                                            startDate: $(elm).prev().prev().val(),
+                                            endDate: $(elm).prev().val(),
+                                            format: "YYYY-MM-DD"
+                                        }, function(start, end){
+                                            $(elm).find(".date-title").html(start.toDateStr() + " 至 " + end.toDateStr());
+                                            $(elm).prev().prev().val(start.toDateStr());
+                                            $(elm).prev().val(end.toDateStr());
+                                        });
+                                    });
+                                });
+                            });
+                        </script>
+                        <input name="time[start]" type="hidden" value="2017-03-03">
+                        <input name="time[end]" type="hidden" value="2017-03-11">
+                        <button class="btn btn-default daterange daterange-date" type="button"><span class="date-title">2017-03-03 至 2017-03-11</span> <i class="fa fa-calendar"></i></button>
+                    </div>
+                </th>
+                <th></th>
+                <th></th>
+                <th></th>
+            </tr>
+            <tr>
+                <td>访客数<br>{php echo json_encode($hit)}</td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>下单人数<br>{php echo json_encode($hit)}</td>
+                <td>下单笔数<br>{php echo json_encode($hit)}</td>
+                <td>下单金额<br>{php echo json_encode($hit)}</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>付款人数<br>{php echo json_encode($hit)}</td>
+                <td>付款笔数<br>{php echo json_encode($hit)}</td>
+                <td>付款金额<br>{php echo json_encode($hit)}</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>成功人数<br>{php echo json_encode($hit)}</td>
+                <td>成功笔数<br>{php echo json_encode($hit)}</td>
+                <td>成功金额<br>{php echo json_encode($hit)}</td>
+                <td>客单价<br>{php echo json_encode($hit)}</td>
+            </tr>
+            <tr>
+                <td colspan="4" style="height: 57px;text-align: left">商城转化率(访客→成功) {php echo json_encode($hit)}</td>
+            </tr>
+            <tr>
+                <td colspan="4" style="height: 57px;text-align: left">商城支付转化率(访客→付款) {php echo json_encode($hit)}</td>
+            </tr>
+        </table>
+    </div>
+    <div  class="col-xs-6">
+        <div id="shangchengZHL"></div>
+    </div>
+
+
+</div>
+<script>
+    var optionCommon = {
+        title : {
+            text: '',
+            subtext: ''
+        },
+        tooltip : {
+            trigger: 'item',
+            formatter: "{a} <br/>{b} : {c}%"
+        },
+        toolbox: {
+            show : false,
+            feature : {
+                mark : {show: true},
+                dataView : {show: true, readOnly: false},
+                restore : {show: true},
+                saveAsImage : {show: true}
+            }
+        },
+        legend: {
+            data : ['访问','下单','付款','成功']
+        },
+        calculable : true,
+        series : [
+            {
+                name:'商城转化率',
+                type:'funnel',
+                x: '10%',
+                y: 60,
+                //x2: 80,
+                y2: 60,
+                width: '80%',
+                // height: {totalHeight} - y - y2,
+                min: 0,
+                max: 100,
+                minSize: '0%',
+                maxSize: '100%',
+                sort : 'descending', // 'ascending', 'descending'
+                gap : 10,
+                itemStyle: {
+                    normal: {
+                        // color: 各异,
+                        borderColor: '#fff',
+                        borderWidth: 1,
+                        label: {
+                            show: true,
+                            position: 'inside'
+                            // textStyle: null      // 默认使用全局文本样式，详见TEXTSTYLE
+                        },
+                        labelLine: {
+                            show: false,
+                            length: 10,
+                            lineStyle: {
+                                // color: 各异,
+                                width: 1,
+                                type: 'solid'
+                            }
+                        }
+                    },
+                    emphasis: {
+                        // color: 各异,
+                        borderColor: 'red',
+                        borderWidth: 5,
+                        label: {
+                            show: true,
+                            formatter: '{b}:{c}%',
+                            textStyle:{
+                                fontSize:20
+                            }
+                        },
+                        labelLine: {
+                            show: true
+                        }
+                    }
+                },
+                data:[
+                    {value:80, name:'访问'},
+                    {value:60, name:'下单'},
+                    {value:40, name:'付款'},
+                    {value:30, name:'成功'}
+                ]
+            }
+        ]
+    };
+    // 路径配置
+    require.config({
+        paths: {
+            echarts: "//www.lexiangpingou.cn/addons/lexiangpingou/web/resource/js/echarts/build/dist"
+        }
+    });
+    require(
+            [
+                'echarts',
+                'echarts/chart/bar', // 使用柱状图就加载bar模块，按需加载
+                'echarts/chart/line',
+                'echarts/chart/funnel',
+                'echarts/chart/pie'
+            ],
+            function (ec) {
+                // 基于准备好的dom，初始化echarts图表
+                var myChart = ec.init(document.getElementById('shangchengZHL'));
+                var option =optionCommon;
+                myChart.setOption(option);
+            }
+    )
+
+</script>
+{php include wl_template('common/footer');}

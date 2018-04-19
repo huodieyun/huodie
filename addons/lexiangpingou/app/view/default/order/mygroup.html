@@ -1,0 +1,83 @@
+{php include wl_template('common/header');}
+<style>
+	.buttons-tab .button.active{
+		color: {$_W['system_color']};
+		border-color: {$_W['system_color']};
+	}
+	.weui_btn.weui_btn_mini{
+		color: #fff;
+	}
+	.m-cart .empty a {
+		color: {$_W['system_color']};
+	}
+	.mt_g_price,.mt_g_price i,.weui_btn_blue{
+		background-color: {$_W['system_color']} !important;
+	}
+	.mt_g_price b.iconal-qunzuduoren{
+		left: -10px;
+		background: #fff!important;
+		border-radius: 50%;
+		width: 35px;
+		height: 35px;
+		line-height: 30px;
+		text-align: center;
+		top: -5px;
+		font-size: 20px;
+		position: absolute;
+		font-weight: 400;
+		color: {$_W['system_color']};
+		border: 2px solid {$_W['system_color']};
+	}
+
+</style>
+<div class="page-group">
+    <div class="page page-current" id="page-index">
+		<div class="content infinite-scroll native-scroll" data-distance="10">
+		    <div class="buttons-tab" style="z-index: 100;">
+		      <a href="#tab1" class="tab-link button {if $op==3 || $op==0}active{/if}" id="3">组团中</a>
+		      <a href="#tab2" class="tab-link button {if $op==2}active{/if}" id="2">组团成功</a>
+		      <a href="#tab3" class="tab-link button {if $op==1}active{/if}" id="1">组团失败</a>
+		    </div>
+			<div style="height: 5px;"></div>
+
+		  	<div class="con">
+		  		{if empty($orders)}
+		  		<div class="m-cart" id="s"><div class="empty" id="pro-view-6">暂无数据，<a href="{php echo app_url('goods/index')}" class="external">马上去逛逛~</a></div></div>
+		    	{/if}
+		    	{loop $orders $order}
+					
+					
+			        <div class="mt_order" style="position:relative;"  id="groups">
+					<div class="mt_g1" >{php echo date('Y-m-d H:i:s', $order['ptime'])} 团单号：{$order['tuan_id']} </div>
+					{if $order['groupstatus'] != 3}<img src="{TG_URL_ARES}images/{if $order['groupstatus'] == 2}success{/if}{if $order['groupstatus'] == 1}fail{/if}.png" style="position:absolute;right:20px;top:10px;height:80px;width:80px;border-radius:50%;z-index:10086;">{/if}
+			        	<div class="mt_g">
+			        		<div class="mt_g_img"><a href="{php echo app_url('goods/goods_detail', array('id'=>$order['g_id']));}" class="external"><img src="{php echo tomedia($order['gimg']);}"></a> 
+			        		</div> 
+			        		<div class="mt_g_info" style="color:white!important"><p class="mt_g_name">{$order['gname']}</p> <p class="mt_g_price"><b class="iconal-qunzuduoren"></b> 成团价： <span> <b> ￥{$order['gprice']}</b>/{$order['unit']} </span> <i style="background-color:#6fbfd8"></i></p> </div>
+			        	</div> 
+			        	<div class="mt_status" style="padding: 0px 10px;"><span class="mt_status_txt">{if $order['groupstatus'] == 3}组团进行中{elseif $order['groupstatus'] == 2}团购成功{else}团购失败{/if} </span>
+			        		<a class="weui_btn weui_btn_mini weui_btn_blue mt_status_lk external" href="{php echo app_url('order/group', array('tuan_id'=>$order['tuan_id']));}" {if $order['groupstatus'] == 1}style="margin-right: 5px;"{/if}> 查看团详情 </a> 
+			        	</div>
+			        </div>
+			    {/loop}
+	        {if !$banquanfunction['status']}
+	        <div class="noData" style="font-size:1.0em;color:#c3c3c3;">
+			<div><a href="http://www.lexiangpingou.cn"><img src="{TG_URL_ARES}images/bbb.png" width="40%"></a><div>火蝶科技技术热线:400-626-1079</div></div>
+			</div>
+			{/if}
+		   </div>
+		    <div style="height:58px;visibility:hidden "></div>
+		</div>
+		
+		{php include wl_template('common/footerbar');}
+	</div>
+
+</div>
+<script>
+$('.buttons-tab').find('a').click(function(){
+	var status = $(this).attr('id');
+	$(this).addClass('active').siblings().removeClass('active');
+	location.href = "{php echo app_url('order/mygroup')}&op="+status;
+});
+</script>
+{php include wl_template('common/footer');}

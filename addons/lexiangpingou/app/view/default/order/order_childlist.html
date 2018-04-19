@@ -1,0 +1,247 @@
+{php include wl_template('common/header');}
+    <style>
+        .m-cart .empty a{color: {$_W['system_color']}}
+        .link-ding {width:96%;margin:auto;height:auto;background-color:white;border-radius:5px;margin-bottom:6px; }
+        .link-ding-header{width:90%;position:relative;left:5%;height:40px;border-bottom:1px solid #ccc;}
+        .link-ding-header div:first-child{position:absolute;top:12.5px;height:22.5px;line-height:22.5px;color:#6fbfd8;font-size:14px;}
+        .link-ding-header div:nth-child(2) {position:absolute;top:35px;height:15px;line-height:15px;color:#888;font-size:10px;}
+        .link-ding-header div:nth-child(3) {position:absolute;top:45px;height:15px;line-height:15px;color:#888;font-size:10px;}
+        .link-ding-header span{background-color:hsl(36, 100%, 49%);display:block;width:65px;height:22.5px;top:12.5px;right:0px;border-radius:5px;color:white;font-size:14px;line-height:22.5px;position:absolute;text-align:center;}
+        .link-ding-body {width:90%;margin-left:5%;margin-top:5px;font-size:12px;color:#333;}
+        .link-ding-body>div {position:relative;margin-bottom:10px;}
+        .link-ding-body>div div:last-child{position:absolute;right:5%;top:0px;color:#6fbfd8;bottom:0px;margin:auto;}
+        .link-ding-body>div div:nth-child(3) {position:absolute;right:30%;top:0px;bottom:0px;margin:auto;}
+        .link-body-feight {position:relative;margin-top:10px;color:#999;padding: 5px 0;}
+        .link-total{position:absolute;right:0px!important;top:0px;color:#999!important;}
+        .link-ding-footer {
+            width:90%;margin-left:5%;color:white;border-top:1px solid #ccc;padding-bottom:1px;
+            width: 96%;
+            margin-left: 2%;
+            color: white;
+            border-top: 1px solid #ccc;
+            padding-bottom: 1px;
+            background: #fff;
+            margin-top: -5px;
+            margin-bottom: 5px;
+        }
+        .link-ding-footer>div:first-child {margin-top:10px;margin-bottom:10px;margin-left:10%;width:30%;height:27.5px;line-height:27.5px;text-align:center;font-size:12px;border-radius:5px;color:#999;border:1px solid #999;}
+        .link-ding-footer>div:last-child {
+            left: 60%;
+            width: 30%;
+            height: 27.5px;
+            line-height: 27.5px;
+            text-align: center;
+            top: -5px;
+            font-size: 12px;
+            border-radius: 5px;
+            background-color: #6fbfd8;
+            display: block;
+            position: absolute;
+        }
+        #order-group-detail {
+            left: 35%;
+            width: 30%;
+            height: 27.5px;
+            line-height: 27.5px;
+            text-align: center;
+            top: 10px;
+            font-size: 12px;
+            border-radius: 5px;
+            background-color: #6fbfd8;
+            display: block;
+            color:white;
+            position: absolute;
+        }
+        #order-serves {
+            width: 30%;
+            height: 27.5px;
+            line-height: 27.5px;
+            text-align: center;
+            top: 10px;
+            font-size: 12px;
+            border-radius: 5px;
+            background-color: #6fbfd8;
+            display: block;
+            color:white;
+            position: absolute;
+        }
+        #order-detail {
+            margin-top:10px;
+            margin-bottom:10px;
+            color:white!important;
+            margin-left:70%;
+            width:30%;
+            height:27.5px;
+            line-height:27.5px;
+            text-align:center;
+            font-size:12px;
+            border-radius:5px;
+            color:#999;
+        }
+        #order-final {
+                width: 30%;
+                height: 27.5px;
+                line-height: 27.5px;
+                text-align: center;
+                top: 10px;
+                font-size: 12px;
+                border-radius: 5px;
+                background-color: #6fbfd8;
+                display: block;
+                color:white;
+                position: absolute;
+        }
+        .small-confim {
+            position: absolute;
+            top: 0;
+            margin-top: 10px;
+        }
+    </style>
+    <style>
+        .back {
+            color:#f99b00;
+        }
+        .back .p-16 {
+            font-size: 16px;
+        }
+        #btn-received {
+            border: 1px solid #6FBFD8;
+            color: #6FBFD8;
+        }
+    </style>
+{if $uniacid_tpl['tpl']==8190||$uniacid_tpl['tpl']==8193}
+<style>
+    /*我的订单*/
+    .link-ding-header div:first-child,.link-ding-body>div div:last-child>span,.link-ding-body>div div:last-child{
+        color: #e4393c !important;
+    }
+    .m-cart .empty a{
+        color: #e4393c;
+    }
+    .link-ding-footer>a,.link-ding-footer>div:last-child{
+        background-color: #e4393c !important;
+    }
+    .link-ding-body>div div.link-total{
+        color:#999 !important;
+    }
+
+</style>
+{/if}
+
+<div class="page-group">
+
+    <div class="page page-current" id="page-order-list">
+        <div class="buttons-tab" style="z-index: 100;">
+            <header class="bar bar-nav">
+                <a class="pull-left back" href="javascript:history.go(-1);">
+                    <span class="icon icon-left"><span class="p-16">返回</span></span>
+                </a>
+                <h1 class="title">已发货子订单</h1>
+                <a class="pull-right" href="{php echo app_url('order/order/list')}">
+                    <span class="icon back"><span class="p-16">所有订单</span></span>
+                </a>
+            </header>
+        </div>
+        <div class="content infinite-scroll native-scroll" data-distance="10">
+            <div class="tabs" style="padding-top: 2.8rem;">
+                {loop $c_order $item}
+                    <div class="link-ding">
+                        <div class="link-ding-header">
+                            <div>订单号:{$item['c_orderno']}</div>
+                            {if $item['status'] == 2}
+                            <span>已发货</span>
+                            {elseif $item['status'] == 3}
+                            <span>已签收</span>
+                            {/if}
+                        </div>
+                        <div class="link-ding-body">
+                            {loop $item['goods'] $i}
+                            <div>
+                                <div>{$i['goodsname']}</div>
+                                <div style="position:absolute;right:30%;top:0px;bottom:0px;margin:auto;" >x{$i['num']}</div>
+                            </div>
+                            {/loop}
+                        </div>
+                        <div class="link-ding-footer" style="position:relative;">
+                            {if $item['status'] == "2"}
+                            <a href="#" onclick="confirm('{$item['orderno']}', '{$item['id']}')" class="small-confim external weui_btn weui_btn_mini weui_btn_blue">确认收货</a>
+                            {/if}
+                            <a href="{php echo app_url('order/order/childdetail');}id={$item['id']}" id="order-detail" class="weui_btn weui_btn_mini weui_btn_blue field-btn-gray external">订单详情</a>
+                        </div>
+                    </div>
+                {/loop}
+
+            </div>
+
+             <div class="list" style="background-color: #efeff4;">
+                <div class="loading_more" style="padding-top: 15px;display: none;font-size:1.2em;font-weight:bold;"><span class="loading"><i class="icon_load"></i>正在玩命的加载中......</span></div>
+                <div class="error">加载失败，点击重新加载</div>
+
+
+                <div class="noData" style="font-size:1.0em;color:#c3c3c3;">全部数据加载完毕
+                {if !$banquanfunction['status']}<div><a href="http://www.lexiangpingou.cn"><img src="{TG_URL_ARES}images/bbb.png" width="40%"></a><div>火蝶科技技术热线:400-626-1079</div></div>{/if}
+                </div>
+
+            </div>
+
+            <div class="bottombar-down">
+                <div class="bottombar">
+
+                    <div class="bottombar-main" style="margin-left:15px;">
+                        <div class="bottombar-buttonwrap bottombar-buttonwrap-3" style="overflow: hidden;">
+
+                            <button class="combtn bottombar-btn-red" style="width: 23%;" onclick="location.href='{php echo app_url('order/order/detail');}id={$order['id']}'">主订单详情</button>
+                            {if $order['status'] != 8}
+                            <button id="btn-received" class="combtn bottombar-btn-dark" no="{$order['orderno']}" oid="{$order['id']}" style="width:85px;">全部收货</button>
+                            {/if}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+<script type="text/javascript">
+    var data = {php echo json_encode($c_order)};
+    var oo = {php echo json_encode($order)};
+    console.log(data);
+    console.log(oo);
+    // 确认收货
+    $(document).on('click','#btn-received',function(){
+        var id = $(this).attr('oid');
+        $.confirm('是否确认全部收货？',
+            function () {
+                $.post("{php echo app_url('order/order/receipt')}",{orderno:id},function(d){
+                    if(d.status == 1){
+                        // 619953
+                        $.toast('全部确认收货成功！');
+                        setTimeout(function () {
+                            location.href = "{php echo app_url('order/order/detail')}id=" + id;
+                        }, 1000);
+                    }else{
+                        $.toast('发生错误');
+                    }
+                },"json");
+            }
+        );
+    });
+    function confirm(orderno, id) {
+        $.confirm('是否确认收货？',
+            function () {
+                $.post("{php echo app_url('order/order/childconfirm')}",{orderno:orderno, id:id},function(d){
+                    if(d.errCode == 1){
+                        $.toast('确认收货成功！');
+                            window.location.reload()
+                    }else{
+                        $.toast('发生错误');
+                    }
+                },"json");
+            }
+        );
+    }
+
+</script>
+{php include wl_template('common/footer');}

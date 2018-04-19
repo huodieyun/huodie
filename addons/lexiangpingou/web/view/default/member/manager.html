@@ -1,0 +1,433 @@
+{php include wl_template('common/header');}
+<ul class="nav nav-tabs">
+    <li {if $op=='index' }class="active" {/if}>
+        <a href="{php echo web_url('member/time', array('op'=>'index'));}">模板管理</a>
+    </li>
+    <li {if $op=='save' }class="active" {/if}>
+        <a href="{php echo web_url('member/time', array('op'=>'save'));}">新增模板</a>
+    </li>
+    {if $op == 'update'}
+    <li class="active">
+        <a href="{php echo web_url('member/time', array('op'=>'update', 'id'=>intval($_GPC['id'])));}">编辑模板
+		</a>
+    </li>
+    {/if}
+</ul>
+<div class="main">
+    {if $op == 'save'}
+    <form action="" method="post" class="form-horizontal form" id="form1">
+        <div class="panel panel-default">
+            <div class="panel-heading">新增模板</div>
+            <div class="panel-body">
+                <div class="form-group">
+                    <label class="col-xs-12 col-sm-3 col-md-2 control-label">
+						<span class="text-danger">*</span>
+						标题
+					</label>
+                    <div class="col-xs-12 col-sm-9 col-md-10">
+                        <input class="form-control" type="text" name="title" value="" placeholder="该标题仅提供识别，与模板消息内容无关" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-xs-12 col-sm-3 col-md-2 control-label">
+						<span class="text-danger">*</span>
+						模板ID
+					</label>
+                    <div class="col-xs-12 col-sm-9 col-md-10">
+                        <!--<input class="form-control" type="text" name="mid" value="" />-->
+                        <select id="tpllist" class="form-control" name="mid">
+							<!-- <option {if empty($message_id['m_pay'])}style="display: none"{/if} value="{$message_id['m_pay']}">支付成功模板</option>
+							<option {if empty($message_id['m_daipay'])}style="display: none"{/if} value="{$message_id['m_daipay']}">代付成功模板</option>
+							<option {if empty($message_id['m_tuan'])}style="display: none"{/if} value="{$message_id['m_tuan']}">组团成功模板</option>
+							<option {if empty($message_id['m_nocash'])}style="display: none"{/if} value="{$message_id['m_nocash']}">未支付订单模板</option>
+							<option {if empty($message_id['m_send'])}style="display: none"{/if} value="{$message_id['m_send']}">发货模板</option>
+							<option {if empty($message_id['m_ref'])}style="display: none"{/if} value="{$message_id['m_ref']}">退款模板</option>
+							<option {if empty($message_id['m_buy'])}style="display: none"{/if} value="{$message_id['m_buy']}">单买(购物车)支付模板</option>
+							<option {if empty($message_id['m_change'])}style="display: none"{/if} value="{$message_id['m_change']}">降价或上架消息提醒模板</option> -->
+						</select>
+                        <div class="help-block">调用模板消息接口时需提供模板ID。</div>
+                        <div class="help-block" style="color: red">为避免恶意投诉模板库被删除后，系统无法发送常规使用的模板，使用此功能请去微信公众号后台模板消息--模板库中查找不常用类型的模板群发。</div>
+                    </div>
+                </div>
+                <!--<div class="form-group">-->
+                <!--<label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label"><span style='color:red'>*</span>活动推送时间</label>-->
+                <!--<div class="col-md-10">-->
+                <!--<div class="input-group">-->
+                <!--<input type="number" id="times" name="times" class="form-control" value="" />-->
+                <!--<span class="input-group-addon">小时前(正数表示活动前推送，负数表示活动后未到推送)</span>-->
+                <!--</div>-->
+                <!--</div>-->
+                <!--</div>-->
+                <div class="form-group" style="display: none">
+                    <label class="col-xs-12 col-sm-3 col-md-2 control-label">
+						<span class="text-danger">*</span>
+						详细内容
+					</label>
+                    <div class="col-xs-12 col-sm-9 col-md-10">
+                        <textarea class="form-control" name="content" rows="8"></textarea>
+                        <br/>
+                        <div class="help-block">模板消息的详细内容，可从微信模板消息获得。</div>
+                        <a id="J_resolve" class="btn btn-info" title="解析模板内容" href="javascript:;">解析模板内容</a>
+                    </div>
+                </div>
+                <div id="J_KeyValue" class="form-group" style="display:none;">
+                    <label class="col-xs-12 col-sm-3 col-md-2 control-label">
+						<span class="text-danger">*</span>
+						群发模板
+					</label>
+                    <div class="col-xs-12 col-sm-9 col-md-10">
+                        <div id="J_keyValue_Content"></div>
+                        <div class="help-block">模板消息在供第三方插件使用时默认值可不填写，颜色可不填写会有统一的默认颜色。</div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-xs-12 col-sm-3 col-md-2 control-label">跳转链接</label>
+                    <div class="col-xs-12 col-sm-9 col-md-10">
+                        <input class="form-control" type="text" name="url" value="" />
+                        <div class="help-block">该链接不是必填项,链接过长的时候可以使用短链接转换下。</div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-xs-12 col-sm-9 col-md-10 col-sm-offset-3 col-md-offset-2">
+                        <button class="btn btn-primary" name="submit" type="submit" value="1">保存</button>
+                        <input name="token" type="hidden" value="{$_W['token']}" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+   
+    <script type="text/javascript">
+		//加载模板ID
+        var tpllist={$tpl_list};
+        var html='<option>请选择模板</option>';
+        for(var i=0;i<tpllist.template_list.length;i++){
+			html+='<option value="'+tpllist.template_list[i].template_id+'" data-str="'+tpllist.template_list[i].content+'">'+tpllist.template_list[i].title+'</option>';
+		}
+        $('#tpllist').html(html);
+
+		//解析
+		$('#tpllist').change(function(){
+		    if($('#tpllist option:selected').html()=='请选择模板'){
+		        $('#J_keyValue_Content').html('');
+                $('#J_KeyValue').css('display','none');
+			}else {
+                $('textarea').html($('#tpllist option:selected').attr('data-str'));
+                $('#J_resolve').click();
+            }
+		});
+
+
+
+
+        require(["jquery", "util"], function($, util) {
+            var i = 0;
+            var main = $("#J_keyValue_Content");
+
+            function addline(key) {
+                var html = '<div class="form-inline" style="margin-bottom:5px;"><input class="form-control" readonly="" name="key[' + i + ']" value="' + key + '" placeholder="键"/> : <input class="form-control" name="value[' + i + ']" placeholder="默认值"/>  : <input class="form-control" name="color[' + i + ']" placeholder="颜色"/></div>';
+                main.html(main.html() + html);
+                i += 1;
+            }
+            $(function() {
+                //解析
+                $("#J_resolve").on("click", function() {
+                    var content = $("[name=content]").val();
+                    if (content == "" || content == undefined) {
+                        util.message("该详细内容无法解析！", "", "error");
+                        return false;
+                    }
+                    main.html("");
+                    i = 0;
+                    //开始解析
+                    var reg = /\{\{.*?\.(DATA)\}\}/gi;
+                    var array = [];
+                    var temp;
+                    while (array = reg.exec(content)) {
+                        temp = array[0].replace(" ", "").replace("{{", "").replace(".DATA}}", "");
+                        addline(temp);
+                    }
+                    //选取颜色
+                    $("input[name^=color]").each(function() {
+                        var ele = this;
+                        util.colorpicker(ele, function(color) {
+                            $(ele).val(color.toString());
+                        });
+                    });
+                    //显示
+                    $("#J_KeyValue").show();
+                });
+            });
+        });
+    </script>
+    {elseif $op == 'update'}
+    <form action="" method="post" class="form-horizontal form" id="form1">
+        <div class="panel panel-default">
+            <div class="panel-heading">编辑模板</div>
+            <div class="panel-body">
+                <div class="form-group">
+                    <label class="col-xs-12 col-sm-3 col-md-2 control-label">
+						<span class="text-danger">*</span>
+						标题
+					</label>
+                    <div class="col-xs-12 col-sm-9 col-md-10">
+                        <input class="form-control" type="text" name="title" value="{$tplmsg['title']}" placeholder="该标题仅提供识别，与模板消息内容无关" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-xs-12 col-sm-3 col-md-2 control-label">
+						<span class="text-danger">*</span>
+						模板ID
+					</label>
+                    <div class="col-xs-12 col-sm-9 col-md-10">
+                        <input class="form-control" readonly type="text" name="" value="{$tplmsg['msgname']}" />
+                        <input class="form-control" type="hidden" name="mid" value="{$tplmsg['mid']}" />
+                        <div class="help-block">调用模板消息接口时需提供模板ID。</div>
+                    </div>
+                </div>
+                <!--<div class="form-group">-->
+                <!--<label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label"><span style='color:red'>*</span>活动推送时间</label>-->
+                <!--<div class="col-md-10">-->
+                <!--<div class="input-group">-->
+                <!--<input type="number" id="times" name="times" class="form-control" value="{$tplmsg['times']}" />-->
+                <!--<span class="input-group-addon">小时前(正数表示活动开始前推送，负数表示活动结束后未到推送)</span>-->
+                <!--</div>-->
+                <!--</div>-->
+                <!--</div>-->
+                <div class="form-group" style="display:none;">
+                    <label class="col-xs-12 col-sm-3 col-md-2 control-label">
+						<span class="text-danger">*</span>
+						详细内容
+					</label>
+                    <div class="col-xs-12 col-sm-9 col-md-10">
+                        <textarea class="form-control" name="content" rows="8">{$tplmsg['content']}</textarea>
+                        <br/>
+                        <div class="help-block">模板消息的详细内容，可从微信模板消息获得。</div>
+                        <a id="J_resolve" class="btn btn-info" title="解析模板内容" href="javascript:;">解析模板内容</a>
+                    </div>
+                </div>
+
+                <div id="J_KeyValue" class="form-group" {if count($tplmsg[ 'data']) <=0}style="display:none;" {/if}>
+                    <label class="col-xs-12 col-sm-3 col-md-2 control-label">
+						<span class="text-danger">*</span>
+						键值对
+					</label>
+                    <div class="col-xs-12 col-sm-9 col-md-10">
+                        <div id="J_keyValue_Content">
+                            {php $i=0;} {loop $tplmsg['data'] $key $item}
+                            <div class="form-inline" style="margin-bottom:5px;">
+                                <input class="form-control" readonly="" name="key[{$i}]" value="{$key}" placeholder="键" /> :
+                                <input class="form-control" name="value[{$i}]" placeholder="默认值" value="{$item['value']}" /> :
+                                <input class="form-control" name="color[{$i}]" placeholder="颜色" value="{$item['color']}" />
+                            </div>
+                            {php $i+=1;} {/loop}
+                        </div>
+                        <div class="help-block">模板消息在供第三方插件使用时默认值可不填写，颜色可不填写会有统一的默认颜色。</div>
+                    </div>
+                    <div style="width: 80px;position: absolute;right: 20%;line-height: 1.45em;">标题：{$tplmsg['content']}</div>
+                </div>
+                <div class="form-group">
+                    <label class="col-xs-12 col-sm-3 col-md-2 control-label">跳转链接</label>
+                    <div class="col-xs-12 col-sm-9 col-md-10">
+                        <input class="form-control" type="text" name="url" value="{$tplmsg['url']}" />
+                        <div class="help-block">该链接不是必填项,链接过长的时候可以使用短链接转换下。</div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-xs-12 col-sm-9 col-md-10 col-sm-offset-3 col-md-offset-2">
+                        <button class="btn btn-primary" name="submit" type="submit" value="1">确定编辑</button>
+                        <input name="id" type="hidden" value="{$tplmsg['id']}" />
+                        <input name="token" type="hidden" value="{$_W['token']}" />
+                    </div>
+                </div>
+            </div>
+
+    </form>
+    <script type="text/javascript">
+        require(["jquery", "util"], function($, util) {
+            var i = 0;
+            var main = $("#J_keyValue_Content");
+
+            function addline(key) {
+                var html = '<div class="form-inline" style="margin-bottom:5px;"><input class="form-control" readonly="" name="key[' + i + ']" value="' + key + '" placeholder="键"/> : <input class="form-control" name="value[' + i + ']" placeholder="默认值"/>  : <input class="form-control" name="color[' + i + ']" placeholder="颜色"/></div>';
+                main.html(main.html() + html);
+                i += 1;
+            }
+            $(function() {
+                //解析
+                $("#J_resolve").on("click", function() {
+                    var content = $("[name=content]").val();
+                    if (content == "" || content == undefined) {
+                        util.message("该详细内容无法解析！", "", "error");
+                        return false;
+                    }
+                    main.html("");
+                    i = 0;
+                    //开始解析
+                    var reg = /\{\{.*?\.(DATA)\}\}/gi;
+                    var array = [];
+                    var temp;
+                    while (array = reg.exec(content)) {
+                        temp = array[0].replace(" ", "").replace("{{", "").replace(".DATA}}", "");
+                        addline(temp);
+                    }
+                    //选取颜色
+                    $("input[name^=color]").each(function() {
+                        var ele = this;
+                        util.colorpicker(ele, function(color) {
+                            $(ele).val(color.toString());
+                        });
+                    });
+                    //显示
+                    $("#J_KeyValue").show();
+                });
+                //选取颜色
+                $("input[name^=color]").each(function() {
+                    var ele = this;
+                    util.colorpicker(ele, function(color) {
+                        $(ele).val(color.toString());
+                    });
+                });
+            });
+        });
+    </script>
+    {else}
+    <!--<form class="form-horizontal" role="form" method="get" action="">-->
+    <!--<div class="panel panel-info">-->
+    <!--<div class="panel-heading">-->
+    <!--<div>筛选查询</div>-->
+    <!--</div>-->
+    <!--<div class="panel-body">-->
+    <!--<div class="form-group">-->
+    <!--<label class="col-sm-2 col-md-2 control-label">名称</label>-->
+    <!--<div class="col-sm-4 col-md-10">-->
+    <!--<input class="form-control" name="title" type="text" value="{$_GPC['title']}"/>-->
+    <!--</div>-->
+    <!--</div>-->
+    <!--<div class="form-group">-->
+    <!--<label class="col-sm-2 col-md-2 control-label">模板ID</label>-->
+    <!--<div class="col-sm-4 col-md-10">-->
+    <!--<input class="form-control" name="mid" type="text" value="{$_GPC['mid']}"/>-->
+    <!--</div>-->
+    <!--</div>-->
+    <!--<div class="form-group">-->
+    <!--<div class="col-sm-4 col-md-10 col-sm-offset-2 col-md-offset-2">-->
+    <!--<input type="hidden" name="c" value="site"/>-->
+    <!--<input type="hidden" name="a" value="entry"/>-->
+    <!--<input type="hidden" name="do" value="manager"/>-->
+    <!--<input type="hidden" name="m" value="healer_tplmsg"/>-->
+    <!--<input type="hidden" name="token" value="{$_W['token']}" />-->
+    <!--<button type="submit" class="btn btn-info"> <i class="fa fa-search"></i>-->
+    <!--搜索-->
+    <!--</button>-->
+    <!--</div>-->
+    <!--</div>-->
+    <!--</div>-->
+    <!--</div>-->
+    <!--</form>-->
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <table class="table table-hover table-responsive">
+                <thead class="navbar-inner">
+                    <tr>
+                        <th class="text-center" style="width: 10px;">序号</th>
+                        <th class="text-center">标题</th>
+                        <th class="text-center">模板ID</th>
+                        <!--<th style="width: 45px;text-align: center">启用状态</th>-->
+                        <th style="width: 35px;text-align: center">操作</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {loop $list $key $item}
+                    <tr class="text-center">
+                        <td>{php echo ++$key;}</td>
+                        <td class="text-center">{$item['title']}</td>
+                        <td class="text-center">{$item['mid']}</td>
+                        <!--<td style="width: 45px;text-align: center">-->
+                        <!--<input class="flag" type="checkbox" category-id="{$item['id']}" name="status[{$item['id']}]" value="{$item['status']}" {if $item['status'] == 1}checked="checked"{/if} />-->
+                        <!--</td>-->
+                        <td style="text-align: center">
+                            <a href="{php echo web_url('member/time', array('op'=>'upsave', 'id'=>$item['id']));}" class="btn btn-default btn-sm" data-toggle="tooltip" data-placement="top" title="" data-original-title="群发"> <i class="fa fa-send"></i>
+                            </a>
+                            <a href="{php echo web_url('member/time',array('op'=>'update', 'id'=>$item['id']));}" class="btn btn-default btn-sm" data-toggle="tooltip" data-placement="top" title="" data-original-title="修改"> <i class="fa fa-edit"></i>
+                            </a>
+                            <a onclick="if(!confirm('删除后将不可恢复,确定删除吗?')) return false;" href="{php echo web_url('member/time', array('op'=>'del', 'id'=>$item['id']));}" class="btn btn-default btn-danger btn-sm" data-toggle="tooltip" data-placement="top" title="" data-original-title="删除">
+                                <i class="fa fa-times"></i>
+                            </a>
+                        </td>
+                    </tr>
+                    {/loop} {if empty($list)}
+                    <tr>
+                        <td colspan="4">未创建模板消息</td>
+                    </tr>
+                    {/if}
+                </tbody>
+            </table>
+            {$pager}
+        </div>
+    </div>
+    {/if}
+    </div>
+    <script type="text/javascript">
+        require(['jquery', 'util'], function($, util) {
+            $("#form1").on("submit", function() {
+                var _ = $(this);
+                if (_.find("[name=title]").val() == '') {
+                    util.message('温馨提示：请填写标题！', '', 'error');
+                    return false;
+                }
+                if (_.find("[name=mid]").val() == '') {
+                    util.message('温馨提示：请填写模板ID！', '', 'error');
+                    return false;
+                }
+                //            if(_.find('#times').val() == ''){
+                //                util.message('温馨提示：必须输入推送时间！', '', 'error');
+                //                return false;
+                //            }
+            });
+            //
+            $('.btn').hover(function() {
+                $(this).tooltip('show');
+            }, function() {
+                $(this).tooltip('hide');
+            });
+        });
+
+
+        //    require(['bootstrap.switch'],function($){
+        //        // 启用状态
+        //        $('.flag:checkbox').bootstrapSwitch({onText: '启用', offText: '禁用'});
+        //        $('.flag:checkbox').on('switchChange.bootstrapSwitch', function(event, state) {
+        //            var category_id = $(this).attr('category-id');
+        //            var status = state ? 1 : 0;
+        //            $.post("{php echo web_url('member/time/status')}", {id : category_id, status : status}, function (data){
+        //                if (!data.errno) {
+        //                    util.tips(data.message);
+        //                };
+        //            }, 'json');
+        //        });
+        //
+        //    });
+    </script>
+     <script>
+//		 $.get(
+//		     "https://api.weixin.qq.com/cgi-bin/template/get_all_private_template",
+//			 {"access_token": "{$access_token}"},
+//			 function(res){
+//             	console.log(res);
+//		 })
+//            $.ajax({
+//                url: "https://api.weixin.qq.com/cgi-bin/template/get_all_private_template",
+//                type: "get",
+//                data: {
+//                    "access_token": "{$access_token}"
+//                },
+//                success: function(res) {
+//                    console.log(res);
+//                },
+//                error: function(res) {
+//                    console.log(res);
+//                }
+//            });
+    </script>
+    {php include wl_template('common/footer');}

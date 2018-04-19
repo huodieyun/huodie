@@ -1,0 +1,142 @@
+
+{php include wl_template('common/header');}
+
+
+<ul class="nav nav-tabs">
+	
+    <li{if $groupstatus == '0'} class="active"{/if}>
+        <a href="{php echo web_url('member/cash', array('op' => 'display', 'groupstatus' =>'0'))}">待审核</a>
+    </li>
+	<li {if $groupstatus == '1'} class="active"{/if}>
+        <a href="{php echo web_url('member/cash', array('op' => 'display', 'groupstatus' =>'1'))}">已发放</a>
+    </li>
+	<li {if $groupstatus == '2'}class="active"{/if}>
+        <a href="{php echo web_url('member/cash', array('op' => 'display', 'groupstatus' =>'2'))}">全部记录</a>
+    </li>
+   
+  
+</ul>
+<div class="main">
+    <div class="panel panel-info">
+	    <div class="panel-heading">筛选</div>
+	    <div class="panel-body">
+			<form action="./index.php" method="get" class="form-horizontal" role="form" id="form1">
+				<input type="hidden" name="c" value="site" />
+				<input type="hidden" name="a" value="entry" />
+				<input type="hidden" name="m" value="lexiangpingou" />
+				<input type="hidden" name="do" value="member" />
+				<input type="hidden" name="ac" value="cash" />
+                <input type="hidden" name="groupstatus" value="{$groupstatus}" />
+				 <input type="hidden" name="selltype" value="{$selltype}" />
+                <div class="form-group">
+                    <label class="col-xs-12 col-sm-2 col-md-2 col-lg-2 control-label">昵称</label>
+                    <div class="col-sm-8 col-lg-9 col-xs-12">
+                        <input class="form-control" name="keyword" id="" type="text" value="{$_GPC['keyword']}" placeholder="可查询昵称">
+                    </div>
+                </div>
+                <div class="form-group">
+                        <label class="col-xs-12 col-sm-2 col-md-2 col-lg-2 control-label">申请时间</label>
+                        <div class="col-sm-5 col-lg-7 col-xs-12">
+                            {php echo tpl_form_field_daterange('time', array('starttime'=>date('Y-m-d', $starttime),'endtime'=>date('Y-m-d', $endtime)));}
+                        </div>
+                        <div class="col-sm-3 col-lg-2" style="text-align:right;"><button class="btn btn-default"><i class="fa fa-search"></i> 搜索</button>
+                        </div>
+                    </div>
+                <div class="form-group">
+                </div>
+            </form>
+			
+          <!--  <a href='{php echo $this->createWebUrl('grouporder', array('op' => 'output','groupstatus'=>$groupstatus,'starttime'=>$starttime,'endtime'=>$endtime))}'><button class="btn btn-info"><i class="fa fa-download"></i> 导出记录</button></a>-->
+	    </div>
+	</div>
+
+	<div class="panel panel-default">
+		<div class="panel-body table-responsive">
+			<table class="table table-hover">
+				<thead class="navbar-inner">
+					<tr>
+						<th style="width:10%;">昵称</th>
+						<th style="width:10%;">状态</th>	
+						<th style="width:10%;">提现金额</th>							
+						<th style="width:17%;">申请时间</th>
+						<th style="width:17%;">发放时间</th>
+						<th style="width:30%; text-align:right;">操作</th>
+					</tr>
+				</thead>
+				<tbody>
+					{loop $alltuan $key $item}
+					 <?php 
+
+                    $sql3 = 'SELECT * FROM '.tablename('tg_member').' WHERE from_user=:openid and uniacid=:uniacid';
+
+                    $params3 = array(':openid'=>$item['openid'],':uniacid'=>$_W['uniacid']);
+
+                    $good3 = pdo_fetch($sql3, $params3);
+
+          ?>
+					<tr>
+						<td>{$good3['nickname']}</td>
+						<td>
+							{if $item['type']==0 }
+								<span class="label label-warning">审批中</span>
+							{/if}
+							{if $item['type']==1 }
+								 <span class="label label-success">已发放</span>
+							{/if}
+							
+						</td>
+						<td>
+							 <span class="label label-success">￥{$item['price']}</span>
+						</td>
+						<td>{php echo date('Y-m-d H:i:s', $item['addtime'])}</td>
+						<td>{if !empty($item['ptime'])}{php echo date('Y-m-d H:i:s', $item['ptime'])}{/if}</td>
+						<td style="text-align:right;">
+						{if $item['type']==0}
+
+							<a data-id="{$item['id']}" href="javascript:;" class="label label-warning js-success">确认发放</a>
+							<a data-id="{$item['id']}" href="{php echo web_url('member/cash', array('op' => 'cash_add' , 'id' => $item['id']))}" class="label label-warning cash_add">线下打款</a>
+							{/if}
+							{if $item['type']==1}
+							<label class="label label-success">{$item['web_cash']}</label>
+							{/if}
+							
+						</td>
+					</tr>
+					{/loop}
+				</tbody>
+			</table>
+		</div>
+	</div>
+</div>
+{$pager}
+<script type="text/javascript">
+	require(['daterangepicker'], function($){
+		$('.daterange').on('apply.daterangepicker', function(ev, picker) {
+			$('#form1')[0].submit();
+		});
+	});
+
+    $(".js-success").click(function (e) {
+        e.stopPropagation();
+        var html = "立即发放金额？";
+        var id = $(this).attr('data-id');
+        util.nailConfirm(this, function (state) {
+            if (!state) return;
+            location.href="{php echo web_url('member/cash', array('op' => 'sendcash'))}"+'&id='+id;
+        }, {html: html});
+    });
+
+    if (document.getElementsByClassName("cash_add").length > 0) {
+        var cancelJs = document.getElementsByClassName("cash_add");
+        for (var i = 0; i < cancelJs.length; i++) {
+            cancelJs[i].onclick = function (event) {
+                event.preventDefault();
+                if (confirm("确认线下打款，线下打款会直接将记录修改为已发放，请确定已在线下打款至粉丝账户")) {
+                    location.href = event.target.href;
+                }
+            }
+        }
+    }
+</script>
+
+{php include wl_template('common/footer');}

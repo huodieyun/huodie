@@ -1,0 +1,149 @@
+{php include wl_template('common/header');}
+<style>
+    .container{
+        background:#fff;
+        padding: 10px;
+        position: relative;
+    }
+    #chengtuanrsdbt{
+        height: 670px;
+    }
+    .container label{
+        width: 60px;
+        line-height: 34px;
+    }
+    .loading{
+        position: absolute;
+        top: 0;
+        left: 0;
+        z-index: 10;
+        background: rgba(0,0,0,0.3);
+        width: 100%;
+        height: 100%;
+        text-align: center;
+        color: #eee;
+        padding-top: 17rem;
+        font-size: 16px;
+    }
+</style>
+<div class="container">
+    <div class="loading">
+        <i class="glyphicon glyphicon-refresh"></i>
+        <span>数据加载中......</span>
+    </div>
+    <div id="chengtuanrsdbt"></div>
+</div>
+<script>
+    // 路径配置
+    require.config({
+        paths: {
+            echarts: "//www.lexiangpingou.cn/addons/lexiangpingou/web/resource/js/echarts/build/dist"
+        }
+    });
+
+    var option={};
+    $.get(location.origin+'/minapi.php?op=store_real_data&uniacid={$_W["uniacid"]}',function(res){
+        var data=JSON.parse(res);
+        console.log(data);
+        var legendData=[];
+        var seriesData1=[];
+        var seriesData2=[];
+        for(var i=0;i<data.data.length;i++){
+//            var obj={
+//                value:data.data[i].total,
+//                name:data.data[i].neednum+'人团'
+//            };
+            legendData.push(data.data[i].storename);
+            seriesData1.push(data.data[i].store_order);
+            seriesData2.push(data.data[i].store_real_order);
+        }
+        option = {
+            title: {
+                text: '下单门店核销门店准确率',
+                subtext: ''
+            },
+            tooltip: {
+                trigger: 'axis'
+            },
+            legend: {
+                data: ['下单数', '核销数']
+            },
+            toolbox: {
+                show: true,
+                feature: {
+                    magicType: {show: true, type: ['line', 'bar']},
+                    restore: {show: true},
+                    saveAsImage: {show: true}
+                }
+            },
+            calculable: true,
+            xAxis: [
+                {
+                    type: 'category',
+                    data: legendData
+                }
+            ],
+            yAxis: [
+                {
+                    type: 'value'
+                }
+            ],
+            series: [
+                {
+                    "name": "下单数",
+                    "type": "bar",
+                    "data": seriesData1,
+                    markPoint: {
+                        data: [
+                            {type: 'max', name: '最大值'},
+                            {type: 'min', name: '最小值'}
+                        ]
+                    }
+                },
+                {
+                    "name": "核销数",
+                    "type": "bar",
+                    "data":seriesData2,
+                    markPoint: {
+                        data: [
+                            {type: 'max', name: '最大值'},
+                            {type: 'min', name: '最小值'}
+                        ]
+                    }
+                }
+            ]
+        };
+        if(data.total=='0'){
+            option.series=[{
+                name:'',
+                type:'',
+                radius : '',
+                center: [],
+                data:[]
+            }];
+            $('#chengtuanrsdbt').css('height','690px')
+        }
+        $('.loading').css('display','none');
+        console.log(option);
+        RCHARTS(option);
+    });
+
+    function RCHARTS(optionCommon){
+        require(
+                [
+                    'echarts',
+                    'echarts/chart/bar', // 使用柱状图就加载bar模块，按需加载
+                    'echarts/chart/line',
+                    'echarts/chart/funnel',
+                    'echarts/chart/pie'
+                ],
+                function (ec) {
+                    // 基于准备好的dom，初始化echarts图表
+                    var myChart = ec.init(document.getElementById('chengtuanrsdbt'));
+                    // 为echarts对象加载数据
+                    myChart.setOption(optionCommon);
+                }
+        );
+    }
+</script>
+{php include wl_template('common/footer');}

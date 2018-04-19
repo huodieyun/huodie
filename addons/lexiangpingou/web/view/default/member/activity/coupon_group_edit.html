@@ -1,0 +1,125 @@
+{php include wl_template('common/header');}
+<style>
+	.label1 {
+		display: block;
+		float:left;
+		width:25%;
+		text-align:left;		
+	}
+	datalist {
+		height:6em;
+		overflow:scroll;
+	}
+</style>
+<ul class="nav nav-tabs" >
+	<li class="active"><a>设置组优惠券</a></li>
+	<li class="ex-button"><a class="ex-b-lastA" target="_blank" href="http://doc.lexiangpingou.cn/pCard.html">图文说明</a></li>
+</ul>
+<style>
+	.label1 {
+		display: block;
+		float:left;
+		width:25%;
+		text-align:left;		
+	}
+	datalist {
+		height:6em;
+		overflow:scroll;
+	}
+</style>
+<link href="../addons/lexiangpingou/web/resource/css/app.css" rel="stylesheet">
+<style>
+.app .panel {background-color: #FFF;}
+</style>
+<form action="" method="post" class="form-horizontal">
+	<div class="panel panel-default">
+		<div class="panel-heading">设置组优惠券</div>
+		<div class="panel-body">
+			
+									<div class="form-group">
+										<label class="col-md-3 control-label"><span class="red">*</span>优惠券名称</label>
+										<div class="col-md-9">
+											<input type="text" class="form-control" name="name" value="{$coupon_template['name']}">
+										</div>
+									</div>
+								<div class="form-group">
+	<label class="col-md-3 control-label">优惠卷组</label>
+	<div class="col-sm-9 col-xs-12">
+		{loop $couponlist $item}
+			<label class="label1"><input class="check" type="checkbox" name="functions" value="{$item['id']}" onclick="chk()" {if strpos($coupon_template['couponsids'], $item['id']) !== false}checked{/if}>{$item['name']}</label>
+		{/loop}
+		<input type="text" name="functionValue" id="functionValue" style="display:none;"/>
+	</div>
+</div>	
+	<div class="form-group">
+	<div class="col-md-3 control-label" >
+	<button type="button" class="btn btn-default js-back min-width">取消</button>
+						<!-- <button type="submit" class="btn btn-primary min-width">保存</button> -->
+						<input name="submit" type="submit" class="btn btn-primary min-width" value="保存">
+						<input type="hidden" name="token" value="{$_W['token']}" />
+						</div>
+</div>	
+							
+					</div>
+				</div>
+				
+			</div>
+		</div>
+	</div>
+</form>
+<script>
+	$(function() {
+		
+		$('.js-back').click(function() {
+			location.href = "{php echo web_url('member/coupon/group');}";
+		});
+		var $name = $('input[name="name"]');
+		var $functionValue = $('input[name="functionValue"]');
+		
+
+		$('form').submit(function() {
+
+			if ($(this).find('.text-danger, .has-error').length > 0) {
+				return false;
+			};
+			if ($name.val() == '') {
+				util.tips('组优惠券名称不能为空', 2000);
+				$name.focus().parent().append('<span class="text-danger">优惠券名称必须在 1-10 个字内</span>').addClass('has-error');
+				return false;
+			};
+			if ($functionValue.val() == '') {
+				util.tips('组优惠券不能为空', 2000);
+				return false;
+			};
+			
+	});
+	});
+</script>
+<script>
+function chk(){ 
+var obj=document.getElementsByName('functions'); //选择所有name="'test'"的对象，返回数组 
+//取到对象数组后，我们来循环检测它是不是被选中 
+var s=''; 
+for(var i=0; i<obj.length; i++){ 
+if(obj[i].checked) s+=obj[i].value+','; //如果选中，将value添加到变量s中 
+} 
+//那么现在来检测s的值就知道选中的复选框的值了 
+//alert(s==''?'你还没有选择任何内容！':s); 
+document.getElementById('functionValue').value=s.slice(0,-1);
+
+} 
+
+
+function functionValues() {
+var functionValue = document.getElementById("functionValue");
+		  var len = check.length;
+		  var str = '';
+		  for (var i = 0; i < len; i++) {
+			if (check[i].checked){
+				str += check[i].value +',';
+			}
+		  }
+		  functionValue.value = str.slice(0,-1);
+		}
+</script>
+{php include wl_template('common/footer');}

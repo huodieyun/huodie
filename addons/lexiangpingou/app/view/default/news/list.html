@@ -1,0 +1,238 @@
+{php include wl_template('common/header');}
+<style>
+    .fixRT{display: none!important;}
+    .top{
+        background: #f6f6f6;
+        padding: 5px 10px;
+    }
+    .top i{
+        font-size: 22px;
+    }
+    .iconal-homefill{
+        float: right;
+    }
+    .item-title{
+        font-size: 14px;
+        display: flex;
+        align-items: center;
+        display: -webkit-flex;
+        -webkit-align-items: center;
+    }
+    .list-block{
+        margin: 5px 0;
+    }
+    .list-block ul{
+        background: #f3f3f3;
+    }
+    .list-block .item-inner:after{
+        background-color: inherit;
+    }
+    .list-block .item-content{
+        height: 30px;
+        min-height: inherit;
+        background: #fff;
+        margin: 0;
+        margin-bottom: 5px;
+    }
+    .list-block .item-media+.item-inner{
+        margin-left: inherit;
+    }
+    .item-title>span{
+        display: inline-block;
+        height: 18px;
+        width: 3px;
+        background: #e4486e;
+        margin-right: 10px;
+    }
+</style>
+
+<div class="page-group" style="">
+    <div class="page page-current" id="page-goods-list">
+        <div class="content infinite-scroll native-scroll" data-distance="10">
+            <div class="top">
+                <a href="javascript:;"><i class="iconal-back"></i></a>
+                <a href="{php echo app_url('goods_list')}"><i class="iconal-homefill"></i></a>
+            </div>
+            <div class="banner" id="banner" style="visibility: visible;">
+                <ul class="imgs">
+                    {loop $advs $adv}
+                        <li {if !empty($adv['link'])} onclick="document.location = '{$adv['link']}';"{else}#{/if}>
+                            <img src="{php echo tomedia($adv['thumb'])}">
+                        </li>
+                    {/loop}
+                </ul>
+                <ul class="dotList" style="">
+                    {php $slideNum = 1;} {loop $advs $adv}
+                        <li{if $slideNum==1 } class="cur" {/if}></li>
+                    {php $slideNum++;} {/loop}
+                </ul>
+            </div>
+            <script>
+                $(function() {
+                    new Swipe($('#banner')[0], {
+                        speed:500,
+                        auto:3000,
+                        callback: function(){
+                            var lis = $(".dotList").children();
+                            lis.removeClass("cur").eq(this.index).addClass("cur");
+                        }
+                    });
+                });
+            </script>
+            <div class="list" id="orderlist">
+                <div class="listCon list-block">
+                    <ul class="ul_1"></ul>
+                </div>
+                <div class="loading_more" style="padding-top: 10px;display: none;font-size:1.2em;font-weight:bold;"><span class="loading"><i class="icon_load"></i>正在玩命的加载中......</span></div>
+
+                <div class="error">加载失败，点击重新加载</div>
+
+                <div class="noData" style="font-size:1.0em;color:#c3c3c3;">
+                    全部数据加载完毕
+                    {if !$banquanfunction['status']}	<div><a href="http://www.lexiangpingou.cn"><img src="{TG_URL_ARES}images/bbb.png" width="40%"></a><div>火蝶科技技术热线:400-626-1079</div></div>{/if}
+                </div>
+            </div>
+            <div class="mask"></div>
+        </div>
+    </div>
+</div>
+
+<div id="gotop" style="display:none;position:fixed;right:10px;bottom:60px;width:45px;height:45px;border-radius:50%;z-index:10086;background-color:#c3c3c3;">
+    <img src="{TG_URL_ARES}images/gotop.png" width="45px" height="45px">
+</div>
+<script type="text/html" id="goodslist">
+    {{# for(var i = 0, len = d.data.length; i < len; i++){ }}
+    <li class="item-content item-link" onclick='gotoDetail("{{ d.data[i].url }}",{{ d.data[i].id }})'>
+        <div class="item-media"><i class="icon icon-f7"></i></div>
+        <div class="item-inner">
+            <div class="item-title"><span></span>{{ d.data[i].title }}</div>
+            <div class="item-after"></div>
+        </div>
+    </li>
+    {{# } }}
+</script>
+<script>
+    function gotoDetail(url,id) {
+        if(url=='null'||url==''){
+            location.href="{php echo app_url('goods/graphic_list/post')}id="+id;
+        }else{
+            location.href=url;
+        }
+    }
+    console.log('新闻 news list');
+    var content = document.getElementsByClassName("content")[0];
+    content.addEventListener("touchmove", function (ev) {
+        ev.stopImmediatePropagation();
+    }, false);
+    content.addEventListener("touchstart", function (ev) {
+        ev.stopImmediatePropagation();
+    }, false);
+    content.addEventListener("touchend", function (ev) {
+        ev.stopImmediatePropagation();
+    }, false);
+    var gotop = document.getElementById("gotop");
+    var orderlist = document.getElementById("orderlist");
+    gotop.onclick = function ( ev ) {
+        document.getElementById("banner").scrollIntoView();
+    };
+    var sesso;
+    $(function() {
+        'use strict';
+        //商品列表页
+        $(document).on("pageInit", "#page-goods-list", function(e, id, page) {
+            var loading = false;
+            var thispagesize = 20;
+            var thispagesizemax = 100;
+            var thispage = 1;
+
+            function addItems(thispage, thispagesize) {
+                var ajaxurl = "{php echo app_url('goods/graphic_list/post')}" + "&page=" + thispage + "&pagesize=" + thispagesize;
+                $.ajax({
+                    type: "get",
+                    url: ajaxurl,
+                    dataType: 'json',
+                    beforeSend: function(XMLHttpRequest) {},
+                    success: function(data) {
+//                        var data=JSON.parse(data);
+                        thispagesizemax = 100;
+                        if (data.data.length > 0) {
+                            var gettpl = document.getElementById('goodslist').innerHTML;
+                            laytpl(gettpl).render(data, function(html){
+                                $(".ul_1").append(html);
+                            });
+                        } else {
+                            $(".loading_more").remove();
+                            $('.noData').show();
+                        }
+                        setSealout();
+                    },
+                    error: function() {
+                        $('.error').show();
+                    }
+                });
+            }
+            addItems(thispage, thispagesize);
+            $(page).on('infinite', function() {
+                if (loading) return;
+                loading = true;
+                $(".loading_more").show();
+                if (orderlist.getBoundingClientRect().top < -500){
+                    gotop.style.setProperty("display", "block");
+                }
+                else {
+                    gotop.style.setProperty("display", "none");
+                }
+                setTimeout(function() {
+                    loading = false;
+                    thispage++;
+                    addItems(thispage, thispagesize);
+                    $(".loading_more").hide();
+                    $.refreshScroller();
+                }, 200);
+            });
+//            sesso=function sessionProcess(elem) {
+//                //sessionStorage.removeItem("miao");
+//                var externals = document.getElementsByClassName("externals");
+//                var len = externals.length;
+//                for ( var i = 0; i < len; i++ ) {
+//                    if ( elem === externals[i] ) {
+//                        var classclassname = elem.className.slice(9);
+//                        sessionStorage.setItem("position",classclassname+i.toString());
+//                    }
+//                }
+//
+//            }
+//            if (sessionStorage.getItem("position") !== null){
+//                document.getElementById("animationS").style.setProperty("display","block");
+//                setTimeout(function() {
+//                    var classname = sessionStorage.getItem("position").slice(-1*sessionStorage.getItem("position").length,-1*sessionStorage.getItem("position").length+9);
+//                    var index = parseInt(sessionStorage.getItem("position").slice(-1*sessionStorage.getItem("position").length+9));
+//                    var i = index;
+//                    var n = ( i /4 +2 )* 500;
+//                    setTimeout(function(){
+//                        loadData(i);
+//                        setTimeout(function(){
+//                            document.getElementsByClassName(classname)[index].scrollIntoView();
+//
+////                            setTimeout(function(){
+////                                document.getElementById("animationS").style.setProperty("display","none");
+////                            },0)
+//                        },0)
+//                    },0)
+//                },0);
+//            }
+//            function loadData(i) {
+//                if (i<3) return;
+//                thispage++;
+//                addItems(thispage,thispagesize);
+//                setTimeout(function(){
+//                    loadData(i-4);
+//                },200)
+//
+//            }
+        });
+        $.init();
+    });
+</script>
+{php include wl_template('common/footer');}
+	

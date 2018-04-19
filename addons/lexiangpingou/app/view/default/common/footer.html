@@ -1,0 +1,217 @@
+<style>
+    .iconEWM{
+        position: fixed;
+        z-index: 2000;
+        top: 45%;
+        right: 0;
+        background: rgba(0,0,0,0.75);
+        border-bottom-left-radius: 5px;
+        border-top-left-radius: 5px;
+        padding: 3px 3px 3px 8px;
+    }
+    .iconEWM>img {
+        max-width: 30px;
+    }
+    .erweima,.erweimaa,.erweimaa1{
+    {if $_W['fans']['follow'] !=1 &&$subscribe==1}
+    display:block;
+    {else}
+    display:none;
+    {/if}
+    width: 100%;
+    position: fixed;
+    top: 0;
+    z-index: 10096;
+    height: 100%;
+    background: rgba(0,0,0,0.75);
+    left: 0;
+    }
+    .erweima>img,.erweimaa>img,.erweimaa1>img{
+        width: 80%;
+        margin-top: 30%;
+        margin-left: 10%;
+    }
+    .erweima>div,.erweimaa>div,.erweimaa1>div{
+        text-align: center;
+        margin: 10px;
+        color: #fff;
+    }
+
+</style>
+
+<script type="text/javascript">
+    $('iframe').attr('data-title',"{$config['share']['share_title']}");
+    sessionStorage.setItem('a_shareData',JSON.stringify({
+        'data-title':"{$config['share']['share_title']}" ,
+        'data-desc':"{$config['share']['share_desc']}" ,
+        'data-link':"{$tourl}" ,
+        'data-imgUrl':"{php echo tomedia($config['share']['share_image'])}"
+    }));
+    wx.ready(function () {
+        var shareData = {
+            title: "{$config['share']['share_title']}",
+            desc: "{$config['share']['share_desc']}",
+            link: "{$tourl}",
+            imgUrl: "{php echo tomedia($config['share']['share_image'])}"
+        };
+        //分享朋友
+        wx.onMenuShareAppMessage({
+            title: shareData.title,
+            desc: shareData.desc,
+            link: shareData.link,
+            imgUrl:shareData.imgUrl,
+            trigger: function (res) {
+                //alert(shareData.desc);
+            },
+            success: function (res) {
+                //alert(shareData.desc);
+            },
+            cancel: function (res) {
+                //alert(shareData.desc);
+            },
+            fail: function (res) {
+                //alert(JSON.stringify(res));
+            }
+        });
+        {if $_W['uniacid_tpl'] == 8209}
+		wx.getLocation({
+			type: 'gcj02', //返回可以用于wx.openLocation的经纬度
+			success: function(res) {
+				var locationADD={
+					latitude:res.latitude,
+					longitude:res.longitude
+//                    accuracy:res.accuracy // 位置精度
+				};
+//				console.log(res);
+//				var latitude = res.latitude;
+//				var longitude = res.longitude;
+				localStorage.setItem('locationADD',JSON.stringify(locationADD));
+//				alert(JSON.stringify(locationADD));
+			}
+		});
+        {/if}
+        //朋友圈
+        wx.onMenuShareTimeline({
+            title: shareData.title,
+            link: shareData.link,
+            imgUrl:shareData.imgUrl,
+            trigger: function (res) {
+            },
+            success: function (res) {
+            },
+            cancel: function (res) {
+            },
+            fail: function (res) {
+                alert(JSON.stringify(res));
+            }
+        });
+        var shareAddress = {php echo json_encode($shareAddress)};
+        WeixinJSBridge.invoke('editAddress',shareAddress,function(res){
+            if(res.err_msg=='edit_address:ok'){
+                $("#myname").val(res.userName);
+                $('#myphone').val(res.telNumber);
+                $('#detailed_address').val(res.addressDetailInfo);
+                var city = res.proviceFirstStageName+" "+res.addressCitySecondStageName+" "+res.addressCountiesThirdStageName;
+                $('#city-picker').val(city);
+            }
+        });
+    });
+    $('#animationS').click(function(){$(this).css('display','none')})
+</script>
+
+<!--定义关注弹出层微信二维码-->
+{if $_W['fans']['follow'] !=1&&$subscribe!=1 &&  $config['tginfo']['guanzhu']==1 && $action != 'addmanage' && $action != 'createadd' && $action != 'cash'&& $action != 'orderconfirm'}
+<div class="subscribe">
+    <div class="img"><img src="{php echo tomedia($config['tginfo']['slogo'])}"></div>
+    <div class="text">
+        <p>欢迎进入<font>{$config['tginfo']['sname']}</font></p>
+        <p>关注公众号,享专属服务</p>
+    </div>
+    <div class="btn">
+        <div class="buttonn" onclick="followButton()">立即关注</div>
+    </div>
+</div>
+{/if}
+{if !empty($config['tginfo']['kefu_image'])}
+<div class="fixRT">
+    <div id="iconEWM" class="iconEWM">
+        <img src="../../../../../../addons/lexiangpingou/app/resource/images/EWM.png" alt=""/>
+    </div>
+    <div class="erweima">
+        <img src="{php echo tomedia($config['tginfo']['kefu_image'])}" alt=""/>
+        <div>为保证您正常接收订单信息，<br>请长按识别二维码再参与</div>
+    </div>
+</div>
+{/if}
+
+<!--
+<div id="footWx">
+<a href="javascript:closeFollowButton();" id="closefootWx">ㄨ</a>
+<img src="{php echo tomedia($config['tginfo']['followed_image'])}">
+<a href="{php echo app_url('goods/list')}" id="gohomelink">返回首页>></a>
+</div><!--定义关注弹出层微信二维码 end-->
+{if $_W['fans']['follow'] !=1 &&$subscribe==1}
+<div class="erweimaa">
+    <img src="{php echo tomedia($config['tginfo']['followed_image'])}" alt=""/>
+    <div>为保证您正常接收订单信息，<br>请长按识别二维码再参与</div>
+</div>
+<script type="text/javascript">
+    //    followButton();
+    //    document.getElementById("closefootWx").style.display="none";
+</script>
+{/if}
+<div class="erweimaa1">
+    <img src="{php echo tomedia($config['tginfo']['followed_image'])}" alt=""/>
+    <div>为保证您正常接收订单信息，<br>请长按识别二维码再参与</div>
+</div>
+<script language='javascript'>
+    $(".iconEWM>img").on('click',function(){
+        $(".erweima").css('display','block');
+    });
+    {if $_W['fans']['follow'] ==1 }
+    $(".erweima,.erweimaa,.erweimaa1").on('click',function(){
+        $(this).css('display','none');
+    });
+    {/if}
+        $(".erweima,.erweimaa,.erweimaa1").on('click',function(){
+            $(this).css('display','none');
+        });
+        function followButton(){
+            $(".erweimaa1").css('display','block');
+        }
+        /*$(function(){
+            $.ajax({
+                url: '{php echo app_url("home/autorefund")}',
+                cache:false
+            });
+        })*/
+
+        if(sessionStorage.getItem('startTime')) {
+            var date1 = new Date(sessionStorage.getItem('startTime'));  //开始时间
+            var date2 = new Date();    //结束时间
+            var date3 = (date2.getTime() - date1.getTime()) / 1000 / 60;  //时间差的毫秒数
+            if (date3 > 10) {
+                $.get('{php echo app_url("home/autorefund")}',function(){console.log(11)});
+                sessionStorage.setItem('startTime',new Date());
+            }
+        }else{
+            sessionStorage.setItem('startTime',new Date());
+            $.ajax({
+                url: '{php echo app_url("home/autorefund")}',
+                cache:false
+            });
+        }
+        var div = document.getElementById('iconEWM');
+        div.addEventListener('touchmove', function(event) {
+            event.preventDefault();//阻止其他事件
+            // 如果这个元素的位置内只有一个手指的话
+            if (event.targetTouches.length == 1) {
+                var touch = event.targetTouches[0];  // 把元素放在手指所在的位置
+//                div.style.left = touch.pageX + 'px';
+                div.style.top = touch.pageY + 'px';
+            }
+        }, false);
+
+</script>
+</body>
+</html>

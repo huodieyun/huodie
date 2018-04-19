@@ -1,0 +1,688 @@
+
+<div class="panel panel-default">
+    <div class="panel-heading">商品信息
+        <a target="_blank" style="cursor:pointer; float:right; font-weight:bold;" href="http://v.youku.com/v_show/id_XMTc0OTkwNTU4NA==.html?from=s1.8-1-1.2&spm=a2h0k.8191407.0.0">视频演示>></a>
+        <a target="_blank" style="cursor:pointer; float:right; margin-right:10px; font-weight:bold;" href="http://doc.lexiangpingou.cn/releaseProduct.html#jbxx">图文说明>></a>
+    </div>
+    <div class="panel-body">
+        <div class="panel-body">
+            <div class="form-group" {if $_W['user']['merchant_id'] > 0}style="display:none;"{/if}>
+                <label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label">排序</label>
+                <div class="col-md-6">
+                    <input type="text" name="goods[displayorder]" class="form-control" value="{$goods['displayorder']}" />
+                </div>
+            </div>
+            <div class="form-group" style="display:none;">
+                <label class="col-xs-12 col-sm-3 col-md-2 control-label"><span style='color:red'>*</span>所属商家</label>
+                <div class="col-md-6">
+                    <select name="goods[merchantid]" class="form-control">
+                        <option value="" {if empty($goods['merchantid'])}selected="selected"{/if}>{$_W['account']['name']}</option>
+                        {loop $merchants $row}
+                        <option value="{$row['id']}" {if $goods['merchantid']==$row['id']}selected="selected"{/if}>{$row['name']}</option>
+                        {/loop}}
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-xs-12 col-sm-3 col-md-2 control-label"><span style='color:red'>*</span>一级分类</label>
+                <div class="col-sm-6 col-xs-12">
+                    <select name="goods[fk_typeid]" class="form-control yijiFL" onclick="ajaxEJFL()">
+                        {loop $category $row}
+                        <option value="{$row['id']}" {if $goods['fk_typeid']==$row['id']}selected="selected"{/if}>{$row['name']}</option>
+                        {/loop}}
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-xs-12 col-sm-3 col-md-2 control-label"><span style='color:red'>*</span>二级分类</label>
+                <div class="col-sm-6 col-xs-12">
+                    <select name="goods[category_childid]" class="form-control erjiFL">
+                        <option value="{$goods['category_childid']}" selected="selected">{$cates['name']}</option>
+                        <!--<option value="{$row['id']}" {if $goods['fk_typeid']==$row['id']}selected="selected"{/if}>{$row['name']}</option>-->
+                    </select>
+                </div>
+            </div>
+            <script>
+                function ajaxEJFL(){
+                    var id=$('.yijiFL').find('option:selected').val();
+                    $.get(
+                        "{php echo web_url('goods/goods/fenleiTwo')}",
+                        {id:id},
+                        function(res){
+                            var data=JSON.parse(res);
+                            var html='<option selected="selected">请选择二级分类</option>';
+                            for(var i=0;i<data.length;i++){
+                                html+='<option value='+data[i].id+' >'+data[i].name+'</option>';
+                            }
+                            $('.erjiFL').html(html);
+                        })
+                }
+                //加载二级分类
+            </script>
+            <div class="form-group">
+                <label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label"><span style='color:red'>*</span>商品名称</label>
+                <div class="col-md-6">
+                    <input type="text" placeholder="商品名称请勿添加英文格式符号及字数少于30字！否则将无法正常支付！！！" name="goods[gname]" class="form-control" value="{$goods['gname']}" />
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label"><span style='color:red'>*</span>单位</label>
+                <div class="col-md-6">
+                    <input maxlength="4" placeholder="最大字符为4个" type="text" name="goods[unit]" class="form-control" value="{$goods['unit']}" />
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label"><span style='color:red'>*</span>库存</label>
+                <div class="col-md-6">
+                    <div class="input-group">
+                        <input placeholder="库存规则：成团减库存，例如10人团，成团后10-10=0" type="number" name="goods[gnum]" class="form-control" value="{$goods['gnum']}" />
+                        <span class="input-group-addon">件</span>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label">销量</label>
+                <div class="col-md-6">
+                    <div class="input-group">
+                        <input type="number" name="goods[salenum]" class="form-control" value="{php echo intval($goods['salenum'])}" />
+                        <span class="input-group-addon">件</span>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label"><span style='color:red'>*</span>订金</label>
+                <div class="col-md-6">
+                    <div class="input-group">
+                        <input placeholder="建议起步价格为5元，大于5元支付才自动关注服务号" type="text" name="goods[preprice]" class="form-control" value="{$goods['preprice']}" />
+                        <span class="input-group-addon">元</span>
+                    </div>
+
+                </div>
+            </div>
+            <div class="form-group" id="level">
+                <label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label"><span style='color:red'>*</span>阶梯</label>
+                <div class="col-sm-6">
+                    <div class="panel-body table-responsive" style="padding:0px;">
+                        <table class="table table-hover">
+                            <thead>
+                            <tr>
+                                <th style='width:50px;'></th>
+                                <th>几人</th>
+                                <th>团购价</th>
+                            </tr>
+                            </thead>
+                            <tbody id="param-items-level">
+                            {loop $param_level $item}
+                            <tr>
+                                <td>
+                                    <a href="javascript:;" class="fa fa-move" title="拖动调整此显示顺序"><i class="fa fa-arrows"></i></a>&nbsp;
+                                    <a href="javascript:;" onclick="deleteParam_level(this)" style="margin-top:10px;" title="删除"><i class='fa fa-remove'></i></a>
+                                </td>
+                                <td>
+                                    <input name="param_groupnum[]" type="number" class="form-control param_title" value="{$item['groupnum']}"/>
+                                </td>
+                                <td><input name="param_groupprice[]" type="text" class="form-control param_value" value="{$item['groupprice']}"  onkeyup="this.value=this.value.replace(/[^\d.]/g,'')"/></td>
+                            </tr>
+                            {/loop}
+                            </tbody>
+
+                            <tbody>
+                            <tr>
+                                <td colspan="3">
+                                    <a href="javascript:;" id='add-param' onclick="addParam_level()" style="margin-top:10px;"  title="添加阶梯">添加阶梯 <i class='fa fa-plus'></i></a>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label"><span style='color:red'>*</span>单买价</label>
+                <div class="col-md-6">
+                    <div class="input-group">
+                        <input type="text" name="goods[oprice]" class="form-control" value="{$goods['oprice']}" />
+                        <span class="input-group-addon">元</span>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label"><span style='color:red'>*</span>市场价</label>
+                <div class="col-md-6">
+                    <div class="input-group">
+                        <input type="text" name="goods[mprice]" class="form-control" value="{$goods['mprice']}" />
+                        <span class="input-group-addon">元</span>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-xs-12 col-sm-3 col-md-2 control-label">重量</label>
+                <div class="col-sm-6 col-xs-12">
+
+                    <div class="input-group">
+                        <input type="text" name="goods[weight]" id="weight" class="form-control" value="{$goods['weight']}" />
+                        <span class="input-group-addon">克</span>
+                    </div>
+
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-xs-12 col-sm-3 col-md-2 control-label">进货价</label>
+                <div class="col-sm-6 col-xs-12">
+
+                    <div class="input-group">
+                        <input type="text" placeholder="建议填写便于报表分析" name="goods[supprices]" id="supprices" class="form-control" value="{$goods['supprices']}" />
+                        <span class="input-group-addon">元</span>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label"><span style='color:red'>*</span>组团限时(整数小时)</label>
+                <div class="col-md-6">
+                    <div class="input-group">
+                        <input type="number" name="endtime" class="form-control" value="{$goods['endtime']}" />
+                        <span class="input-group-addon">小时</span>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label">组团人数不足提醒(整数分钟)</label>
+                <div class="col-md-6">
+                    <div class="input-group">
+                        <input type="number" name="goods[no_num_success]" class="form-control" value="{$goods['no_num_success']}" />
+                        <span class="input-group-addon">分钟</span>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label"><span style='color:red'>*</span>首页图片</label>
+                <div class="col-md-6">
+                    {php echo tpl_form_field_image('goods[gimg]', $goods['gimg']);}
+                    <span class="help-block">图片建议为640X300</span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-xs-12 col-sm-3 col-md-2 control-label">图集</label>
+                <div class="col-sm-6">
+                    {php echo tpl_form_field_multi_image('img',$piclist);}
+                    <span class="help-block">商品详情幻灯片，建议640X350</span>
+                </div>
+            </div>
+
+
+        <div class="form-group" style="display: block">
+            <label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label">详情页视频</label>
+            <div class="col-md-6">
+                <input type="text" name="index_video" value="{$goods['index_video']}" class="form-control">
+                <span class="help-block">视频尺寸建议为640X300!请在左侧菜单栏上传视频。上传后在详情页轮播图位置展示。</span>
+            </div>
+        </div>
+            <div class="form-group">
+                <label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label">客服链接</label>
+                <div class="col-sm-9 col-xs-12">
+                    <input type="text" name="goods[kefu_url]" class="form-control" value="{$goods['kefu_url']}" />
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-xs-12 col-sm-3 col-md-2 control-label">订单通知接收员</label>
+                <div class="col-sm-9 col-xs-12">
+                    <div class='input-group'>
+                        <input type='hidden' id='openid' name='openid' value="{$saler['openid']}" />
+                        <input type="text" name="saler" maxlength="30" value="{if !empty($saler)}{$saler['nickname']}{/if}" id="saler" class="form-control" readonly />
+                        <div class='input-group-btn'>
+                            <button class="btn btn-default" type="button" onclick="popwin = $('#modal-module-menus2').modal();">选择订单通知接收员</button>
+                        </div>
+                    </div>
+                    {if !empty($saler)}
+                    <span class='help-block' style="position: relative;">
+                        <img style="width:100px;height:100px;border:1px solid #ccc;padding:1px" src="{$saler['avatar']}" id="avatar" />
+                        <em class="close" style="position:absolute; top: 0px; left: 105px;" title="删除这张图片" onclick="deleteImage(this)">×</em>
+                    </span>
+                    {/if}
+                    <div id="modal-module-menus2"  class="modal fade" tabindex="-1">
+                        <div class="modal-dialog" style='width: 660px;'>
+                            <div class="modal-content">
+                                <div class="modal-header"><button aria-hidden="true" data-dismiss="modal" class="saler_close" type="button">×</button><h3>选择订单通知接收员</h3></div>
+                                <div class="modal-body" >
+                                    <div class="row">
+                                        <div class="input-group">
+                                            <input type="text" class="form-control" name="keyword" value="" id="search-kwd2" placeholder="请输入管理员昵称" />
+                                            <span class='input-group-btn'><button type="button" class="btn btn-default" onclick="search_members2();">搜索</button></span>
+                                        </div>
+                                    </div>
+                                    <div id="module-menus2" style="padding-top:5px;"></div>
+                                </div>
+                                <div class="modal-footer"><a href="#" class="btn btn-default" data-dismiss="modal" aria-hidden="true">关闭</a></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {if $_W['user']['merchant_id'] == 0}
+        <div class="form-group">
+            <label class="col-xs-12 col-sm-3 col-md-2 control-label">最大自提期限</label>
+            <div class="col-sm-6 col-xs-12">
+
+                <div class="input-group">
+                    <input type="number" name="goods[zititime]" id="zititime" class="form-control" value="{$goods['zititime']}" />
+                    <span class="input-group-addon">小时</span>
+                </div>
+                <span class="help-block" style="color:red;">用户下单后,每超出最大自提期限将记录一次,如若开启自动加入黑名单功能,超过设定次数的用户将无法访问系统(默认为0此商品不参与计数)</span>
+
+            </div>
+        </div>
+        {/if}
+        </div>
+    </div>
+</div>
+<div class="panel panel-default">
+    <div class="panel-heading">控制开关</div>
+    <div class="panel-body">
+        <div class="panel-body">
+            <div class="chooseMS" id="chooseMS">
+                <div class="form-group">
+                    <label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label">购买模式</label>
+                    <div class="col-xs-12 col-sm-8">
+                        <div class="input-group" style="position: relative">
+                            {if $isshop==1}
+                            <label class="radio radio-inline">
+                                <input type="radio" name="goods[selltype]" value="0" {if intval($goods['selltype']) ==0}checked="checked"{/if}> 单买
+                            </label>{/if}
+                            <label class="radio radio-inline">
+                                <input type="radio" name="goods[selltype]" value="1" {if intval($goods['selltype']) ==1}checked="checked"{/if}> 随意团
+                            </label>
+                            {if $islin['status']}
+                            <label class="radio radio-inline">
+                                <input type="radio" name="goods[selltype]" value="2" {if intval($goods['selltype']) ==2}checked="checked"{/if}> 邻购团
+                            </label>
+                            {/if}
+                            {if $isjieti['status']}
+                            <label class="radio radio-inline">
+                                <input type="radio"  name="goods[selltype]" value="3" {if intval($goods['selltype']) ==3}checked="checked"{/if}> 自选团
+                            </label>
+                            <label class="radio radio-inline">
+                                <input type="radio" name="goods[selltype]" value="4" {if intval($goods['selltype']) ==4}checked="checked"{/if}> 阶梯团
+                            </label>
+                            {/if}
+                            {if $ischoujian['status']}
+                            <label class="radio radio-inline">
+                                <input type="radio" name="goods[selltype]" value="5" {if intval($goods['selltype']) ==5}checked="checked"{/if}> 抽奖团
+                            </label>
+                            {/if}
+                            {if $ischoujian['status']}
+                            <label class="radio radio-inline">
+                                <input type="radio" name="goods[selltype]" value="6" {if intval($goods['selltype']) ==6}checked="checked"{/if}> 新专团
+                            </label>
+                            {/if}
+                            {if $isjieti2['status']}
+                            <label class="radio radio-inline" onclick="$('.type').show();$('.type1').hide();" >
+                                <input type="radio" name="goods[selltype]" value="7" {if intval($goods['selltype']) ==7}checked="checked"{/if}> 订金团
+                            </label>
+                            {/if}
+                            <button onclick="changeMS()" style="margin-left:25px;float:right;" type="button" class="btn btn-primary btn-sm">编辑模式</button>
+                            <div class="glyphicon glyphicon-question-sign" style="position: absolute;top: 0;right: -10%;padding: 10px;cursor: pointer;"></div>
+                            <img src="{TG_URL_WRES}images/goospostewm.png" alt="" style="position: absolute;top: 0;right: -40%;display: none">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label">是否开启数量</label>
+                <div class="col-xs-12 col-sm-8">
+                    <div class="input-group">
+                        <label class="radio radio-inline">
+                            <input type="radio" name="goods[is_amount]" value="1" {if intval($goods['is_amount']) ==1 }checked="checked"{/if}> 是
+                        </label>
+                        <label class="radio radio-inline">
+                            <input type="radio" name="goods[is_amount]" value="0" {if intval($goods['is_amount']) ==0}checked="checked"{/if}> 否
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group" >
+            <label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label">首页显示</label>
+            <div class="col-xs-12 col-sm-8">
+                <div class="input-group">
+                    <label class="radio radio-inline">
+                        <input type="radio" name="goods[showindex]" value="0" {if !empty($goods) && $goods['showindex'] == 0}checked{/if}> 开
+                    </label>
+                    <label class="radio radio-inline">
+                        <input type="radio" name="goods[showindex]" value="1" {if empty($goods) || $goods['showindex'] == 1}checked{/if}> 关
+                    </label>
+
+                </div>
+            </div>
+        </div>
+
+            {if $acct['vip'] == 1}
+        <div class="form-group">
+            <label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label">是否开启限时</label>
+            <div class="col-xs-12 col-sm-8">
+                <div class="input-group">
+                    <label class="radio radio-inline">
+                        <input type="radio" name="spikeT" value="1" {if intval($goods['spikeT']) == 1}checked="checked"{/if} onclick="$('#spikeT').show();">是
+                    </label>
+                    <label class="radio radio-inline">
+                        <input type="radio" name="spikeT" value="0" {if intval($goods['spikeT']) == 0}checked="checked"{/if} onclick="$('#spikeT').hide();">否
+                    </label>
+                </div>
+            </div>
+        </div>
+        {/if}
+        <div>
+            <div id="spikeT" {if $goods['spikeT']==0}style="display: none;"{/if}>
+            <div class="form-group">
+                <label class="col-xs-12 col-sm-3 col-md-2 control-label">限时时间段</label>
+                <div class="col-sm-3 col-xs-4">
+                    {php echo tpl_form_field_daterange('time', array('start'=>date('Y-m-d H:i:s', $goods['spike_start']),'end'=>date('Y-m-d H:i:s', $goods['spike_end'])),true);}
+                </div>
+            </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label">上架公众号</label>
+            <div class="col-xs-12 col-sm-8">
+                <div class="input-group">
+                    <label class="radio radio-inline">
+                        <input type="radio" name="goods[is_public]" value="1"  {if $goods['is_public'] == 1 || is_null($goods['is_public'])}checked="checked"{/if}> 是
+                    </label>
+                    <label class="radio radio-inline">
+                        <input type="radio" name="goods[is_public]" value="0"  {if $goods['is_public'] == 0 && !is_null($goods['is_public'])}checked="checked"{/if}> 否
+                    </label>
+                </div>
+            </div>
+        </div>
+            <div class="form-group">
+                <label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label">上架小程序</label>
+                <div class="col-xs-12 col-sm-8">
+                    <div class="input-group">
+                        <label class="radio radio-inline">
+                            <input type="radio" name="goods[is_applet]" value="1" {if intval($goods['is_applet']) ==1 }checked="checked"{/if}> 是
+                        </label>
+                        <label class="radio radio-inline">
+                            <input type="radio" name="goods[is_applet]" value="0" {if intval($goods['is_applet']) ==0}checked="checked"{/if}> 否
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label">上架通知</label>
+                <div class="col-xs-12 col-sm-8">
+                    <div class="input-group">
+                        <label class="radio radio-inline">
+                            <input type="radio" name="goods[isupjia]" value="1" {if intval($goods['isupjia']) ==1 }checked="checked"{/if}> 开
+                        </label>
+                        <label class="radio radio-inline">
+                            <input type="radio" name="goods[isupjia]" value="0" {if intval($goods['isupjia']) ==0}checked="checked"{/if}> 关
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label">降价通知</label>
+                <div class="col-xs-12 col-sm-8">
+                    <div class="input-group">
+                        <label class="radio radio-inline">
+                            <input type="radio" name="goods[isdownjia]" value="1" {if intval($goods['isdownjia']) ==1 }checked="checked"{/if}> 开
+                        </label>
+                        <label class="radio radio-inline">
+                            <input type="radio" name="goods[isdownjia]" value="0" {if intval($goods['isdownjia']) ==0}checked="checked"{/if}> 关
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group" {if $_W['uniacid']!=557}style="display:none"{/if}>
+            <label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label">关注购买</label>
+            <div class="col-xs-12 col-sm-8">
+                <div class="input-group">
+                    <label class="radio radio-inline">
+                        <input type="radio" name="goods[subscribe]" value="1" {if intval($goods['subscribe']) ==1 }checked="checked"{/if}> 开
+                    </label>
+                    <label class="radio radio-inline">
+                        <input type="radio" name="goods[subscribe]" value="0" {if intval($goods['subscribe']) ==0}checked="checked"{/if}> 关
+                    </label>
+                </div>
+                <span class="help-block">可能会涉及到诱导关注违规，如需开启违规后果自负</span>
+            </div>
+        </div>
+        {if $isshop==1}
+        <div class="form-group type" style="display:none;">
+            <label class="col-xs-12 col-sm-3 col-md-2 control-label">商品属性</label>
+            <div class="col-sm-9 col-xs-12" >
+                <label  class="radio radio-inline" onclick="$('.chageprice').hide();$('.limittime').hide();" style="display:none;">
+                    <input type="radio" name="goods[type]" value="1" id="type" {if $goods['type'] == 1}checked="true"{/if} > 新用户专享</input>
+                </label>
+                <label  class="radio radio-inline" onclick="$('.chageprice').hide();$('.limittime').show();" style="display:none;">
+                    <input type="radio" name="goods[type]" value="4" id="type" {if $goods['type'] == 4}checked="true"{/if} > 限时卖</input>
+                </label>
+                <label  class="radio radio-inline" >
+                    <input type="radio" name="goods[type]" value="5" id="type" {if $goods['type'] == 5||intval($goods['type'])==0}checked="true"{/if} > 正常</input>
+                </label>
+            </div>
+        </div>
+        {/if}
+        {if $ison['status']}
+        <div class="form-group">
+            <label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label">显示分享团</label>
+            <div class="col-xs-12 col-sm-8">
+                <div class="input-group">
+                    <label class="radio radio-inline">
+                        <input type="radio" name="goods[ison]" value="1" {if intval($goods['ison']) ==1 }checked="checked"{/if}> 开
+                    </label>
+                    <label class="radio radio-inline">
+                        <input type="radio" name="goods[ison]" value="0" {if intval($goods['ison']) ==0}checked="checked"{/if}> 关
+                    </label>
+
+                </div>
+            </div>
+        </div>
+        {/if}
+        {if $isjudgment['status']}
+        <div class="form-group">
+            <label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label">商品评价</label>
+            <div class="col-xs-12 col-sm-8">
+                <div class="input-group">
+                    <label class="radio radio-inline">
+                        <input type="radio" name="goods[isjudgment]" value="1" {if intval($goods['isjudgment']) ==1 }checked="checked"{/if}> 开
+                    </label>
+                    <label class="radio radio-inline">
+                        <input type="radio" name="goods[isjudgment]" value="0" {if intval($goods['isjudgment']) ==0}checked="checked"{/if}> 关
+                    </label>
+
+                </div>
+            </div>
+        </div>
+        {/if}
+        <div class="form-group">
+            <label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label">显示详情</label>
+            <div class="col-xs-12 col-sm-8">
+                <div class="input-group">
+                    <!--默认0显示1不显示-->
+                    <label class="radio radio-inline">
+                        <input type="radio" name="goods[issharedesc]" value="0" {if intval($goods['issharedesc']) ==0}checked="checked"{/if}>开
+                    </label>
+                    <label class="radio radio-inline">
+                        <input type="radio" name="goods[issharedesc]" value="1" {if intval($goods['issharedesc']) ==1 }checked="checked"{/if}> 关
+                    </label>
+
+
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label">包邮</label>
+            <div class="col-xs-12 col-sm-8">
+                <div class="input-group">
+
+
+                    <label class="radio radio-inline">
+                        <input type="radio" name="goods[isfree]" value="1" {if intval($goods['isfree']) ==1 }checked="checked"{/if}>开
+                    </label>
+                    <label class="radio radio-inline">
+                        <input type="radio" name="goods[isfree]" value="0" {if intval($goods['isfree']) ==0}checked="checked"{/if}> 关
+                    </label>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label">显示发货记录</label>
+            <div class="col-xs-12 col-sm-8">
+                <div class="input-group">
+                    <label class="radio radio-inline">
+                        <input type="radio" name="goods[isshowsend]" value="1" {if intval($goods['isshowsend']) ==1}checked="checked"{/if}> 开
+                    </label>
+
+                    <label class="radio radio-inline">
+                        <input type="radio" name="goods[isshowsend]" value="0" {if intval($goods['isshowsend']) ==0 }checked="checked"{/if}> 关
+                    </label>
+
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label">状态</label>
+            <div class="col-md-6">
+                <label class="radio radio-inline">
+                    <input type="radio" name="goods[isshow]" value="1" {if intval($goods['isshow']) ==1 || empty($goods['isshow'])}checked="checked"{/if}> 上架
+                </label>
+                <label class="radio radio-inline">
+                    <input type="radio" name="goods[isshow]" value="2" {if intval($goods['isshow']) ==2}checked="checked"{/if}> 下架
+                </label>
+                <label class="radio radio-inline">
+                    <input type="radio" name="goods[isshow]" value="3" {if intval($goods['isshow']) ==3}checked="checked"{/if}> 售罄
+                </label>
+            </div>
+        </div>
+        {if !empty($id)}
+        <div class="form-group">
+            <label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label">添加日期</label>
+            <div class="col-md-6">
+                <p class="form-control-static">{php echo date('Y-m-d H:i', $goods['createtime']);}</p>
+            </div>
+        </div>
+        {/if}
+    <div class="form-group">
+        <label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label">是否签收有礼</label>
+        <div class="col-md-6">
+            <p class="form-control-static"><input type="radio" name="send" value="1" {if $goods["is_sendcoupon"] == 1}checked="checked"{/if}>是
+                <input type="radio" name="send" value="0" {if $goods["is_sendcoupon"] == 0}checked="checked"{/if}>否</p>
+        </div>
+    </div>
+    <div class="form-group" {if $goods["is_sendcoupon"] == 1}style="display: block"{else}style="display: none"{/if} id="sen_list">
+    <label class="col-xs-12 col-sm-3 col-md-2 control-label"><span style='color:red'>*</span>选择优惠券</label>
+    <div class="col-sm-6 col-xs-12">
+        <select name="coupon_id" class="form-control yijiFL" >
+            {loop $coupon $rows}
+            <option value="{$rows['id']}" {if $rows["id"] == $goods['coupon_id']}selected="selected"{/if}>{$rows['name']}</option>
+            {/loop}
+            <!--{if $goods['fk_typeid']==$row['id']}selected="selected"{/if}-->
+        </select>
+    </div>
+</div>
+<div class="form-group">
+    <label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label">填写身份证号码</label>
+    <div class="col-md-6">
+        <p class="form-control-static"><input type="radio" name="goods[idcard]" value="1" {if $goods["idcard"] == 1}checked="checked"{/if}>是
+            <input type="radio" name="goods[idcard]" value="0" {if $goods["idcard"] == 0}checked="checked"{/if}>否</p>
+    </div>
+</div>
+<script>
+    $("input[name=send]").click(function () {
+        var is_send = $(this).val();
+        if (is_send == 1){
+            $("#sen_list").css("display","block")
+        }else {
+            $("#sen_list").css("display","none")
+        }
+    });
+</script>
+{php include wl_template('goods/goods_basic_param/one_card');}
+{php include wl_template('goods/goods_basic_param/self_time');}
+    </div>
+</div>
+</div>
+<style>
+    button.saler_close {
+        -webkit-appearance: none;
+        padding: 0;
+        cursor: pointer;
+        background: 0 0;
+        border: 0;
+    }
+
+    .saler_close {
+        float: right;
+        font-size: 21px;
+        font-weight: 700;
+        line-height: 1;
+        color: #000;
+        text-shadow: 0 1px 0 #fff;
+        filter: alpha(opacity=20);
+        opacity: .2;
+    }
+</style>
+<script language='javascript'>
+    $(function(){
+        $("#param-items-level").sortable({handle:'.fa-move'});
+        $("#chkoption").click(function(){
+            var obj =$(this);
+            if(obj.get(0).checked){
+                $("#tboption").show();
+                $(".trp").hide();
+            }
+            else{
+                $("#tboption").hide();
+                $(".trp").show();
+            }
+        });
+    })
+    function addParam_level() {
+        var url = "{php echo web_url('goods/param_level')}";
+        $.ajax({
+            "url": url ,
+            success:function(data){
+                $('#param-items-level').append(data);
+            }
+        });
+        return;
+    }
+    function deleteParam_level(o) {
+        $(o).parent().parent().remove();
+    }
+
+
+    function search_members2() {
+        if( $.trim($('#search-kwd2').val())==''){
+            Tip.focus('#search-kwd2','请输入关键词');
+            return;
+        }
+
+        $("#module-menus2").html("正在搜索....")
+        $.get("{php echo web_url('store/bdelete/display',array('op'=>'selectsaler'))}", {
+            keyword: $.trim($('#search-kwd2').val())
+        }, function(dat){
+            $('#module-menus2').html(dat);
+        })
+    }
+    function search_members() {
+        if( $.trim($('#search-kwd').val())==''){
+            Tip.focus('#search-kwd','请输入关键词');
+            return;
+        }
+
+        $("#module-menus").html("正在搜索....")
+        $.get("{php echo web_url('store/bdelete/display',array('op'=>'selectsaler'))}", {
+            keyword: $.trim($('#search-kwd').val())
+        }, function(dat){
+            $('#module-menus').html(dat);
+        });
+    }
+    function select_member(o) {
+        $("#openid").val(o.openid);
+        $("#saler").val(o.nickname);
+        $("#avatar").attr('src', o.avatar);
+        $(".saler_close").click();
+    }
+
+</script>

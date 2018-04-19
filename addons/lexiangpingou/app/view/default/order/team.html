@@ -1,0 +1,121 @@
+{php include wl_template('common/header');}
+
+<style>
+        .list{
+            padding:10px;
+            background:#fff;
+            min-height: 100%;
+            margin-top: 40px;
+        }
+        .list>div{
+            display:flex;
+            display:-webkit-flex;
+            align-items:center;
+            -webkit-align-items:center;
+            padding: 10px 0;
+            border-bottom: 1px solid #ddd;
+        }
+        .list img{
+            width:50px;
+            height:50px;
+            border-radius:50%;
+        }
+        .list span{
+            margin:0 20px;
+        }
+        .list p{
+            -webkit-flex: 1;
+            flex: 1;
+            /* for uc */
+            -webkit-box-flex: 1;
+            -moz-box-flex: 1;
+            -ms-flex: 1;
+            text-align:right;
+        }
+        .list_detail{
+            display: flex;
+            flex-direction: column;
+        }
+        .loadMore{
+            display:none;
+            text-align:center;
+        }
+    </style>
+
+<body>
+<div style="text-align: center;font-size: 18px;padding: 10px 0;position: fixed;top: 0;width: 100%;background: #f3f3f3;">我的客户:{$total['num']}</div>
+<div class="list">
+    <!--<div>-->
+        <!--<img src="https://dimg.365vmei.cn/uploads/project/57c998ee268f4.jpg" alt=""/>-->
+        <!--<span>姓名姓名</span>-->
+        <!--<p>￥200.00</p>-->
+    <!--</div>-->
+</div>
+
+<div class="loadMore">
+    数据加载中...
+</div>
+</body>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-weui/1.0.1/js/jquery-weui.js"></script>
+<script>
+    var page=1;
+    ajaxList(page,"");
+    function ajaxList(page,append) {
+        $.get(
+                "{php echo app_url('order/team',array('b'=>'list'))}",
+                {
+                    page: page,
+                    pagesize: 10
+                },
+                function (res) {
+                    var data = JSON.parse(res);
+                    console.log(data);
+                    console.log(new Date(data[0].intertime));
+                    if (page==1&&data.length < 1) {
+                        $('.list').html('<p style="text-align: center;margin: 10px 0">暂无数据...</p>');
+                        return false;
+                    }
+                    var html = "";
+                    var j=0;
+                    for (var i = 0; i < data.length; i++) {
+                        var timestamp = data[i].intertime;
+                        var d = new Date(timestamp * 1000);    //根据时间戳生成的时间对象
+                        var dateTime = (d.getFullYear()) + "-" +
+                                (d.getMonth() + 1) + "-" +
+                                (d.getDate()) + " " +
+                                (d.getHours()) + ":" +
+                                (d.getMinutes()) + ":" +
+                                (d.getSeconds());
+                        html += '<div><img src="' + data[i].avatar + '" alt=""><div class="list_detail"><span>' + data[i].nickname + '</span><span>时间:' + dateTime + '</span></div></div>'
+                        j++;
+                    }
+                    if(append=="append"){
+                        $('.list').append(html);
+                    }else {
+                        $('.list').html(html);
+                    }
+                    if(j>=10){
+                        $(document.body).infinite();//初始化
+                    }else{
+                        $(document.body).destroyInfinite()
+                    }
+                }
+        );
+    }
+
+    var loading = false;  //状态标记
+    $(document.body).infinite().on("infinite", function() {
+        if(loading) return;
+        loading = true;
+        page++;
+        $('.loadMore').css('display','block');
+        setTimeout(function() {
+            ajaxList(page,'append');
+            loading = false;
+            $('.loadMore').css('display','none');
+        }, 700);   //模拟延迟
+    });
+
+
+</script>
+{php include wl_template('common/footer');}

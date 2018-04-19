@@ -1,0 +1,335 @@
+{php include wl_template('common/header');}
+<style>
+    .form-group {
+        height: 50px;
+    }
+
+    input[type="radio"] {
+        vertical-align: top;
+        margin-right: 4px; 
+    }
+    .right_bar {
+        padding-left: 20%;        
+    }
+</style>
+<div class="panel panel-default">
+<!-- <div class="container_box">                
+    <div class="col_main">    
+    <div class="main_bd">        
+        <div id="stepItems">
+            <ul class="processor_bar grid_line">
+                <li class="step grid_item size1of5 current">
+                    <h4>1 基本信息</h4>
+                </li>
+                
+                <li class="step grid_item size1of5 next">
+                    <h4>2 邮箱激活</h4>
+                </li>
+                
+                <li class="step grid_item size1of5 nnext">
+                    <h4>3 选择类型</h4>
+                </li>
+                
+                <li class="step grid_item size1of5 nnext">
+                    <h4>4 信息登记</h4>
+                </li>
+                
+                <li class="no_extra step grid_item size1of5 nnext">
+                    <h4>5 公众号信息</h4>
+                </li>
+            </ul>
+        </div>        
+        <div id="register">
+            <div class="info_box">
+                <div class="form_wrp">
+                    <form action="return:false" class="form" id="js_registerStep1" novalidate="novalidate">
+                            <fieldset class="frm_fieldset">
+                                <div class="frm_title mini_tips">每个邮箱仅能申请一种帐号 <i class="icon_msg_mini ask" id="js_tips_help"></i></div>
+                                                
+                                <div class="frm_control_group">
+                                    <label for="" class="frm_label">邮箱</label>
+                                    <div class="frm_controls">
+                                        <span class="frm_input_box">
+                                            <input name="email" id="js_email" type="text" placeholder="" class="frm_input">
+                                        </span>
+                                        <p class="frm_tips"></p>
+                                    </div>
+                                </div>
+
+                                <div class="frm_control_group">
+                                    <label for="" class="frm_label">密码</label>
+                                    <div class="frm_controls">
+                                        <span class="frm_input_box">
+                                        <input name="pw1" id="pw1" type="password" placeholder="" autocomplete="off" class="frm_input" onpaste="return false">
+                                        </span>
+                                    <p class="frm_tips">字母、数字或者英文符号，最短8位，区分大小写</p>
+                                    </div>
+                                </div>
+
+                                <div class="frm_control_group">
+                                    <label for="" class="frm_label">确认密码</label>
+                                    <div class="frm_controls">
+                                        <span class="frm_input_box">
+                                        <input name="pw2" id="pw2" type="password" placeholder="" autocomplete="off" class="frm_input" onpaste="return false">
+                                        </span>
+                                    <p class="frm_tips">请再次输入密码</p>
+                                    </div>
+                                </div>
+
+                                <div class="frm_control_group">
+                                    <label for="" class="frm_label">验证码</label>
+                                    <div class="frm_controls" id="js_verifycodeImgArea"><div class="verifycode">
+                                        <span class="frm_input_box"><input id="imgcode" name="imgcode" type="text" value="" class="frm_input"></span>
+                                        <div class="verifyimg_wrp">
+                                            <img src="/cgi-bin/verifycode?r=1502440108071">
+                                            <a href="javascript:;" class="changeVerifyCode">换一张</a>
+                                        </div>
+                                    </div></div>
+                                </div>
+                            </fieldset>
+                            <div class="tool_area">
+                                <label for="js_agree" class="frm_control_checkbox frm_checkbox_label">
+                                <i class="icon_checkbox"></i>
+                                <input class="frm_checkbox" id="js_agree" name="agree" type="checkbox" value="">
+                                我同意并遵守<a href="/cgi-bin/readtemplate?t=home/agreement_tmpl&amp;type=info&amp;lang=zh_CN" target="_blank">《微信公众平台服务协议》</a>
+                                </label>
+                            </div>
+
+                            <div class="tool_bar border with_form">
+                                <span class="btn btn_disabled btn_primary btn_input" id="js_nextBtn"><button type="submit" class="" disabled="">注册</button></span>
+                            </div>
+                    </form>
+                </div>
+                <div class="tips_show">
+                    <p>已有微信公众帐号？<a href="/">立即登录</a></p>
+                </div>
+            </div>
+        </div>    
+    </div>
+    </div>            
+</div> -->
+
+
+    <div class="panel-heading"></div>
+    <div class="panel-body">
+        <form action="" method="post" class="form-horizontal form" id="form" style="position: relative">
+            <div class="form-group">
+                <label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label"><span style='color:red'>*</span>类型</label>
+                    <div class="col-md-3">
+                        <label><input type="radio" name="platform[type]" {if $supplier['type'] == 0}checked{/if} value="0">企业法人及个体工商户</label>
+                    </div>
+                    <div class="col-md-12 right_bar">
+                        <label><input type="radio" name="platform[type]" {if $supplier['type'] == 1}checked{/if} value="1">企业法人</label>
+                    </div>
+                    <div class="col-md-12 right_bar">
+                        <label><input type="radio" name="platform[type]" {if $supplier['type'] == 2}checked{/if} value="2">个体工商户</label>
+                    </div>
+                    <div class="col-md-12" style="padding-left:0;">
+                        <label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label"></label>
+                        <div class="col-md-3">
+                            <label><input type="radio" name="platform[type]" {if $supplier['type'] == 3}checked{/if} value="3">媒体</label>
+                        </div>
+                    </div>
+                    <div class="col-md-12" style="padding-left:0;">
+                        <label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label"></label>
+                        <div class="col-md-3">
+                            <label><input type="radio" name="platform[type]" {if $supplier['type'] == 4}checked{/if} value="4">政府及事业单位</label>
+                        </div>
+                    </div>
+                    <div class="col-md-12" style="padding-left:0;">
+                        <label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label"></label>
+                        <div class="col-md-3">
+                            <label><input type="radio" name="platform[type]" {if $supplier['type'] == 5}checked{/if} value="5">其他</label>
+                        </div>
+                    </div>
+            </div>
+            <div class="form-group" style="height: 120px">
+                <label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label"><span style='color:red'>*</span>个体工商户资料</label>
+                <div class="col-md-12" style="border-bottom: 1px solid #ccc"></div>
+            </div>
+            <div class="form-group" style="height: 150px">
+                <label class="col-xs-12 col-sm-4 col-md-2 col-lg-2 control-label"><span style='color:red'>*</span>工商户名称</label>
+                <div class="col-md-9 control-label" style="text-align: left;">
+                    <div class="col-md-5">
+                        <input type="text" name="platform[uniname]" value="{$supplier['uniname']}" class="form-control"/>
+                        <span class="help-block col-sm-12">工商户名称<a>查看事例</a></span>
+                    </div>
+                    <!--<span class="help-block col-sm-4"> 支持'中国大陆工商支持'中国大陆工商支持'中国大陆工商支持'中国大陆工商支持'中国大陆工商支持'中国大陆工商支持'中国大陆工商支持'中国大陆工商</span>-->
+                </div>
+            </div>
+            <div class="form-group" style="height: 120px">
+                <label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label"><span style='color:red'>*</span>工商执照注册号</label>
+                <div class="col-md-4">
+                    <input type="number" name="platform[uni_license]" value="{$supplier['uni_license']}" class="form-control"/>
+                    <span class="help-block col-sm-12">填写工商营业执照上的注册号</span>
+                </div>
+            </div>
+            <div class="form-group editZL" style="height:inherit;margin-bottom: 50px">
+                <label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label"><span style='color:red'>*</span>工商执照上传</label>
+                <div class="col-md-4">
+                    {php echo tpl_form_field_image('platform[license_img]', $supplier['license_img']);}
+                    <!--<span class="help-block">图片建议为640X300</span>-->
+                </div>
+            </div>
+            <div class="form-group" style="height: 120px">
+                <label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label"><span style='color:red'>*</span>经营者姓名</label>
+                <div class="col-md-4">
+                    <input type="text" name="platform[realname]" value="{$supplier['realname']}" class="form-control"/>
+                    <span class="help-block col-sm-12">填写个体工商户营业执照上的经营者姓名</span>
+                </div>
+            </div>
+            <div class="form-group" style="height: 120px">
+                <label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label"><span style='color:red'>*</span>经营者身份证号</label>
+                <div class="col-md-4">
+                    <input type="text" name="platform[id_card]" value="{$supplier['id_card']}" class="form-control"/>
+                    <span class="help-block col-sm-12">填写个体工商户营业执照上的经营者身份证号码</span>
+                </div>
+            </div>
+            <div class="form-group editZL" style="height:inherit;margin-bottom: 50px">
+                <label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label"><span style='color:red'>*</span>经营者身份证上传</label>
+                <div class="col-md-4">
+                    {php echo tpl_form_field_image('platform[id_card_img]', $supplier['id_card_img']);}
+                    <!--<span class="help-block">图片建议为640X300</span>-->
+                </div>
+            </div>
+            <div class="form-group" style="height: 120px">
+                <label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label"><span style='color:red'>*</span>开户名称</label>
+                <div class="col-md-4">
+                    <input type="text" name="platform[bank_name]" class="form-control" value="{$supplier['bank_name']}"/>
+                    <span class="help-block col-sm-12">若有对公账户,填写个体工商户对公账户名称.若无对公账户,填写填写营业执照上经营者个人开服名称</span>
+                </div>
+            </div> 
+            <div class="form-group" style="height: 120px">   
+                <label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label"><span style='color:red'>*</span>开户银行</label>
+                <div class="col-md-4">
+                    <!--<input type="text" name="platform[bank_type]" class="form-control" value="{$supplier['bank_type']}"/>-->
+                    <select class="categoryI form-control tpl-category-parent" name="platform[bank_type]" id="bank">
+
+                    </select>
+                    <span class="help-block col-sm-12">如有个体工商户对公账户,也可填写个体工商户开户银行</span>
+                </div> 
+            </div>
+            <div class="form-group" style="height: 120px">   
+                <label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label"><span style='color:red'>*</span>银行账号</label>
+                <div class="col-md-4">
+                    <input type="text" name="platform[bank_account]" class="form-control" value="{$supplier['bank_account']}"/>
+                    <span class="help-block col-sm-12">我们会给该账户汇入一笔非常小的金额和备注信息,需要你后续跟审核人员确认</span>
+                </div> 
+            </div>
+            <div class="form-group" style="height: 120px">
+                <label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label"><span style='color:red'>*</span>认证联系人信息</label>
+                <div class="col-md-9 control-label" style="text-align: left;">
+                    <span class="help-block col-sm-4">以下仅作为认证审核'中联系人信息,建议为认证实际操作人员的联系方式,认证成功后该联系人不会变更为管理员,管理员的变更请在<a>安全'中心</a>统一变更.</span>
+                </div>
+                <div class="col-md-12" style="border-bottom: 1px solid #ccc"></div>    
+            </div>
+            <div class="form-group" style="height: 120px">   
+                <label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label"><span style='color:red'>*</span>联系人姓名</label>
+                <div class="col-md-4">
+                    <input type="text" name="platform[contact_person]" class="form-control" value="{$supplier['contact_person']}"/>
+                    <span class="help-block col-sm-12">认证审核过程'中将会致电该联系人</span>
+                </div> 
+            </div>
+            <div class="form-group" style="height: 120px">   
+                <label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label"><span style='color:red'>*</span>联系人手机号码</label>
+                <div class="col-md-4">
+                    <input type="text" name="platform[contact_phone]" class="form-control" value="{$supplier['contact_phone']}"/>
+                    <span class="help-block col-sm-12">请填写联系人的手机号码,认证审核过程'中将会致电该联系人.验证码有效期10分钟</span> 
+                </div>
+                {if empty($supplier['id'])}
+                <label class="btn btn-default">获取验证码</label>
+                {/if}
+            </div>
+            {if empty($supplier['id'])}
+            <div class="form-group" style="height: 60px">   
+                <label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label"><span style='color:red'>*</span>短信验证码</label>
+                <div class="col-md-4">
+                    <input type="text" name="message_code" class="form-control" value=""/>
+                </div> 
+            </div>
+            {/if}
+            <div class="form-group" style="height: 300px">
+                <label class="col-xs-12 col-sm-3 col-md-2 control-label"><span style='color:red'>*</span>经营范围{$supplier['id']}</label>
+                <div class="col-sm-9 col-xs-12">
+                    {php echo tpl_ueditor('platform[scope]', $supplier['scope']);}
+                </div>
+            </div>
+            {if empty($supplier['id'])}
+            <div class="form-group col-sm-12 TJButtonCom">
+                <input type="submit" name="submit" value="提交" class="btn btn-primary col-lg-1"
+                       style="float: right;position: relative;right:60px;"/>
+                <input type="hidden" name="token" value="{$_W['token']}"/>
+                <input type="hidden" name="platform[id]" value="{$supplier['id']}"/>
+            </div>
+            {/if}
+        </form>
+    </div>
+</div>
+<script>
+    $(function () {
+        $('#form').submit(function () {
+            return true;
+        });
+        //银行名称
+        var bank=[
+            '中国工商银行','招商银行','中国农业银行','中国建设银行',
+            '中国银行','中国民生银行','中国光大银行','中信银行','交通银行',
+            '兴业银行','上海浦东发展银行','中国人民银行','华夏银行','深圳发展银行',
+            '广东发展银行','国家开发银行','中国邮政储蓄银行','中国进出口银行',
+            '中国农业发展银行','人民币存/贷款利率','中国银行香港分行','北京银行',
+            '北京农村商业银行','天津银行','上海银行','上海农村商业银行','南京银行','宁波银行',
+            '杭州市商业银行','深圳平安银行','深圳农村商业银行','温州银行',
+            '厦门国际银行','济南市商业银行','重庆银行','哈尔滨银行',
+            '成都市商业银行','包头市商业银行','南昌市商业银行','贵阳商业银行',
+            '兰州市商业银行','常熟农村商业银行','青岛市商业银行','徽商银行',
+            '花旗中国银行','汇丰中国银行','渣打中国银行','香港汇丰银行',
+            '渣打(香港)银行','中国建设银行(亚洲)','东亚银行中国网站','恒生银行',
+            '花旗(台湾)银行','荷兰银行','欧力士银行','巴黎银行',
+            '美国运通银行','蒙特利尔银行','满地可银行','瑞士银行','德意志银行'
+        ];
+        var options='';
+        if("{$supplier['bank_type']}"!=''){
+            options='<option value="{$supplier['bank_type']}">{$supplier['bank_type']}</option>';
+        }
+        for(var i=0;i<bank.length;i++){
+            options+='<option value="'+bank[i]+'">'+bank[i]+'</option>';
+        }
+        $('#bank').html(options);
+
+    });
+
+    //    var comUrl="{php echo $_W['siteroot']}";
+    //    $('#submit').click(function(){
+    //        var regbg=$('input[name="regbg"]').val();
+    //        var payrate=$('input[name="payrate"]').val();
+    //        var merchant_pay_time=$('input[name="merchant_pay_time"]').val();
+    //        var merchant_role=$('#ueditor_0').html();
+    //        var applycontent=$('#ueditor_1').html();
+    //        if(regbg==""){
+    //            util.message('入驻宣传头部图片不能为空');
+    //        }
+    //        if(payrate==""){
+    //            util.message('手续费不能为空');
+    //        }
+    //        if(merchant_pay_time==""){
+    //            util.message('打款周期不能为空');
+    //        }
+    //        $.post(comUrl+'minapi.php?op=merchant_base',
+    //                {
+    //                    uniacid:"{$_W['uniacid']}",
+    //                    regbg:regbg,
+    //                    applycontent:applycontent,
+    //                    payrate:payrate,
+    //                    merchant_role:merchant_role,
+    //                    merchant_pay_time:merchant_pay_time
+    //                },
+    //                function(data){
+    //                    util.message('提交成功');
+    //                    //location.reload();
+    //                }
+    //        );
+    //    })
+
+</script>
+
+{php include wl_template('common/footer');}

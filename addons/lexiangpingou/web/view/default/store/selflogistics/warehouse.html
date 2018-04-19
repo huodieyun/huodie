@@ -1,0 +1,597 @@
+{php include wl_template('common/header');}
+<!--<span class="price" style="display:none;">0.01</span>-->
+<style type="text/css">
+    .require{color:red;}
+    .info{padding:6px;width:400px;margin:-20px auto 3px auto;text-align:center;}
+    .address_wrapper {
+        position: absolute;
+        padding:10px;
+        top: 0;
+        left: 0;
+        width: 200px;
+    }
+    .address_list {
+        position: relative;
+        height: 545px;
+        overflow-y: auto;
+        padding-left: 0;
+    }
+    
+    .address_list > li.address_item {  
+        position: relative;
+        padding: 10px 15px;
+        margin: 10px 0;
+        border: 1px solid #eee;
+        border-left: none;
+    }
+    .address_list > li.area-item:before {
+        content: '';
+        display: block;
+        width: 6px;
+        height: 100%;
+        left: 0;
+        top: 0;
+        position: absolute;
+    }
+    .address_list > li.area-item.area0:before {
+        background-color: #1791fc;
+    }
+    .address_list > li.area-item.area1:before {
+        background-color: #9a6a38;
+    }
+    .address_list > li.area-item.area2:before {
+        background-color: #1ebd4f;
+    }
+    .address_list > li.area-item.area3:before {
+        background-color: #fe4d3d;
+    }
+    .address_list > li.area-item.area4:before {  
+        background-color: #4589ef;
+    }
+    .address_list > li > div:first-child {  
+        display: flex;
+        margin-top: -30px;  
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+        font-size: 14px;   
+    }
+    .address_list > li div:first-child h5 {  
+        height: 30px;
+        line-height: 30px;
+        font-size: 15px;
+        font-weight: bold;
+    }
+    .address_list > li div:last-child {
+        line-height: 30px;
+        font-size: 12px;      
+    }
+    .new_address  {
+        position: relative;
+        padding: 10px 15px;
+        margin: 10px 0;
+        border: 1px solid #eee;
+        border-left: none;    
+        overflow-y: auto;
+        font-size: 14px;     
+    }
+    .new_address > div:first-child {    
+        display: flex;
+        margin-top: -30px;  
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+        font-size:0;
+
+    }
+    .new_address div:first-child h5 {
+        height: 30px;
+        line-height: 30px;
+        font-size: 15px;
+        font-weight: bold;
+    }
+    .new_address div:first-child span {
+        font-size: 14px;  
+    }
+    .new_address .new_price-container {
+        display: flex;  
+        flex-direction: column;
+        justify-content: space-between; 
+        align-items: flex-start;  
+    }
+    .new_address .new_price-container > div {
+        line-height: 30px;
+        margin-bottom: 10px;
+    }
+    .new_address .new_price-container input{
+        width: 80px;
+       /* border: 1px solid #ccc;*/
+        border:none; 
+        outline: 0;
+        border-radius: 5px;
+        margin: 0 10px;
+        text-align: center;
+        font-size: 14px; 
+    }
+    .new_address .edit { 
+        display: none;
+    }
+    .self_add {
+        padding: 8px 12px;
+        margin-top: 10px;
+        text-align: center; 
+        background-color: #1ab394;
+        border-color: #1ab394;
+        color: #FFF;
+        border-radius: 5px; 
+    }
+    .btn-delete {
+        margin-top: 10px;  
+        padding-top: 10px;
+        border-top: 1px dashed #ccc;
+        cursor: pointer;
+        text-align: center;  
+    }
+    .btn-delete .icon-delete {
+        content: "\e6b4";
+    }
+    .price-container input[name="address_name"] {
+        border:none;
+        width: 80px;
+        outline: 0;
+        border-radius: 5px;
+        margin: 0 10px;
+        text-align: center;
+        font-size: 14px;   
+    }
+    .edit {
+        cursor: pointer; 
+    }
+    .cancel { 
+        cursor: pointer;
+        display: none;
+    }
+    .flexrow {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+    }
+    .addNewDistance {
+        background-color: #1791fc;
+        padding: 0;
+    }
+    .distanceItem {
+        padding: 10px 0;
+        border-bottom: 1px dashed #ccc;
+        font-size: 12px;
+    }
+    .address_item_distance{
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-around; 
+        width: 100%;
+        margin: 10px auto 0 auto;
+        height: 40px;
+        border: 1px dashed #ccc;
+        border-radius: 5px;
+    }
+</style>
+<ul class="nav nav-tabs">
+    <li {if $op=='base'}class="active"{/if}><a href="{php echo web_url('store/selflogistics', array('op' => 'base'))}">基本设置</a></li>
+    {if $checkfunction['status']}
+    {if checkstr($_W['user']['perms'],'selflogistics.list')}
+    <li {if $op=='display'}class="active"{/if}><a href="{php echo web_url('store/selflogistics', array('op' => 'display'))}">送货上门管理</a>
+    </li>
+    {/if}
+    {/if}
+    <li {if $_GPC['op'] == 'delivery_man' && $_GPC['opp'] == 'display'} class="active"{/if}>
+    <a href="{php echo web_url('store/selflogistics/delivery_man',array('opp'=>'display'))}">派送员管理</a>
+    </li>
+    <li {if $_GPC['op'] == 'delivery_man' && $_GPC['opp'] == 'post'} class="active"{/if}>
+    <a href="{php echo web_url('store/selflogistics/delivery_man',array('opp'=>'post'))}">编辑派送员</a>
+    </li>
+    <li {if $_GPC['op'] == 'warehouse'} class="active"{/if}>
+    <a href="{php echo web_url('store/selflogistics/warehouse')}">送货仓库点</a>
+    </li>
+</ul>
+{if $_GPC['op'] == 'warehouse'}
+<div class="main">
+    <form action="" method="post" class="form-horizontal form" enctype="multipart/form-data">
+        <div class='panel panel-default'>
+            <div class='panel-heading'>
+                仓库点设置（tips：最多支持五个门店,点击新增，使用鼠标左键，在地图上绘制面，鼠标右键结束绘制）
+            </div>
+            <div class='panel-body'>
+                <div class="modal-body" style="height: 600px;padding: 0 0 0 200px;position: relative;">
+                    <div class="address_wrapper">
+                        <h4>区域及配送范围</h4>
+                        <ul class="address_list">
+                            <!-- <li class="address_item area-item area1">
+                                <div>
+                                    <h5>配送范围</h5>
+                                    <span>编辑</span>
+                                </div>
+                                <div class="price-container">
+                                    <span>区域1</span>
+                                </div>
+                                <input type="hidden" name="address" value=""/>  
+                            </li> -->
+                            <!-- <li class="new_address area-item area1">  
+                                <div>
+                                    <h5>配送范围</h5>
+                                    <span>编辑</span>
+                                </div>
+                                <div class="new_price-container">
+                                    <div class="new_price_item">
+                                        <label><input type="text" name="start_price" value="区域2"></label>
+                                    </div>
+                                </div>
+                                <input type="hidden" name="address" value=""/>   
+                            </li> -->
+                            <li class="self_add" onclick="self_add()">
+                                +新增配送区域
+                            </li>      
+                        </ul>
+                    </div>
+                    <div id="container" style="position: inherit;">
+                    </div>
+                    <div class="button-group">
+                        <input type="button" class="button" value="重新编辑区域" id="edit"/>    
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button  type="button" class="btn btn-primary" onclick="submap(this)"> 
+                        提交区域 
+                    </button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+{/if}
+<script type="text/javascript">
+        //历史绘制
+        {if $result}
+        var polygonArr = {$result};
+        {else}
+        var polygonArr= [];
+        {/if}
+        //三维数组
+        var all_points = [];
+        var true_points = []; 
+        //获取经纬度
+        var select_points = [];
+        var select_point = [
+            // 0:120.583534,   //纬度
+            // 1:27.884109     //经度
+        ]
+        var map = new AMap.Map("container", {  //初始化地图
+            resizeEnable: true,
+            zoom:12  
+        });               
+        var mouseTool = new AMap.MouseTool(map);
+        var marker = null;
+        var MarkerList = null;
+        // function setPointer () {
+        //     //在地图中添加MouseTool插件
+            
+        //     var history_position = ["{$item['lbs']['lng']}","{$item['lbs']['lat']}"];   //历史绘制点
+        //     var marker_position = "{$item['lbs']['lng']}" != "" ? history_position : map.getCenter();
+        //     var marker = new AMap.Marker({          //设置点标记拖拽效果
+        //         position: marker_position,
+        //         draggable: true,
+        //         cursor: 'move',
+        //         raiseOnDrag: true
+        //     });
+        //     marker.setMap(map);
+        //     marker.setLabel({//label默认蓝框白底左上角显示，样式className为：amap-marker-label
+        //         offset: new AMap.Pixel(20, 20),//修改label相对于maker的位置
+        //         content: "拖拽到门店位置"
+        //     });
+        // }
+
+        function getMarker () {
+            var getPosition = marker.getPosition();
+            return getPosition;
+        }
+        //增加一个点
+        function addMarker(i, marker_position) {
+            marker = new AMap.Marker({
+                icon: 'http://webapi.amap.com/theme/v1.3/markers/n/mark_b'+i+'.png',
+                position: marker_position,
+                draggable: true,
+                cursor: 'move',
+                raiseOnDrag: true
+            });
+            marker.setLabel({//label默认蓝框白底左上角显示，样式className为：amap-marker-label
+                offset: new AMap.Pixel(20, 20),//修改label相对于maker的位置
+                content: "拖拽到门店位置"
+            });
+            marker.setMap(map);
+        }
+
+        //渲染多点
+        function renderMarkerList (store) {
+
+            store.forEach(function(item, index) {
+                index = index + 1;
+                MarkerList = new AMap.Marker({
+                    icon: 'http://webapi.amap.com/theme/v1.3/markers/n/mark_b'+index+'.png',
+                    position: [item.store_position[0], item.store_position[1]],
+                    offset: new AMap.Pixel(-12, -36)
+                });
+                console.log(MarkerList);
+                MarkerList.setMap(map);
+            });
+
+           
+        }   
+
+        AMap.event.addDomListener(document.getElementById('edit'), 'click', function() {     //重新编辑区域
+            map.clearMap(); 
+            polygonArr = [];
+            all_points = [];
+            var li = '<li class="self_add" onclick="self_add()">'+ 
+                                '+新增配送区域'  
+                            '</li>';
+            $('.address_list').html(li);         
+        }, false);     
+         
+        //提交后台
+        function submap(self) {
+            var spot_array = [];
+            var face_array = [];
+            var _id = window.GetQueryString('id');       
+            $.post("{php echo web_url('store/selflogistics',array('op'=>'store_distance'))}",{'all_points':polygonArr,id:_id},function(res) {     
+               console.log(res);
+               util.tips('保存成功');
+               setTimeout(function () {
+                location.href = location.href;
+               },1500)
+            })    
+        }
+        $(function(){
+            if(polygonArr.length > 0) {
+                window.init_map(polygonArr);
+            }    
+        }) 
+
+        function init_map(store) {
+            var colors = store.length;  
+            for(var i = 0; i< colors; i++) {             
+            switch (i)                      
+                {                           //用颜色区分区域
+                case 0:
+                  x="#1791fc";
+                  break;
+                case 1:
+                  x="#9a6a38";     
+                  break;
+                case 2:
+                  x="#1ebd4f";      
+                  break;
+                case 3:
+                  x="#fe4d3d";
+                  break;
+                case 4:
+                  x="#4589ef";
+                  break;
+                }       
+                var  polygon = new AMap.Polygon({        
+                    path: store[i].range.slice(),//设置多边形边界路径
+                    strokeColor: x, //线颜色
+                    strokeOpacity: 0.2, //线透明度
+                    strokeWeight: 3,    //线宽
+                    fillColor: x, //填充色   
+                    fillOpacity: 0.35//填充透明度
+                });         
+                polygon.setMap(map);        
+            }
+            console.log(store);
+            
+            window.init_addresslist(store);
+            renderMarkerList(store);   
+        }
+       function self_add () { 
+            var i = $('.address_list li').length -1;
+            if(i >= 5) { 
+                util.message('最多添加5条记录','','error');
+                return false;  
+            }
+            i++
+            addMarker(i,  map.getCenter());
+            $('.self_add').remove();
+            var addDistance = window.addDistance();    
+            var html = '<li class="new_address area-item area1">'+  
+                                '<div>'+  
+                                    '<h5>配送范围</h5>'+
+                                    // '<span class="cancel" onclick="cancel(this)" style="display:inline">取消/</span>'+ 
+                                    '<span class="save btn btn-info btn-xs" data-index='+i+' onclick="save(this)">保存</span>'+
+                                    '<span class="edit btn btn-info btn-xs" onclick="edit(this)">编辑</span>'+
+                                '</div>'+
+                                '<div class="new_price-container">'+
+                                    '<div class="new_price_item">'+
+                                        '<label>'+
+                                            '<input type="text" name="start_price" readonly value="区域'+i+'">'+
+                                        '</label>'+  
+                                    '</div>'+
+                                '</div>'+
+                                '<input type="hidden" name="address" value=""/>'+
+                                '<label>配送距离</label>'+
+                                '<div class="distanceList distanceList'+i+'">'+addDistance+'</div>'+
+                                '<div class="self_add addNewDistance" onclick="addNewDistance('+i+')">新增配送距离</div>'+           
+                            '</li>';
+            var li = '<li class="self_add" onclick="self_add()">'+ 
+                                '+新增配送区域'  
+                            '</li>';
+
+            $('.address_list').append(html); 
+            $('.address_list').append(li);   
+            window.draw();  
+       }
+       var clickListener; 
+       // var clickEventListener;
+       function draw(e) {     //绘制面   
+            mouseTool.polygon();
+            window.bind(); 
+        }
+
+         var bind = function() {
+            remove();//防止重复绑定
+            clickListener = AMap.event.addListener(map, "click", _onClick);//绑定地图事件
+        }
+        var _onClick = function (e) {                                       //获取多边形的坐标数组
+            select_point = []; 
+            select_point[0] = e.lnglat.getLng();   
+            select_point[1] = e.lnglat.getLat();
+            console.log(Array.from(new Set(select_point)));          
+            select_points.push(Array.from(new Set(select_point))); 
+        }
+        var remove = function() {
+            if (clickListener) {
+                AMap.event.removeListener(clickListener);//移除地图事件，以绑定时返回的对象作为参数
+            }
+        }
+        //保存区域
+        function save (self) {
+            if (select_points.length == 0) {
+                util.message('请绘制图形后保存','','error');
+                return false;
+            }
+            var parent = $(self).parent();
+            parent.find('.cancel').hide();
+            parent.find('.save').hide();
+            parent.find('.edit').show();    
+            window.remove();                            //每次保存,移除map点击事件.                   
+            var start_element = parent.siblings('.distanceList').find('input[name="start_position"]');
+            var end_element = parent.siblings('.distanceList').find('input[name="end_position"]');
+            var delivery_element = parent.siblings('.distanceList').find('input[name="delivery_price"]');
+            var _distanceList = [];
+            console.log(start_element);  
+            for(var i = 0, len = start_element.length; i < len; i++) {
+                if($(start_element[i]).val() == '' || $(end_element[i]).val() == '' ||  $(delivery_element[i]).val() == '') {
+                    util.message('请填写完整信息','','error');
+                    return false;
+                }
+                var foo = {
+                    'start': $(start_element[i]).val(),
+                    'end': $(end_element[i]).val(),
+                    'price': $(delivery_element[i]).val()
+                }
+                _distanceList.push(foo);
+            }
+            var _pointer = getMarker();
+            _pointer = [_pointer.lng, _pointer.lat]
+            var obj = {
+                    'id': "{$_W['uniacid']}"+ $(self).attr('data-index'),
+                    'distance': _distanceList,
+                    'range': select_points,
+                    'store_position': _pointer
+                }  
+            polygonArr.push(obj); 
+            select_points = [];
+            // distanceList.concat(_distanceList)
+            console.log(polygonArr);
+            map.clearMap();
+            window.init_map(polygonArr);   
+        }
+        //编辑
+        function edit (that) {
+            $(that).hide();
+            $(that).parent().find('.cancel').show();
+            var delete_html = '<div class="btn-delete" onclick="delete_address(this)">'+       
+                                '<span class="glyphicon glyphicon-trash"></span>删除该区域'   
+                                '</div>';
+            var parent = $(that).parent().parent();
+
+            parent.append(delete_html);     
+        }
+        //初始化区域列表
+        function init_addresslist (store) { 
+            var i = 0;
+            var length = store.length;
+            var html = '';
+            var child_html = '';
+            for(;i < length; i++) {
+                for(var k = 0, len = store[i].distance.length; k < len; k++) {
+                    child_html += '<div class="address_item_distance">'+
+                                        store[i].distance[k].start+
+                                    '<span>至</span>'+
+                                        store[i].distance[k].end+
+                                    '<span>公里</span>'+
+                                    '<span>配送费'+store[i].distance[k].price+'元</span>'+
+                                    '</div>';
+                }
+                var j = i + 1;
+                html += '<li class="address_item area-item area'+i+'" address_id='+i+'>'+
+                                '<div>'+
+                                    '<h5>配送范围</h5>'+
+                                    '<span class="cancel btn btn-info btn-xs" onclick="cancel(this)">取消/</span>'+
+                                    '<span class="edit btn btn-info btn-xs" onclick="edit(this)">编辑</span>'+
+                                '</div>'+
+                                '<div class="price-container">'+
+                                    '<input type="text" name="address_name" value="区域'+j+'" readonly >'+
+                                '</div>'+
+                                '<label>配送距离</label>'+child_html+
+                                '<input type="hidden" name="address" value=""/>'+
+                            '</li>';
+                child_html = '';
+            }
+            var li = '<li class="self_add" onclick="self_add()">'+ 
+                                '+新增配送区域'  
+                            '</li>';
+            $('.address_list').html(html+li); 
+            // $('.address_list').append(li);     
+        }
+        function delete_address (self) {
+            var index = $(self).parent().attr('address_id');  //拿到数组下标
+
+            polygonArr.splice(index,1);                       //删除对应数组元素
+            // all_points.splice(index,1); 
+            map.clearMap();                                   //清空地图覆盖物,以便重新绘制
+            window.init_map(polygonArr);                                  //初始地图,重新绘制
+        }
+        function cancel(that) {
+            $(that).hide();
+            $(that).parent().parent().find('.btn-delete').hide();
+            $(that).parent().find('.edit').show();  
+        }
+
+     //获取url参数
+    function GetQueryString(name){
+         var reg = new RegExp("(^|&)"+ name +"=([^&]*)(&|$)");
+         var r = window.location.search.substr(1).match(reg);
+         if(r!=null)return  unescape(r[2]); return null;
+    }
+
+    function addDistance() {
+        var html = '<div class="distanceItem">'+
+                        '<div class="flexrow">'+
+                            '<div style="width: 35%">'+
+                                '<input type="text" maxlength="11" name="start_position" class="form-control" value="" />'+
+                            '</div>'+
+
+                            '<label>到</label>'+
+
+                            '<div style="width: 35%">'+
+                                '<input type="text" maxlength="11" name="end_position" class="form-control" value="" />'+
+                            '</div>'+
+
+                            '<label>公里</label>'+
+                        '</div>'+
+
+                        '<div class="flexrow">'+
+                            '<input type="text" maxlength="11" name="delivery_price" class="form-control" value="" />'+
+                            '<label class="control-label" >元</label>'+ 
+                        '</div>'+
+                    '</div>'
+        return html;
+    }
+    function addNewDistance (index) {
+       var addDistance = window.addDistance();
+       console.log(index);
+       $('.distanceList'+index+'').append(addDistance);
+    }
+    </script>
+{php include wl_template('common/footer');}

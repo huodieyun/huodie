@@ -1,0 +1,362 @@
+{php include wl_template('common/header');}
+<ul class="nav nav-tabs">
+	<li {if $_GPC['op'] == '' || $_GPC['op'] == 'display'}class="active"{/if}><a href="{php echo web_url('platform/supply_order/display');}">上架单品</a></li>
+	{if $_GPC['op'] == 'supply'}<li class="active"><a href="{php echo web_url('platform/supply_order/supply' , array('id' => $_GPC['id']));}">单品订单</a></li>{/if}
+	<li {if $_GPC['op'] == 'supply_refund'}class="active"{/if}><a href="{php echo web_url('platform/supply_order/supply_refund' , array('id' => $_GPC['id']));}">平台退款订单</a></li>
+	<li {if $_GPC['op'] == 'order' && intval($_GPC['status']) == 1}class="active"{/if}><a href="{php echo web_url('platform/supply_order/order' , array('status' => 1));}">待处理订单</a></li>
+	<li {if $_GPC['op'] == 'order' && intval($_GPC['status']) == 2}class="active"{/if}><a href="{php echo web_url('platform/supply_order/order' , array('status' => 2));}">已处理订单</a></li>
+	<li {if $_GPC['op'] == 'order' && intval($_GPC['status']) == 0}class="active"{/if}><a href="{php echo web_url('platform/supply_order/order');}">全部订单</a></li>
+    {if $_GPC['op'] == 'collect'}<li class="active"><a href="{php echo web_url('platform/supply_order/collect' , array('collect_id' => $_GPC['collect_id']));}">订单列表</a></li>{/if}
+    {if $_GPC['op'] == 'detail'}<li class="active"><a href="{php echo web_url('platform/supply_order/detail');}">订单详情</a></li>{/if}
+	<li {if $_GPC['op'] == 'ship'}class="active"{/if}><a href="{php echo web_url('platform/supply_order/ship');}">批量发货</a></li>
+
+</ul>
+{if $_GPC['op'] == '' || $_GPC['op'] == 'display'}
+
+<div class="panel panel-info">
+	<div class="panel-heading">筛选</div>
+	<div class="panel-body">
+		<form action="./index.php" method="get" class="form-horizontal" role="form">
+			<input type="hidden" name="c" value="site" />
+			<input type="hidden" name="a" value="entry" />
+			<input type="hidden" name="m" value="lexiangpingou" />
+			<input type="hidden" name="do" value="platform" />
+			<input type="hidden" name="ac" value="supply_order" />
+			<input type="hidden" name="op" value="display" />
+			<input type="hidden" name="status" value="{$_GPC['status']}">
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-2 col-md-2 col-lg-1 control-label">搜索条件</label>
+				<select name="platform[manage_cate_id]" class="categoryI form-control tpl-category-parent" style="margin-right:20px;display: inline-block;width: 20%;float: left;">
+					<option value="">商品名称</option>
+					<option value="">批次号</option>
+				</select>
+				<div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
+					<input class="form-control" name="keyword" id="" type="text" value="{$_GPC['keyword']}" placeholder="请输入搜索关键词">
+				</div>
+				<div class="col-md-2" style="float: right">
+					<button class="btn btn-default min-width"><i class="fa fa-search"></i> 搜索</button>
+				</div>
+			</div>
+		</form>
+	</div>
+</div>
+{if empty($goodses)}
+<div style="text-align: center;padding: 100px 0;" class="panel panel-default">暂无数据~</div>
+{else}
+<div class="panel panel-default">
+	<div class="table-responsive">
+		<table class="table table-hover" >
+			<thead>
+			<tr>
+				<!--<th style="width:30px;">-->
+				<!--<input type="checkbox" name="checkall" value="" id="checkall" onclick="var ck = this.checked; $(':checkbox').each(function(){this.checked = ck});"/>-->
+				<!--</th>-->
+				<th class="text-center" style="width:150px;">批次号</th>
+				<th style="width:180px;">商品图</th>
+				<th style="width:180px;">商品名</th>
+				<th class="text-center" style="width:180px;">单买价</th>
+				<th class="text-center" style="width:180px;">库存/销量</th>
+				<th class="text-center" style="width:230px;">操作</th>
+			</tr>
+			</thead>
+			<tbody>
+			<!-- 模态框（Modal） -->
+			<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+				<div class="modal-dialog">
+					<div class="modal-content">
+						<div class="modal-header">
+							<button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+								&times;
+							</button>
+							<h4 class="modal-title" id="myModalLabel">
+								审核此商品
+							</h4>
+						</div>
+						<div class="modal-body">
+							请选择审核成功/拒绝!
+						</div>
+						<div class="modal-footer">
+							<button type="button" class="btn btn-default" data-dismiss="modal" id="yunxu" onclick="yunxu()">拒绝审核
+							</button>
+							<button type="button" class="btn btn-primary" id="jujue" onclick="jujue()">
+								审核通过
+							</button>
+						</div>
+					</div><!-- /.modal-content -->
+				</div><!-- /.modal -->
+			</div>
+			<script>
+                function check(self) {
+                    var gid =  $(self).attr('data-id');
+                    var op = $(self).attr('id');  //你下面op都写死了  你在干嘛
+                    $('#yunxu').attr('data-id',gid);
+                };
+
+                function yunxu() {
+                    $.ajax({
+                        url:"{php echo web_url('platform/goods_list')}",
+                        type:'post',
+                        dataType:"json",
+                        data:{
+                            'id': $('#yunxu').attr('data-id'),
+                            "op":"check",
+                            "status":2,
+                        },
+                        success:function (res) {
+                            window.location.reload();
+                        },
+                        error:function (res) {
+
+                        }
+                    });
+                }
+                //失败处理
+                function jujue() {
+                    $.ajax({
+                        url:"{php echo web_url('platform/goods_list')}",
+                        type:'post',
+                        dataType:"json",
+                        data:{
+                            'id':$('#yunxu').attr('data-id'),
+                            "op":"check",
+                            "status":1
+                        },
+                        success:function (res) {
+                            window.location.reload();
+                        },
+                        error:function (res) {
+
+                        }
+                    });
+                }
+			</script>
+			{php $i=0;}
+			{loop $goodses $goods}
+
+			<tr data-toggle="popover" data-trigger="hover" data-placement="left" class="js-goods-img" >
+				<!--<td><input type="checkbox" id="gid"  name="items[{php echo $i}]" value="{$goods['id']}" class="items" /></td>-->
+				<td class="text-center">{$goods['pici']}</td>
+				<td><img class="scrollLoading" src="{IMAGE_PIXEL}" data-url="{php echo tomedia($goods['gimg'])}" onerror="this.src='{IMAGE_NOPIC_SMALL}'" height="50" width="70"/></td>
+				<td class="line-feed" style="word-wrap:break-word;line-height:25px;">
+					<span class="label label-info">{$goods['name']}</span><br>
+				</td>
+
+				<td class="text-center" style="line-height:25px;">
+					<span class="label label-info">售价：￥{php echo number_format($goods['oprice'], 2)}</span>
+				</td>
+				<td class="text-center" style="line-height:25px;">
+					<span class="label label-warning">库存：{$goods['stock']}</span><br>
+					<span class="label label-info">销量：{$goods['salenum']}</span>
+
+				</td>
+
+				<td class="text-center" style="position:relative;">
+					<!--<a href="javascript:;" class="js-goods-copy" goods-id="{$goods['id']}" >复制商品</a>-->
+					<!--<a href="javascript:;" data-id="{$goods['id']}"  data-url="{php echo web_app_url('goods/detail',array('id'=>$goods['id']))}" id="js-copy{$goods['id']}" class="js-copy">复制链接</a>-->
+					<br>
+					<!--<a href="#" onclick="copy(this,event,{$goods['id']})">采纳商品</a>-->
+					<a href="{php echo web_url('platform/supply_order', array('op' => 'order','id' => $goods['id']))}" class="">订单列表</a>
+					<!--<a href="#" class="" id="check" data-toggle="modal" data-target="#myModal" data-id="{$goods['id']}" onclick="check(this)">审核</a>-->
+					<!--{if intval($_GPC['status']) == 1}-->
+					<!-- -<a href="javascript:;" class="js-sellout-goods" goods-id="{$goods['id']}">售罄</a>-->
+					<!-- - <a href="javascript:;" class="js-off-shelves-goods" goods-id="{$goods['id']}">下架</a>-->
+					<!--{/if}-->
+					<!--{if intval($_GPC['status']) == 2}-->
+					<!-- - <a href="javascript:;" class="js-on-shelves-goods" goods-id="{$goods['id']}">上架</a>-->
+					<!-- - <a href="javascript:;" class="js-delete-goods" goods-id="{$goods['id']}">删除</a>-->
+					<!--{/if}-->
+					<!--{if intval($_GPC['status']) == 4}-->
+					<!-- - <a href="javascript:;" class="js-on-shelves-goods" goods-id="{$goods['id']}">上架</a>-->
+					<!-- - <a href="javascript:;" class="js-remove-goods" goods-id="{$goods['id']}">彻底删除</a>-->
+					<!--{/if}-->
+
+				</td>
+			</tr>
+
+			{php $i++;}
+			{/loop}
+			<!--<tr>-->
+			<!--<td><input type="checkbox" name="checkall" value="" id="checkall" onclick="var ck = this.checked; $(':checkbox').each(function(){this.checked = ck});" /></td>-->
+			<!--<td colspan="8">-->
+			<!--&lt;!&ndash;{if intval($_GPC['status']) != 2}&ndash;&gt;-->
+			<!--&lt;!&ndash;<a href="javascript:;" class="btn btn-success min-width js-batch js-off-shelves">下架</a>&ndash;&gt;-->
+			<!--&lt;!&ndash;{/if}&ndash;&gt;-->
+			<!--&lt;!&ndash;{if intval($_GPC['status']) != 1}&ndash;&gt;-->
+			<!--&lt;!&ndash;<a href="javascript:;" class="btn btn-primary min-width js-batch js-on-shelves">上架</a>&ndash;&gt;-->
+			<!--&lt;!&ndash;{/if}&ndash;&gt;-->
+			<!--&lt;!&ndash;{if intval($_GPC['status']) != 4}&ndash;&gt;-->
+			<!--&lt;!&ndash;<a href="javascript:;" class="btn btn-danger min-width js-batch js-delete">删除</a>&ndash;&gt;-->
+			<!--&lt;!&ndash;{/if}&ndash;&gt;-->
+			<!--&lt;!&ndash;{if intval($_GPC['status']) == 4}&ndash;&gt;-->
+			<!--&lt;!&ndash;<a href="javascript:;" class="btn btn-danger min-width js-batch js-remove">彻底删除</a>&ndash;&gt;-->
+			<!--&lt;!&ndash;{/if}&ndash;&gt;-->
+			<!--</td>-->
+			<!--</tr>-->
+			</tbody>
+		</table>
+	</div>
+</div>
+
+{$pager}
+{/if}
+<script>
+
+    function showUser(str,gid)
+    {
+        var paixv = str;
+        var orid = gid;
+        $.post("{php echo web_url('goods/goods/numx')}",{oridd:orid,paixvv:paixv}
+            ,function(data){
+                util.tips('新的排序已保存！', 2000);
+
+            },'json'
+        );
+    }
+    function onshow_dialog (message) {
+        console.log(message);
+        alert(message);
+    }
+</script>
+<script type="text/javascript">
+    require(['jquery', 'util'], function($, util){
+        $('.js-copy').each(function(){
+            var id=$(this).attr('data-id');
+            util.clip($("#js-copy"+id), $(this).attr('data-url'));
+        });
+    });
+    $(".js-goods-copy").click(function (e) {
+
+        e.stopPropagation();
+        var html = "复制本商品,将保存在【商品列表】【下架的商品】中！";
+        var id = $(this).attr('goods-id');
+        util.nailConfirm(this, function (state) {
+            if (!state) return;
+            $.post("{php echo web_url('goods/goods/copy',array('copy'=>1));}", {id: id}, function (data) {
+                if (!data.errno) {
+                    util.tips("复制成功");
+                    location.href = "{php echo web_url('goods/goods/display',array('status'=>2));}";
+                }
+                ;
+            }, 'json');
+        }, {html: html});
+    });
+</script>
+<script>
+
+    if("{$_GPC['category']['parentid']}") {
+        setTimeout(function () {
+            var parentV = "{$_GPC['category']['parentid']}";
+            var childV = "{$_GPC['category']['childid']}";
+            $('option[value="' + parentV + '"]').attr('selected', 'selected');
+            $('option[value="' + childV + '"]').attr('selected', 'selected');
+        }, 700);
+    }
+
+
+    $(function(){
+        $(".scrollLoading").scrollLoading();
+        $(".js-displayorder").blur(function(e){
+            e.stopPropagation();
+            var $this = $(this);
+            var good_id = $this.data("id");
+            var displayorder = parseInt($this.val());
+            if (isNaN(displayorder)) {
+                $this.parent().addClass('has-error');
+                util.tips('必须为数字', 2000);
+                return false;
+            };
+            $.post("{php echo url('goods/goods/display/displayorder');}", {good_id : good_id, displayorder : displayorder}, function(data){
+                $this.parent().removeClass('has-error');
+                util.tips(data.message, 2000);
+            },'json');
+        });
+
+        $('.js-batch').click(function(e){
+            e.stopPropagation();
+            var goods_ids = [];
+            var $checkboxes = $('.items:checkbox:checked');
+            $checkboxes.each(function() {
+                if (this.checked) {
+                    goods_ids.push(this.value);
+                };
+            });
+
+            if (goods_ids.length == 0) {
+                util.tips('请选择要操作的商品!', 2000);
+                return false;
+            }
+            var op = '';
+            var html = '';
+            if ($(this).hasClass('js-delete')) {
+                op = 'delete';
+                html = '确认删除?';
+            } else if ($(this).hasClass('js-remove')) {
+                op = 'remove';
+                html = '确认选中彻底删除?';
+            }
+            else if ($(this).hasClass('js-shenhe')) {
+                op = 'shenhe';
+                html = '确认审核选中商品?';
+            }
+            var $this = $(this);
+            util.nailConfirm(this, function(state) {
+                if(!state) return;
+                $.post("{php echo web_url('goods/goods/batch');}", {funcop : op, goods_ids : goods_ids}, function(data){
+                    if(!data.errno){
+                        $checkboxes.each(function() {
+                            $(this).parent().parent().remove();
+                        });
+                    };
+                    util.tips(data.message, 2000);
+                }, 'json');
+            }, {html: html});
+        });
+
+        $('.js-delete-goods, .js-off-shelves-goods, .js-on-shelves-goods, .js-remove-goods,.js-sellout-goods').click(function(e) {
+            e.stopPropagation();
+            var id = $(this).attr('goods-id');
+            var _this = $(this).parent().parent();
+            if ($(this).hasClass('js-delete-goods')) {
+                op = 'delete';
+                html = '确认删除?';
+            } else if ($(this).hasClass('js-remove-goods')) {
+                op = 'remove';
+                html = '确认选中彻底删除?';
+            } else if ($(this).hasClass('js-sellout-goods')) {
+                op = 'sellout';
+                html = '确认设置售罄?';
+            }
+            util.nailConfirm(this, function(state) {
+                if(!state) return;
+                $.post("{php echo web_url('goods/goods/single_op')}", {funcop : op, id : id}, function(data){
+                    if(!data.errno){
+                        _this.remove();
+                    };
+                    util.tips(data.message, 2000);
+                }, 'json');
+            }, {html: html});
+        });
+        var $pop = null;
+        $('.scrollLoading').hover(function(){
+            var img = $(this).attr('src');
+            var obj = this;
+            var $pop = util.popover(obj, function($popover, obj){
+                obj.$popover = $popover;
+            }, '<div><img src="'+img+'" style="max-width:200px; max-height:200px;"></div>');
+        }, function(){
+            this.$popover.remove();
+        });
+    });
+</script>
+
+{elseif $_GPC['op'] == 'ship'}
+    {php include wl_template('platform/ship');}
+{elseif $_GPC['op'] == 'order'}
+    {php include wl_template('platform/commodity_order');}
+{elseif $_GPC['op'] == 'collect'}
+    {php include wl_template('platform/order_detail');}
+{elseif $_GPC['op'] == 'supply_refund'}
+{php include wl_template('platform/supply_refund');}
+{/if}
+
+{php include wl_template('common/footer');}

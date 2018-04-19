@@ -1,0 +1,240 @@
+{php include wl_template('common/header');}
+<ul class="nav nav-tabs">
+    <li class="active">
+        <a href="{php echo web_url('service/xiaochengxu')}"><i class="icon-group"></i> 小程序年度套餐</a>
+    </li>
+</ul>
+<div class="panel panel-info">
+    <div class="panel-heading">小程序年度套餐</div>
+    <div class="panel-body table-responsive" style="padding: 0px;">
+        <div class="main_bd">
+            <div class="plugins_wrp">
+                <dl>
+                    <dd>
+                        <ul id="js_plugins1">
+                            <li class="item_wrp" style="width: 100%;">
+                                <div class="plugin_item">
+                                    <div class="plugin_icon"><img src="{TG_URL_WRES}images/function/sendtime.png"></div>
+                                    <div class="plugin_status">
+                                        <i class="access"></i>
+                                        <span class="status_txt">
+                                    </span>
+                                    </div>
+                                    <div class="plugin_content">
+                                        <h3 class="title">小程序年度套餐到期时间</h3>
+                                        <p class="desc" style="width: 100%;">
+                                            {if $wechat['applet_time'] != 0}
+                                            {php echo date('Y-m-d', $wechat['applet_time'])}
+                                            {else}
+                                            暂未开通
+                                            {/if}
+                                        </p>
+                                        <h3 class="title" style="float: left; width: inherit;">剩余天数:</h3>
+                                        <p class="time_left" style="line-height: 15px;">
+
+                                        </p>
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
+                    </dd>
+                </dl>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="panel panel-default">
+    <div class="panel-body">
+        <form  method="get" class="form-horizontal" role="form" id="form1">
+
+            <div class="form-group">
+
+                <label class="col-xs-12 col-sm-3 col-md-2 control-label">{$package['name']}</label>
+
+                <div class="col-sm-10">
+
+                    <label class="radio-inline"><input type="radio" value="{$package['id']}" name="smsnum" >{$package['price']}/年</label>
+
+                </div>
+
+            </div>
+
+            <div class="form-group">
+
+                <label class="col-xs-12 col-sm-3 col-md-2 control-label">扫码支付</label>
+
+                <div class="col-sm-10">
+
+                    <label class="radio-inline">
+                        <img  src="{TG_URL_WRES}images/paylogo.png" width="150px" height="150px" id="payimage">
+                    </label>
+
+                </div>
+            </div>
+
+            <div id="text-table" class="form-group" hidden="hidden">
+                <div class="col-sm-10">
+                    <table class="table table-striped">
+                        <tbody>
+                            <tr>
+                                <td rowspan="13">服务内容</td>
+                            </tr>
+                            <tr>
+                                <td>后续实际运营中增加需求开发优先权，按付费客户提报先后顺序排序（在不改变火蝶系统架构情况下，非常规通用功能不予开发）</td>
+                            </tr>
+                            <tr>
+                                <td>火蝶云小程序系统全功能年度使用</td>
+                            </tr>
+                            <tr>
+                                <td>小程序注册代办（未申请小程序情况下）</td>
+                            </tr>
+                            <tr>
+                                <td>年度期间内所有增加功能免费升级 </td>
+                            </tr>
+                            <tr>
+                                <td>所有常规技术支持无需另外付费</td>
+                            </tr>
+                            <tr>
+                                <td>实体门店/自提点/配送点数量无限制</td>
+                            </tr>
+                            <tr>
+                                <td>多对1客服金牌服务</td>
+                            </tr>
+                            <tr>
+                                <td>运营过程辅助指导</td>
+                            </tr>
+                            <tr>
+                                <td>全国CDN加速服务</td>
+                            </tr>
+                            <tr>
+                                <td>https安全证书防广告劫持</td>
+                            </tr>
+                            <tr>
+                                <td>服务器使用、维护、升级</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script type="text/javascript">
+        $(function(){
+            $('input:radio[name="smsnum"]').change(function() {
+                $('#text-table').find('tr td').css('text-align', 'center');
+                $('#text-table').show();
+                var smsnum=$("input[name='smsnum']:checked").val();
+                var orderno=RandomS();
+                var data=new FormData();
+                data.append('id',smsnum);
+                data.append('num',1);
+                data.append('orderno',orderno);
+                 data.append('uniacid',33);
+                var url="{php echo web_url('store/setting/qr');}";
+                var xhr=new XMLHttpRequest();
+                xhr.onreadystatechange=function(){
+                    if (xhr.readyState==4){
+                        if ((xhr.status>=200 && xhr.status<300)|| xhr.status==304){
+                             document.getElementById("payimage").src="{TG_URL}"+"data/qrcode/33/"+orderno+".png";
+                            var intervalId = setInterval("startRequest('"+orderno+"')",1000);
+                            //clearInterval(intervalId);
+                        }
+                    }
+                }
+                xhr.open("post",url,true);
+                xhr.send(data);
+            });
+        });
+
+        function startRequest(orderno) {
+
+            var buyFormdata=new FormData();
+            /*验证是否购买*/var buyUrl="{php echo web_url('service/order_service',array('op'=>'check'))}";
+
+
+            var requestXhr=new XMLHttpRequest();
+            requestXhr.onreadystatechange=function(){
+
+                if (requestXhr.readyState==4){
+                    if ((requestXhr.status>=200 && requestXhr.status<300)||requestXhr.status==304){
+                        console.log(requestXhr.responseText);
+                        if (JSON.parse(requestXhr.responseText).errno==0){
+                            util.tips(JSON.parse(requestXhr.responseText).message);
+                            //console.log(requestXhr.responseText);
+                            location.reload();
+                        }
+                    }else{
+
+                        //util.tips(requestXhr.status.toString());
+                    }
+                }
+            }
+            requestXhr.open('post',buyUrl,true);
+            buyFormdata.append("orderno",orderno);
+            requestXhr.send(buyFormdata);
+
+        }
+
+        function RandomS(){
+            var now=new Date();
+            var year=now.getFullYear();
+            var month=now.getMonth()+1<10?0+""+(now.getMonth()+1):now.getMonth()+1;
+            var date=now.getDate()<10?0+""+now.getDate():now.getDate();
+            var time=now.getHours()<10?0+""+now.getHours():now.getHours();
+            var minutes=now.getMinutes()<10?0+""+now.getMinutes():now.getMinutes();
+            var seconds=now.getSeconds()<10?0+""+now.getSeconds():now.getSeconds();
+            var randoms=parseInt(Math.random()*9+1)+""+parseInt(Math.random()*9)+""+parseInt(Math.random()*9)+""+parseInt(Math.random()*9)+""+parseInt(Math.random()*9);
+            return year+""+month+""+date+""+time+""+minutes+""+seconds+""+randoms;
+        }
+</script>
+<script>
+    'use strict';
+    console.log({php echo json_encode($wechat['applet_time'])})
+    var endtime = Number({$wechat['applet_time']}+'000')
+    var Endtime = new Date(endtime).toISOString();
+    function getDateData(endtime) {
+        let diff = (Date.parse(new Date(endtime)) - Date.parse(new Date)) / 1000;
+        if (diff <= 0) {
+            return false;
+        }
+        var timeLeft = {
+            years: 0,
+            months: 0,
+            days: 0,
+            hours: 0,
+            min: 0,
+            sec: 0,
+            millisec: 0,
+        };
+        if (diff >= (365.25 * 86400)) {
+            timeLeft.years = Math.floor(diff / (365.25 * 86400));
+            diff -= timeLeft.years * 365.25 * 86400;
+        }
+        if (diff >= (30 * 86400)) {
+            timeLeft.months = Math.floor(diff / (30 * 86400));
+            diff -= timeLeft.months * 30 * 86400;
+        }
+        if (diff >= 86400) {
+            timeLeft.days = Math.floor(diff / 86400);
+            diff -= timeLeft.days * 86400;
+        }
+        if (diff >= 3600) {
+            timeLeft.hours = Math.floor(diff / 3600);
+            diff -= timeLeft.hours * 3600;
+        }
+        if (diff >= 60) {
+            timeLeft.min = Math.floor(diff / 60);
+            diff -= timeLeft.min * 60;
+        }
+        timeLeft.sec = diff;
+        return timeLeft;
+    }
+
+    var dd = getDateData(Endtime);
+    var html= dd ? dd.years+'年'+dd.months+'月'+dd.days+'天'+dd.hours+'小时'+dd.min+'分钟' : '暂未有剩余时间';
+    $('.time_left').html(html);
+</script>
+{php include wl_template('common/footer');}
+

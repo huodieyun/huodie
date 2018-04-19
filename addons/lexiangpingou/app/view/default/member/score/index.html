@@ -1,0 +1,262 @@
+{php include wl_template('common/header');}
+<LINK href="../addons/feng_fightgroups/template/css/style_366c9ef.css" rel="stylesheet">
+<LINK href="../addons/feng_fightgroups/template/css/font-awesome-4.3.0/css/font-awesome.min.css" rel="stylesheet">
+<style>
+    .list_orderno{
+        padding: 10px;
+        background: #e5e5e5;
+        border-bottom: 1px solid #ccc;
+    }
+    .list_detail{
+        display: flex;
+        padding: 10px;
+        background: #fff;
+        border-bottom: 1px solid #ccc;
+        align-items: center;
+        display: -webkit-flex;
+        -webkit-align-items: center;
+    }
+    .detail_img{
+        flex: 1;
+        -webkit-flex: 1;
+    }
+    .detail_img img{
+        width: 20%;
+        margin-right: 10px;
+        margin-bottom: 10px;
+    }
+    .detail_price{
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 20px;
+    }
+    .listCon li{
+        margin: 0;
+        margin-top: 20px;
+    }
+    .list-block .item-title.label{
+        width: 20%;
+    }
+    .status_text {
+        border-radius: 3px;
+        padding: 2px;
+        color: #fff;
+    }
+    .top-title {
+        margin: 10px 20px;
+        line-height: 30px;
+    }
+    .top-title img {
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+    }
+    .top-title .text {
+        padding-left: 20px;
+    }
+    .col-list-3 {
+        float: left;
+        width: 25%;
+        text-align: center;
+        border-left: 1px solid #eee;
+    }
+    .tab {
+        border-bottom: 1px solid #0894ec;
+    }
+    .tab .a-active {
+        padding: 5px 10px;
+        margin-top: 10px;
+        color: #fff;
+        display: inline-block;
+        background: #0894ec;
+    }
+</style>
+<div class="page-group" style="">
+    <div class="page page-current" id="page-goods-list">
+
+        <div class="content infinite-scroll native-scroll" data-distance="10">
+            <div class="header">
+                <div class="top-title"><img src="{$member['avatar']}"><span class="text">我的积分</span></div>
+                <div class="main">
+                    <div class="col-list-3">
+                        <div class="top">全部积分</div>
+                        <span class="num">{$member['score_amount']}</span>
+                    </div>
+                    <div class="col-list-3">
+                        <div class="top">可用积分</div>
+                        <span class="num">{php echo intval($member['score_balance'])}</span>
+                    </div>
+                    <div class="col-list-3">
+                        <div class="top">已用积分</div>
+                        <span class="num">{php echo intval($member['score_amount']) - intval($member['score_balance'])}</span>
+                    </div>
+                    <div class="col-list-3">
+                        <div class="top">待结算积分</div>
+                        <span class="num">{$not}</span>
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
+                <div class="top-title">
+                    <a href="{php echo app_url('member/score/market')}" class="weui_btn weui_btn_mini weui_btn_blue">立即兑换优惠券</a>
+                </div>
+            </div>
+            <div class="list" id="orderlist">
+                <div class="listCon">
+                    <div class="tab">
+                        <a href="{php echo app_url('member/score/index', array('tab' => 'over'))}" class="{php echo $tab == 'over' ? 'a-active' : ''}">已结算积分</a>
+                        <a href="{php echo app_url('member/score/index', array('tab' => 'not'))}" class="{php echo $tab == 'not' ? 'a-active' : ''}">未结算积分</a>
+                    </div>
+                    <ul class="ul_1">
+                    </ul>
+                </div>
+                <div class="loading_more" style="padding-top: 10px;display: none;font-size:1.2em;font-weight:bold;"><span class="loading"><i class="icon_load"></i>正在玩命的加载中......</span>
+                </div>
+                <div class="error">加载失败，点击重新加载</div>
+            </div>
+            <div class="mask"></div>
+        </div>
+    </div>
+
+</div>
+
+<div id="gotop" style="display:none;position:fixed;right:10px;bottom:120px;width:45px;height:45px;border-radius:50%;z-index:10086;background-color:c3c3c3;">
+    <img src="{TG_URL_ARES}images/gotop.png" width="45px" height="45px">
+</div>
+<!-- <img src="{{ d.list[i].goods[j].gimg}}" alt=""> -->
+<script type="text/html" id="goodslist">
+    {{# for(var i = 0, len = d.list.length; i < len; i++){ }}
+    <li>
+        <div class="list_orderno">{{ d.list[i].created_at}} </div>
+        <div class="list_detail">
+            <div class="detail_img">
+                <p>订单号：{{ d.list[i].orderno}}</p>
+
+            </div>
+
+            <div class="detail_price">
+                <p>{{ d.list[i].status }}</p>
+                <p>积分：{{ d.list[i].score }}</p>
+            </div>
+
+        </div>
+    </li>
+
+    {{# } }}
+
+</script>
+
+<script>
+    var sesso;//传递事件函数，定义在全局中有助于传递
+    var orderlist = document.getElementById("orderlist");
+
+    $(function() {
+        'use strict';
+        //商品列表页
+        $(document).on("pageInit", "#page-goods-list", function(e, id, page) {
+            var loading = false;
+            var thispagesize = 6;
+            var thispagesizemax = 100;
+            var thispage = 1;
+
+            function addItems(thispage, thispagesize) {
+                sessionStorage.setItem('thispage',thispage);
+                var ajaxurl = "{$ajaxurl}" + "&page=" + thispage + "&pagesize=" + thispagesize;
+                $.ajax({
+                    type: "POST",
+                    url: ajaxurl,
+                    dataType: 'json',
+                    beforeSend: function(XMLHttpRequest) {},
+                    success: function(data) {
+                        thispagesizemax = data.total;
+                        if (data.list.length > 0) {
+                            var gettpl = document.getElementById('goodslist').innerHTML;
+                            laytpl(gettpl).render(data, function(html){
+                                if(html!="Laytpl Error：TypeError: Cannot read property 'length' of undefined") {
+                                    $(".ul_1").append(html);
+                                }
+                            });
+                        } else {
+                            $(".loading_more").remove();
+                            $('.noData').show();
+                        }
+                        joinSession();
+                        setSealout();
+                    },
+                    error: function() {
+                        $('.error').show();
+                    }
+                });
+            }
+            addItems(thispage, thispagesize);
+            $(page).on('infinite', function() {
+                if (loading) return;
+                loading = true;
+                $(".loading_more").show();
+                if (orderlist.getBoundingClientRect().top < -500){
+                    gotop.style.setProperty("display", "block");
+                }else {
+                    gotop.style.setProperty("display", "none");
+                }
+                setTimeout(function() {
+                    loading = false;
+                    thispage++;
+                    addItems(thispage, thispagesize);
+                    $(".loading_more").hide();
+                    $.refreshScroller();
+                }, 200);
+            });
+            sesso=function sessionProcess(elem) {
+                var externals = document.getElementsByClassName("externals");
+                var len = externals.length;
+                for ( var i = 0; i < len; i++ ) {
+                    if ( elem === externals[i] ) {
+                        var classclassname = elem.className.slice(9);
+                        sessionStorage.setItem("position", classclassname+i.toString());
+                        sessionStorage.setItem("id", externals[i].id);
+                        sessionStorage.setItem("weight", externals[i].getElementsByClassName('weight')[0].innerHTML);
+                        sessionStorage.setItem("kucun", externals[i].getElementsByClassName('kucun')[0].innerHTML);
+                        sessionStorage.setItem("isGuige", externals[i].getElementsByClassName("isguige")[0].innerHTML);
+                        sessionStorage.setItem("price", externals[i].getElementsByClassName("price")[0].innerHTML.slice(1));
+                        sessionStorage.setItem("img", externals[i].getElementsByTagName("img")[1].src);
+                        sessionStorage.setItem("title", externals[i].getElementsByTagName("h5")[0].innerHTML);
+                        saveSession();
+                    }
+                }
+
+            }
+            if (sessionStorage.getItem("position") !== null){
+                document.getElementById("animationS").style.setProperty("display","block");
+                setTimeout(function() {
+                    var classname = sessionStorage.getItem("position").slice(-1*sessionStorage.getItem("position").length,-1*sessionStorage.getItem("position").length+9);
+                    var index = parseInt(sessionStorage.getItem("position").slice(-1*sessionStorage.getItem("position").length+9));
+                    var i = index;
+                    var n = ( i /4 +2 )* 500;
+                    setTimeout(function(){
+                        loadData(i);
+                        setTimeout(function(){
+                            document.getElementsByClassName(classname)[index].scrollIntoView();
+                            setTimeout(function(){
+                                document.getElementById("animationS").style.setProperty("display","none");
+                            },0)
+                        },n)
+                    },200)
+                },0);
+            }
+            function loadData(i) {
+                if (i<3) return;
+                thispage++;
+                addItems(thispage,thispagesize);
+                setTimeout(function(){
+                    loadData(i-4);
+                },200)
+
+            }
+        });
+        $.init();
+    });
+
+
+</script>
+
+{php include wl_template('common/footer');}

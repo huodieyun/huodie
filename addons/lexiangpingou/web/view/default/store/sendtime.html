@@ -1,0 +1,326 @@
+{php include wl_template('common/header');}
+<style>
+	.form-horizontal .form-group{
+		margin: inherit;
+	}
+</style>
+<!--<span class="price" style="display:none;">0.01</span>-->
+<ul class="nav nav-tabs">
+<li {if $op == 'base'}class="active"{/if}><a href="{php echo web_url('store/sendtime', array('op' => 'base'))}">基本设置</a></li>
+{if $checkfunction['status']}
+	{if checkstr($_W['user']['perms'],'sendtime.list')}
+	<li {if $op == 'display'}class="active"{/if}><a href="{php echo web_url('store/sendtime', array('op' => 'display'))}">管理送货时间</a></li>
+	{/if}
+	{if checkstr($_W['user']['perms'],'sendtime.add')}
+	<li {if $op == 'post'}class="active"{/if}><a href="{php echo web_url('store/sendtime', array('op' => 'post'))}">添加送货时间</a></li>
+	{/if}
+	{/if}
+</ul>
+<script>
+	require(['bootstrap'],function($){
+		$('.btn').hover(function(){
+			$(this).tooltip('show');
+		},function(){
+			$(this).tooltip('hide');
+		});
+	});
+</script>
+{if $op == 'base'}
+	
+	<div class="panel panel-default">
+	<div class="panel-body table-responsive" style="padding: 0px;">
+		<div class="main_bd">
+        	<div class="plugins_wrp">
+            <dl>
+                <dd>
+                    <ul id="js_plugins">
+						<li class="item_wrp" style="width: 100%;">
+							<div class="plugin_item">
+								<div class="plugin_icon"><img src="{TG_URL_WRES}images/function/sendtime.png" style="cursor:pointer;"></div>
+								<div  id="link-icon1" class="plugin_icon" >
+									<div id="link-icon" style="display:none;width:100%;height:100%;position:absolute;background-color:rgba(0,0,0,0.3);cursor:pointer;">
+										<img src="{TG_URL_WRES}images/3.svg"style="position:absolute;width:60%;left:20%;">
+									</div>
+									<img src="{TG_URL_WRES}images/function/sendtime.png" style="cursor:pointer;">
+								</div>
+								{if $_W['user']['merchant_id'] == 0}
+								<div class="plugin_status">
+									<i class="access"></i>
+									<span class="status_txt">
+										{if $checkfunction['status']}									
+										<input class="flag" type="checkbox" name="help"  value="{$setting['sendtime']}" {if $setting['sendtime'] == 1}checked{/if} />
+										<span style="display:block;margin-left:60px;margin-top:2px;color:#888;font-size:14px;">截止日期：{php echo date('Y-m-d', $checkfunction['endtime'])}<span id="renewal" style="background-color:#ea5919;color:white;cursor:pointer;margin-left:15px;border-radius:2px;font-size:12px;padding-left:3px;padding-right:3px;padding-bottom:1px;padding-top:1px;">续费</span></span>
+										
+										{else}
+										
+										<div id="buyDaifu" style="font-size:20px;margin-top:-20px;width: 60px;height:60px;border-radius:50%;font-weight:900;background-color:#ff5466;color:white;margin-right: -25px;text-align:center;line-height:60px;cursor:pointer;">购买</div>
+										{/if}
+									</span>
+								</div>
+								{/if}
+								<div class="plugin_content">
+									<h3 class="title">{$_W['page']['title']}</h3>
+									<p class="desc" style="    width: 100%;">
+										启用送货时间后，单买模式支持设置多时间段粉丝自由选择，时间过期或者时段配送承载量达到后自动关闭对应时间段选择项。此功能购物车模式适用性更强，搭配送货上门功能使用。
+									</p>
+								</div>
+							</div>
+						</li>
+					</ul>
+                </dd>
+            </dl>
+        </div>
+    	</div>
+
+		<form action="" method="post" class="form-horizontal form" enctype="multipart/form-data" id="form1">
+			<!--<div class="main_bd" style="height: 80px;">-->
+				<!--<div class="form-group">-->
+					<!--<label class="col-xs-12 col-sm-1 col-md-1 control-label">自提说明</label>-->
+					<!--<div class="col-sm-10 col-xs-12">-->
+						<!--<textarea name="goods[content]" class="form-control" cols="70" value="">{$parms['content']}</textarea>-->
+					<!--</div>-->
+				<!--</div>-->
+			<!--</div>-->
+			<div class="main_bd" style="height: 100px;">
+				<div class="form-group">
+					<label class="col-xs-12 col-sm-1 col-md-1 control-label">送货时间</label>
+					<div class="col-sm-10 col-xs-12">
+						<textarea name="goods[time]" class="form-control" cols="70" {if $_W['user']['merchant_id'] > 0}disabled{/if} value="">{$parms['time']}</textarea>
+					</div>
+				</div>
+			</div>
+			<input type="submit" name="submit" value="提交" class="btn btn-primary col-lg-1" style="float: left;position: relative;top: -10px;left:110px;">
+		</form>
+	</div>
+</div>
+	{/if}
+{if $op == 'post'}
+<div class="main">
+	<form action="" method="post" class="form-horizontal form" enctype="multipart/form-data" id="form1">
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				送货时间(请填写整数(00~24),例如送货时间为:08:00~09:59,起始时间填写08,截止时间填写09)
+			</div>
+			<div class="panel-body">
+				
+				
+				
+<div class="form-group">
+					<label class="col-xs-12 col-sm-3 col-md-2 control-label"><span style="color:red">*</span>起始时间</label>
+					<div class="col-sm-9 col-xs-12">
+						<input type="text" name="starttime" class="form-control" value="{$sendtime['starttime']}" onkeyup="this.value=this.value.replace(/[^\d:]/g,'')"/>
+					</div>
+				</div>		
+			<div class="form-group">
+					<label class="col-xs-12 col-sm-3 col-md-2 control-label"><span style="color:red">*</span>截至时间</label>
+					<div class="col-sm-9 col-xs-12">
+						<input type="text" name="endtime" class="form-control" value="{$sendtime['endtime']}" onkeyup="this.value=this.value.replace(/[^\d:]/g,'')"/>
+					</div>
+				</div>	
+<div class="form-group">
+					<label class="col-xs-12 col-sm-3 col-md-2 control-label"><span style="color:red">*</span>承载量</label>
+					<div class="col-sm-9 col-xs-12">
+						<input type="text" name="total" class="form-control" value="{$sendtime['total']}" />
+					</div>
+				</div>					
+				<!--<div class="form-group">
+					<label class="col-xs-12 col-sm-3 col-md-2 control-label">首页推荐</label>
+					<div class="col-sm-9 col-xs-12">
+						 <label class='radio-inline'>
+							 <input type='radio' name='isrecommand' value=1' {if $sendtime['isrecommand']==1}checked{/if} /> 是
+						 </label>
+						 <label class='radio-inline'>
+							 <input type='radio' name='isrecommand' value=0' {if $sendtime['isrecommand']==0}checked{/if} /> 否
+						 </label>
+					</div>
+				</div>-->
+				<div class="form-group">
+					<label class="col-xs-12 col-sm-3 col-md-2 control-label">是否显示</label>
+					<div class="col-sm-9 col-xs-12">
+						<label class='radio-inline'>
+							<input type='radio' name='status' value=1' {if $sendtime['status']==1}checked{/if} /> 是
+						</label>
+						<label class='radio-inline'>
+							<input type='radio' name='status' value=0' {if $sendtime['status']==0}checked{/if} /> 否
+						</label>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="form-group col-sm-12">
+			<input type="submit" name="submit" value="提交" class="btn btn-primary col-lg-1" />
+			<input type="hidden" name="token" value="{$_W['token']}" />
+		</div>
+	</form>
+</div>
+
+{elseif $op == 'display'}
+<div class="main">
+	<div class="sendtime">
+		<form action="" method="post" onsubmit="return formcheck(this)">
+			<div class="panel panel-default">
+				<div class="panel-body table-responsive">
+					<table class="table table-hover">
+						<thead>
+							<tr>
+								
+								
+								<th style="width:300px;">送货时间名称</th>
+								<th style="width:300px;">承载量</th>
+								<th style="width:150px;">状态</th>
+								<th style="width:150px;">操作</th>
+							</tr>
+						</thead>
+						<tbody>
+						{loop $sendtime $row}
+						<tr>
+						
+							
+							<td>
+								
+								<div class="type-parent">{$row['starttime']}~{$row['endtime']}
+								</div>
+							</td>
+							<td>
+							{$row['total']}
+							</td>
+							<td>
+								{if $row['status']==1}
+								<span class='label label-success'>显示</span>
+								{else}
+								<span class='label label-danger'>隐藏</span>
+								{/if}
+							</td>
+							<td>
+								{if checkstr($_W['user']['perms'],'sendtime.edit')}
+							<a href="{php echo web_url('store/sendtime', array('op' => 'post', 'id' => $row['id']))}" class="btn btn-default btn-sm" data-toggle="tooltip" data-placement="bottom" title="编辑"><i class="fa fa-edit"></i></a>&nbsp;&nbsp;
+								{/if}
+								{if checkstr($_W['user']['perms'],'sendtime.delete')}
+								<a href="{php echo web_url('store/sendtime', array('op' => 'delete', 'id' => $row['id']))}" onclick="return confirm('确认删除此送货时间吗？');return false;" class="btn btn-default btn-sm" data-toggle="tooltip" data-placement="bottom" title="删除"><i class="fa fa-times"></i></a>
+								{/if}
+							</td>
+						</tr>
+						
+						{/loop}
+						{if checkstr($_W['user']['perms'],'sendtime.add')}
+						<tr>
+							
+							<td colspan="4">
+								<a href="{php echo web_url('store/sendtime', array('op' => 'post'))}"><i class="fa fa-plus-sign-alt"></i> 添加新送货时间</a>
+							</td>
+						</tr>
+						{/if}
+						<tr>
+							
+							<td colspan="4">
+								<input name="submit" type="submit" class="btn btn-primary" value="提交">
+								<input type="hidden" name="token" value="{$_W['token']}" />
+							</td>
+						</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</form>
+	</div>
+</div>
+{/if}
+<script>
+var linkicon=document.getElementById("link-icon");
+		var linkicon2=document.getElementById("link-icon1");
+		
+		linkicon2.onmouseleave = function () {
+			linkicon.style.setProperty( 'display', 'none' );
+		}
+		
+		linkicon2.onmouseover = function () {
+			linkicon.style.setProperty( 'display', 'block' );
+		}
+		
+		linkicon.onclick=function (ev) {
+			document.getElementById('detailimg').src='{TG_URL_WRES}images/function/shsj.jpg';
+			document.getElementById("detailname").innerHTML = "送货时间";
+			document.getElementById("detailshow").style.setProperty("display","block");
+		}
+$(function(){
+	require(['bootstrap.switch'],function($){
+		$('.flag:checkbox').bootstrapSwitch({onText: '启用', offText: '禁用'});
+		$('.bootstrap-switch-wrapper').click(function(e){
+			e.stopPropagation();
+			$.post("{php echo web_url('store/sendtime/ajax')}",function(d){
+				if(!d.errno){
+					util.tips(d.message);
+				}
+			},"json");
+		});
+	});
+	// 新建
+		$('.js-create').click(function(e) {
+			$('#order-remark-container').show();
+			$('.panel').css("opacity","0.2");$('.nav').css("opacity","0.2");
+		});
+		$('.js-cancel,.close').click(function(e) {
+			$('#order-remark-container').hide();
+			$('.panel').css("opacity","1");$('.nav').css("opacity","1");
+		});
+		$('.js-order-remark-post').click(function() {
+			var order_id = $(this).attr('order-id');
+			var remark = $('#remark').val();
+			$.post("{php echo web_url('application/helpbuy/create')}",{id:order_id,remark:remark},function(d){
+				if(!d.errno){
+					if(order_id){
+						$('#name'+order_id).html(remark);
+					}else{
+						var data = '<tr data-toggle="popover" data-trigger="hover" data-placement="left" class="js-goods-img">'
+									+'<td class="line-feed text-left">'+remark
+									+'</td>'
+									+'<td class="text-left">'
+										+'<a href="javascript:;" class="js-edit" order-id="'+d.id+'">编辑</a> - '
+										+'<a href="javascript:;" class="js-delete" order-id="'+d.id+'">删除</a>'
+									+'</td>'
+								+'</tr>';
+						
+						$('#add').append(data);
+					}
+					
+				}
+			},"json");
+			$('#order-remark-container').hide();
+			$('.panel').css("opacity","1");$('.nav').css("opacity","1");
+		});
+		$('.js-edit').click(function(e) {
+			var order_id = $(this).attr('order-id');
+			var order_name = $(this).attr('order-name');
+			$('#remark').val(order_name);
+			$('.js-order-remark-post').attr("order-id",order_id);
+			$('#order-remark-container').show();
+			$('.panel').css("opacity","0.2");
+			$('.nav').css("opacity","0.2");
+		});
+		$('.js-delete').click(function(e) {
+			e.stopPropagation();
+			var order_id = $(this).attr('order-id');
+			var _this = $(this);
+			util.nailConfirm(this, function(state) {
+				if(!state) return;
+				_this.parent().parent().remove();
+/*url*/				$.post("{php echo web_url('application/helpbuy/delete');}", { id : order_id }, function(data){
+						util.tips(data.message);
+				}, 'json');
+			}, {html: "确定删除！"});
+			
+		});
+	$(".scrollLoading").scrollLoading();
+	var $pop = null;
+	$('.scrollLoading').hover(function(){
+		var img = $(this).attr('src');
+		var obj = this;
+		var $pop = util.popover(obj, function($popover, obj){
+			obj.$popover = $popover;
+		}, '<div><img src="'+img+'" style="max-width:200px; max-height:200px;"></div>');
+	}, function(){
+		this.$popover.remove();
+	});
+});
+</script>
+{php include wl_template('common/footer');}

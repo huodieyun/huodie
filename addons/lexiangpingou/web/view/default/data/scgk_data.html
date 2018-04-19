@@ -1,0 +1,180 @@
+{php include wl_template('common/header');}
+<style>
+    .container{
+        background:#fff;
+        padding: 10px;
+        height: 690px;
+    }
+    #shangchengFW{
+        height: 500px;
+    }
+    .container label{
+        width: 60px;
+        line-height: 34px;
+    }
+    .btn-default:focus,.btn-default.active{
+        background-color: #44b549;
+        color: #fff0cc;
+        border-color: #ccc;
+        box-shadow:none;
+    }
+    .topGM{
+        margin-bottom: 20px;
+    }
+</style>
+<div class="container">
+    <div class="btn-group topGM" role="group">
+        <button type="button" class="btn btn-default active">最近七天</button><button type="button" class="btn btn-default">最近30天</button><button type="button" class="btn btn-default">最近60天</button><button type="button" class="btn btn-default">最近90天</button>
+    </div>
+    <div id="shangchengFW"></div>
+</div>
+
+<script>
+    $('.topGM').on('click','button',function(){
+        if($(this).hasClass('active')){return false;}
+        $('.topGM button').removeClass('active');
+        $(this).addClass('active');
+        if($(this).html()=='最近七天'){
+            ajaxZHL(getBeforeDate(6),getBeforeDate(0));
+        }else if($(this).html()=='最近30天'){
+            ajaxZHL(getBeforeDate(29),getBeforeDate(0));
+        }else if($(this).html()=='最近60天'){
+            ajaxZHL(getBeforeDate(59),getBeforeDate(0));
+        }else if($(this).html()=='最近90天'){
+            ajaxZHL(getBeforeDate(89),getBeforeDate(0));
+        }
+    });
+
+
+    // 路径配置
+    require.config({
+        paths: {
+            echarts: "//www.lexiangpingou.cn/addons/lexiangpingou/web/resource/js/echarts/build/dist"
+        }
+    });
+    var option = {
+        title: {
+            text: '商城访问趋势图',
+            subtext: '各时间段访问量'
+        },
+        tooltip: {
+            show: true
+        },
+        legend: {
+            data: ['商城PV', '商城UV']
+        },
+        toolbox: {
+            show: true,
+            feature: {
+                magicType: {show: true, type: ['line', 'bar']},
+                restore: {show: true},
+                saveAsImage: {show: true}
+            }
+        },
+        calculable: true,
+        xAxis: [
+            {
+                type: 'category',
+                data: []
+            }
+        ],
+        yAxis: [
+            {
+                type: 'value'
+            }
+        ],
+        series: [
+            {
+                "name": "商城PV",
+                "type": "bar",
+                "data": []
+//                markPoint: {
+//                    data: [
+//                        {type: 'max', name: '最大值'},
+//                        {type: 'min', name: '最小值'}
+//                    ]
+//                }
+            },
+            {
+                "name": "商城UV",
+                "type": "bar",
+                "data": []
+//                markPoint: {
+//                    data: [
+//                        {type: 'max', name: '最大值'},
+//                        {type: 'min', name: '最小值'}
+//                    ]
+//                }
+            }
+        ]
+    };
+    ajaxZHL(getBeforeDate(6),getBeforeDate(0));
+    function ajaxZHL(a,b) {
+        $.get(
+                location.origin + '/minapi.php?op=scgk_data&uniacid={$_W["uniacid"]}',
+                {
+                    stime: a,
+                    etime: b
+                },
+                function (res) {
+                    var data = JSON.parse(res).data;
+                    console.log(data);
+                    var seriesPV=[],seriesUV=[],xAxisdata=[];
+                    for(var i=0;i<data.length;i++){
+                        seriesPV.push(data[i].pv);
+                        seriesUV.push(data[i].uv);
+                        xAxisdata.push(data[i].addtime)
+                    }
+                    option.series[0].data=seriesPV;
+                    option.series[1].data=seriesUV;
+                    option.xAxis[0].data=xAxisdata;
+                    ajaxEh(option)
+                }
+        );
+    }
+
+    function ajaxEh(option) {
+        require(
+                [
+                    'echarts',
+                    'echarts/chart/bar', // 使用柱状图就加载bar模块，按需加载
+                    'echarts/chart/line',
+                    'echarts/chart/funnel',
+                    'echarts/chart/pie'
+                ],
+                function (ec) {
+                    // 基于准备好的dom，初始化echarts图表
+                    var myChart = ec.init(document.getElementById('shangchengFW'));
+                    myChart.setOption(option);
+                }
+        );
+    }
+
+    function getBeforeDate(n){
+        var n = n;
+        var d = new Date();
+        var year = d.getFullYear();
+        var mon=d.getMonth()+1;
+        var day=d.getDate();
+        if(day <= n){
+            if(mon>1) {
+                mon=mon-1;
+            }
+            else {
+                year = year-1;
+                mon = 12;
+            }
+        }
+        d.setDate(d.getDate()-n);
+        year = d.getFullYear();
+        mon=d.getMonth()+1;
+        day=d.getDate();
+        s = year+"-"+(mon<10?('0'+mon):mon)+"-"+(day<10?('0'+day):day);
+        return s;
+    }
+
+</script>
+
+
+
+{php include wl_template('common/footer');}

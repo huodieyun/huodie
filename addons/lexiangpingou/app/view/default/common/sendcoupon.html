@@ -1,0 +1,61 @@
+{if $goods['is_sendcoupon']=='1'}
+<style>
+    .iconal-wodeyouhuiquan{
+        font-size: 20px;
+        margin-top: 3px;
+    }
+    .coupon_detail{
+        display: none;
+        position: fixed;
+        z-index: 105;
+    }
+</style>
+<div class="list-block" style="margin:0;font-size: inherit;">
+    <ul>
+        <li class="item-content item-link" onclick="$('.coupon_detail').slideDown()">
+            <div class="item-media"><i class="iconal-wodeyouhuiquan"></i></div>
+            <div class="item-inner">
+                <div class="item-title">签收有礼</div>
+                <div class="item-after">查看详情</div>
+            </div>
+        </li>
+    </ul>
+</div>
+<div class="page-group coupon_detail">
+    <div class="page page-current" id="page-coupon-get">
+        <div class="content native-scroll app">
+            <div class="app-coupon">
+                <div class="promote-card">
+                    <div class="name clearfix">
+                        <span class="js-name"> {$coupon_info['name']} </span>
+                        <!--<a href="" class="promote-share">分享</a>-->
+                    </div>
+                    <div class="text-center promote-value">
+                        ￥ <span class="js-value"> {if $coupon_info['is_random'] == 2} {$coupon_info['value']} ~ {$coupon_info['value_to']} {else} {$coupon_info['value']} {/if} </span>
+                    </div>
+                    <div class="text-center promote-limit js-is-at-least">
+                        {if !empty($coupon_info['at_least']) && $coupon_info['at_least'] != 0.00}
+                        订单满 <span class="js-at-least">  {$coupon_info['at_least']} </span>元 (不含运费)
+                        {else}
+                        不限制
+                        {/if}
+                    </div>
+                    <div class="text-center promote-time">
+                        有效日期：<span class="js-start-time"> {php echo date('Y-m-d H:i:s', $coupon_info['start_time']);} </span> - <span class="js-end-time"> {php echo date('Y-m-d H:i:s', $coupon_info['end_time']);} </span>
+                    </div>
+                    <div class="dot"></div>
+                </div>
+                <div class="promote-desc">
+                    <div class="promote-desc-title">使用说明</div>
+                    <div class="desc-detail js-description">
+                        {$coupon_info['description']}
+                    </div>
+                </div>
+                <div class="weui_btn_area">
+                    <div class="weui_btn weui_btn_primary" href="javascript:" onclick="$('.coupon_detail').slideUp()">关闭</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{/if}

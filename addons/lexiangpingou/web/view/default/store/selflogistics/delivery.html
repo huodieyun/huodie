@@ -1,0 +1,6 @@
+<tr class='{$deliverys}'>
+ <input type="hidden" name="deliverys[]" value="{$deliverys}" />
+<td class="text-center"><input type="text" value="{$row['cart']}" class="form-control" name="cart[{$deliverys}]" style="width:100px;"></td>
+<td class="text-center"><input type="text" value="{$row['cost']}" class="form-control" name="cost[{$deliverys}]" style="width:100px;"></td>
+<td><a href='javascript:;' onclick='$(this).parent().parent().remove()'><i class='fa fa-remove'></i></td>
+</tr>

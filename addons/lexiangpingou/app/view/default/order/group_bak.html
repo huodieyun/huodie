@@ -1,0 +1,853 @@
+{php include wl_template('common/header');}
+<style> 
+		.link-rule{
+		height:100%;
+		width:100%;
+		background-color:
+		rgba(128,128,128,0.5);
+		position:fixed;top:0px;
+		left:0px;
+		z-index:10000;
+	}
+	
+	.link-rule>div div:last-child{
+		 position:absolute;
+		 left:0px;
+		 right:0px;
+		 width:150px;
+		 height:30px;
+		 bottom:5px;
+		 background-color:#0894ec;
+		 color:white;
+		 font-size:18px;
+		 margin-left:auto;
+		 margin-right:auto;
+		 line-height:30px;
+		 border-radius:5px;
+	}
+	
+	.link-rule>div{
+		text-align:center;
+		position:absolute;
+		top:0;
+		bottom:0;
+		left:8px;
+		right:8px;
+		margin-top:auto;
+		margin-bottom:auto;
+		height:85%;
+		background-color:white;
+		border-radius:8px;
+	}
+	.link-rule>div>div:first-child{
+		 font-weight:bold;
+		 background-color:#ececec;
+		 font-size:20px;
+		 line-height:40px;
+		 border-radius:8px 8px 0 0;
+		 height:40px;
+	}
+	.link-rule>div div:nth-child(2){
+		 text-align:left;
+		 position:absolute;
+		 top:48px;
+		 bottom:45px;
+		 left:19px;
+		 right:19px;
+		 overflow:scroll;
+	}
+	.link-rule>div div:last-child{
+		 position:absolute;
+		 left:0px;
+		 right:0px;
+		 width:150px;
+		 height:30px;
+		 bottom:5px;
+		 background-color:#0894ec;
+		 color:white;
+		 font-size:18px;
+		 margin-left:auto;
+		 margin-right:auto;
+		 line-height:30px;
+		 border-radius:5px;
+	}
+	.progressStep:first-child{ border:1px solid transparent!important;background-color:transparent!important;}
+	.goods-rule{
+		height:100%;
+		width:100%;
+		background-color:
+		rgba(128,128,128,0.5);
+		position:fixed;top:0px;
+		left:0px;
+		z-index:10000;
+	}
+	
+	.goods-rule>div div:last-child{
+		 position:absolute;
+		 left:0px;
+		 right:0px;
+		 width:150px;
+		 height:30px;
+		 bottom:5px;
+		 background-color:#0894ec;
+		 color:white;
+		 font-size:18px;
+		 margin-left:auto;
+		 margin-right:auto;
+		 line-height:30px;
+		 border-radius:5px;
+	}
+	
+	.goods-rule>div{
+		text-align:center;
+		position:absolute;
+		top:0;
+		bottom:0;
+		left:8px;
+		right:8px;
+		margin-top:auto;
+		margin-bottom:auto;
+		height:85%;
+		background-color:white;
+		border-radius:8px;
+	}
+	.goods-rule>div>div:first-child{
+		 padding:19px;
+		 padding-top:10px;
+		 padding-bottom:10px;
+		 
+		 font-weight:bold;
+		 background-color:#ececec;
+		 font-size:20px;
+		 line-height:28px;
+		 border-radius:8px 8px 0 0;
+		 display:block;
+		 
+	}
+	.goods-rule>div div:nth-child(2){
+		 padding-left:24px; padding-right:24px;
+		 font-size:14px;
+		 line-height:16px;
+		 margin:0 auto;
+		 height: 70%;
+		 clear:both;
+		 overflow: auto;
+	}
+	.goods-rule>div div:last-child{
+		 
+		 width:150px;
+		 height:30px;
+		 margin-bottom:23px;
+		 background-color:#0894ec;
+		 color:white;
+		 font-size:18px;
+		 margin-left:auto;
+		 margin-right:auto;
+		 line-height:30px;
+		 border-radius:5px;
+	}
+</style>
+
+<span id="numPerson">{$numPerson}</span>
+<span id="numPrices">{$numPrices}</span>
+<span id="numGroup">{$numGroup}</span>
+<span id="goodsid">{$goods['id']}</span>
+<div class="page-group">
+    <div class="page page-current" id="page-order-list">
+    <div class="content" style="padding-bottom: 60px;">
+		{if $tuaninfo['groupstatus']==3}
+        <div class="H5_con" id="H5_con1">
+	    <div class="tips topStateWrap tips_succ tips_succ2" id="originTopWrap">
+			<div class="tips_ico"></div>
+			<div class="tips_tit">组团进行中</div>
+			<div class="tips_txt">赶快召唤小伙伴加入吧！</div>
+		</div>
+   		</div>
+   		{elseif $tuaninfo['groupstatus']==2}
+   		<div class="H5_con" id="H5_con1">
+        <div class="tips topStateWrap tips_succ tips_succ2" id="originTopWrap">
+            <div class="tips_ico"></div>
+            <div class="tips_tit">团购成功</div>
+            <div class="tips_txt">我们会尽快为您发货，请耐心等待</div>
+        </div>
+        </div>
+        {else}
+        <div class="H5_con" id="H5_con1">
+        <div class="tips topStateWrap tips_err tips_succ2" id="originTopWrap">
+            <div class="tips_ico"></div>
+            <div class="tips_tit">团购失败</div>
+            <div class="tips_txt">组团失败，不要气馁重新再来！</div>
+        </div>
+        </div>
+        {/if}
+        <div class="H5_con">
+            <div class="tm {if $tuaninfo['groupstatus']==2}tm_succ{elseif $tuaninfo['groupstatus']==1}tm_err{/if}">
+                <div class="td tuanDetailWrap">
+                    <div class="td_img">
+                        <a href="{php echo app_url('goods/detail', array('id' => $goods['id'],'tuan_id'=>$tuan_id))}" class="external goItemPage"><img src="{$goods['share_image']}" alt=""></a>
+                    </div>
+                    <div class="td_info">
+                        <p class="td_name">{$goods['gname']}</p>
+                        <p class="td_mprice"><span class="tuanTotal">{$tuaninfo['neednum']}</span>人团：<i>￥</i><b>{if !empty($tuaninfo['price'])}{$tuaninfo['price']}{else}{$goods['gprice']}{/if}</b><i> /{$goods['unit']}</i></p>
+                        <p class="td_attr" style="display: none;">属性：<span></span></p>
+						<p class="td_attr" style="display: block;">团单号：{$order['tuan_id']}<span></span></p>
+                        <p><span id="goodsdetail" style="color:red; font-size:16px;">查看详情&gt;</span></p>
+                        <p class="td_num"></p>
+                    </div>	
+                </div>
+				<div class="editor">{$goods['luckcontent']}{$goods['goodsdesc']}</div>
+            </div>
+        </div>
+
+		
+	
+	
+					{if $goods['isshowsend']==1}
+			 <div class="step" style="margin-top:-10px;" data-unuse="1" style=" text-align:center;">
+                <div class="step_hd">
+                    <b>成团记录：</b>只显示最新成功组团成功的几个团
+
+                </div>
+                
+                      <MARQUEE loop=-1 scrollAmount=1 scrollDelay=1 direction=up width=100% height=63
+					&#111;nmouseout="this.start()" &#111;nmouseover="this.stop()">
+					  {loop $sendadd $adv}  
+					{$adv['content']}
+					{/loop}
+					 </MARQUEE>
+                            
+                            </div>
+							{/if}
+							{if $tuaninfo['selltype']==4}
+				<div style="background-color: white;padding: 20px 0px;">
+							<?php
+				$nownum=count($orders);
+									 $pernow=count($orders)/$numGroup*100;
+									 ?>
+				
+				<div class="process" style="margin-top:20px;margin-bottom:20px;position:relative;width:80%;margin-left:10%;height:20px;border-radius:10px;background-color:white;border:1px solid hsl(354, 91%, 73%)">
+					<div class="progress" style="background-image:linear-gradient(90deg,#6fbfd8,hsl(354, 91%, 73%));height:100%;border-radius:10px;left:0px;top:0px;width:{$pernow}%">
+						{loop $param_level $item}
+						<?php
+							$per=$item['groupnum']/$numGroup*100;
+						?>
+						<div class="progressStep" style="border:1px solid white;height:14px;width:4px;border-radius:7px;position:absolute;top:2px;background-color:white;left:{$per}%;">
+							<div class="progressNum" style="position: absolute;top: -20px;width: 40px;text-align: center;left: -20px;line-height: 20px;height: 20px;">{$item['groupnum']}</div>
+							<div class="progressPrice" style="position: absolute;top: 14px;width: 40px;text-align: center;left: -20px;line-height: 20px;height: 20px;">{$item['groupprice']}</div>
+						</div>	
+						{/loop}
+												
+						<div class="recentprogress" style="border:1px solid white;height:14px;width:4px;border-radius:7px;position:absolute;top:2px;background-color:white;left:$pernow}%;">
+							<div class="recentNum" style="color:red;position: absolute;top: -20px;width: 40px;text-align: center;left: -20px;line-height: 20px;height: 20px;">{$nownum}</div>
+							<div class="recentPrice" style="color:red;position: absolute;top: 14px;width: 40px;text-align: center;left: -20px;line-height: 20px;height: 20px;">0.1</div>
+						</div>	
+						<div class="unitUp" style="position:absolute;right:-30px;top:-18px;">/人</div>
+						<div class="unitUp" style="position:absolute;right:-30px;top:16px;">/元</div>
+					</div>								
+				</div>
+				<script>
+							var numPerson = document.getElementById("numPerson").textContent.slice(1).split(",");
+							var numPrice  = document.getElementById("numPrices").textContent.slice(1).split(",");
+							var progress = document.getElementsByClassName("progress");
+							var recentNums = document.getElementsByClassName("recentNum");
+							var recentPrices = document.getElementsByClassName("recentPrice");
+							var Len = recentNums.length;
+							var recentNum = Number(recentNums[Len - 1].textContent);
+							var recentPrice = recentPrices[Len - 1];
+							var priceLen = numPrice.length;
+							var recentprogress = document.getElementsByClassName("recentprogress");
+							for (var i = 0; i < priceLen; i++){
+								if (recentNum < Number(numPerson[priceLen - 1])) {
+									recentPrice.textContent = numPrice[priceLen - 1];			
+									break;
+								}
+								else if (recentNum == Number(numPerson[0])) {
+									recentPrice.textContent = numPrice[0];
+									break;
+								}
+								else if (recentNum >= Number(numPerson[i+1]) && recentNum < Number(numPerson[i])) {
+									recentPrice.textContent = numPrice[i+1];
+									break;
+								}
+							}
+							var percent = recentNum * 100 / Number(numPerson[0]) + "%";
+							
+							recentprogress[Len -1].style.left = percent;
+						</script>
+						</div>
+						{/if}
+        <div class="pp" style="margin-top:-5px;">
+		{if $tuaninfo['selltype']!=4}
+            <div class="pp_users">
+            	{loop $orders $or}
+            	<a href="#" class="pp_users_item pp_users_normal"><img src="{$or['avatar']}"></a>
+            	{/loop}
+            	{loop $num_arr $item}
+                <a href="#" class="pp_users_item pp_users_normal"><img src="{TG_URL_ARES}images/avatar.png"></a>
+                {/loop}
+				
+            	{if $tuaninfo['groupstatus']!=2}
+            	<div class="pp_tips" id="flag_0_a">还差<b>{$tuaninfo['lacknum']}</b>人，盼你如南方人盼暖气</div>
+            	{/if}
+            </div>
+			{/if}
+			{if $tuaninfo['selltype']==4&&$tuaninfo['groupstatus']==3}
+			<div class="pp_tips" id="flag_0_a">还差<b>{$tuaninfo['lacknum']}</b>人,就可以团购到最低价</div>
+			{/if}
+            {if $tuaninfo['groupstatus']==2}<div class="pp_tips">对于诸位大侠的相助，团长感激涕零</div>{/if}
+            
+            <div class="pp_state">
+            	{if $tuaninfo['groupstatus']==3}
+                <div class="pp_time"></div>
+                {elseif $tuaninfo['groupstatus']==2}
+                <div class="pp_state_txt">团购成功，我们将尽快发货</div>
+                {else}
+                <div class="pp_state_txt">团购失败，召唤小伙伴失败</div>
+                {/if}
+            </div>
+            <div class="pp_list" >
+                <div id="showYaoheList" >
+                	{php $onum=1;}
+                	{loop $orders $or}
+                    <div class="pp_list_item" style="background-color:#f97b87;border-color:#f97b87;">
+                        <img src="{$or['avatar']}" class="pp_list_avatar">
+						<div class="pp_list_info">
+						<span class="pp_list_name">
+						{if $onum==1}团长{/if}<b>{$or['nickname']}</b>{if $onum==1}发话{else}驾哈雷赶到{/if}
+						</span>
+						<span class="pp_list_time">{php echo date('m-d H:i', $tuaninfo['starttime'])}{if $onum==1}开团{else}参团{/if}</span>
+						</div>
+						<div class="pp_list_words">{if $onum==1}好货不容留，快来跟我一起抢。{else}立马参团，有钱就是任性。{/if}</div>     
+                    </div>
+                    {if $onum==2}
+                    {php break;}
+                    {/if}
+                    {php $onum++;}
+                    {/loop}
+            	</div>
+        	</div>
+        	<div class="pp_state">
+                <div class="pp_state_txt" onclick="$('.m-detail-record').toggle();" style="background-color: white;">查看更多</div>
+            </div>
+        <div class="m-detail-record" style="display: none;">
+            <div class="w-bar">参团记录 <span class="w-bar-hint">(自{php echo date('m-d H:i', $tuaninfo['starttime'])}开团)</span></div>
+                <div class="m-detail-record-wrap">
+	                <div id="pro-view-4">
+	                <ul class="m-detail-record-list" data-pro="entry" id="morelist">
+	                	{loop $orders $or}
+	                	<li id="pro-view-5">
+	                		<div class="f-clear">
+	                			<div class="avatar"><a href="#"><img width="35" height="35" src="{$or['avatar']}"></a></div>
+	                			<div class="text"><p class="f-breakword"><a href="#">{$or['nickname']}   </a>{if !empty($lists['ip'])}<span class="address">( IP:{$lists['ip']}  {$lists['ipaddress']})</span>{/if}</p><p><span class="num">参团时间：     {php echo date('Y-m-d H:i:s',$or['createtime'])} {if $or['ordertype']==1}<font color="#4CA052">代付</font>{/if}</p></div>
+	                		</div> 
+	                	</li>
+	                	{/loop}
+	                </ul>
+	               	</div>
+                </div>
+            </div>
+   		</div>
+        
+        <section class="stepGuild" style="margin-top:-5px;">
+	        <div class="step_tit"><i></i>{if $tuaninfo['selltype']==4}阶梯团玩法{elseif $tuaninfo['selltype']==6}新专团玩法{elseif $goods['selltype']==3}自选团玩法{else}拼团玩法{/if}<span><span id="lookdetail">查看详情&gt;</span></span></div>
+	        <div class="step_flow">
+	            <div class="step_item"><span class="step_num">1</span><span>选择<br>心仪商品</span></div>
+	            <div class="step_item"><span class="step_num">2</span><span class="steps">支付开团<br>或参团</span></div>
+	            <div class="step_item {if $tuaninfo['groupstatus']==3 || $tuaninfo['groupstatus']==1 }step_item_on{/if}"><span class="step_num">3</span><span class="steps">邀请好友<br>参团支付</span></div>
+	            <div class="step_item {if $tuaninfo['groupstatus']==2}step_item_on{/if}"><span class="step_num">4</span><span class="steps">达到人数<br>{if $tuaninfo['selltype']==4}拿最低价{else}团购成功{/if}</span></div>
+	        </div>
+			
+			
+<!--猜你喜欢-->		
+<h2 class="guesslike">猜你喜欢 ❤</h2>
+<ul class="aboutProduct"></ul><!--aboutProduct-->
+<script type="text/javascript">guesslike("{php echo app_url('goods/ajaxlist/goods_rand')}");</script>
+			
+	    </section>
+    </div>
+	 {if ($goods['hasoption']==1||$goods['one_limit']>=1||$goods['many_limit']>=1)&&$goods['selltype']!=3}
+	    	{php include wl_template('goods/goods_option');}
+	    {/if}
+		{if $goods['selltype']==3}
+		{php include wl_template('goods/goods_ladder');}
+		{/if}
+    <div class="H5_con fixopt" id="fixopt" style="display: block;">
+        <div class="address_new">
+            {if !empty($myorder)}
+                {if $tuaninfo['groupstatus']==3} 
+                <span style="display:block;float:left;width: 80%;margin-left: 5px;">
+                <button class="bottombutton" style="fllow:left;width: 100%;color:#fff" onclick="_system._guide(true)">还差{$tuaninfo['lacknum']}人{if $tuaninfo['selltype']==4}拿到最低价{else}组团成功{/if},立即召唤小伙伴</button> 
+                </span>
+                 <span style="display:block;float:right;width: 15%;">
+	             <button style="width: 90%;color:#fff"><a href="{php echo app_url('home/index')}" class="nav-controller external">首页
+	            </a></button>
+	            </span>
+                {else}
+				
+                <span style="display:block;float:left;width: 80%;margin-left: 5px;">
+						{if $goods['hasoption']!=1 }
+					{if $goods['selltype']==3}	
+					<a href="{php echo app_url('goods/detail',array('id'=>$goods['id']));}" class="external">
+					
+					{else}
+					 <a href="{php echo app_url('order/orderconfirm',array('groupnum'=>$goods['groupnum'],'id'=>$goods['id'],'newtuan'=>'newtuan'));}" class="external">
+					{/if}
+					<button style="fllow:left;width: 100%;color:#fff">团购已{if $tuaninfo['groupstatus']==1}失败{/if}{if $tuaninfo['groupstatus']==2}成功{/if},点击新开一团</button> 
+					</a>
+					{else}
+					<a onclick='choose(2)'>
+					<button style="fllow:left;width: 100%;color:#fff">团购已{if $tuaninfo['groupstatus']==1}失败{/if}{if $tuaninfo['groupstatus']==2}成功{/if},点击新开一团</button> 
+					</a>
+					{/if}
+					</span>
+					
+				   <span style="display:block;float:right;width: 15%;">
+					 <button style="width: 90%;color:#fff"><a href="{php echo app_url('home/index')}" class="nav-controller external">首页
+					</a></button>
+					</span>
+                {/if}
+            {else}
+	            {if $tuaninfo['groupstatus']==3}
+	            <span style="display:block;float:left;width: 80%;margin-left: 5px;">
+	            	{if $goods['hasoption']==1||$goods['one_limit']>=1||$goods['many_limit']>=1}
+	           			 <a onclick='choose(2)'><button class="bottombutton" style="fllow:left;width: 100%;color:#fff">我要参团</button> 
+	            </a>
+	           		{else}
+		           		{if $result['statustype'] == 1 && $tuaninfo['selltype']==6}
+			           		<a class="close" onclick='$(".open").show()' class="external">
+			           			<button class="bottombutton" style="fllow:left;width: 100%;color:#fff">我要参团 </button> 
+			           		</a>
+			           		<a class="open" href="{php echo app_url('order/orderconfirm',array('groupnum'=>$goods['groupnum'],'id'=>$goods['id'],'newtuan'=>'newtuan'));}" style="display: none;" >
+			           			<button class="bottombutton" style="fllow:left;width: 100%;color:#fff">我要当团长 </button> 
+			           		</a>
+			           	{else}
+		           			 <a href="{php echo app_url('order/orderconfirm',array('id' => $goods['id'],'tuan_id' => $tuan_id,'groupnum'=>$tuaninfo['neednum']));} " class="external"><button class="bottombutton" style="fllow:left;width: 100%;color:#fff">我要参团</button> 
+	            </a>
+		           		{/if}
+	           		{/if}
+
+	            </span>
+	            <span style="display:block;float:right;width: 15%;">
+	             <button style="width: 90%;color:#fff"><a href="{php echo app_url('home/index')}" class="nav-controller external">首页
+	            </a></button>
+	            </span>
+	            {else}
+	            
+	            <span style="display:block;float:left;width: 80%;margin-left: 5px;">
+	            	{if $goods['hasoption']!=1}
+	             	{if $goods['one_limit']>1||$goods['selltype']==3}
+	           			 <a onclick='choose(2)'>
+	           		{else}
+	           			 <a href="{php echo app_url('order/orderconfirm',array('id' => $goods['id'],'tuan_id' => $tuan_id,'groupnum'=>$tuaninfo['neednum']));} " class="external">
+	           		{/if}
+	            <button class="bottombutton" style="fllow:left;width: 100%;color:#fff">团购已{if $tuaninfo['groupstatus']==1}失败{/if}{if $tuaninfo['groupstatus']==2}成功{/if},点击新开一团</button> 
+	           	</a>
+	           	{else}
+	           	{if $goods['hasoption']==1||$goods['one_limit']>1||$goods['selltype']==3}
+	           			 <a onclick='choose(2)'>
+	           		{else}
+	           			 <a href="{php echo app_url('order/orderconfirm',array('id' => $goods['id'],'tuan_id' => $tuan_id,'groupnum'=>$tuaninfo['neednum']));} " class="external">
+	           		{/if}
+	            <button class="bottombutton" style="fllow:left;width: 100%;color:#fff">团购已{if $tuaninfo['groupstatus']==1}失败{/if}{if $tuaninfo['groupstatus']==2}成功{/if},点击新开一团</button> 
+	           	</a>
+	           	{/if}
+	            </span>
+	            <span style="display:block;float:right;width: 15%;">
+	             <button style="width: 90%;color:#fff"><a href="{php echo app_url('home/index')}" class="nav-controller external">首页
+	            </a></button>
+	            </span>
+	            {/if}
+            {/if}
+        </div>
+        </div>
+		<input type="hidden" name="times" id="times" value="{$times}" />
+		 	<input type="hidden" name="one_limit" id="one_limit" value="{$goods['one_limit']}" />
+		 	<input type="hidden" name="many_limit" id="many_limit" value="{$goods['many_limit']}" />
+		 <input type="hidden" id="buytype" value="" />
+	    <input type="hidden" id="buytype2" value="{$goods['groupnum']}" />
+	    <input type="hidden" id="optionid" name="optionid" value=""/>
+		<div id="cover"></div>
+		<div id="guide"><img src="{TG_URL_ARES}images/guide1.png"></div>
+ 	</div>
+</div>
+<div class="goods-rule" style="display:none;">
+<div>
+<div class="goods-rule-head">{$goods['gname']}</div> 		
+
+<div id="productInfott">
+
+	                    </div>
+<div id="goods-know" style="background-color:#6fbfd8;">已了解</div>
+</DIV>
+</div>
+<div class="link-rule" style="display:none;">
+	<div>
+	{if $tuaninfo['selltype']==4}
+	<div>阶梯团须知</div> 		
+		<div>			
+			<div style="color:#0894ec;">什么是阶梯团？</div>	
+			<p>每个商品都有单独购买价和阶梯拼团价，当您通过拼团价购买时，开团支付成功后再邀请朋友参团，参团人数达到组团规定时，系统将阶梯差价应退款金额自动退款至您的微信钱包中，然后在家坐等包裹。在规定时间内，若人数不足整团规定人数，在活动时间截止时，系统自动识别当前阶梯价格将阶梯差价应退款金额自动退款至您的微信钱包中，然后在家坐等包裹。</p >	
+			<div style="color:#0894ec;">如何拼团成功，并取得最低阶梯价？</div>	
+			<p>阶梯团是基于好友的转发扩散，获取团购优惠，达到规定人数自动降价退款至微信钱包。首先选择商品开团：选择拼团商品下单，团即刻开启，但团长完成支付，方能获取转发链接，并在团开启规定时间内邀请到相应人数的好友支付，此团方能成功获得本次阶梯团最低价。</p >		
+			<div style="color:#0894ec;">团长干嘛的？</div>		
+			<p>首先选择心仪的商品下单，并完成支付后即为团长。团长视为本次交易的发起人，且为第一位支付成功的成员。</p >	
+			<div style="color:#0894ec;">拼团成员是什么？</div>		
+			<p>通过分享出去的该团入口进入或者通过分享团入口进入并完成付款加入该团的团员，参团成员也可以将该团分享出去邀约更多的团员参团。</p >
+		</div>
+		<div id="link-know">已了解</div>
+		{elseif $goods['selltype']==3}
+		<div>
+			<div>自选团须知</div> 
+			<div>
+				<div style="color:#0894ec;">什么是自选团？</div>
+				<p>每个商品都有单独购买价和拼团价，拼团价可设置多人多个不同的人数价格团，可以根据粉丝自己朋友的情况选择人数去开团。当您通过拼团价购买时，开团支付成功后再邀请朋友参团，参团人数达到组团规定时，订单生效。在规定时间内，若人数不足组团失败，我们会在48小时内自动退款。</p>
+				<div style="color:#0894ec;">如何拼团成功？</div>
+				<p>拼团是基于好友的转发扩散，获取团购优惠。首先选择商品开团：选择拼团商品下单，团即刻开启，但团长完成支付，方能获取转发链接，并在团开启规定时间内邀请到相应人数的好友支付，此团方能成功。</p>
+				<div style="color:#0894ec;">团长干嘛的？</div>
+				<p>首先选择心仪的商品下单，并完成支付后即为团长。团长视为本次交易的发起人，且为第一位支付成功的成员。</p>
+				<div style="color:#0894ec;">拼团成员是什么？</div>
+				<p>通过分享出去的该团入口进入或者通过分享团入口进入并完成付款加入该团的团员，参团成员也可以将该团分享出去邀约更多的团员参团。</p>
+				<div style="color:#0894ec;">拼团失败是怎么回事？</div>
+				<p>从团长开团规定时间内未能找到相应开团人数的好友参团，则该团失败，系统会在48个小时内自动原路退款至你的支付账户中。</p>
+			</div>
+			<div id="link-know">已了解</div>
+		</div>
+		{else if $tuaninfo['selltype']==6}
+		<div>新专团须知</div> 
+		<div>
+			<div style="color:#0894ec;">什么是新专团？</div>
+			<p>每个商品都有单独购买价和新用户专享价，当您通过拼团价购买时，开团支付成功后再邀请朋友参团，参团人数达到组团规定时，订单生效。在规定时间内，若人数不足组团失败，我们会在48小时内自动退款。新专团主要为未在商城购买过商品记录的用户去设立的一个专属团，新用户可以团长或者是团员，如已在商城下单的用户只能当团长</p>
+			<div style="color:#0894ec;">如何拼团成功？</div>
+			<p>拼团是基于好友的转发扩散，获取团购优惠。首先选择商品开团：选择拼团商品下单，团即刻开启，但团长完成支付，方能获取转发链接，并在团开启规定时间内邀请到相应人数的好友支付，此团方能成功。</p>
+			<div style="color:#0894ec;">团长干嘛的？</div>
+			<p>首先选择心仪的商品下单，并完成支付后即为团长。团长视为本次交易的发起人，且为第一位支付成功的成员。</p>
+			<div style="color:#0894ec;">拼团成员是什么？</div>
+			<p>通过分享出去的该团入口进入或者通过分享团入口进入并完成付款加入该团的团员，参团成员也可以将该团分享出去邀约更多的团员参团。</p>
+			<div style="color:#0894ec;">拼团失败是怎么回事？</div>
+			<p>从团长开团规定时间内未能找到相应开团人数的好友参团，则该团失败，系统会在48个小时内自动原路退款至你的支付账户中。</p>
+		</div>
+		<div id="link-know">已了解</div>
+		{else}
+		<div>拼团须知</div> 
+		<div>
+			<div style="color:#0894ec;">什么是拼团？</div>
+			<p>每个商品都有单独购买价和拼团价，当您通过拼团价购买时，开团支付成功后再邀请朋友参团，参团人数达到组团规定时，订单生效。在规定时间内，若人数不足组团失败，我们会在48小时内自动退款。</p>
+			<div style="color:#0894ec;">如何拼团成功？</div>
+			<p>拼团是基于好友的转发扩散，获取团购优惠。首先选择商品开团：选择拼团商品下单，团即刻开启，但团长完成支付，方能获取转发链接，并在团开启规定时间内邀请到相应人数的好友支付，此团方能成功。</p>
+			<div style="color:#0894ec;">团长干嘛的？</div>
+			<p>首先选择心仪的商品下单，并完成支付后即为团长。团长视为本次交易的发起人，且为第一位支付成功的成员。</p>
+			<div style="color:#0894ec;">拼团成员是什么？</div>
+			<p>通过分享出去的该团入口进入或者通过分享团入口进入并完成付款加入该团的团员，参团成员也可以将该团分享出去邀约更多的团员参团。</p>
+			<div style="color:#0894ec;">拼团失败是怎么回事？</div>
+			<p>从团长开团规定时间内未能找到相应开团人数的好友参团，则该团失败，系统会在48个小时内自动原路退款至你的支付账户中。</p>
+		</div>
+		<div id="link-know">已了解</div>
+		{/if}
+	</div>
+</div>
+
+<div class="weui_dialog_alert">
+    <div class="weui_mask"></div>
+    <div class="weui_dialog">
+        <div class="weui_dialog_hd"><strong class="weui_dialog_title">弹窗标题</strong></div>
+        <div class="weui_dialog_bd">弹窗内容，告知当前页面信息等</div>
+        <div class="weui_dialog_ft">
+            <a href="javascript:;" class="weui_btn_dialog primary">确定</a>
+        </div>
+    </div>
+</div>
+
+{if $tuaninfo['groupstatus']==3}
+<script>
+
+$(document).ready(function(){
+    function FreshTime(){
+        var str ='{php echo date('Y-m-d H:i:s',$tuaninfo['starttime'])}';
+        str = str.replace(/-/g,"/");
+        var starttime= new Date(str);//开始时间
+        var nowtime = new Date();//当前时间
+        var now_time = parseInt(nowtime.getTime());
+        var start_time = parseInt(starttime.getTime());
+        var lefttime = parseInt({$lasttime}*3600-((nowtime.getTime()-start_time)/1000)); //计算剩余时间\
+        var bar_width =  (1-(lefttime/({$lasttime}*3600)))*100+"%"; //计算进度条百分比
+        if (lefttime > 0) {
+            hh=parseInt((lefttime/3600));
+            mm=parseInt((lefttime/60)%60);
+            ss=parseInt(lefttime%60);
+            $(".pp_time").html('剩余<span id="ti_time_hour">'+hh+'</span>:<span id="ti_time_min">'+mm+'</span>:<span id="ti_time_sec">'+ss+'</span>结束');
+            $('#progressbar').css("width",bar_width);
+        }else{
+            
+        }
+    }
+    FreshTime();
+    var sh;
+    sh=setInterval(FreshTime,1000);
+});
+</script>
+
+{/if}
+
+<script>
+	document.getElementById("productInfott").innerHTML=escapeHtml('{$goods['gdesc']}');
+document.getElementById("link-know").onclick=function(){
+		document.querySelector('.link-rule').style.setProperty("display","none");
+	}
+	document.getElementById("lookdetail").onclick=function(){
+		document.querySelector('.link-rule').style.setProperty("display","block");
+	}
+document.getElementById("goods-know").onclick=function(){
+		document.querySelector('.goods-rule').style.setProperty("display","none");
+	}
+	document.getElementById("goodsdetail").onclick=function(){
+		document.querySelector('.goods-rule').style.setProperty("display","block");
+	}
+	function bb(b){
+		var many_limit = $("#many_limit").val();
+	    var one_limit = $("#one_limit").val();
+	    var times = $("#times").val();
+	    many_limit = parseInt(many_limit);one_limit=parseInt(one_limit);times=parseInt(times);
+		if(b==1){
+			location.href = "{php echo app_url('order/orderconfirm',array('groupnum'=>1));}";
+		}else{
+		if(many_limit>=1){
+	        		if(times >= many_limit){
+		        		$.toast('单人购买总数为：'+many_limit+',您已购买'+times);
+						return false;
+		        	}
+	        	}
+			var nn = "{$goods['groupnum']}";
+			location.href = "{php echo app_url('order/orderconfirm')}" + "&groupnum=" + nn;
+		}
+	}
+	
+    $("#num").blur(function(){
+		var inputnum=$("#num").val();
+		var marketprice = 0;
+	    var productprice = 0;
+		var options = {php echo json_encode($options)};
+		
+		var ret = option_selected();
+	    var len = options.length;
+	        for (var i = 0; i < len; i++) {
+	            var o = options[i];
+	            var ids = ret.all.join("_");
+	            if (o.specs == ids) {
+	                optionid = o.id;
+	                stock = o.stock;
+	                marketprice = o.marketprice;
+	                productprice = o.productprice;
+	                break;
+	            }
+	        }
+	    if(marketprice==0){
+	     	marketprice = "{php echo $goods['gprice']}";
+	    }
+		var goodsPrice=marketprice;
+		var totalPrice = goodsPrice*inputnum;
+		totalPrice = totalPrice.toFixed(2);
+		$("#option_gprice").html(totalPrice);
+	});
+	
+	$("#up").bind('click',function(){
+		var num = $('#num').val();
+			num = parseInt(num)+1;
+			$('#num').val(num);
+		var marketprice = 0;
+	    var productprice = 0;
+		var options = {php echo json_encode($options)};
+		var ret = option_selected();
+	    var len = options.length;
+	        for (var i = 0; i < len; i++) {
+	            var o = options[i];
+	            var ids = ret.all.join("_");
+	            if (o.specs == ids) {
+	                optionid = o.id;
+	                stock = o.stock;
+	                marketprice = o.marketprice;
+	                productprice = o.productprice;
+	                break;
+	            }
+	        }
+	     if(marketprice==0){
+	     	marketprice = "{php echo $goods['gprice']}";
+	     }
+		var goodsPrice=marketprice;
+		var inputnum=num;
+		var totalPrice = goodsPrice*inputnum;
+		totalPrice = totalPrice.toFixed(2);
+		$("#option_gprice").html(totalPrice);
+	});
+	
+	$("#down").bind('click',function(){
+		var num = $('#num').val();
+		num = parseInt(num)-1;
+		if(num<=0){
+			num=1;
+		}
+		$('#num').val(num);
+		var marketprice = 0;
+	    var productprice = 0;
+		var options = {php echo json_encode($options)};
+		var ret = option_selected();
+	    var len = options.length;
+	        for (var i = 0; i < len; i++) {
+	            var o = options[i];
+	            var ids = ret.all.join("_");
+	            if (o.specs == ids) {
+	                optionid = o.id;
+	                stock = o.stock;
+	                marketprice = o.marketprice;
+	                productprice = o.productprice;
+	                break;
+	            }
+	        }
+	     if(marketprice==0){
+	     	marketprice = "{php echo $goods['gprice']}";
+	     }
+		var goodsPrice=marketprice;
+		var inputnum=num;
+		var totalPrice = goodsPrice*inputnum;
+		totalPrice = totalPrice.toFixed(2);
+		$("#option_gprice").html(totalPrice);
+	});
+
+   $("#num2").blur(function(){
+	var inputnum=$("#num2").val();
+	var gp=$("#gn").val();
+		gp = inputnum * gp;
+		$("#option_price").html(gp);
+	});
+	
+	$("#up2").bind('click',function(){
+		var num = $('#num2').val();
+			num = parseInt(num)+1;
+			$('#num2').val(num);
+		var gp=$("#gn").val();
+			gp = num * gp;
+			$("#option_price").html(gp);
+	});
+	
+	$("#down2").bind('click',function(){
+		var num = $('#num2').val();
+		num = parseInt(num)-1;
+		if(num<=0){
+			num=1;
+		}
+		$('#num2').val(num);
+		var gp=$("#gn").val();
+			gp = num * gp;
+			$("#option_price").html(gp);
+	});
+
+    var options = {php echo json_encode($options)};
+    var specs = {php echo json_encode($specs)};
+    var hasoption = {php echo $goods['hasoption'] == '1' ? 'true' : 'false'};
+	
+    var selected = [];
+    function option_selected() {
+        var ret = {
+            no: "",
+            all: []
+        };
+        if (!hasoption) {
+            return ret;
+        }
+        $(".optionid").each(function () {
+            ret.all.push($(this).val());
+            if ($(this).val() == '') {
+                ret.no = $(this).attr("title");
+                return false;
+            }
+        })
+        return ret;
+    }
+	
+	function closechoose(){
+		$('.footer').show();
+        $('.good_choose_layer').fadeOut(100);
+		$('.good_choose').fadeOut(100); 
+    }
+
+	function exchange(numb) {
+		$('#div_nav .boxx .sp').removeClass('on');
+		$('.section_specification').removeClass('on');
+		$('.section_detail').removeClass('on');
+		$('a#shangpin'+numb).addClass('on');
+		if(numb==0) {
+			$('.section_specification').addClass('on');
+		}else{
+			$('.section_detail').addClass('on');
+		}
+	}
+	
+	function showStores(obj){
+        if($(obj).attr('show')=='1'){
+            $(obj).next('div').slideUp(100);
+            $(obj).removeAttr('show').find('i').removeClass('fa-angle-down').addClass('fa-angle-up');
+        }else{
+            $(obj).next('div').slideDown(100);
+            $(obj).attr('show','1').find('i').removeClass('fa-angle-up').addClass('fa-angle-down');
+        }
+    }
+
+</script>
+<script type="text/javascript">
+    var _system={
+        $:function(id){return document.getElementById(id);},
+   _client:function(){
+      return {w:document.documentElement.scrollWidth,h:document.documentElement.scrollHeight,bw:document.documentElement.clientWidth,bh:document.documentElement.clientHeight};
+   },
+   _scroll:function(){
+      return {x:document.documentElement.scrollLeft?document.documentElement.scrollLeft:document.body.scrollLeft,y:document.documentElement.scrollTop?document.documentElement.scrollTop:document.body.scrollTop};
+   },
+   _cover:function(show){
+      if(show){
+     this.$("cover").style.display="block";
+     this.$("cover").style.width=(this._client().bw>this._client().w?this._client().bw:this._client().w)+"px";
+     this.$("cover").style.height=(this._client().bh>this._client().h?this._client().bh:this._client().h)+"px";
+  }else{
+     this.$("cover").style.display="none";
+  }
+   },
+   _guide:function(click){
+      this._cover(true);
+      this.$("guide").style.display="block";
+      this.$("guide").style.top=(_system._scroll().y+5)+"px";
+      window.onresize=function(){_system._cover(true);_system.$("guide").style.top=(_system._scroll().y+5)+"px";};
+  if(click){_system.$("cover").onclick=function(){
+         _system._cover();
+         _system.$("guide").style.display="none";
+ _system.$("cover").onclick=null;
+ window.onresize=null;
+  };}
+   },
+   _zero:function(n){
+      return n<0?0:n;
+   }
+}
+if (document.getElementsByClassName("bottombutton").length>0){
+	if (document.getElementsByClassName("bottombutton")[0].innerHTML.indexOf("立即召唤小伙伴")>0) {
+	 _system._guide(true);
+	}
+}
+	
+</script>
+
+<script type="text/javascript">
+
+$(document).ready(function(){
+	  $(".close").click(function(){
+	  $(".close").hide();
+
+	
+	  $.alert("感谢您的支持，新专团模式您可享受团长待遇，点击下方按钮开团！");
+	
+	  
+
+	  $(".open").show();
+	  });
+	  
+});
+</script>
+{php include wl_template('common/footer');}

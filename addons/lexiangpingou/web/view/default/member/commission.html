@@ -1,0 +1,348 @@
+
+{php include wl_template('common/header');}
+
+
+<ul class="nav nav-tabs">
+
+    <li{if $groupstatus == '0'} class="active"{/if}>
+        <a href="{php echo web_url('member/commission', array('op' => 'display', 'groupstatus' =>'0'))}">待审核</a>
+    </li>
+	<li{if $groupstatus == '1'} class="active"{/if}>
+        <a href="{php echo web_url('member/commission', array('op' => 'display', 'groupstatus' =>'1'))}">待打款</a>
+    </li>
+	<li {if $groupstatus == '2'} class="active"{/if}>
+        <a href="{php echo web_url('member/commission', array('op' => 'display', 'groupstatus' =>'2'))}">已发放</a>
+    </li>
+	<!--<li {if $groupstatus == '3'}class="active"{/if}>-->
+        <!--<a href="{php echo web_url('member/commission', array('op' => 'display', 'groupstatus' =>'3'))}"></a>-->
+    <!--</li>-->
+
+
+</ul>
+{if $op == '' || $op == 'display'}
+<div class="main">
+    <div class="panel panel-info">
+	    <div class="panel-heading">筛选</div>
+	    <div class="panel-body">
+            <form action="./index.php" method="get" class="form-horizontal" role="form" id="form1">
+                <input type="hidden" name="c" value="site" />
+                <input type="hidden" name="a" value="entry" />
+                <input type="hidden" name="m" value="lexiangpingou" />
+                <input type="hidden" name="do" value="member" />
+                <input type="hidden" name="ac" value="commission" />
+                <input type="hidden" name="dispatchtype" value="{$dispatchtype}" />
+
+                <div class="form-group">
+                    <label class="col-xs-12 col-sm-2 col-md-2 col-lg-2 control-label">昵称</label>
+                    <div class="col-sm-8 col-lg-9 col-xs-12">
+                        <input class="form-control" name="keyword" id="" type="text" value="{$_GPC['keyword']}" placeholder="可查询昵称">
+                    </div>
+                </div>
+                <div class="form-group">
+                        <label class="col-xs-12 col-sm-2 col-md-2 col-lg-2 control-label">申请时间</label>
+                        <div class="col-sm-5 col-lg-7 col-xs-12">
+                            {php echo tpl_form_field_daterange('time', array('starttime'=>date('Y-m-d', $starttime),'endtime'=>date('Y-m-d', $endtime)));}
+                        </div>
+                        <div class="col-sm-3 col-lg-2" style="text-align:right;"><button class="btn btn-default"><i class="fa fa-search"></i> 搜索</button>
+                        </div>
+                    </div>
+                <div class="form-group">
+                </div>
+            </form>
+
+          <!--  <a href='{php echo $this->createWebUrl('grouporder', array('op' => 'output','groupstatus'=>$groupstatus,'starttime'=>$starttime,'endtime'=>$endtime))}'><button class="btn btn-info"><i class="fa fa-download"></i> 导出记录</button></a>-->
+	    </div>
+	</div>
+
+	<div class="panel panel-default">
+		<div class="panel-body table-responsive">
+			<table class="table table-hover">
+				<thead class="navbar-inner">
+					<tr>
+						<th style="width:10%;">昵称</th>
+						<th style="width:10%;">状态</th>
+						<th style="width:10%;">申请提现金额</th>
+                        <th style="width:15%;">申请时间</th>
+                        {if $_GPC['groupstatus'] == 0 }
+						<th style="width:10%;">待审批金额</th>
+                        {elseif $_GPC['groupstatus'] == 1 }
+						<th style="width:10%;">已审批金额</th>
+                        {elseif $_GPC['groupstatus'] == 2 }
+						<th style="width:10%;">已发放金额</th>
+                        {/if}
+                        {if $_GPC['groupstatus'] != 2 }
+                        <th style="width:15%;text-align:center;">操作时间</th>
+                        {else}
+                        <th style="width:15%;text-align:center;">发放时间</th>
+                        {/if}
+                        {if checkstr($_W['user']['perms'], 'leader.check') || checkstr($_W['user']['perms'], 'leader.play') || checkstr($_W['user']['perms'], 'leader.list')}
+						<th style="width:20%; text-align:center;">操作</th>
+                        {/if}
+					</tr>
+				</thead>
+				<tbody>
+					{loop $alltuan $key $item}
+					 <?php
+
+                    $sql3 = 'SELECT * FROM '.tablename('tg_member').' WHERE from_user=:openid and uniacid=:uniacid';
+
+                    $params3 = array(':openid'=>$item['openid'],':uniacid'=>$_W['uniacid']);
+
+                    $good3 = pdo_fetch($sql3, $params3);
+                    ?>
+					<tr>
+						<td>{$good3['nickname']}</td>
+						<td>
+							{if $item['status'] == 1 }
+								<span class="label label-danger">审批中</span>
+							{elseif $item['status'] == 2 }
+								 <span class="label label-warning">待打款</span>
+                            {elseif $item['status'] == 3 }
+								 <span class="label label-success">已发放</span>
+							{/if}
+
+						</td>
+						<td><span class="label label-success">￥{$item['apply']}</span></td>
+                        <td>{php echo date('Y-m-d H:i:s', $item['createtime'])}</td>
+                        {if $_GPC['groupstatus'] == 0 }
+						<td><span class="label label-warning">￥{$item['get']}</span></td>
+                        {elseif $_GPC['groupstatus'] == 1 }
+                        <td><span class="label label-success">￥{$item['get']}</span></td>
+                        {elseif $_GPC['groupstatus'] == 2 }
+						<td><span class="label label-success">￥{$item['give']}</span></td>
+                        {/if}
+                        {if $_GPC['groupstatus'] == 0 }
+                        <td>{if !empty($item['createtime'])}{php echo date('Y-m-d H:i:s', $item['createtime'])}{/if}</td>
+                        {elseif $_GPC['groupstatus'] == 1 }
+                        <td>{if !empty($item['updatetime'])}{php echo date('Y-m-d H:i:s', $item['updatetime'])}{/if}</td>
+                        {elseif $_GPC['groupstatus'] == 2 }
+                        <td>{if !empty($item['give_time'])}{php echo date('Y-m-d H:i:s', $item['give_time'])}{/if}</td>
+                        {/if}
+
+                        {if checkstr($_W['user']['perms'], 'leader.check') || checkstr($_W['user']['perms'], 'leader.play') || checkstr($_W['user']['perms'], 'leader.list')}
+						<td style="text-align:center;">
+                            {if $item['status'] == 1}
+                            {if checkstr($_W['user']['perms'], 'leader.check')}
+                            <!--<a class="btn btn-primary min-width" href="{php echo web_url('member/commission' , array('op' => 'record' , 'id' => $item['id']))}">审核</a>-->
+                            <a class="btn btn-primary min-width js-shenhe" href="javascript:;" goods-id="{$item['id']}">审核</a>
+                            {/if}
+                            {elseif $item['status'] == 2}
+                            {if checkstr($_W['user']['perms'], 'leader.play')}
+                            <!--<a class="btn btn-success min-width" href="{php echo web_url('member/commission', array('op' => 'sendcash', 'id' =>$item['id']))}">打款</a>-->
+                            <a class="btn btn-success min-width js-pay" href="javascript:;" goods-id="{$item['id']}">打款</a>
+                            {/if}
+                            {elseif $item['status'] == 3}
+                            {if checkstr($_W['user']['perms'], 'leader.list')}
+                            <!--<a class="btn btn-success min-width" href="{php echo web_url('member/commission' , array('op' => 'record' , 'id' => $item['id']))}">提现详情</a>-->
+                            <!--<a class="btn {if $item['status'] == 3}btn-success{/if} btn-sm js-change" data-txno="{php echo strval($item['group_no']);}" data-single="{$item['single']}" data-thumb="{php echo tomedia($item['thumb']);}" href="javascript:;">流水详情</a>-->
+                            {/if}
+                            {/if}
+						    <!--{if $item['status'] == 1}-->
+                                <!--<a href="{php echo web_url('member/commission', array('op' => 'record', 'id' =>$item['id']))}" class="label label-warning" >审核</a>-->
+                            <!--{elseif $item['status'] == 2}-->
+								<!--<a href="{php echo web_url('member/commission', array('op' => 'play', 'id' =>$item['id']))}" class="label label-warning" >打款</a>-->
+                            <!--{else}-->
+								<!--<a href="{php echo web_url('member/commission', array('op' => 'record', 'id' =>$item['id']))}" class="label label-warning" >详情</a>-->
+							<!--{/if}-->
+
+						</td>
+                        {/if}
+					</tr>
+					{/loop}
+				</tbody>
+			</table>
+		</div>
+	</div>
+</div>
+{$pager}
+<div class="modal-content col-xs-12 col-sm-6 col-md-6 col-lg-6" style="display:none;position: fixed;top: 20%; left: 30%;z-index: 10000;text-align: center;">
+    <div class="modal-header">
+        <button aria-hidden="true" data-dismiss="modal" class="close one close_text" type="button">×</button>
+        <div style="display: inline-block;margin:0 10px 8px 0;font-size: 18px;vertical-align: middle">银行流水单号：</div><h3 style="display: inline-block"></h3><br>
+        <div style="display: inline-block;margin:0 10px 4px 0;font-size: 18px;vertical-align: middle">提现单号：</div><h4 style="display: inline-block"></h4>
+    </div>
+    <img src=""/>
+</div>
+<script>
+
+    $('.js-pay').click(function(e) {
+        e.stopPropagation();
+        var id = $(this).attr('goods-id');
+        var _this = $(this).parent().parent();
+
+        var html = '确认打款?';
+        util.nailConfirm(this, function(state) {
+            if(!state) return;
+            $.post("{php echo web_url('member/commission', array('op' => 'sendcash'))}", {id : id}, function(data){
+                if(!data.errno){
+                    _this.remove();
+
+                };
+                util.tips(data.message, 2000);
+            }, 'json');
+        }, {html: html});
+    });
+    $('.js-change').click(function () {
+        var data_single = $(this).attr('data-single');
+        var data_txno = $(this).attr('data-txno');
+        var data_thumb = $(this).attr('data-thumb');
+        $('.modal-header h3').html(data_single);
+        $('.modal-header h4').html(data_txno);
+        $('.modal-content img').attr('src',data_thumb);
+        $('.modal-content').fadeIn();
+    })
+    $('.close_text').click(function () {
+        $('.modal-content').fadeOut();
+    })
+    $('.js-shenhe').click(function(e) {
+        e.stopPropagation();
+        var id = $(this).attr('goods-id');
+        var _this = $(this).parent().parent();
+        if ($(this).hasClass('js-shenhe')) {
+            op = 'shenhe';
+            html = '确认通过审核?';
+        }
+        util.nailConfirm(this, function(state) {
+            if(!state) return;
+            $.post("{php echo web_url('member/commission/change')}", {funcop : op, id : id}, function(data){
+                if(!data.errno){
+                    _this.remove();
+//                    setTimeout(function () {
+//                        window.location.href = window.location.href
+//                    },1000);
+                };
+                util.tips(data.message, 2000);
+            }, 'json');
+        }, {html: html});
+    });
+</script>
+{elseif $op == 'record'}
+<div class="main">
+
+    <div class="panel panel-default">
+        <div class="panel-body table-responsive">
+            <form method="post">
+            <table class="table table-hover">
+                <thead class="navbar-inner">
+                <tr>
+                    <th style="width:10%;">昵称</th>
+                    <th style="width:10%;">状态</th>
+                    <th style="width:10%;">提现金额</th>
+                    <th style="width:15%;">提现时间</th>
+                    <th style="width:10%;">提成金额</th>
+                    <th style="width:10%;">提成比例</th>
+                    <!--<th style="width:15%;">发放时间</th>-->
+                    <!--<th style="width:20%; text-align:center;">操作</th>-->
+                </tr>
+                </thead>
+                <tbody>
+                {loop $list $item}
+                <?php
+                    $params = array(':openid' => $item['openid'] , ':uniacid' => $_W['uniacid']);
+                    $fan = pdo_fetch("SELECT * FROM " .tablename('tg_member') ." WHERE from_user = :openid and uniacid = :uniacid ", $params);
+                ?>
+                <tr>
+                    <td>{$fan['nickname']}</td>
+                    <td>
+                        {if $item['get_status'] == 0 && $item['uni_status'] == 0}<label class="label label-default label-default">待确认</label>
+                        {elseif $item['get_status'] == 1}<label class="label label-default label-success">已打款</label>
+                        {elseif $item['get_status'] == -1}<label class="label label-default label-danger">拒签</label>
+                        {elseif $item['get_status'] == -2}<label class="label label-default label-danger">强制拒签</label>
+                        {elseif $item['uni_status'] == 1}<label class="label label-default label-success">审核通过</label>
+                        {elseif $item['get_status'] == 2}<label class="label label-default label-success">已确认</label>
+                        {/if}
+                    </td>
+                    <td><span class="label label-success">￥{$item['price']}</span></td>
+                    <td>{php echo date('Y-m-d H:i:s', $item['ptime'])}</td>
+                    <td><span class="label label-success">￥{$item['commission_price']}</span></td>
+                    <td><span class="label label-success">{$item['commission']}%</span></td>
+                    <!--<td style="text-align: center">-->
+                        <!--{if $item['get_status'] == 0 && $item['uni_status'] == 0}-->
+                        <!--<a style="padding: 6px 10px;" href="javascript:;" goods-id="{$item['id']}" data_id='0' sta="{if $item['uni_status'] == 1}3{else}{$item['get_status']}{/if}" class="btn btn-default js-change">拒签</a>-->
+                        <!--{else}-->
+                        <!--<a style="padding: 6px 10px;" href="javascript:;" goods-id="{$item['id']}" data_id='1' sta="{if $item['uni_status'] == 1}3{else}{$item['get_status']}{/if}" class="btn btn-default js-change">详情</a><br>-->
+                        <!--{/if}-->
+                        <!--{if $item['get_status'] == -1}-->
+                        <!--<a style="padding: 6px 10px;" href="javascript:;" goods-id="{$item['id']}" data_id='-1' sta="{if $item['uni_status'] == 1}3{else}{$item['get_status']}{/if}" class="btn btn-default js-change">允许提现</a>-->
+                        <!--<a style="padding: 6px 10px;" href="javascript:;" goods-id="{$item['id']}" data_id='-2' sta="{if $item['uni_status'] == 1}3{else}{$item['get_status']}{/if}" class="btn btn-default js-change">强制拒签</a>-->
+                        <!--{/if}-->
+                    <!--</td>-->
+                </tr>
+                {/loop}
+                <?php
+                    $as = pdo_fetch("select * from " .tablename('tg_member_group_commission') ." where id = '" .$_GPC['id'] ."'");
+                ?>
+                {if $as['status'] != 3}
+                <tr>
+                <td colspan="6" class="text-right">
+                    <div class="form-group col-md-12">
+                        <!--<a href="javascript:;" class="btn btn-primary min-width js-batch">提现确认</a>-->
+                        <input type="submit" name="submit" class="btn btn-primary min-width" value="通过审核"/>
+                        <input type="hidden" name="token" value="{$_W['token']}" />
+                    </div>
+                </td>
+                </tr>
+                {/if}
+                </tbody>
+            </table>
+            </form>
+        </div>
+    </div>
+    <div class="modal-content col-xs-12 col-sm-6 col-md-6 col-lg-6" style="display:none;position: fixed;top: 20%; left: 30%;z-index: 10000;">
+        <div class="modal-header">
+            <button aria-hidden="true" data-dismiss="modal" class="close one close_text" type="button">×</button>
+            <h3>请输入理由</h3></div>
+        <div class="chat_text" style="display: flex;flex-direction: row;justify-content: space-between; padding: 10px 60px;">
+            <div class="silde_left_bar">
+
+            </div>
+            <div class="silde_right_bar">
+
+            </div>
+        </div>
+        <div class="modal-body">
+            <div class="row">
+
+                <div class="input-group col-xs-12">
+                    <input type="text" class="form-control" name="keyword"  id="search-result" placeholder="请输入理由">
+                    <!--<span class="input-group-btn"><button type="button" class="btn btn-default" onclick="search_members('saler','search-kwd');">提交</button></span>-->
+                </div>
+            </div>
+            <div id="module-menus" style="padding-top:5px;"></div>
+        </div>
+        <div class="modal-footer"><a href="#" class="btn btn-default submit_text" data-dismiss="modal" aria-hidden="true" id="c1">提交</a></div>
+    </div>
+</div>
+{elseif  $op == 'play'}
+<div class="main">
+
+    <div class="panel panel-default">
+        <div class="panel-body table-responsive">
+            <form method="post">
+
+                <div class="form-group">
+                    <label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label">银行流水单号</label>
+                    <div class="col-xs-12 col-sm-10">
+                        <input type="text" name="account[single]" class="form-control" value="{$account['single']}" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label">银行流水单上传</label>
+                    <div class="col-xs-12 col-sm-10">
+                        {php echo tpl_form_field_image('account[thumb]', $account['thumb']);}
+                        <!--<span class="help-block">图片建议为200*150</span>-->
+                    </div>
+                </div>
+                <div class="form-group col-md-12" style="text-align: right">
+                    <input name="submit" type="submit" class="btn btn-primary min-width text-right" value="确认打款"/>
+                    <input type="hidden" name="token" value="{$_W['token']}" />
+                </div>
+
+            </form>
+        </div>
+    </div>
+
+</div>
+
+{/if}
+{php include wl_template('common/footer');}

@@ -1,0 +1,139 @@
+{php include wl_template('common/header');}
+<ul class="nav nav-tabs">
+    <li {if $_GPC['op'] == '' || $_GPC['op'] == 'display'}class="active"{/if}><a href="{php echo web_url('platform/history_record/display');}">历史打款记录</a></li>
+
+</ul>
+
+
+<div class="panel panel-info">
+    <div class="panel-heading">筛选</div>
+    <div class="panel-body">
+        <form action="./index.php" method="get" class="form-horizontal" role="form" style="background-color: #fff;padding: 10px 0;margin-bottom: 20px;">
+            <input type="hidden" name="c" value="site" />
+            <input type="hidden" name="a" value="entry" />
+            <input type="hidden" name="m" value="lexiangpingou" />
+            <input type="hidden" name="do" value="platform" />
+            <input type="hidden" name="ac" value="goods_list" />
+            <input type="hidden" name="op" value="display" />
+            <input type="hidden" name="status" value="{$_GPC['status']}">
+            <div class="form-group">
+                <label class="col-xs-12 col-sm-2 col-md-2 col-lg-1 control-label">搜索条件</label>
+                <select name="platform[manage_cate_id]" class="categoryI form-control tpl-category-parent" style="margin-right:20px;display: inline-block;width: 20%;float: left;">
+                    <option value="">商户</option>
+                    <option value="">打款单号</option>
+                    <option value="">支付单号</option>
+                </select>
+                <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
+                    <input class="form-control" name="keyword" id="" type="text" value="{$_GPC['keyword']}" placeholder="请输入搜索关键词">
+                </div>
+                <div class="col-md-2" style="float: right">
+                    <button class="btn btn-default min-width"><i class="fa fa-search"></i> 搜索</button>
+                </div>
+            </div>
+            <div class="form-group">
+                <script type="text/javascript">
+                    require(["daterangepicker"], function($){
+                        $(function(){
+                            $(".daterange.daterange-time").each(function(){
+                                var elm = this;
+                                $(this).daterangepicker({
+                                    startDate: $(elm).prev().prev().val(),
+                                    endDate: $(elm).prev().val(),
+                                    format: "YYYY-MM-DD HH:mm",
+                                    timePicker: true,
+                                    timePicker12Hour : false,
+                                    timePickerIncrement: 1,
+                                    minuteStep: 1
+                                }, function(start, end){
+                                    $(elm).find(".date-title").html(start.toDateTimeStr() + " 至 " + end.toDateTimeStr());
+                                    $(elm).prev().prev().val(start.toDateTimeStr());
+                                    $(elm).prev().val(end.toDateTimeStr());
+                                });
+                            });
+                        });
+                    });
+                </script>
+                <label class="col-xs-12 col-sm-2 col-md-2 col-lg-1 control-label">申请时间</label>
+                <input name="time[start]" type="hidden" value="2017-10-14 09:05:29">
+                <input name="time[end]" type="hidden" value="2017-10-21 09:05:29">
+                <button class="btn btn-default daterange daterange-time" type="button"><span class="date-title">2017-10-14 09:05:29 至 2017-10-21 09:05:29</span> <i class="fa fa-calendar"></i></button>
+            </div>
+        </form>
+    </div>
+</div>
+{if empty($list)}
+<div style="text-align: center;padding: 100px 0;" class="panel panel-default">暂无数据~</div>
+{else}
+<div class="order-list">
+    <div class="panel-body table-responsive collapse in" id="order-template-item-4" style="padding: 0;">
+        <button id="module-judgment" style="display:none" class="btn btn-default" type="button"
+                onclick="popwin = $('#modal-module-judgment').modal();">隐藏点击
+        </button>
+
+    </div>
+
+    <div class="panel panel-default">
+
+        <table class="table" style="background-color:#888">
+            <thead style="">
+            <tr>
+                <!--<th style="width:60px;" class="text-center"><input type="checkbox" onclick="var ck = this.checked;$(':checkbox').each(function(){this.checked = ck});" />全选</th>-->
+                <!--<th style="width: 100px">批次号</th>-->
+                <th style="width: 180px">商户/打款单号</th>
+
+                <th style="text-align:center;">打款金额</th>
+                <th style="text-align:center;">打款时间</th>
+                <th style="width:180px;text-align:center;">支付方式/单号</th>
+                <th style="text-align:center;">支付银行流水图</th>
+                <th style="text-align:center;width: 80px">操作</th>
+
+            </tr>
+            </thead>
+
+            <!--</table>-->
+
+            <div class="panel-body table-responsive" style="padding: 0px;">
+                <!--<table class="table table-bordered">-->
+                <tbody style="background-color: #fff;">
+                {loop $list $item}
+                <tr>
+                    <!--<td class="goods-info line-feed" style="padding-left: 10px;width: 100px">{$item['pici']}</td>-->
+                    <td class="goods-info line-feed" style="width: 180px">{$item['account_name']}<br>{$item['singleno']}</td>
+                    <td class="goods-info line-feed" style="padding-left: 10px;">{$item['price']}</td>
+                    <td class="goods-info line-feed" style="padding-left: 10px;">{php echo date('Y-m-d',$item['paytime'])}
+                    </td>
+
+                    <!--	<td class="text-center" style="width:80px;">{if empty($item['merchant']['name'])}{$_W['account']['name']}{else}{$item['merchant']['name']}{/if}</td>-->
+
+                    <td class="text-center" style="width: 180px">
+                        <p>{$item['uni_payno']}</p>
+                    </td>
+                    <td class="text-center" style="text-align:center;position: relative">
+                        {if !empty($item['uni_payimg'])}
+                        <img onclick="$('.detail3 img').attr('src',$(this).attr('src'));$('.detail3').fadeIn();" class="payimg" style="cursor:pointer;width: 50px;height: 50px" src="{$item['uni_payimg']}" alt="">
+                        {/if}
+                    </td>
+                    <td class="text-center" style="text-align:center;width: 80px">
+                        <a href="{php echo web_url('platform' , array('ac' => $_GPC['ac'],'op' => 'detail','id' => $item['id']))}">查看详情</a><br/>
+
+                    </td>
+                </tr>
+                {/loop}
+                </tbody>
+        </table>
+    </div>
+</div>
+{$pager}
+{/if}
+</div>
+<div class="page-trade-order detail3" style="background-color: rgba(0,0,0,0.7);z-index:10;position: fixed;top: 0;left: 0;width: 100%;height: 100%;display: none">
+    <div class="panel panel-default" style="position: absolute;top: 5%;left: 25%;width: 50%;max-height: 90%;overflow-y: auto">
+        <div class="panel-heading">流水
+            <a onclick="$('.detail3').fadeOut()" style="cursor:pointer; float:right; margin-right:10px; font-weight:bold;" href="javascript:;">X</a>
+        </div>
+        <div class="panel-body" style="text-align: center">
+            <img src="" alt="">
+        </div>
+    </div>
+</div>
+{php include wl_template('common/footer');}

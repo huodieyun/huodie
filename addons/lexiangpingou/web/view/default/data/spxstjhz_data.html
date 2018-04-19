@@ -1,0 +1,132 @@
+{php include wl_template('common/header');}
+<style>
+    .table>tbody>tr>td{line-height:3;}
+    th,table thead tr th:last-child, table tbody tr td:last-child{text-align:center;}
+    table>tr:first-child{height:42px;}
+    .panel-body>.form-group{
+        width: 100%;
+        height: 40px;
+    }
+    .panel-body label{
+        width: 100px;
+        text-align: right;
+        line-height: 34px;
+    }
+</style>
+
+<div class="container">
+    <div class="main">
+        <div class="panel panel-info">
+            <div class="panel-heading">商品销售统计汇总表</div>
+            <div class="panel-body">
+                <div class="form-group">
+                    <label class="col-md-4 col-lg-1 control-label">订单类型</label>
+                    <div class="col-md-4">
+                        <select name="goodsid2" class="form-control">
+                            <option value="">--所有--</option>
+                            {loop $allgoods $key $type}
+                            <option value="{$type['id']}" {if $_GPC['goodsid2']==$type['id']}selected="selected"{/if}>{$type['gname']}</option>
+                            {/loop}
+                        </select>
+                    </div>
+                    <label class="col-md-4 col-lg-1 control-label">日期</label>
+                    <div class="col-md-4">
+                        {php echo tpl_form_field_daterange('time', array('starttime'=>date('Y-m-d H:m:s', $starttime),'endtime'=>date('Y-m-d H:m:s', $endtime)),true);}
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-4 col-lg-1 control-label">商品名称</label>
+                    <div class="col-md-4">
+                        <select name="goodsid2" class="form-control">
+                            <option value="">--所有--</option>
+                            {loop $allgoods $key $type}
+                            <option value="{$type['id']}" {if $_GPC['goodsid2']==$type['id']}selected="selected"{/if}>{$type['gname']}</option>
+                            {/loop}
+                        </select>
+                    </div>
+                    <label class="col-md-4 col-lg-1 control-label">商品名称</label>
+                    <div class="col-md-4">
+                        <input class="form-control" name="member" id="" type="text" value="{$_GPC['member']}" placeholder="可模糊查询商品名称">
+                    </div>
+
+                </div>
+                <div class="form-group">
+                    <label class="col-md-4 col-lg-1 control-label">自提点</label>
+                    <div class="col-md-4">
+                        <select name="goodsid2" class="form-control">
+                            <option value="">--所有--</option>
+                            {loop $allgoods $key $type}
+                            <option value="{$type['id']}" {if $_GPC['goodsid2']==$type['id']}selected="selected"{/if}>{$type['gname']}</option>
+                            {/loop}
+                        </select>
+                    </div>
+                    <label class="col-xs-12 col-sm-4 col-md-4 col-lg-1 control-label">已提/未提</label>
+                    <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
+                        <select name="addresstype" class="form-control" >
+                            <option value="">--所有--</option>
+                            <option value="1" {if $_GPC['addresstype']==1}selected="selected"{/if}>公司</option>
+                            <option value="2" {if $_GPC['addresstype']==2}selected="selected"{/if}>家庭</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-3 col-lg-2" style="text-align:right;margin-left: 18px;"><button class="btn btn-default"><i class="fa fa-search"></i> 搜索</button>
+                    </div>
+                    <a  class="btn btn-default" href='{php echo web_url('order/order/output', array('status'=>$status,'keyword'=>$keyword,'issued'=>$_GPC['issued'],'transid'=>$transid,'addresstype'=>$_GPC['addresstype'],'member'=>$member,'pay_type'=>$pay_type,'starttime'=>$starttime,'endtime'=>$endtime,'time'=>$time,'goodsid'=>$_GPC['goodsid'],'goodsid2'=>$_GPC['goodsid2'],'salers'=>$_GPC['salers'],'merchantid'=>$_GPC['merchantid'],'dispatchtype'=>$dispatchtype))}'>
+                    <i class="fa fa-download"></i> 导出{if $_GPC['dispatchtype']==-1}抽奖{/if}订单
+                    </a>（如果按条件导出请先选择条件后查询，再导出。）
+                    {if $_GPC['dispatchtype']==3}
+                    <a  class="btn btn-default" href='{php echo web_url('order/order/updaterefund', array('status'=>$status,'keyword'=>$keyword,'issued'=>$_GPC['issued'],'transid'=>$transid,'addresstype'=>$_GPC['addresstype'],'member'=>$member,'pay_type'=>$pay_type,'starttime'=>$starttime,'endtime'=>$endtime,'time'=>$time,'goodsid'=>$_GPC['goodsid'],'goodsid2'=>$_GPC['goodsid2'],'salers'=>$_GPC['salers'],'merchantid'=>$_GPC['merchantid'],'dispatchtype'=>$dispatchtype))}'>
+                    <i class="fa fa-download"></i> 强制转换待退款
+                    </a>
+                    {/if}
+                </div>
+            </div>
+            <div>
+                <table class="table table-striped">
+                    <tr>
+                        <th>商品名</th>
+                        <th>团购价</th>
+                        <th>单买价</th>
+                        <th>销售数量</th>
+                        <th>销售金额</th>
+                        <th>已提数量</th>
+                        <th>未提数量</th>
+                    </tr>
+                    <tr>
+                        <td>测试</td>
+                        <td>测试</td>
+                        <td>测试</td>
+                        <td>测试</td>
+                        <td>测试</td>
+                        <td>测试</td>
+                        <td>测试</td>
+                    </tr>
+                    <tr>
+                        <td>测试</td>
+                        <td>测试</td>
+                        <td>测试</td>
+                        <td>测试</td>
+                        <td>测试</td>
+                        <td>测试</td>
+                        <td>测试</td>
+                    </tr>
+                    <tr>
+                        <td>测试</td>
+                        <td>测试</td>
+                        <td>测试</td>
+                        <td>测试</td>
+                        <td>测试</td>
+                        <td>测试</td>
+                        <td>测试</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+{php include wl_template('common/footer');}

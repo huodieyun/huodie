@@ -1,0 +1,2526 @@
+{php include wl_template('common/header');}
+<link rel="stylesheet" href="{TG_URL_ARES}weiui/weui.min.css">
+<link rel="stylesheet" href="{TG_URL_ARES}weiui/jquery-weui.min.css">
+<!--<script type="text/javascript" src="{TG_URL_ARES}weiui/jquery-weui.min.js"></script>-->
+<style>
+	.buttons-row .button.active{
+		background-color: {$_W['system_color']};
+	}
+	.button{
+		border: 1px solid {$_W['system_color']};
+	}
+	.buttons-row .button{
+		color: {$_W['system_color']};
+	}
+	.buttons-row .button{
+		border-color:{$_W['system_color']} ;
+	}
+	.page{
+		z-index: 500;
+	}
+	#zitiMendian{
+		display: none;
+		position: fixed;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 100%;
+		z-index: 900;
+		background: #fff;
+		padding: 10px;
+		text-align: center;
+		font-size: 14px;
+	}
+	#zitiMendian>ul{
+		max-height: 90%;
+		overflow-y: auto;
+	}
+	#zitiMendian>ul>li{
+		padding: 5px;
+		margin-top:15px;
+		border-bottom:1px solid #ddd;
+		display: flex;
+		display: -webkit-flex;
+		align-items: center;
+		-webkit-align-items: center;
+	}
+	#zitiMendian p.kuan1{
+		flex:1;
+		-webkit-flex: 1;
+		/* for uc */
+		-webkit-box-flex: 1;
+		-moz-box-flex: 1;
+		-ms-flex: 1;
+	}
+	#zitiMendian p.kuan2{
+		flex:2;
+		-webkit-flex: 2;
+		/* for uc */
+		-webkit-box-flex: 2;
+		-moz-box-flex: 2;
+		-ms-flex: 2;
+	}
+	.weui-icon-success{
+		color: #ccc;
+	}
+	.weui-icon-success.active{
+	color: {$_W['system_color']};
+	}
+	.storeTJ{
+		width: 94%;
+		border-radius: 5px;
+		margin-top: 20px;
+		color: #fff;
+		position: absolute;
+		bottom: 10px;
+		background-color:{$_W['system_color']} ;
+	}
+	.weui-actionsheet__cell{
+		font-size: 0.6rem;
+	}
+	.weui-actionsheet {
+		max-height: 100%;
+		overflow-y: auto;
+	}
+	.weui-actionsheet_cancel{
+		font-size: 14px;
+	}
+	.link{
+		width:100%;
+		height:auto;
+		position:relative;
+		min-height:35px;
+		background-color:white;
+	}
+	.link-method{
+		position:absolute;
+		width:40px;
+		text-align:center;
+		left:10px;
+		top:0px;
+		bottom:0px;
+		margin-top:auto;
+		margin-bottom:auto;
+		height:35px;
+		font-size:14px;
+		word-spacing:2px;
+		line-height:17.5px;
+		color:{$_W['system_color']};
+	}
+	.link-select{
+		position:relative;
+		margin-left:60px;
+		margin-top:5px;
+		height:auto;
+		min-height:30px;
+	}
+	.link-select .link-button:first-child{
+		margin-top:5px;
+	}
+	.link-button{
+		width:90%;
+		height:35px;
+		border:1px solid {$_W['system_color']};
+		border-radius:5px;
+		line-height:35px;
+		text-align:center;
+		color:{$_W['system_color']};
+		margin-bottom:3px;
+	}
+	.link-button2{
+		width:95%;
+		height:35px;
+		border:1px solid {$_W['system_color']};
+		border-radius:5px;
+		line-height:35px;
+		text-align:center;
+		color:{$_W['system_color']};
+		margin-bottom:3px;
+	}
+	.link-button1{
+		width:90%;
+
+		border:1px solid {$_W['system_color']};
+		border-radius:5px;
+		line-height:20px;
+		text-align:center;
+		color:{$_W['system_color']};
+		margin-bottom:3px;
+		font-size:12px;
+
+	}
+	.link-active{
+		color:white;
+		background-color:{$_W['system_color']};
+	}
+	.link-rule{
+		height:100%;
+		width:100%;
+		background-color:
+		rgba(128,128,128,0.5);
+		position:fixed;top:0px;
+		left:0px;
+		z-index:10000;
+	}
+	.link-rule>div{
+		text-align:center;
+		position:absolute;
+		top:0;
+		bottom:0;
+		left:8px;
+		right:8px;
+		margin-top:auto;
+		margin-bottom:auto;
+		height:85%;
+		background-color:white;
+		border-radius:8px;
+	}
+	.link-rule>div>div:first-child{font-weight:bold;background-color:#ececec;font-size:20px;line-height:40px;border-radius:8px 8px 0 0;height:40px;}
+	.link-rule>div div:nth-child(2){text-align:left;position:absolute;top:48px;bottom:45px;left:19px;right:19px;overflow:scroll;}
+	.link-rule>div div:last-child{position:absolute;left:0px;right:0px;width:150px;height:30px;bottom:5px;background-color:{$_W['system_color']};color:white;font-size:18px;margin-left:auto;margin-right:auto;line-height:30px;border-radius:5px; }
+</style>
+<style>
+.voucher-main{overflow:hidden;position:relative;}
+.voucher-main .list-cash-coupon{padding:10px 0 0 0; list-style:none; margin:10px auto;}
+.voucher-main .list-cash-coupon li{margin:10px 0;}
+.voucher-main .list-cash-coupon a{display:block;width:281px;height:109px;margin:auto;background:url('resource/images/voucher.png') no-repeat 0 -9px;-webkit-background-size:575px auto;position:relative;}
+.voucher-main .list-cash-coupon a>p{position: absolute;max-width:200px;height:20px;color:#FFF;-webkit-box-sizing:border-box;}
+.voucher-main .list-cash-coupon a>p:nth-of-type(1){left:25px;top:20px;font-size:14px;}
+.voucher-main .list-cash-coupon a>p:nth-of-type(1)>span{font-size:30px;}
+.voucher-main .list-cash-coupon a>p:nth-of-type(2){left: 26px;top: 62px;font-size: 14px;}
+.voucher-main .list-cash-coupon a>p:nth-of-type(2):first-letter{font-size:14px;margin-right:3px;}
+.voucher-main .list-cash-coupon a>p:nth-of-type(3){left: 26px;top: 83px;font-size: 12px;}
+.voucher-main .list-cash-coupon a>p:nth-of-type(4){left: 160px;top: 42px;font-size: 11px;}
+.voucher-main .list-cash-coupon a>p:nth-of-type(5){right: 12px;top:18px;font-size:14px;width:25px; line-height:18px;}
+.voucher-main .list-cash-coupon li:nth-of-type(4n+2) a, .list-cash-coupon li .a2{background-position: 0 -133px;}
+.voucher-main .list-cash-coupon li:nth-of-type(4n+3) a, .list-cash-coupon li .a3{background-position: 0 -256px;}
+.voucher-main .list-cash-coupon li:nth-of-type(4n) a, .list-cash-coupon li .a4{background-position: 0 -378px;}
+.voucher-main .list-cash-coupon li[disabled] a{background-position: 0 -502px;}
+.voucher-main .list-cash-coupon li[disabled] a:after{content: "";-webkit-background-size: 110px auto;position: absolute;top: 0;left: 0;width: 100%;height: 100%;z-index: 100;pointer-events: none;}
+.voucher-main .list-cash-coupon li[disabled="expire"] a:after{background-image: url('resource/images/voucher02.png'); background-repeat: no-repeat; background-position:50px 15px;}
+.voucher-main .list-cash-coupon li[disabled] a>p{color:rgba(255,255,255,0.85)!important;}
+.voucher-main .list-cash-coupon li.used a{background-position-x:right!important;}
+.voucher-main .list-cash-coupon li.used:nth-of-type(4n+1) a>p:nth-of-type(5){color:#ee5375;}
+.voucher-main .list-cash-coupon li.used:nth-of-type(4n+2) a>p:nth-of-type(5){color:#ffa619;}
+.voucher-main .list-cash-coupon li.used:nth-of-type(4n+3) a>p:nth-of-type(5){color:#92c427;}
+.voucher-main .list-cash-coupon li.used:nth-of-type(4n) a>p:nth-of-type(5){color:#2f9abd;}
+.voucher-main .read-coupon .list-cash-coupon a>p:nth-of-type(3){left:210px; top:65px; font-size:10px;}
+.voucher-main .selected{width:2rem;height:2rem;text-align:center;border-radius:100%;background-color:#fff;color:red;font-size:1.3rem;position:absolute;top:4.3rem;left:56%;z-index:999999;box-shadow:0px 2px 2px #333;display:none;}
+
+#goodslist>div {position:relative;width:98%;margin-left:2%;border-bottom:1px solid hsl(0, 0%, 95%);box-sizing:border-box;padding-bottom:5px;padding-top:5px;}
+#goodslist>div:last-child {border-bottom:none;}
+#goodslist>div>img {width:60px;height:60px;display:block;float:left;}
+#goodslist>div>div{margin-left:70px;height:60px;width:auto;}
+#goodslist>div>div:last-child{margin-left:70px;height:20px;}
+#goodslist>div>div>div {height:30px;line-height:30px;color:#888;}
+#goodslist .listprice {color:{$_W['system_color']};font-size:16px;}
+#goodslist .goodbuy {font-weight:bold;position:absolute;display:block;width:40px;height:25px;border:1px solid {$_W['system_color']};color:{$_W['system_color']};right:10px;bottom:5px;line-height:23px;font-size:16px;border-radius:12.5px;text-align:center;}
+#goodslist .goodnumber {display:none;position:absolute;width:40px;background-color:white;height:25px;border:1px solid {$_W['system_color']};color:{$_W['system_color']};right:55px;bottom:5px;line-height:23px;font-size:16px;border-radius:12.5px;text-align:center;}
+#goodslist .goodminus {font-weight:bolder;display:none;position:absolute;width:40px;height:25px;border:1px solid {$_W['system_color']};color:#fff;right:100px;bottom:5px;line-height:21px;font-size:16px;border-radius:12.5px;text-align:center;background-color:{$_W['system_color']}}
+#goodEdit {position:absolute;display:block;width:45px;height:20px;border:1px solid {$_W['system_color']};color:{$_W['system_color']};right:10px;top:2.5px;line-height:18px;font-size:14px;border-radius:10px;text-align:center;}
+span.canSelect {margin:0.3em 0 0.3em 0.5em;display: inline-block;background: hsl(354, 91%, 73%);color: white;font-size: 0.9em;letter-spacing: 0.02em;padding: 0.2em 0.4em;border-radius: 4px;}
+span.cantSelect {margin:0.3em 0 0.3em 0.5em;display: inline-block;font-size: 0.9em;letter-spacing: 0.02em;padding: 0.2em 0.4em;border-radius: 4px;background:hsl(0, 0%, 95%);color:hsl(0, 0%, 60%);}
+#dt_goPay{
+	background: #aaa;
+}
+</style>
+
+<div id="animationS">
+<div class="preloader-indicator-modal">
+	<span class="preloader preloader-white"></span>
+</div>
+</div><!--animationS-->
+
+<div class="page-group">
+<div id="isMinusNum" style="display:none;">{$overfreemoney}</div>
+    <div class="page page-current" id="page-order-confirm">
+		<div class="content" data-distance="10">
+
+			<div id="ct">
+			    <div class="dt_order" style="cursor:pointer;">
+					<div id="gotohome" style="cursor:pointer;position:relative;width:100%;margin-bottom:10px;height:40px;color:{$_W['system_color']};font-size:25px;line-height:40px;background-color:white;padding-left:10px;">&lt;
+					<span style="position:absolute;font-size:16px;left:30px;">继续购物</span>
+					</div>
+				<div class="dt_commodity_info" style="margin-bottom:10px;padding-top:0px;">
+
+
+						<div style="height:auto;width:100%;background-color:white;min-height:30px;padding-bottom:10px;">
+						 <div style="color:#888;position:relative;font-size:16px;line-height:30px;">已购买商品
+							<span id="goodEdit" >编辑</span>
+							<span style="display:none;">{$config['base']['deliverytype']}</span>
+						 </div>
+						 <div id="goodslist">
+
+						 </div>
+						 <div id="dataset" style="text-align: right;padding-right: 10px;color: {$_W['system_color']};">
+						 <span id="datavalue" style="border-radius:4px;border: 1px solid {$_W['system_color']};padding: 2px;">小计:<span  class="smallCal" style="padding-right: 0.2em"></span>
+						 <span id="datamiss" style="padding-left: 0.1em;padding-right: 0.2em;display:none">再买<span class="distanceMinus"></span>元享包邮</span></span>
+						 </div>
+						 </div>
+			        </div>
+
+
+			            <!--<div style="background-color: white;display:none" id="act">-->
+							<!--<p style="color: {$_W['system_color']};">现在有以下活动</p>-->
+							<!--<div>-->
+								<!--{if $config['base']['firstfree']==1}<span class="canSelect">首单免运费</span>{/if}-->
+								<!--<span class="canSelect" id="overfree" data-set="1" style="display:none;"></span>-->
+							<!--</div>-->
+						<!--</div>-->
+
+					{if $config['base']['deliverytype']>0}
+			    	{if $config['base']['deliverytype']==7}
+
+				    <div class="content-block" style="background-color: white;margin: 0;position:relative;">
+					<div id="undefBlock" style="position:absolute;left:0;right:0;top:0;height:5000%;background-color:rgba(0,0,0,0);z-index:100;display:none;"></div>
+			          <div class="buttons-row" style="margin-top: .2rem;padding-bottom: 0.5rem;">
+			            <a href="#tab1-1" class="tab-link button" id="express" typeid="1">快递配送</a>
+			           {if !empty($stores)} <a href="#tab1-2" class="tab-link button" id="bdelete" typeid="2">自提</a>{/if}
+						<a href="#tab1-3" class="tab-link button" id="sh" typeid="3">送货上门</a>
+			          </div>
+			        </div>
+					  {elseif $config['base']['deliverytype']==1}
+			          <div class="content-block" style="background-color: white;margin: 0;position:relative;">
+					  <div id="undefBlock" style="position:absolute;left:0;right:0;top:0;height:5000%;background-color:rgba(0,0,0,0);z-index:100;display:none;"></div>
+			          <div class="buttons-row" style="margin-top: .2rem;padding-bottom: 0.5rem;">
+			            <a href="#tab1-1" class="tab-link button" id="express" typeid="1">快递配送</a>
+			           {if !empty($stores)} <a href="#tab1-2" class="tab-link button" id="bdelete" typeid="2">自提</a>{/if}
+
+			          </div>
+			        </div>
+					  {elseif $config['base']['deliverytype']==2}
+			         <div class="content-block" style="background-color: white;margin: 0;position:relative;">
+					 <div id="undefBlock" style="position:absolute;left:0;right:0;top:0;height:5000%;background-color:rgba(0,0,0,0);z-index:100;display:none;"></div>
+			          <div class="buttons-row" style="margin-top: .2rem;padding-bottom: 0.5rem;">
+			            <a href="#tab1-1" class="tab-link button" id="express" typeid="1">快递配送</a>
+
+						<a href="#tab1-3" class="tab-link button" id="sh" typeid="3">送货上门</a>
+			          </div>
+			        </div>
+					  {elseif $config['base']['deliverytype']==3}
+			         <div class="content-block" style="background-color: white;margin: 0;position:relative;">
+					 <div id="undefBlock" style="position:absolute;left:0;right:0;top:0;height:5000%;background-color:rgba(0,0,0,0);z-index:100;display:none;"></div>
+			          <div class="buttons-row" style="margin-top: .2rem;padding-bottom: 0.5rem;">
+
+			          {if !empty($stores)} <a href="#tab1-2" class="tab-link button" id="bdelete" typeid="2">自提</a>{/if}
+						<a href="#tab1-3" class="tab-link button" id="sh" typeid="3">送货上门</a>
+			          </div>
+			        </div>
+					  {elseif $config['base']['deliverytype']==4}
+			         <div class="content-block" style="background-color: white;margin: 0;display:none;position:relative;">
+					 <div id="undefBlock" style="position:absolute;left:0;right:0;top:0;height:5000%;background-color:rgba(0,0,0,0);z-index:100;display:none;"></div>
+			          <div class="buttons-row" style="margin-top: .2rem;padding-bottom: 0.5rem;">
+			            <a href="#tab1-1" class="tab-link button" id="express" typeid="1">快递配送</a>
+
+			          </div>
+			        </div>
+					  {elseif $config['base']['deliverytype']==5}
+			          <div class="content-block" style="background-color: white;margin: 0;display:none;position:relative;">
+					  <div id="undefBlock" style="position:absolute;left:0;right:0;top:0;height:5000%;background-color:rgba(0,0,0,0);z-index:100;display:none;"></div>
+			          <div class="buttons-row" style="margin-top: .2rem;padding-bottom: 0.5rem;">
+						<a href="#tab1-3" class="tab-link button" id="sh" typeid="3">送货上门</a>
+			          </div>
+			        </div>
+			        {elseif $config['base']['deliverytype']==6}
+			        <div class="content-block" style="background-color: white;margin: 0;display:none;position:relative;">
+						<div id="undefBlock" style="position:absolute;left:0;right:0;top:0;height:5000%;background-color:rgba(0,0,0,0);z-index:100;display:none;"></div>
+			          <div class="buttons-row" style="margin-top: .2rem;padding-bottom: 0.5rem;">
+			          <a href="#tab1-2" class="tab-link button" id="bdelete" typeid="2">自提</a>
+						</div>
+			        </div>
+			        {/if}
+			        <div class="tabs">
+			            <div class="tab " id="tab1-1">
+			            	{if !empty($adress_fee)}
+						        <!--地址信息-->
+						        <div class="u_address">
+						            <div class="u_address_d">
+						                <i class="icon_pos"></i>
+						                <div class="address" id="dt_address" style="height: 56px;">
+										<span class="name" style="margin-bottom: 5px;">{$adress_fee['cname']}</span>
+										<span class="tel">{$adress_fee['tel']}</span>
+										<span class="address_txt" style="width:95%;margin-bottom: 5px;">
+										{$adress_fee['province']}{$adress_fee['city']}{$adress_fee['county']}</span>
+										<span class="address_txt">{$adress_fee['detailed_address']}</span>
+										</div>
+						                <i class="address_flag" style="width:40px;right:30px;">{if $adress_fee['type']==2}家庭{elseif $adress_fee['type']==1}公司{/if}</i>
+						                <i class="arrow arrow_show"></i>
+						            </div>
+						        </div>
+			                {else}
+			                	<div class="u_address">
+						            <div class="u_address_d">
+						                <i class="icon_pos"></i>
+						                <div class="address" id="dt_address"><span class="toaddress" id="link-address1">您还没有收货地址哦，点击新增地址</span></div>
+						                <i class="arrow arrow_show"></i>
+						            </div>
+						        </div>
+			                {/if}
+							{if !empty($dispatch_list)}
+							<div class="link">
+								<div class="link-method">配送方式</div>
+								<div class="link-select">
+								{loop $dispatch_list $store}
+									<div class="link-button " id="{$store['id']}">{$store['name']}</div>
+								{/loop}
+
+								</div>
+							</div>
+							{/if}
+							 <!----->
+			            </div>
+
+			            <div class="tab {if $goods['is_hexiao']==2}active{/if}" id="tab1-2">
+							<div class="link">
+								<a class="weui-cell weui-cell_access zitiStores" href="javascript:;">
+									<div class="weui-cell__bd">
+										<p>请选择门店</p>
+									</div>
+									<div class="weui-cell__ft">
+									</div>
+								</a>
+								<!--<div class="link-method" id="ztVal" ztv="0">自提地点</div>-->
+								<!--<div class="link-select">-->
+								<!--{loop $stores $store}-->
+									<!--<div class="link-button1 " id="{$store['id']}">{$store['storename']}<br>{$store['address']}</div>-->
+									<!--{/loop}-->
+
+								<!--</div>-->
+							</div>
+
+			            	<div class="list-block" style="margin:0;padding-top: .5rem;background-color: white;">
+						      <ul>
+						        <li>
+						          <div class="item-content">
+						            <div class="item-inner">
+						              <div class="item-title label">收货人：</div>
+						              <div class="item-input">
+						                <input type="text" id="cnee" value="{$memb['addname']}" placeholder="请输入您的姓名">
+						              </div>
+						            </div>
+						          </div>
+
+						        </li>
+						        <li>
+						          <div class="item-content">
+						            <div class="item-inner">
+						              <div class="item-title label">联系电话：</div>
+						              <div class="item-input">
+						                <input type="tel" id="mobile" maxlength="11" value="{$memb['addmobile']}" placeholder="请输入您的联系电话">
+						              </div>
+						            </div>
+						          </div>
+						        </li>
+								 <input type="date" id="gettime" style="display:none" placeholder="取货或消费日期" value="{php echo date('Y-m-d',time());}">
+						       <!-- <li>
+						          <div class="item-content">
+						            <div class="item-inner">
+						              <div class="item-title label">核销日期：</div>
+						              <div class="item-input">
+						                <input type="date" id="gettime" placeholder="取货或消费日期" value="{php echo date('Y-m-d',time());}">
+						              </div>
+						            </div>
+						          </div>
+						        </li>-->
+						        {if $selfTime['is_self_time'] == "1"}
+						        <li>
+						          <div class="item-content">
+						            <div class="item-inner">
+						              <div class="item-title label">自提时间：</div>
+						              <div class="item-input">
+						                <input id="selfTime" type="date" value="{$selfTime['self_time_end']}">
+						              </div>
+						            </div>
+						          </div>
+						            <div class="item-content">
+						                <span style="color:{$_W['system_color']};font-size: 12px;">可选择时间区段（<span class="s-start">{$selfTime['self_time_start']}</span>，<span class="s-end">{$selfTime['self_time_end']}</span>）</span>
+						            </div>
+						        </li>
+						        {/if}
+							{if !empty($config['content_set'])}
+								  <li style="width:94%;padding:5px;border:1px dashed red;margin:8px auto;border-radius:5px;overflow:hidden;"><p style="font-size:0.7rem;color:#DE5246;text-indent:1rem;">{$config['content_set']}<p></li>
+								  {else}
+								  <li style="width:94%;padding:5px;border:1px dashed red;margin:8px auto;border-radius:5px;overflow:hidden;"><p style="font-size:0.7rem;color:#DE5246;text-indent:1rem;">★  为确保为您及时备货，请确认您选择的自提点！！！商品自提时间以商品名称或商品简介内容为准，逾期未提货将退款处理,请悉知！！！<p></li>
+							{/if}
+						      </ul>
+						    </div>
+			            </div>
+						<div class="tab" id="tab1-3">
+							{if !empty($adress_fee)}
+						        <!--地址信息-->
+						        <div class="u_address">
+						            <div class="u_address_d">
+						                <i class="icon_pos"></i>
+						                <div class="address" id="dt_address" style="height: 56px;">
+										<span class="name" style="margin-bottom: 5px;">{$adress_fee['cname']}</span>
+										<span class="tel">{$adress_fee['tel']}</span>
+										<span class="address_txt" style="width:95%;margin-bottom: 5px;">
+										{$adress_fee['province']}{$adress_fee['city']}{$adress_fee['county']}</span>
+										<span class="address_txt">{$adress_fee['detailed_address']}</span>
+										</div>
+						                <i class="address_flag" style="width:40px;right:30px;">{if $adress_fee['type']==2}家庭{elseif $adress_fee['type']==1}公司{/if}</i>
+						                <i class="arrow arrow_show"></i>
+						            </div>
+						        </div>
+			                {else}
+			                	<div class="u_address">
+						            <div class="u_address_d">
+						                <i class="icon_pos"></i>
+						                <div class="address" id="dt_address"><span class="toaddress"  id="link-address2" >您还没有收货地址哦，点击新增地址</span></div>
+						                <i class="arrow arrow_show"></i>
+						            </div>
+						        </div>
+			                {/if}
+
+							<div class="link">
+								<div class="link-method">送货时间</div>
+								<div class="link-select">
+								{if $issendtime['status']&&$sendtime_setting['sendtime']&&$groupnum<=1}
+								  <div class="content-block"  style="background-color: white;margin: 0;margin-left:-15px;">
+									  <div class="buttons-row" style="margin-top: .2rem;padding-bottom: 0.5rem;">
+										<div class="tab-link button" id="link_tod">今天</div>
+										<div class="tab-link button" id="link_tom">明天</div>
+										<div class="tab-link button" id="link_sec">后天</div>
+									  </div>
+								  </div>
+									<div id="timeDisplay"></div>
+
+								{else}
+										我们会在组团成功后24小时内送货上门，请注意安排接收！
+								{/if}
+								</div>
+							</div>
+							{if !empty($config['dispatch']['time'])}
+							<div style="background: #fff;padding: 10px;margin-top: 5px;">{$config['dispatch']['time']}</div>
+							{/if}
+			            </div>
+			        </div>
+			        {else}
+						{if !empty($adress_fee)}
+						        <!--地址信息-->
+						        <div class="u_address">
+						            <div class="u_address_d">
+						                <i class="icon_pos"></i>
+						                <div class="address" id="dt_address" style="height: 56px;">
+										<span class="name" style="margin-bottom: 5px;">{$adress_fee['cname']}</span>
+										<span class="tel">{$adress_fee['tel']}</span>
+										<span class="address_txt" style=" width: 95%;margin-bottom: 5px;">
+										{$adress_fee['province']}{$adress_fee['city']}{$adress_fee['county']}</span>
+										<span class="address_txt">{$adress_fee['detailed_address']}</span>
+										</div>
+						                <i class="address_flag" style="width:40px;right:30px;">{if $adress_fee['type']==2}家庭{elseif $adress_fee['type']==1}公司{/if}</i>
+						                <i class="arrow arrow_show"></i>
+						            </div>
+						        </div>
+			                {else}
+			                	<div class="u_address">
+						            <div class="u_address_d">
+						                <i class="icon_pos"></i>
+						                <div class="address" id="dt_address"><span class="toaddress" id="link-address3">您还没有收货地址哦，点击新增地址</span></div>
+						                <i class="arrow arrow_show"></i>
+						            </div>
+						        </div>
+			                {/if}
+					{/if}
+			       <?php
+
+						$where3 = "SELECT * FROM ".tablename('tg_coupon').' WHERE `openid` = :openid AND `use_time` = :use_time AND `start_time` < :now1 AND `end_time` > :now2 group by name  ORDER BY `end_time` DESC ';
+						$params3 = array(
+							':openid' => $openid,
+							':use_time' => 0,
+							':now1' => TIMESTAMP,
+							':now2' => TIMESTAMP
+						);
+						$allcoupon = pdo_fetchall($where3, $params3);
+					?>
+					{if !empty($allcoupon)}
+					<div style="padding: 10px;background-color: white;margin-bottom: 10px;margin-top:10px;">
+						<p style="color: {$_W['system_color']};">当前您可用的优惠券</p>
+						<div>
+							{loop $allcoupon $item}
+							<span class="canSelect" data-set="1">{$item['name']}</span>
+							{/loop}
+
+						</div>
+					</div>
+					{/if}
+					<div style="background-color: white;display:none;padding: 10px" id="act">
+						<p style="color: {$_W['system_color']};">现在有以下活动</p>
+						<div>
+							{if $config['base']['firstfree']==1}<span class="canSelect">首单免运费</span>{/if}
+							<span class="canSelect" id="overfree" data-set="1" style="display:none;"></span>
+						</div>
+					</div>
+			        <div class="item_yhq" id="dt_ord_youhui"  >
+			            <div class="item_yhq_left" id="dt_ord_yhjmes">请选择您要使用的优惠券</div>
+			            <div class="item_yhq_right"></div>
+			        </div>
+			        <div>
+			                <input type="text" placeholder="给商家留言" style="margin-top:-1px;margin-bottom: 2px;" value="" class="dt_ord_input" maxlength="200" name="remark">
+			        </div>
+			    </div>
+			</div>
+   		</div>
+   		<div class="footerr">
+	        <div class="order_mes">
+			<span id="yunfeilabel" >运费：</span>
+	        	<span class="order_price" id="freight" data-ajax="false">0.00</span>
+	        <span id="realTotalPrice">实付款：</span>
+	        	<span class="order_price" id="dt_ord_t2">¥{$pay_price}</span>
+	        	<button class="btn_gopay" id="dt_goPay" disabled>立即支付</button>
+	        </div>
+	    </div>
+    </div>
+</div>
+
+
+<div class="link-rule" style="display:none;">
+{if $goods['selltype']==1}
+	<div>
+		<div>拼团须知</div>
+		<div>
+			<div style="color:{$_W['system_color']};">什么是拼团？</div>
+			<p>每个商品都有单独购买价和拼团价，当您通过拼团价购买时，开团支付成功后再邀请朋友参团，参团人数达到组团规定时，订单生效。在规定时间内，若人数不足组团失败，我们会在48小时内自动退款。</p>
+			<div style="color:{$_W['system_color']};">如何拼团成功？</div>
+			<p>拼团是基于好友的转发扩散，获取团购优惠。首先选择商品开团：选择拼团商品下单，团即刻开启，但团长完成支付，方能获取转发链接，并在团开启规定时间内邀请到相应人数的好友支付，此团方能成功。</p>
+			<div style="color:{$_W['system_color']};">团长干嘛的？</div>
+			<p>首先选择心仪的商品下单，并完成支付后即为团长。团长视为本次交易的发起人，且为第一位支付成功的成员。</p>
+			<div style="color:{$_W['system_color']};">拼团成员是什么？</div>
+			<p>通过分享出去的该团入口进入或者通过分享团入口进入并完成付款加入该团的团员，参团成员也可以将该团分享出去邀约更多的团员参团。</p>
+			<div style="color:{$_W['system_color']};">拼团失败是怎么回事？</div>
+			<p>从团长开团规定时间内未能找到相应开团人数的好友参团，则该团失败，系统会在48个小时内自动原路退款至你的支付账户中。</p>
+		</div>
+		<div id="link-know">已了解</div>
+	</div>
+	{elseif $goods['selltype']==2}
+	<div>
+		<div>邻购须知</div>
+		<div>
+			<div style="color:{$_W['system_color']};">什么是邻购团？</div>
+			<p>邻购是基于邻近好友的组团购买，从而获得超低团购价,每个商品都有单独购买价和邻购价，团长选择商品并支付后，邻购即可开启。邻购所有成员收货地址只能是同一个且由团长填写。在规定时间内参与人数达到规定人数，邻购方能成功。若规定时间内邻购人数达不到规定人数，则失败，系统将自动原路退款；</p>
+			<div style="color:{$_W['system_color']};">如何邻购成功？</div>
+			<p>邻购是基于邻近好友的转发扩散，获取团购优惠。首先选择商品开团：选择邻购的商品下单，团即刻开启，但团长完成支付，方能获取转发链接，并在团开启规定时间内邀请到相应人数的好友支付，此团方能成功。</p>
+			<div style="color:{$_W['system_color']};">团长干嘛的？</div>
+			<p>邻购所有成员收货地址只能是同一个且由团长填写，首先选择心仪的商品下单，并完成支付后即为团长。团长视为本次交易的发起人，且为第一位支付成功的成员。</p>
+			<div style="color:{$_W['system_color']};">邻购成员是什么？</div>
+			<p>通过分享出去的该团入口进入并完成付款加入该团的团员，参团成员也可以将该团分享出去邀约更多的团员参团，所有参团团员必须认可团长所填写的收获地址。</p>
+			<div style="color:{$_W['system_color']};">领购失败是怎么回事？</div>
+			<p>团长开团在规定时间内未能找到相应开团人数的好友参团，则该团失败，系统会在48个小时内自动原路退款至你的支付账户。</p>
+		</div>
+		<div id="link-know" style="background-color:{$_W['system_color']};">已了解</div>
+	</div>
+	{/if}
+</div>
+<div id="zitiMendian">
+	<ul>
+		<!--<li>-->
+		<!--<i class="weui-icon-success"></i>-->
+		<!--<p>温州店</p>-->
+		<!--<p>温州店温州店温州店温州店温州店温州店温州店</p>-->
+		<!--</li>-->
+	</ul>
+	<button class="storeTJ">确认</button>
+</div>
+<div class="popup popup-youhui">
+	<header class="bar bar-nav">
+    	<a class="button button-link button-nav pull-right close-popup">关闭</a>
+    	<h1 class="title">优惠券列表</h1>
+  	</header>
+  	<div class="content" id="youhuic">
+
+  	</div>
+</div>
+
+<input id="link_zt" type="text" name="link_zt" value="0" hidden />
+<input id="link_dispatchtype" type="text" name="link_zt" value="0" hidden />
+
+<script type="text/html" id="couponlist">
+{{# for(var i = 0, len = d.length; i < len; i++){ }}
+<div class="voucher-main" cpid="{{ d[i].id }}">
+<div class="selected">✔</div>
+			<ul class="list-cash-coupon">
+				<li disabled>
+					<a onclick="usecoupon({{ d[i].id }},{{ d[i].cash }})" style="{{# if(i%4 == 0){ }}background-position:0 -10px;{{# }else if(i%4 == 1){ }}background-position:0 -133px;{{# }else if(i%4 == 2){ }}background-position:0 -256px;{{# }else{ }}background-position:0 -379px;{{# } }}">
+						<p><span>￥ {{ d[i].cash }}</span>元</p>
+						<p>{{ d[i].name }}</p>
+						<p>截止时间：{{ d[i].end_time }}</p>
+						<p></p>
+						<p>立即使用</p>
+					</a>
+				</li>
+			</ul>
+		</div>
+{{# } }}
+</script>
+<script type="text/javascript">
+    console.log('shoporder_confirm');
+    // 武汉同城
+    {if $uniacid_tpl['tpl']==8209}
+    if(!sessionStorage.getItem('COUNTY_NAME') && typeof sessionStorage.getItem('COUNTY_NAME') == 'object'){ //获取不到返回值为null
+        location.href="{php echo app_url('goods/list/store_list1')}";
+    }else {
+        var local_county = sessionStorage.getItem('COUNTY_NAME');
+            local_county = JSON.parse(local_county);
+        $.get(
+            "{php echo app_url('goods/list/whtc')}",
+            {"storeid": local_county.shop_storeid},
+            function (res) {
+                var data = JSON.parse(res).data;
+                $('.zitiStores p').html('门店：'+data.storename).attr('data-id',local_county.shop_storeid);
+                $('#freight').attr('data-ajax','true');
+                $('#freight').html(Number(data.cost).toFixed(2));
+                $('#dt_ord_t2').html('￥'+({$pay_price}+Number(data.cost)));
+            }
+        );
+    }
+    {/if}
+
+    $('.zitiStores').click(function(){
+        {if $kaiguan['zitidingwei'] == 1}
+            if(localStorage.getItem('locationADD')){
+                var locationADD=JSON.parse(localStorage.getItem('locationADD'));
+                storeList(locationADD.latitude,locationADD.longitude);
+            }else{
+            	$.showPreloader();
+                wx.getLocation({
+                    type: 'gcj02', //返回可以用于wx.openLocation的经纬度
+                    success: function(res) {
+                    	$.hidePreloader();
+                        storeList(res.latitude,res.longitude, 'success');
+                    },
+                    fail: function () {
+                    	$.hidePreloader();
+                    	storeList('','','fail');
+                    }
+                });
+            }
+        {else}
+        	storeList('','', 'success');
+        {/if}
+	});
+
+	function storeList(lat, lon, status) {
+        $.get(
+            "{php echo app_url('order/shoporderconfirm')}op=storelist_distance",
+            {
+                'uniacid':"{$_W['uniacid']}",
+                'g_id':"{$goods['id']}",
+				'lat':lat,
+				'lng':lon
+            },
+            function(data){
+                if(data.length<1){return false;}
+                var data=JSON.parse(data);
+                console.log(data);
+                var html="";
+                var kaiguan  = {php echo intval($kaiguan['zitidingwei'])};
+				var html_child = '';
+				if(status == 'fail') $.toast('定位失败')
+                for(var i=0;i<data.length;i++){
+                	if (data[i].status == '1') {
+	                	html_child = kaiguan == 1 && (status == 'success') ? '<p> 距'+ data[i].distance +'</p>' : '';
+
+	                    html+="<li data-id="+data[i].id+"><i onclick='chooseI(this)' class='weui-icon-success'></i>" +
+							"<p class='kuan1'>"+data[i].storename+"</p><p class='kuan2'>"+data[i].address+"</p>"+html_child+"</li>"
+					}
+                }
+                $('#zitiMendian>ul').html(html);
+                $('#zitiMendian').slideDown();
+            }
+        );
+    }
+	function chooseI(a){
+		$('#zitiMendian li i').removeClass('active');
+		$(a).addClass('active');
+	}
+	$('.storeTJ').click(function(){
+		var ii=$('#zitiMendian li i');
+		for(var i=0;i<ii.length;i++){
+			if($(ii[i]).hasClass('active')){
+				var p=$(ii[i]).next('p');
+				$('a.zitiStores p').html('您选择的门店是: '+ p.html()).attr('data-id',$(ii[i]).parent().attr('data-id'));
+				$('#zitiMendian').slideUp();
+				setT(i, $(ii[i]).parent().attr('data-id'));
+				return false;
+			}
+		}
+		$.toast('请选择门店');
+	});
+	window.onload=function(){
+		$('script[data-garbage="true"]').remove();
+
+		$('iframe').remove();
+		$('#dt_goPay').removeAttr('disabled').css('background','#f97b87');
+	}
+//var dateNow;
+	/*var canSelects = document.getElementsByClassName("canSelect");
+	var cantSelects = document.getElementsByClassName("cantSelect");
+	var cantLen = cantSelects.length;
+	var canLen = canSelects.length;
+	for (var i = 0; i < canLen; i++)(function (i) {
+		canSelects[i].onclick = function(ev) {
+			ev.target.classList.toggle("canSelect");
+			ev.target.classList.toggle("cantSelect");
+		}
+	}(i));
+	for (var i = 0; i < cantLen; i++) (function (i) {
+		cantSelects[i].onclick = function (ev) {
+			if (ev.target.dataset.set == '1') {
+				ev.target.classList.toggle("canSelect");
+				ev.target.classList.toggle("cantSelect");
+			}
+			else {
+				$.toast("未开通该活动");
+			}
+		}
+	}(i));*/
+	var actl={$config['base']['firstfree']};
+	var act =document.getElementById("act");
+	if(actl==1)
+	{
+		act.style.display="block";
+	}
+	if (document.getElementsByClassName("canSelect").length > 0) {
+		var distanceMinus = document.getElementsByClassName("distanceMinus")[0];
+		var isMinusNum = Number(document.getElementById("isMinusNum").textContent);
+		var dataset =  document.getElementById("dataset");
+	}
+	else {
+		var isMinusNum = 0;
+	}
+	if (document.getElementById("undefBlock")){
+		document.getElementById("undefBlock").onclick = function () {
+			$.toast("点击右上角完成按钮，即可提交订单");
+		}
+	}
+//	if (sessionStorage.getItem("Buy")==null){
+//		$.toast("路径出错，自动帮你跳回首页");
+//		setTimeout(function(){
+//		  location.href = "{php echo app_url('goods_list')}";
+//		},1000);
+//	}
+	var orderTime={};
+	orderTime.date=2;
+	orderTime.time=1;
+	var status = '';
+	var isDetail = true;
+	var isPost = true;
+	sessionStorage.setItem("counpon",'0');
+	var linktimes=document.getElementsByClassName("link-time");
+	var ajaxData={};
+	if (document.getElementById("attval")){
+		var discount='{$firstdiscount}';
+	}
+	else { var discount=0; }
+	function getCash(){
+	  var cash = Number(sessionStorage.getItem("counpon"));
+	  return cash;
+	}
+	//查看详情
+	if (document.getElementById("link-know")){
+		document.getElementById("link-know").onclick=function(){
+			document.querySelector('.link-rule').style.setProperty("display","none");
+		}
+		document.getElementById("lookdetail").onclick=function(){
+			document.querySelector('.link-rule').style.setProperty("display","block");
+		}
+	}
+	//数量加减begin
+	var productNum=1;
+	if ( document.getElementById( 'up' ) ) {
+		var plus = document.getElementById( 'up' ),
+			minus = document.getElementById( 'down' ),
+			product = document.getElementById( 'num' );
+		productNum = parseInt( product.value );
+		plus.addEventListener( 'click', plusHander, false );
+		minus.addEventListener( 'click', minusHander, false );
+		product.addEventListener('change',valueChange,false);
+
+		function valueChange( event ) {
+			productNum = parseInt(document.getElementById( 'num' ).value);
+			if ( productNum < 1 ) {
+				$.toast( "数量不能小于0" );
+				document.getElementById("dt_ord_t2").innerHTML ="￥";
+			}
+			else {
+				document.getElementById("dt_ord_t2").innerHTML ="￥"+ (Number(feightValue())+ Number(updateSum())-discount-getCash()).toFixed(2);
+			}
+		}
+
+		function plusHander( event ) {
+
+			  document.getElementById( 'num' ).value = ++productNum;
+			  document.getElementById("dt_ord_t2").innerHTML ="￥"+ (feightValue()+Number(updateSum())-discount-getCash()).toFixed(2);
+
+		}
+
+		function minusHander( event ) {
+			if ( productNum>1 ) {
+			  document.getElementById( 'num' ).value = --productNum;
+			  document.getElementById("dt_ord_t2").innerHTML = "￥"+ (feightValue()+Number(updateSum())-discount-getCash()).toFixed(2);
+
+			}
+			else {
+			  $.toast( "数量不能小于0" );
+			}
+		}
+	}
+	//数量加减end
+
+	var lingouid='{$goods['selltype']}';
+	//选择送货上门
+	if (document.getElementById("link_tod")){
+		var linkToday=document.getElementById("link_tod"),
+			linkTom=document.getElementById("link_tom"),
+			linkNext=document.getElementById("link_sec");
+
+		linkToday.addEventListener("click",function(){
+			selectActive(1);
+		},false);
+
+		linkTom.addEventListener("click",function(){
+			selectActive(2);
+		},false);
+
+		linkNext.addEventListener("click",function(){
+			selectActive(3);
+		},false);
+	}
+	function selectActive(n){
+		if (document.getElementById("link_tod")){
+		act.style.display="none";
+		switch (n){
+			case 1:
+
+				linkToday.classList.add("active");
+				linkTom.classList.remove("active");
+				linkNext.classList.remove("active");
+				break;
+			case 2:
+				linkToday.classList.remove("active");
+				linkTom.classList.add("active");
+				linkNext.classList.remove("active");
+				break;
+			case 3:
+				linkToday.classList.remove("active");
+				linkTom.classList.remove("active");
+				linkNext.classList.add("active");
+				break;
+			default:
+				$.toast("传入错误值");
+		}
+		orderTime.date=n;
+		orderTime.time=-1;
+		//获取时间列表
+		var xhr=new XMLHttpRequest(),
+				timeDisplay=document.getElementById("timeDisplay"),
+				formData=new FormData();
+
+			formData.append("ad",n);
+			formData.append("op","at");
+			var url="{php echo app_url('order/shoporderconfirm')}";
+			xhr.open("post",url,true);
+			xhr.send(formData);
+			xhr.onreadystatechange=function(){
+				if (xhr.readyState==4) {
+					if ((xhr.status>=200 && xhr.status<300)||xhr.status==304) {
+						var responseText=JSON.parse(xhr.responseText);
+
+						document.getElementById("link_dispatchtype").value=1;
+						var linka=document.getElementsByClassName("link-button2");
+						if (linka.length>0){
+							for (var j=0;j<linka.length;j++){
+								linka[j].removeEventListener("click",function(ev){
+									for (var i=0;i<linka.length;i++){
+										if (ev.target==linka[i]){
+											linka[i].classList.add("link-active");
+											orderTime.timer = i;
+							            	}else{
+											linka[i].classList.remove("link-active");
+										}
+									}
+								},false);
+							}
+						}
+						timeDisplay.innerHTML="";
+
+						for (var i=0;i<responseText.length;i++){
+//							var originTime = responseText[i].name.slice(0,2);
+//							var ntime=new Date(),targetTime=ntime.getHours();
+
+							var ntime=new Date();
+							var originTime =ntime.getFullYear()+'/'+(ntime.getMonth()+1)+'/'+ntime.getDate()+' '+responseText[i].name.slice(0,5);
+							var targetTime = Date.parse(ntime);
+							originTime=Date.parse(originTime);
+
+							if (targetTime<originTime && n==1){
+								timeDisplay.innerHTML+='<div class="link-button2">'+responseText[i].name+'</div>';
+							}else if (n>1){
+								timeDisplay.innerHTML+='<div class="link-button2">'+responseText[i].name+'</div>';
+							}
+						}
+
+/*时间测试*/
+						var linka=document.getElementsByClassName("link-button2");
+						if (linka.length>0) {
+							linka[0].classList.add("link-active");
+							orderTime.times = linka[0].innerText;
+							orderTime.time = linka.length;
+
+							//$.toast(JSON.stringify(orderTime));
+						}
+
+						for (var j=0;j<linka.length;j++){
+								linka[j].addEventListener("click",function(ev){
+								for (var i=0;i<linka.length;i++){
+										if (ev.target==linka[i]){
+											linka[i].classList.add("link-active");
+											orderTime.time=linka.length - i;
+
+										}else{
+											linka[i].classList.remove("link-active");
+										}
+									}
+								orderTime.times=$(this).text();
+							},false);
+							}
+					}
+				}
+			}
+		}
+
+	}
+
+
+	//
+	var linkButtons=document.getElementsByClassName("link-button"),
+		linkButtonsLen=linkButtons.length,
+		linkExpress,
+		linkPrice='{$price}';
+	var linkButton1s=document.getElementsByClassName("link-button1"),
+		linkButton1sLen=linkButton1s.length;
+
+	if (linkButtonsLen>0){
+		for (var i=0;i<linkButtonsLen;i++){
+			linkButtons[i].addEventListener("click",function(ev){
+				for (var j=0;j<linkButtonsLen;j++){
+					if (ev.target==linkButtons[j]){
+						clickLinkButton(j);
+					}else{
+						linkButtons[j].classList.remove("link-active");
+					}
+				}
+			},false);
+		}
+	}
+	function clickLinkButton(j){
+		for (var i=0;i<linkButtonsLen;i++){
+			linkButtons[i].classList.remove("link-active");
+		}
+		if (linkButtons.length>0){
+				linkButtons[j].classList.add("link-active");
+		}
+		if (true || ajaxData["0"+j.toString()]===undefined){
+
+				var xhr=new XMLHttpRequest(),
+				formData=new FormData();
+				formData.append("tid",linkButtons[j].id);
+				formData.append("op","ck");
+				var url="{php echo app_url('order/shoporderconfirm')}";
+				xhr.open("post",url,true);
+				xhr.send(formData);
+				xhr.onreadystatechange=function(){
+					if (xhr.readyState==4) {
+						if ((xhr.status>=200 && xhr.status<300)||xhr.status==304) {
+						//console.log(JSON.parse(xhr.responseText).freight);
+							linkExpress=Number(JSON.parse(xhr.responseText).freight);
+							if (linkExpress.length>10){
+								location.replace(location.href);
+								return false;
+							}
+							ajaxData["0"+j.toString()]=linkExpress;
+							//添加满包邮数值
+							document.getElementById("isMinusNum").innerHTML=JSON.parse(xhr.responseText).free;
+							isMinusNum = Number(document.getElementById("isMinusNum").textContent);
+							var overfree=document.getElementById("overfree");
+							var datamiss=document.getElementById("datamiss");
+							if(JSON.parse(xhr.responseText).free>0)
+							{
+								checkMinus();
+								overfree.innerHTML = '满'+JSON.parse(xhr.responseText).free+'免运费';
+								overfree.style.display = "inline";
+								datamiss.style.display = "inline";
+								act.style.display = "block";
+							}else{
+							overfree.style.display = "none";
+							datamiss.style.display = "none";
+							}
+
+							//添加满包邮数值
+							$('#freight').attr('data-ajax','true');
+							document.getElementById("link_dispatchtype").value=2;
+							document.getElementById("link_zt").value=linkButtons[j].id;
+							document.getElementById("freight").innerHTML=linkExpress.toFixed(2);
+							document.getElementById("dt_ord_t2").innerHTML="￥"+ (Number(feightValue())+Number(updateSum())-discount-getCash()).toFixed(2);
+							$("#dt_ord_t2").attr("num",(Number(feightValue())+Number(updateSum())-discount-getCash()).toFixed(2));
+						}
+					}
+				}
+			}
+
+		else {
+			var xhr=new XMLHttpRequest(),
+				formData=new FormData();
+				formData.append("tid",linkButtons[j].id);
+				formData.append("op","ck");
+				var url="{php echo app_url('order/shoporderconfirm')}";
+				xhr.open("post",url,true);
+				xhr.send(formData);
+				document.getElementById("link_dispatchtype").value=2;
+			document.getElementById("freight").innerHTML=ajaxData["0"+j.toString()].toFixed(2);
+			document.getElementById("dt_ord_t2").innerHTML="￥"+ (Number(ajaxData["0"+j.toString()])+Number(updateSum())-discount-getCash()).toFixed(2);
+			document.getElementById("link_zt").value=linkButtons[j].id;
+		}
+	}
+	if (linkButton1s.length>0){
+		link_id =linkButton1s[0].id;
+		if (linkButton1sLen>0){
+			for (var i=0;i<linkButton1sLen;i++){
+				linkButton1s[i].addEventListener("click",function(ev){
+					for (var j=0;j<linkButton1sLen;j++){
+						if (ev.target==linkButton1s[j]){
+							linkButton1s[j].classList.add("link-active");
+							link_id=linkButton1s[j].id;
+							setT(j, link_id);
+						}else{
+							linkButton1s[j].classList.remove("link-active");
+						}
+					}
+				},false);
+			}
+		}
+	}
+	var link_id = 0;
+   	function setT(n,link_id){
+	  if (true || ajaxData["aaa"+n.toString()]=== undefined){
+								isPost = false;
+								var xhr=new XMLHttpRequest(),
+									formData=new FormData();
+									formData.append("sid",link_id);
+									//$.toast(link_id);
+									formData.append("op","zt");
+									var url="{php echo app_url('order/shoporderconfirm')}";
+									xhr.open("post",url,true);
+									xhr.send(formData);
+									xhr.onreadystatechange=function(){
+
+										if (xhr.readyState==4) {
+											if ((xhr.status>=200 && xhr.status<300)||xhr.status==304) {
+			                				    linkExpress=Number(xhr.responseText);
+
+												isPost = true;
+												if (linkExpress.length>10){
+													location.replace(location.href);
+													return false;
+												}
+												ajaxData["aaa"+n.toString()]=linkExpress;
+												document.getElementById("link_zt").value=link_id;
+												//$.toast(link_id);
+												document.getElementById("link_dispatchtype").value=3;
+												document.getElementById("freight").innerHTML=linkExpress.toFixed(2);
+												document.getElementById("dt_ord_t2").innerHTML="￥"+ (Number(feightValue())+Number(updateSum())-discount-getCash()).toFixed(2);
+												$("#dt_ord_t2").attr("num",(Number(feightValue())+Number(updateSum())-discount-getCash()).toFixed(2));
+											}
+											else {
+												isPost = true;
+											}
+										}
+									}
+								}
+								else {
+									var xhr=new XMLHttpRequest(),
+									formData=new FormData();
+									formData.append("sid",link_id);
+									formData.append("op","zt");
+									var url="{php echo app_url('order/shoporderconfirm')}";
+									xhr.open("post",url,true);
+									xhr.send(formData);
+									document.getElementById("link_dispatchtype").value=3;
+									document.getElementById("freight").innerHTML=ajaxData["aaa"+n.toString()].toFixed(2);
+									document.getElementById("dt_ord_t2").innerHTML="￥"+ (ajaxData["aaa"+n.toString()]+Number(updateSum())-discount-getCash()).toFixed(2);
+									document.getElementById("link_zt").value=link_id;
+								}
+	}
+	sessionStorage.setItem("oldcounpon",0);
+	var jumptype = Number('{$type}');
+	var num = "{php echo $goods['gnum']}";
+    var isshow = "{php echo $goods['isshow']}";
+    var addrid = "{php echo $adress_fee['id']}";
+    var freight = "{php echo $freight}";
+    var pay_price = "{php echo $pay_price}";
+    var couponid = 0;
+    var typeid = $('.buttons-row .active').attr('typeid');
+    num = parseInt(num);
+	function getTotalPrice(){
+		return Number( document.getElementById("dt_ord_t2").innerHTML.slice(-document.getElementById("dt_ord_t2").innerHTML.length+1))+Number(sessionStorage.getItem("oldcounpon"));
+	}
+	//var totalpricereal =Number( document.getElementById("dt_ord_t2").innerHTML.slice(-document.getElementById("dt_ord_t2").innerHTML.length+1));
+	function usecoupon(id,cash){
+		$.closeModal();
+		$('#couponid').val(id);
+		couponid = id;
+ 		$('#dt_ord_yhjmes').html('使用优惠券： ￥-'+cash+'元');
+		/*if(typeid == 2 || typeid == 4){
+			$('#dt_ord_t2').html('￥' + (pay_price - freight - cash).toFixed(2));
+		}else{
+			$('#dt_ord_t2').html('￥' + (pay_price - cash).toFixed(2));
+		}*/
+
+		sessionStorage.setItem("oldcounpon",sessionStorage.getItem("counpon"));
+		$('#dt_ord_t2').html('￥' + (getTotalPrice() - cash).toFixed(2));
+		sessionStorage.setItem("counpon",cash);
+		return false;
+	}
+		var goodEdit = document.getElementById("goodEdit");
+			var urladd = "{php echo app_url('goods/list/add')}";
+			var urlRemove = "{php echo app_url('goods/list/remove')}";
+			var Buy = {};
+			var GuigeSelect = {};
+			loadBuyGood();
+			function postAjax(id, url, weight, str){
+				var formData = new FormData();
+					formData.append('id', id);
+					formData.append("weight",weight);
+					if (str !==undefined){
+					  formData.append("str",str);
+					}
+					var xhr = new XMLHttpRequest();
+					xhr.open('post', url, true);
+					xhr.send(formData);
+					xhr.onreadystatechange = function() {
+						if (xhr.readyState ==4) {
+						  if ((xhr.status >=200 && xhr.status<300) || xhr.status ==304){
+						    isPost = true;
+							//alert(xhr.responseText);
+							//changeDefault();
+							console.log(xhr.responseText);
+							 return !!xhr.responseText;
+						  }
+						  else {
+						    isPost = true;
+							console.log("cuowu");
+						  }
+						}
+					}
+			}
+			var handlerEdit = function () {
+			  if (goodEdit.innerHTML == '编辑') {
+
+			    if (document.getElementById("undefBlock")){
+					document.getElementById("undefBlock").style.display = "block";
+				}
+				//dateNow = +new Date();
+				document.getElementById("realTotalPrice").textContent = '商品总价';
+				document.getElementById("freight").style.visibility = 'hidden';
+				document.getElementById("yunfeilabel").style.visibility = 'hidden';
+				document.getElementById("dt_ord_t2").innerHTML = "￥"+Number(updateSum()).toFixed(2);
+				goodEdit.innerHTML = '完成';
+				//dataset.style.display = "none";
+				activeHandle();
+			  }
+			  else {
+			    if (document.getElementById("undefBlock")){
+					document.getElementById("undefBlock").style.display = "none";
+				}
+				document.getElementById("realTotalPrice").textContent = '实付款';
+				document.getElementById("yunfeilabel").style.visibility = 'visible';
+				document.getElementById("freight").style.visibility = 'visible';
+				goodEdit.innerHTML = '编辑';
+				//dataset.style.display = "block";
+				checkMinus();
+				defaultHandle();
+				postAjax2(updateSum());
+
+			  }
+			}
+			function activeHandle() {
+			  isDetail = false;
+			  sessionStorage.setItem("counpon",0);
+			  //<div class="item_yhq_left" id="dt_ord_yhjmes">请选择或兑换优惠券{$coupon['name']}</div>
+			  document.getElementById("dt_ord_yhjmes").textContent = '请选择或兑换优惠券';
+			  var minuslist = document.getElementsByClassName("goodminus"),
+				 numberlist = document.getElementsByClassName("goodnumber"),
+					addlist = document.getElementsByClassName("goodbuy"),
+						len = minuslist.length;
+			  for (var i = 0; i < len; i++) {
+				addlist[i].innerHTML = '<img src="{TG_URL_ARES}images/plus.png" style="margin-top:5px;width:13px;heigth:13px;">';
+				addlist[i].style.setProperty("background-color", "{$_W['system_color']}");
+				addlist[i].style.color = "white";
+				addlist[i].style.lineHeight = "14px";
+				minuslist[i].style.display = 'block';
+				numberlist[i].style.display = 'block';
+			  }
+			}
+			function defaultHandle() {
+			  isDetail = true;
+			  var minuslist = document.getElementsByClassName("goodminus"),
+				 numberlist = document.getElementsByClassName("goodnumber"),
+					addlist = document.getElementsByClassName("goodbuy"),
+						len = minuslist.length;
+			  for (var i = 0; i < len; i++) {
+			    addlist[i].style.setProperty("background-color", "#fff");
+				addlist[i].style.color = "{$_W['system_color']}";
+				addlist[i].innerHTML = numberlist[i].innerHTML;
+				addlist[i].style.lineHeight = "23px";
+				minuslist[i].style.display = 'none';
+				numberlist[i].style.display = 'none';
+			  }
+			  changeDefault();
+			}
+			function changeDefault(){
+			  //alert(status);
+			  if (status === 'bdAjax'){
+				bdAjax();
+
+			  }
+			  else if (status === 'exAjax') {
+				exAjax();
+
+			  }
+			  else if (status === 'shAjax'){
+				shAjax();
+
+			  }
+			  else {
+				loadNone();
+				//alert(66);
+			  }
+			}
+			function loadNone() {
+				document.getElementById("dt_ord_t2").innerHTML="￥"+ (Number(updateSum())-discount-getCash()).toFixed(2);
+			}
+			goodEdit.onclick = handlerEdit;
+			function getGoodHtml(i,guige) {
+			  var str = '';
+			  if (guige !== undefined){
+			    if (Number(GuigeSelect[i][guige]) > 0){
+					str += '<div>'
+					   + '<img src="' + Buy[i]['img'] + '"\/>'
+					   + '<div>'
+					   + '<div style="overflow: hidden;white-space: nowrap;text-overflow: ellipsis;">' + Buy[i]['title'] + '<\/div>'
+					   + '<div class="listprice p'+ Buy[i]['id'] +'">￥' + GuigeSelect[i][guige+'Price'] +'元/'+ '<span style="color:red;font-size:0.75em;">' + guige  +'<\/span><\/div>'
+					   + '<\/div>'
+					   + '<span class="goodminus" onclick="minusGoods(this)"><img src="{TG_URL_ARES}images/minus.png" style="width:13px;heigth:13px;"><\/span>'
+					   + '<span class="guige" style="display:none">' +guige+ '<\/span>'
+					   + '<span class="key" style="display:none">' +i+ '<\/span>'
+					   + '<span class="goodnumber">' + GuigeSelect[i][guige] + '<\/span>'
+					   + '<span class="goodbuy" onclick="plusGoods(this)">' + GuigeSelect[i][guige] + '<\/span>'
+					   + '<\/div>';
+				}
+			  }
+			  else {
+				if (Number(Buy[i]['num']) > 0){
+					str += '<div>'
+					   + '<img src="' + Buy[i]['img'] + '"\/>'
+					   + '<div>'
+					   + '<div style="overflow: hidden;white-space: nowrap;text-overflow: ellipsis;">' + Buy[i]['title'] + '<\/div>'
+					   + '<div class="listprice p'+ Buy[i]['id'] +'">￥' + Buy[i]['price'] +'元<\/div>'
+					   + '<\/div>'
+					   + '<span class="guige" style="display:none">' +'no'+ '<\/span>'
+					   + '<span class="key" style="display:none">' +i+ '<\/span>'
+					   + '<span class="goodminus" onclick="minusGoods(this)"><img src="{TG_URL_ARES}images/minus.png" style="width:13px;heigth:13px;"><\/span>'
+					   + '<span class="goodnumber">' + Buy[i]['num'] + '<\/span>'
+					   + '<span class="goodbuy" onclick="plusGoods(this)">' + Buy[i]['num'] + '<\/span>'
+					   + '<\/div>';
+				}
+			  }
+			  return str;
+			}
+			function updateSum(str){
+				var sum = 0;
+				var strDetail = '';
+				for (var key in Buy) {
+					if (key in GuigeSelect) {
+					  var jiage = queryGuigestr(key);
+					  for (var i = 0; i< jiage.length; i++){
+						if (str === 'weight') {
+						  strDetail = jiage[i] + 'Weight';
+						}
+						else {
+						  strDetail = jiage[i] + "Price";
+						}
+						if (GuigeSelect[key][jiage[i]] !== undefined){
+						 sum += GuigeSelect[key][jiage[i]] * GuigeSelect[key][strDetail];
+						 }
+					  }
+					}
+					else {
+					  if ( Buy[key]['num'] !== undefined){
+						if (str === 'weight'){
+						  sum += Number(Buy[key]['num']) * Number(Buy[key]['weight']);
+						}
+						else {
+						  sum += Number(Buy[key]['num']) * Number(Buy[key]['price']);
+						}
+					  }
+					}
+				}
+
+
+				return sum.toFixed(2);
+			}
+			function minusGoods(ev) {
+			  if (isPost){
+				  isPost = false;
+				  var i = ev.parentNode.getElementsByClassName("key")[0].innerHTML,
+				isguige = ev.parentNode.getElementsByClassName("guige")[0].innerHTML,
+					 id = Buy[i]['id'],
+			 goodnumber = ev.parentNode.getElementsByClassName("goodnumber")[0];
+			 var smallCal = document.getElementsByClassName("smallCal")[0];
+			  if (isguige !== 'no') {
+				weight = GuigeSelect[i][isguige+"Weight"];
+				var sum = 0;
+				for (var a in Buy) {
+					sum += Buy[a]['num'];
+				}
+				if (sum >1){
+				  if (postAjax(id, urlRemove, weight, isguige) || true){
+					Buy[i]['num']--;
+					GuigeSelect[i][isguige]--;
+					goodnumber.innerHTML = GuigeSelect[i][isguige];
+					if (GuigeSelect[i][isguige]==0) {
+					  ev.parentNode.style.display = "none";
+					  delete GuigeSelect[i][isguige];
+					  delete GuigeSelect[i][isguige + "Price"];
+					  delete GuigeSelect[i][isguige + "Weight"];
+					  delete GuigeSelect[i][isguige + "Stock"];
+					 }
+				  }
+				}
+				else if (sum==1 && confirm("商品数量为1，确认再减么,按确认后会自动跳回首页")){
+					if (postAjax(id, urlRemove, weight, isguige) || true){
+					GuigeSelect[i][isguige]--;
+					Buy[i]['num']--;
+					goodnumber.innerHTML = GuigeSelect[i][isguige];
+					if (GuigeSelect[i][isguige]==0) {
+					  delete GuigeSelect[i];
+					  if (Buy[i]['num']==0) {
+						delete Buy[i];
+					  }
+					  ev.parentNode.style.display = "none";
+					}
+					 setTimeout(function(){
+						  location.href = "{php echo app_url('goods_list')}";
+						},1000);
+				  }
+				}
+
+				else {
+					isPost = true;
+					$.toast("网络不好，增减失败");
+				}
+			  }
+			  else {
+				weight = Buy[i]['weight'];
+				var sum = 0;
+				for (var a in Buy) {
+					sum += Buy[a]['num'];
+				}
+				if (sum >1){
+				  if (postAjax(id, urlRemove, weight) || true){
+					Buy[i]['num']--;
+					goodnumber.innerHTML = Buy[i]['num'];
+					if (Buy[i]['num']==0) {
+					  ev.parentNode.style.display = "none";
+					  delete Buy[i];
+					 }
+				  }
+				}
+				else if (sum==1 && confirm("商品数量为1，确认再减么,按确认后会自动跳回首页")){
+					if (postAjax(id, urlRemove, weight) || true){
+					Buy[i]['num']--;
+					goodnumber.innerHTML = Buy[i]['num'];
+					if (Buy[i]['num']==0) {
+					  ev.parentNode.style.display = "none";
+					  delete Buy[i];
+					 }
+					 setTimeout(function(){
+						  location.href = "{php echo app_url('goods_list')}";
+						},1000);
+				  }
+
+					  /*var sum = 0;
+					  for (var a in Buy) {
+						sum += Buy[a]['num'];
+					  }
+					  if (sum == 0) {
+						$.toast("购物车商品数量为0，自动跳转首页");
+						setTimeout(function(){
+						  location.href = "{php echo app_url('goods_list')}";
+						},3000)
+					  }*/
+
+				}
+				else {
+					isPost = true;
+					//$.toast("网络不好，增减失败");
+				}
+			  }
+			  saveSession();
+			  document.getElementById("dt_ord_t2").innerHTML = "￥"+Number(updateSum()).toFixed(2);
+			  smallCal.textContent = "￥"+Number(updateSum()).toFixed(2);
+			  checkMinus();
+
+			  }
+			}
+
+
+			function LimitedPurchase(onelimit,manylimit,historylimit,i){    //普通形式的限购-结算页
+
+			var surplusLimit=eval(manylimit)-eval(historylimit);//剩余可购买数
+			 if(onelimit>0 && manylimit>0){     //第一种情况，onelimit不为0，并且manylimit>0
+			    if(surplusLimit==0){
+			     $.toast("当前用户总限购数："+manylimit+"件");
+			     Buy[i]['num']=0;
+				 return false;
+		    	}
+                 if(Number(Buy[i]['num'])>= Number(onelimit)){
+                     $.toast("当前限购："+onelimit+"件");
+                     Buy[i]['num']=parseInt(onelimit);
+                     return false;
+                 }else if(Number(Buy[i]['num'])>=Number(surplusLimit)){
+                     $.toast("最多还可购买："+surplusLimit+"件");
+                     Buy[i]['num']=parseInt(surplusLimit);
+                     return false;
+                 }
+                 // Buy[i]['num']++;
+                 return true;
+			 }
+
+			 if(onelimit>0 && manylimit==0){     //第二种情况，onelimit不为0，manylimit=0不限购
+                 if(Number(Buy[i]['num'])>=Number(onelimit)){
+					  $.toast("当前限购："+onelimit+"件");
+	                   Buy[i]['num']=parseInt(onelimit);
+					   return false;
+					 }
+//				 Buy[i]['num']++;
+				 return true;
+			 }
+
+			 if(onelimit==0 && manylimit>0){     //第三种情况，onelimit为0，manylimit>0限购
+			    if(surplusLimit==0){
+			     $.toast("当前用户总限购数："+manylimit+"件");
+			     Buy[i]['num']=0;
+				 return false;
+		    	}else if(Buy[i]['num']>=surplusLimit){
+			   $.toast("剩余可购买数量最多："+surplusLimit+"件");
+			   Buy[i]['num']=parseInt(surplusLimit);
+			  }
+			  Buy[i]['num']++;
+			  return true;
+			 }
+			   // Buy[i]['num']++;
+			  return true;
+			}//end LimitedPurchase
+	{if $goods['deliverytype']==0||$goods['deliverytype']==5||$goods['deliverytype']==6||$goods['deliverytype']==3}
+		$('#freight').attr('data-ajax','true');
+		{/if}
+	    	//定义规格形式的限购函数-结算页
+			function LimitedPurchase_guige(onelimit,manylimit,historylimit,i,isguige){
+			 var surplusLimit=eval(manylimit)-eval(historylimit);//剩余可购买数
+			 if(Number(onelimit)>0 && Number(manylimit)>0){     //第一种情况，onelimit不为0，并且manylimit>0
+			    if(surplusLimit==0){
+			     $.toast("当前用户总限购数："+manylimit+"件");
+			     Buy[i]['num']=0;
+				 return false;
+		    	}
+			    if(Number(Buy[i]['num']) >= Number(onelimit)){
+					  $.toast("当前限购："+onelimit+"件");
+	                   Buy[i]['num']=parseInt(onelimit);
+					   return false;
+					 }else if(Number(Buy[i]['num'])>= Number(surplusLimit)){
+                    $.toast("最多还可购买："+surplusLimit+"件");
+	                Buy[i]['num']=parseInt(surplusLimit);
+					return false;
+				     }
+     			 }
+
+                if(Number(onelimit)>0 && Number(manylimit)==0){     //第二种情况，onelimit不为0，manylimit=0不限购
+				 if(Buy[i]['num']>=onelimit){
+					  $.toast("当前限购："+onelimit+"件");
+	                   Buy[i]['num']=parseInt(onelimit);
+					   return false;
+					 }
+			 }
+
+                if(Number(onelimit)==0 && Number(manylimit)>0){     //第三种情况，onelimit为0，manylimit>0限购
+                    if(surplusLimit==0){
+                        $.toast("当前用户总限购数："+manylimit+"件");
+                        Buy[i]['num']=0;
+                        return false;
+                    }else if(Number(Buy[i]['num'])>=Number(surplusLimit)){
+                        $.toast("剩余可购买数量最多："+surplusLimit+"件");
+                        Buy[i]['num']=parseInt(surplusLimit);
+                        return false;
+                    }
+			 }
+
+			 // GuigeSelect[i][isguige]++;
+			 // Buy[i]['num']++;
+			 return true;
+			}//LimitedPurchase_guige
+
+			function plusGoods(ev){
+             	if (isPost){
+				isPost = false;
+				var minusButton = ev.parentNode.getElementsByClassName("goodminus")[0];
+				var smallCal = document.getElementsByClassName("smallCal")[0];
+				if (minusButton.style.display == 'block'){
+					  var i = ev.parentNode.getElementsByClassName("key")[0].innerHTML,
+					isguige = ev.parentNode.getElementsByClassName("guige")[0].innerHTML,
+						 id = Buy[i]['id'],
+				 goodnumber = ev.parentNode.getElementsByClassName("goodnumber")[0];
+
+				  if (isguige !== 'no'){
+			        var logic=LimitedPurchase_guige(Buy[i].onelimit,Buy[i].manylimit,Buy[i].historylimit,i,isguige);
+
+				    if(logic){
+					weight =  GuigeSelect[i][isguige+"Weight"];
+					if(GuigeSelect[i][isguige] < GuigeSelect[i][isguige+'Stock']){
+					 //  if(postAjax(id, urladd, weight, isguige)||true){              //规格类加商品
+					 //   goodnumber.innerHTML = GuigeSelect[i][isguige];
+					 //  }else{
+						// isPost = true;
+						// $.toast("网络不好，增减失败");
+					 //  }
+					 $.post("{php echo app_url('goods/add_num/add')}",{'id': id, 'weight': weight, num: '1', 'guige':isguige,}, function (res) {
+							res = JSON.parse(res);
+							isPost = true;
+							if(res == '1') {
+								GuigeSelect[i][isguige]++;
+			 					Buy[i]['num']++;
+			 					goodnumber.innerHTML = GuigeSelect[i][isguige];
+                                saveSession();
+                                smallCal.textContent = "￥"+Number(updateSum()).toFixed(2);
+                                document.getElementById("dt_ord_t2").innerHTML = "￥"+Number(updateSum()).toFixed(2);
+                                checkMinus();
+							} else if(res.status == 'error'){
+								$.toast(res.data);
+								return;
+							}
+							return;
+						})
+					} else {
+					  isPost = true;
+					  $.toast("库存不足");
+					}
+					}else{isPost = true;}
+				  } else {
+				 	weight = Buy[i]['weight'];
+	    			var logic=LimitedPurchase(Buy[i].onelimit,Buy[i].manylimit,Buy[i].historylimit,i);
+						if(logic){
+							 if (Number(Buy[i]['num']) < Number(Buy[i]['kucun'])){             //非规格类加商品
+							 //  if (postAjax(id, urladd, weight)||true){
+								//   goodnumber.innerHTML = Buy[i]['num'];
+							 //  }
+							 //  else {
+							 //    isPost = true;
+								// $.toast("网络不好，增减失败");
+							 //  }
+								$.post("{php echo app_url('goods/add_num/add')}",{'id': id, 'weight': weight, num: '1'}, function (res) {
+									res = JSON.parse(res);
+									isPost = true;
+									if(res == '1') {
+                                        Buy[i]['num']++;
+                                        goodnumber.innerHTML = Buy[i]['num'];
+                                        saveSession();
+                                        smallCal.textContent = "￥"+Number(updateSum()).toFixed(2);
+                                        document.getElementById("dt_ord_t2").innerHTML = "￥"+Number(updateSum()).toFixed(2);
+                                        checkMinus();
+									} else if(res.status == 'error'){
+										$.toast(res.data);
+										return;
+									}
+									return;
+								})
+							} else {
+							  isPost = true;
+							  $.toast("库存不足");
+							}
+
+						} else {
+							isPost = true;
+						}
+					}
+				 }// minusButton
+
+
+              }
+
+			}//end plusGoods
+
+
+			function calNumber(i, isguige) {
+			  var sum = 0, str;
+			  if (isguige == 'no'){
+				sum = (Number(Buy[i]['num']) * Number(Buy[i]['price'])).toFixed(2);
+			  }
+			  else {
+			    sum = (Number(GuigeSelect[i][isguige]) * Number(GuigeSelect[i][isguige + 'Price'])).toFixed(2);
+			  }
+			  str ='￥' + sum + "元";
+			  return str;
+			}
+			function queryGuigestr(key) {
+				var str = [];
+				for (var a in GuigeSelect[key]) {
+				  if (!(/.*Price/.test(a) || /.*Stock/.test(a) || /.*Weight/.test(a))){
+					str.push(a);
+				  }
+				}
+				return str;
+			}
+			function loadSession() {
+                // 批发
+                wholesale();
+			    if (sessionStorage.getItem('Buy') !== '{}') {
+					Buy = JSON.parse(sessionStorage.getItem('Buy'));
+				}
+				if (sessionStorage.getItem('GuigeSelect') !== '{}') {
+					GuigeSelect = JSON.parse(sessionStorage.getItem('GuigeSelect'));
+				}
+			}
+			function saveSession() {
+				sessionStorage.setItem("Buy", JSON.stringify(Buy));
+				sessionStorage.setItem("GuigeSelect", JSON.stringify(GuigeSelect));
+                // 批发
+                checkWholesale();
+			}
+			function loadBuyGood() {
+				var html = '';
+				var goodslist = document.getElementById("goodslist");
+				loadSession();
+				var selectGuige = [];
+				for (var key in Buy) {
+					if (key in GuigeSelect) {
+					  selectGuige = queryGuigestr(key);
+					  for (var i = 0; i < selectGuige.length; i++) {
+						html += getGoodHtml(key,selectGuige[i]);
+					  }
+					}
+					else {
+					  html += getGoodHtml(key);
+					}
+				}
+				goodslist.innerHTML = html;
+			}
+			function getAjax() {
+				var xhr = new XMLHttpRequest();
+				var formData = new FormData();
+				formData.append("tid",link_id);
+				var url="{php echo app_url('order/shoporderconfirm')}";
+				xhr.open('post', url, true);
+				xhr.send(formData);
+				xhr.onreadystatechange = function () {
+				  if (xhr.readyState==4) {
+					if ((xhr.status>=200 && xhr.status<300)||xhr.status==304) {
+					  //alert(xhr.responseText);
+					}
+				  }
+				}
+			}
+			$('#bdelete').click(function(){
+				if($('#dt_ord_t2').attr('num')!='0.00') {
+					$('#tab1-2 a').find('p').removeAttr('data-id').html('请选择门店');
+					var shiprice = ($('#dt_ord_t2').attr('num') - $('#freight').html()).toFixed(2);
+					$('#dt_ord_t2').html('￥' + shiprice).attr('num', shiprice);
+					$('#freight').html('0.00');
+				}
+			});
+			function exAjax() {
+                if (typeof $('#dt_goPay').attr('disabled') != 'undefined') {
+                    $('#dt_goPay').removeAttr('disabled').css({'background': '#f97b87'});
+                }
+			    status = 'exAjax';
+				document.getElementById("link_zt").value=linkButtons[0].id;
+				if (document.getElementById('bdelete')){
+                    orderTime.time=1;
+					document.getElementById('bdelete').classList.remove("active");
+				}
+				//document.getElementById('express').classList.remove("active");
+				if (document.getElementById("sh")){
+					document.getElementById("sh").classList.remove("active");
+				}
+				if (document.getElementById("express")){
+                    orderTime.time=1;
+					document.getElementById("express").classList.add("active");
+				}
+
+				var xhr=new XMLHttpRequest(),
+				formData=new FormData();
+				for (var i=0;i<linkButtonsLen;i++){
+					linkButtons[i].classList.remove("link-active");
+				}
+				if (linkButtons.length>0){
+						linkButtons[0].classList.add("link-active");
+						clickLinkButton(0);
+						formData.append("tid",linkButtons[0].id);
+				}
+				if (true || ajaxData["0"+"ccc"]===undefined){
+
+						formData.append("op","ck");
+						var url="{php echo app_url('order/shoporderconfirm')}";
+						xhr.open("post",url,true);
+						xhr.send(formData);
+						xhr.onreadystatechange=function(){
+							if (xhr.readyState==4) {
+								if ((xhr.status>=200 && xhr.status<300)||xhr.status==304) {
+									console.log(JSON.parse(xhr.responseText));
+									linkExpress=Number(JSON.parse(xhr.responseText).freight);
+									//$.toast(+new Date() - dateNow);
+									if (linkExpress.length>10){
+										location.replace(location.href);
+										return false;
+									}
+									ajaxData["0"+"ccc"]=linkExpress;
+									//添加满包邮数值
+							document.getElementById("isMinusNum").innerHTML=JSON.parse(xhr.responseText).free;
+							isMinusNum = Number(document.getElementById("isMinusNum").textContent);
+							checkMinus();
+							document.getElementById("link_dispatchtype").value=2;
+							//添加满包邮数值
+									document.getElementById("freight").innerHTML=linkExpress.toFixed(2);
+									document.getElementById("dt_ord_t2").innerHTML="￥"+ (Number(feightValue())+Number(updateSum())-discount-getCash()).toFixed(2);
+									$("#dt_ord_t2").attr("num",(Number(feightValue())+Number(updateSum())-discount-getCash()).toFixed(2));
+
+								}
+							}
+						}
+				}
+				else {
+					formData.append("op","ck");
+						var url="{php echo app_url('order/shoporderconfirm')}";
+						xhr.open("post",url,true);
+						xhr.send(formData);
+						document.getElementById("link_dispatchtype").value=2;
+					document.getElementById("freight").innerHTML=ajaxData["0"+"ccc"].toFixed(2);
+					document.getElementById("dt_ord_t2").innerHTML="￥"+ (Number(ajaxData["0"+"ccc"])+Number(updateSum())-discount-getCash()).toFixed(2);
+				}
+
+				//couponid = 0;
+				//$('#freight').html(freight);
+				//$('#dt_ord_yhjmes').html('请选择或兑换优惠券');
+				//$('#dt_ord_t2').html('￥'+pay_price);
+				//$.toast(linkButton1s);
+			}
+
+			function bdAjax() {
+                if (typeof $('#dt_goPay').attr('disabled') != 'undefined') {
+                    $('#dt_goPay').removeAttr('disabled').css({'background': '#f97b87'});
+                }
+				status = 'bdAjax';
+				$("#dt_goPay").off("click");
+		   		setTimeout(function(){
+			   $("#dt_goPay").on('click',submits);  //绑定提交按钮
+			   },3000);
+
+				document.getElementById("link_zt").value=link_id;
+				if (document.getElementById('express')){
+                    orderTime.time=1;
+					document.getElementById('express').classList.remove("active");
+				}
+				if (document.getElementById("sh")){
+					document.getElementById("sh").classList.remove("active");
+				}
+				if (document.getElementById("bdelete")){
+                    orderTime.time=1;
+					document.getElementById("bdelete").classList.add("active");
+				}
+				for (var i=0;i<linkButton1s.length;i++){
+					linkButton1s[i].classList.remove("link-active");
+				}
+				if (linkButton1sLen>0){
+					linkButton1s[0].classList.add("link-active");
+					//couponid = 0;
+					var link_id=linkButton1s[0].id;
+					setT(0, link_id);
+				//$.toast(link_id);
+				if (true || ajaxData["1"+"aaa"] === undefined){
+					var xhr=new XMLHttpRequest(),
+						formData=new FormData();
+						formData.append("sid",link_id);
+						formData.append("op","zt");
+						var url="{php echo app_url('order/shoporderconfirm')}";
+						xhr.open("post",url,true);
+						xhr.send(formData);
+
+						xhr.onreadystatechange=function(){
+							if (xhr.readyState==4) {
+								if ((xhr.status>=200 && xhr.status<300)||xhr.status==304) {
+									console.log(xhr.responseText);
+									linkExpress=Number(xhr.responseText);
+									//$.toast(+new Date() - dateNow);
+									if (linkExpress.length>10){
+										location.replace(location.href);
+										return false;
+									}
+									ajaxData["1"+"aaa"]=linkExpress;
+									document.getElementById("link_dispatchtype").value=3;
+									document.getElementById("freight").innerHTML=linkExpress.toFixed(2);
+									document.getElementById("dt_ord_t2").innerHTML="￥"+ (Number(feightValue())+Number(updateSum())-discount-getCash()).toFixed(2);
+									$("#dt_ord_t2").attr("num",(Number(feightValue())+Number(updateSum())-discount-getCash()).toFixed(2));
+								}
+							}
+						}
+					}
+					else {
+						var xhr=new XMLHttpRequest(),
+						formData=new FormData();
+						formData.append("sid",link_id);
+						formData.append("op","zt");
+						var url="{php echo app_url('order/shoporderconfirm')}";
+						xhr.open("post",url,true);
+						xhr.send(formData);
+						document.getElementById("link_dispatchtype").value=3;
+						document.getElementById("freight").innerHTML=ajaxData["1"+"aaa"].toFixed(2);
+						document.getElementById("dt_ord_t2").innerHTML="￥"+ (Number(ajaxData["1"+"aaa"])+Number(updateSum())-discount-getCash()).toFixed(2);
+					}
+				}
+
+
+			}
+
+			function shAjax() {
+			    status = 'shAjax';
+				$("#dt_goPay").off("click");
+				setTimeout(function(){
+			   $("#dt_goPay").on('click',submits);  //绑定提交按钮
+			   },3000);
+
+				//alert(status);
+				if (document.getElementById("link_tod")){
+					selectActive(1);
+				}
+				//couponid = 0;
+				if (document.getElementById("bdelete")){
+					document.getElementById("bdelete").classList.remove("active");
+				}
+				if (document.getElementById('express')){
+					document.getElementById('express').classList.remove("active");
+				}
+				if (document.getElementById("sh")){
+					document.getElementById("sh").classList.add("active");
+				}
+				document.getElementById("tab1-2").classList.remove("active");
+				document.getElementById("tab1-1").classList.remove("active");
+				document.getElementById("tab1-3").classList.add("active");
+				$('#freight').html('0.00');
+                {if $kaiguan['area_delivery'] == '1'} //开启送货上门区域配送
+                initDeliveryPrice();
+                {else}
+				if (true || ajaxData["2"+"bbb"] === undefined ) {
+					var xhr=new XMLHttpRequest(),
+					formData=new FormData();
+					formData.append("op","sh");
+					var url="{php echo app_url('order/shoporderconfirm')}";
+					xhr.open("post",url,true);
+					xhr.send(formData);
+					xhr.onreadystatechange=function(){
+						if (xhr.readyState==4) {
+							if ((xhr.status>=200 && xhr.status<300)||xhr.status==304) {
+								linkExpress=Number(xhr.responseText);
+								//$.toast(+new Date() - dateNow);
+								if (linkExpress.length>10){
+									location.replace(location.href);
+									return false;
+								}
+								ajaxData["2"+"bbb"]=linkExpress;
+								document.getElementById("freight").innerHTML=linkExpress.toFixed(2);
+								document.getElementById("link_dispatchtype").value=1;
+								document.getElementById("dt_ord_t2").innerHTML="￥"+ (Number(feightValue())+Number(updateSum())-discount-getCash()).toFixed(2);
+								$("#dt_ord_t2").attr("num",(Number(feightValue())+Number(updateSum())-discount-getCash()).toFixed(2));
+							}
+						}
+					}
+				}
+				else {
+					var xhr=new XMLHttpRequest(),
+					formData=new FormData();
+					//formData.append("tid",linkButtons[j].id);
+					formData.append("op","sh");
+					var url="{php echo app_url('order/shoporderconfirm')}";
+					xhr.open("post",url,true);
+					xhr.send(formData);
+					document.getElementById("link_dispatchtype").value=1;
+					document.getElementById("freight").innerHTML=ajaxData["2"+"bbb"].toFixed(2);
+					document.getElementById("dt_ord_t2").innerHTML="￥"+ (Number(ajaxData["2"+"bbb"])+Number(updateSum())-discount-getCash()).toFixed(2);
+				}
+                {/if}
+
+			}
+
+			if (document.getElementById("express")){
+
+				status = 'exAjax';
+				var xhr=new XMLHttpRequest(),
+						formData=new FormData();
+						for (var i=0;i<linkButtonsLen;i++){
+							linkButtons[i].classList.remove("link-active");
+						}
+						if (linkButtons.length>0){
+								linkButtons[0].classList.add("link-active");
+								formData.append("tid",linkButtons[0].id);
+						}
+						if (true || ajaxData["0"+"ccc"]===undefined){
+
+
+								formData.append("op","ck");
+								var url="{php echo app_url('order/shoporderconfirm')}";
+								xhr.open("post",url,true);
+								xhr.send(formData);
+								xhr.onreadystatechange=function(){
+									if (xhr.readyState==4) {
+										if ((xhr.status>=200 && xhr.status<300)||xhr.status==304) {
+
+											linkExpress=Number(JSON.parse(xhr.responseText).freight);
+											if (linkExpress.length>10){
+												location.replace(location.href);
+												return false;
+											}
+											ajaxData["0"+"ccc"]=linkExpress;
+											//添加满包邮数值
+							document.getElementById("isMinusNum").innerHTML=JSON.parse(xhr.responseText).free;
+							isMinusNum = Number(document.getElementById("isMinusNum").textContent);
+							checkMinus();
+							document.getElementById("link_dispatchtype").value=2;
+							//添加满包邮数值
+											document.getElementById("freight").innerHTML=linkExpress.toFixed(2);
+											document.getElementById("dt_ord_t2").innerHTML="￥"+ (Number(feightValue())+Number(updateSum())-discount-getCash()).toFixed(2);
+											$("#dt_ord_t2").attr("num",(Number(feightValue())+Number(updateSum())-discount-getCash()).toFixed(2));
+										}
+									}
+								}
+						}
+						else {
+							formData.append("op","ck");
+								var url="{php echo app_url('order/shoporderconfirm')}";
+								xhr.open("post",url,true);
+								xhr.send(formData);
+								document.getElementById("link_dispatchtype").value=2;
+							document.getElementById("freight").innerHTML=ajaxData["0"+"ccc"].toFixed(2);
+							document.getElementById("dt_ord_t2").innerHTML="￥"+ (Number(ajaxData["0"+"ccc"])+Number(updateSum())-discount-getCash()).toFixed(2);
+						}
+				document.getElementById("express").classList.add("active");
+				if (linkButtons.length>0){
+					linkButtons[0].classList.add("link-active");
+					clickLinkButton(0);
+					//clickLinkButton(j)
+				}
+				document.getElementById("tab1-1").classList.add("active");
+			}else if (document.getElementById("bdelete")&&(document.getElementById("sh")==null && document.getElementById("express") == null)){
+
+				status = 'bdAjax';
+				if (document.getElementById("bdelete")){
+				document.getElementById("bdelete").classList.add("active");}
+				if (document.getElementById("tab1-2")) {
+				document.getElementById("tab1-2").classList.add("active");}
+				for (var i=0;i<linkButton1s.length;i++){
+					linkButton1s[i].classList.remove("link-active");
+				}
+				if (linkButton1s.length>0){
+				linkButton1s[0].classList.add("link-active");
+				var link_id=linkButton1s[0].id;
+					setT(0, link_id);
+				}
+
+
+			}else if (document.getElementById("sh")){
+				status = 'shAjax';
+				selectActive(1);
+				var xhr=new XMLHttpRequest(),
+						formData=new FormData();
+						formData.append("op","sh");
+						var url="{php echo app_url('order/shoporderconfirm')}";
+						xhr.open("post",url,true);
+						xhr.send(formData);
+						xhr.onreadystatechange=function(){
+							if (xhr.readyState==4) {
+								if ((xhr.status>=200 && xhr.status<300)||xhr.status==304) {
+									linkExpress=Number(xhr.responseText);
+									//alert(xhr.responseText);
+									document.getElementById("link_dispatchtype").value=1;
+									document.getElementById("freight").innerHTML =linkExpress.toFixed(2);
+									document.getElementById("dt_ord_t2").innerHTML ="￥"+ (Number(feightValue())+Number(updateSum())-discount-getCash()).toFixed(2);
+								}
+							}
+						}
+				document.getElementById("sh").classList.add("active");
+				document.getElementById("tab1-3").classList.add("active");
+			}
+
+        function initDeliveryPrice() {
+            $('#dt_goPay').attr('disabled','disabled').css({'background': '#ccc'});
+            var address_txt='';
+            if($('.address_txt').eq(0).html()) {
+                address_txt = $('.address_txt').eq(0).html().trim() + $('.address_txt').eq(1).html().trim();
+            }else{
+                address_txt='北京市';
+            }
+            AMap.service('AMap.Geocoder',function(){//回调函数
+                //实例化Geocoder
+                var geocoder = new AMap.Geocoder({
+                    // city: "010"//城市，默认：“全国”
+                });
+                //TODO: 使用geocoder 对象完成相关功能
+            })
+            areaDelivery(address_txt, function (res) {
+                console.log(res);
+                if (typeof $('#dt_goPay').attr('disabled') != 'undefined') {
+                    $('#dt_goPay').removeAttr('disabled').css({'background': '#f97b87'});
+                }
+                $('#freight').html(Number(res).toFixed(2));
+                var shiprice = (Number(res)+Number(updateSum())-discount-getCash()).toFixed(2);
+                $('#dt_ord_t2').html("￥"+shiprice).attr('num', shiprice);
+            },function () {
+                $.toast('您不在配送范围内，不支持送货上门');
+
+                $('#dt_goPay').attr('disabled','disabled').css({'background': '#ccc'});
+                return false;
+            })
+        }
+        //区域及配送范围
+        function areaDelivery (address,success, fail) {
+            $.get("{php echo app_url('goods/area_delivery')}",function (res) {
+                res = JSON.parse(res);
+                if(res.status != 1) return;
+                var geocoder = new AMap.Geocoder({
+                    // radius: 1000 //范围，默认：500
+                });
+                //地理编码,返回地理编码结果
+                geocoder.getLocation(address, function(status, result) {
+                    if (status === 'complete' && result.info === 'OK') {
+                        var check_address = null;
+                        var geocode = result.geocodes;
+                        var deliveryPosition = [
+                            geocode[0].location.getLng(),
+                            geocode[0].location.getLat()
+                        ];
+                        console.log(deliveryPosition);
+                        for(var i = 0, len = res.list.length; i < len; i++) {
+                            var polygon = new AMap.Polygon({
+                                    path: res.list[i].range
+                                });
+                            check_address = polygon.contains(deliveryPosition);
+                            if(check_address) {
+                                var deliveryLngLat = new AMap.LngLat(deliveryPosition[0], deliveryPosition[1]);
+                                var distance = deliveryLngLat.distance(res.list[i].store_position);
+                                for(var k = 0, leng = res.list[i].distance.length; k < leng; k++) {
+                                    var start = res.list[i].distance[k].start;
+                                    var end = res.list[i].distance[k].end;
+                                    start = Number(start) * 1000;               //公里转换成米
+                                    end = Number(end) * 1000;
+                                    if(Number(distance) >= start && Number(distance) <= end) {
+                                        success&&success(res.list[i].distance[k].price);
+                                    }else if(Number(distance) > Number(res.list[i].distance[leng-1].end) * 1000) {
+                                        fail&&fail();
+                                    }
+                                }
+                                break;
+                            }
+                        }
+                        if(!check_address) {
+                            fail&&fail();
+                        }
+                    } else {
+                        fail&&fail();
+                    }
+                });
+            })
+        }
+
+            function checkorderTime() {
+			if (orderTime.time == -1) {
+				$.toast("您未选择送货时间");
+			}
+			return orderTime.time;
+		}
+
+		function checkOrderValue() {
+			var str = Number(document.getElementById("dt_ord_t2").innerHTML.slice(1));
+			if (str > 0) {return true;}
+			else {$.toast("金额不能小于等于0");
+				location.href = "{php echo app_url('goods_list')}";
+			return false;}
+		}
+
+		function submits(){    //点击最终提交按钮触发
+			if($('#freight').attr('data-ajax')=='false'){
+				$.toast("运费异常，请刷新页面");
+				return false;
+			}
+			if($('#bdelete').hasClass('active')&&!$('.zitiStores p').attr('data-id')){
+				$.toast("请选择门店");
+				return false;
+			}
+
+             if (document.getElementById("link-address1")){
+					if (document.getElementById("tab1-1").classList.contains("active")){
+							$.toast("未填写地址");
+							return false;
+					}
+				}
+
+				if (document.getElementById("link-address2")){
+
+					if (document.getElementById("tab1-3").classList.contains("active")){
+							$.toast("未填写地址");
+							return false;
+					}
+				}
+
+				if (document.getElementById("dt_ord_t2").innerHTML=='￥NaN') {
+					$.toast("网络错误");
+					location.replace(location.href);
+				}
+				if (document.getElementById("link-address") || document.getElementById("link-address1") || document.getElementById("link-address2") || document.getElementById("link-address3")){
+				 if (document.getElementById("tab1-2")) {
+				 if (!document.getElementById("tab1-2").classList.contains("active")){
+					$.toast("未填写地址");
+					return false;
+				  }
+				}else{
+					$.toast("未填写地址");
+					return false;
+					}
+				}
+			  if (isPost && isDetail && checkorderTime() > 0 && checkOrderValue()){
+				var typeid = $('.buttons-row .active').attr('typeid');
+				var link_dispatchtype = $('#link_dispatchtype').val();
+				var name = $('#cnee').val();
+		        var mobile = $('#mobile').val();
+		        var gettime = $('#gettime').val();
+				var sendtime=$("#sendtime").val();
+				//var buynum = $('#num').val();
+				var buynum=eval($("#dt_ord_t2").attr("num"));
+				var link_zt=$('#link_zt').val();
+		        var remark = $('.dt_ord_input').val();
+				if(num <= 0){$.toast('销量爆表，库存不足咯!');return false;}
+				if(typeid == 2  || typeid == 4){
+					if(!name){
+						$.toast('请输入您的姓名');
+						return false;
+					}
+					if(!mobile){
+						$.toast('请输入您的手机号码');
+						return false;
+					}
+					if (!(/^1[34578]\d{9}$/.test(mobile))){
+						$.toast('您的手机号码有误');
+						return false;
+					}
+					//if(!gettime){
+					//	$.toast('请选择您的核销时间');
+					//	return false;
+					//}
+				}
+				var freight=document.getElementById("freight").innerHTML;
+				var selfTime = $('#selfTime').val();
+				var cTime = new Date(selfTime);
+				var sStart = new Date($('.s-start').text());
+				var sEnd = new Date($('.s-end').text());
+				if (sStart > cTime || cTime > sEnd) {
+					$.toast("自提时间不正确！");
+					return false;
+				}
+		        $("#dt_goPay").off("click");
+			    document.getElementById("animationS").style.setProperty("display","block");
+             	$.post("{php echo app_url('order/shoporderconfirm')}",{
+             		freight:freight,
+             		typeid:typeid,
+             		name:name,
+             		link_zt:link_zt,
+             		mobile:mobile,
+             		gettime:gettime,
+             		num:buynum,
+             		remark:remark,
+             		addrid:addrid,
+             		couponid:couponid,
+             		link_dispatchtype:link_dispatchtype,
+             		senddate:orderTime.date,
+             		sendtime:orderTime.times,
+             		self_time: selfTime
+             	},function(data){
+					if (data.status==1) {
+						 sessionStorage.clear();
+		    			 document.getElementById("animationS").style.setProperty("display","none");
+						top.location.href = "{php echo app_url('pay/paytype')}"+'orderno='+data.result.orderno;
+						//location.replace("{php echo app_url('pay/paytype')}"+'orderno='+data.result.orderno);
+					}
+					else{
+						 $.toast("网络异常,请重新下单或去我的订单支付！");
+					}
+				},"json");
+			}
+			else if(isDetail == false) {
+				$.toast("购物车为编辑模式，无法提交");
+			}
+			}//submits
+
+		  $("#dt_goPay").on("click",submits);
+		'use strict';
+		$(document).on("pageInit", "#page-order-confirm", function(e, id, page) {
+			if (jumptype>0){
+				if (jumptype==1){
+					//$.toast("00");
+					couponid = 0;
+					//$.toast("000");
+					if (document.getElementById('bdelete')){
+						document.getElementById('bdelete').classList.remove("active");
+					}
+					if (document.getElementById('express')){
+						document.getElementById('express').classList.remove("active");
+					}
+					document.getElementById("sh").classList.add("active");
+					document.getElementById("tab1-2").classList.remove("active");
+					document.getElementById("tab1-1").classList.remove("active");
+					document.getElementById("tab1-3").classList.add("active");
+					$('#freight').html('0.00');
+					var xhr=new XMLHttpRequest(),
+						formData=new FormData();
+					//formData.append("tid",linkButtons[j].id);
+					formData.append("op","sh");
+					var url="{php echo app_url('order/shoporderconfirm')}";
+					xhr.open("post",url,true);
+					xhr.send(formData);
+					xhr.onreadystatechange=function(){
+						if (xhr.readyState==4) {
+							if ((xhr.status>=200 && xhr.status<300)||xhr.status==304) {
+								linkExpress=Number(xhr.responseText);
+								document.getElementById("link_dispatchtype").value=1;
+								document.getElementById("freight").innerHTML=linkExpress.toFixed(2);
+								document.getElementById("dt_ord_t2").innerHTML="￥"+ (Number(feightValue())+Number(updateSum())-discount-getCash()).toFixed(2);
+								$("#dt_ord_t2").attr("num",(Number(feightValue())+Number(updateSum())-discount-getCash()).toFixed(2));
+							}
+						}
+					}
+                    {if $kaiguan['area_delivery'] == '1'} //开启送货上门区域配送
+                        initDeliveryPrice();
+                    {/if}
+					//$('#dt_ord_yhjmes').html('请选择或兑换优惠券');
+				}
+				if (jumptype==2){
+					if (document.getElementById('bdelete') ){
+					//$.toast("666");
+							//document.getElementById('bdelete').classList.remove("active");}
+						//document.getElementById('express').classList.remove("active");
+						if (document.getElementById("sh")){
+							document.getElementById("sh").classList.remove("active");
+						}
+						clickLinkButton(0);
+
+						$('#freight').html(freight);
+						//$('#dt_ord_yhjmes').html('请选择或兑换优惠券');
+						$('#dt_ord_t2').html('￥'+pay_price-getCash());
+					}
+				}
+			}
+			//$.toast('{$tuan_id}');
+
+			$('#dt_ord_youhui').on('click', function () {
+			  $.popup('.popup-youhui');
+//				$('.popup-youhui').slideDown();
+		      var voucher=$(".voucher-main");
+			 for(var i=0;i<voucher.length;i++){
+			  if(eval(voucher.eq(i).attr("cpid"))==couponid){voucher.eq(i).children(".selected").css("display","block");}else{
+			  voucher.eq(i).children(".selected").removeAttr("style");
+			  }
+			 }
+
+			});
+
+			$('.u_address').on('click', function () {
+			if (lingouid==2) {
+			var tuanId=0;
+			tuanId='{$tuan_id}';
+				if (tuanId){
+				return;
+				}
+			}
+				location.href = "{php echo app_url('address/addmanage',array('isshop'=>1))}";
+			});
+
+
+			$('#express').on('click', exAjax);
+			$('#bdelete').on('click', bdAjax);
+			$('#sh').on('click', shAjax);
+
+		});
+		$.init();
+		document.getElementById("gotohome").onclick = function () {
+		  location.href = "{php echo app_url('goods_list')}";
+		}
+		document.getElementsByClassName("smallCal")[0].innerHTML = "￥"+Number(updateSum()).toFixed(2);
+	//getAjax();
+	if (document.getElementById("sh") && document.getElementById("sh").classList.contains("active")){
+		shAjax();
+	}
+
+	function checkMinus() {
+		var datamiss = document.getElementById("datamiss");
+		var smallCal = document.getElementsByClassName('smallCal')[0];
+		isMinusNum = Number(document.getElementById("isMinusNum").textContent);
+		if (isMinusNum > 0) {
+			var val = isMinusNum - Number(updateSum()).toFixed(2);
+
+			if (val > 0) {
+				datamiss.innerHTML = '还差<span class="distanceMinus"></span>元可享包邮';
+				var distanceMinus = datamiss.getElementsByClassName("distanceMinus")[0];
+				distanceMinus.textContent = (isMinusNum - Number(updateSum()).toFixed(2)).toFixed(2);
+				dataset.style.display = "block";
+				smallCal.style.setProperty("border-right", "1px solid {$_W['system_color']}");
+				datamiss.style.display = "inline";
+				act.style.display = "block";
+			}
+			else {
+
+				smallCal.style.setProperty("border-right", "transparent");
+				datamiss.innerHTML = '活动生效';
+				datamiss.style.display = "none";
+				act.style.display = "none";
+			}
+		}
+	}
+	function feightValue() {
+		var allPrice = Number(updateSum());
+		var freight = Number(document.getElementById("freight").innerHTML).toFixed(2);
+		if (isMinusNum > allPrice || isMinusNum == 0) {
+			return freight;
+
+		}
+		else {
+			return 0;
+		}
+	}
+
+	checkMinus();
+	function postAjax2(productprice) {
+        $("#animationS").css("display","block");
+		var youhuic = document.getElementById("youhuic");
+		youhuic.innerHTML = "";
+		var url="{php echo app_url('order/shoporderconfirm')}";
+		var xhr=new XMLHttpRequest(),
+		formData=new FormData();
+		formData.append("op", 'couponajax');
+		formData.append("productprice", productprice);
+
+		xhr.open("post",url,true);
+		xhr.send(formData);
+		xhr.onreadystatechange=function(){
+			if (xhr.readyState==4) {
+				if ((xhr.status>=200 && xhr.status<300)||xhr.status==304) {
+				var xhrObj=JSON.parse(xhr.responseText);
+				if($.isEmptyObject(xhrObj)==false){
+				  usecoupon(xhrObj[0].id,xhrObj[0].cash);
+				}
+				$("#animationS").css("display","none");
+					var gettpl = document.getElementById('couponlist').innerHTML;
+					var emphtml = '<div class="m-cart" id="s"><div class="empty" id="pro-view-6">暂无符合使用条件的优惠券</div></div>';
+					var youhuiNumDiv = document.createElement("div");
+					youhuic.style.textAlign = "center";
+					youhuiNumDiv.style.cssText = "background:hsl(354, 91%, 73%);color:white;text-align:center;display:inline-block;margin-top:1em;margin-bottom:-2em;padding:0.5em 2em;border-radius:0.5em;";
+					var youhuiJ = JSON.parse(xhr.responseText)||{};
+					youhuiNumDiv.textContent = '您有' + youhuiJ.length + '张优惠券符合使用条件';
+
+					laytpl(gettpl).render(youhuiJ, function(html){
+						if(html.length < 10){
+							$("#youhuic").append(emphtml);
+						}else{
+							document.getElementById("youhuic").appendChild(youhuiNumDiv);
+							$("#youhuic").append(html);
+						}
+
+					});
+				}
+			}
+		}
+	}
+	postAjax2(updateSum());
+
+	function getQueryString(name) {
+		var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
+		var r = window.location.search.substr(1).match(reg);
+		if (r != null) return decodeURI(r[2]); return null;
+	}
+	if(getQueryString('tuan_id')){
+		$('#freight').attr('data-ajax','true');
+	}
+                /**
+                 * 批发js
+                 */
+                function wholesale() {
+                    var orderList = {php echo $sorderlist};
+                    if (sessionStorage.hasOwnProperty('Buy')) {
+                        var buy = JSON.parse(sessionStorage.Buy);
+                        var arr = []
+                        for (var i in buy) {
+                            arr.push(buy[i]); //属性
+                        }
+                        buy = arr;
+                        for (var bb in buy) {
+                            if (orderList[bb].is_wholesale == "1") {
+                                buy[bb].is_wholesale = orderList[bb].is_wholesale;
+                                buy[bb].oprice = orderList[bb].oprice;
+                                buy[bb].wholesale_num = orderList[bb].wholesale_num;
+                                buy[bb].wholesale_level = orderList[bb].wholesale_level;
+                            } else {
+                                buy[bb].is_wholesale = 0;
+                            }
+                        }
+                        Buy = buy;
+                        sessionStorage.Buy = JSON.stringify(buy);
+                        checkWholesale();
+                    }
+                };
+                // 批发要求是否达到
+                function checkWholesale() {
+                    var remark = true;
+                    for (var i in Buy) {
+                        if (Buy[i].is_wholesale == "1") {
+                            var num = Number(Buy[i].num);
+                            var wholesaleNum = Number(Buy[i].wholesale_num);
+                            // 未到起批量
+                            if (num < wholesaleNum) {
+                                remark = false;
+                                $.toast(Buy[i].title + '，'+ wholesaleNum +'件起批量');
+                                Buy[i].price = Number(Buy[i].oprice);
+                                $('.footerr').hide();
+                            } else {
+                                changePrice(Buy[i]);
+                            }
+                            $('.p' + Buy[i].id).text('￥'+ Buy[i].price +'元');
+                            sessionStorage.setItem("Buy", JSON.stringify(Buy));
+                        }
+                    }
+                    if (remark) {
+                        $('.footerr').show();
+                    }
+                }
+                // 修改
+                function changePrice(buy) {
+                    var level = buy.wholesale_level;
+                    if (level != false) {
+                        var mark = true;
+                        for (var i = 0; i < level.length; i++) {
+                            if (buy.num >= Number(level[i].pifanum)) {
+                                buy.price = Number(level[i].pifaprice);
+                                mark = false;
+                            }
+                        }
+                        if (mark) {
+                            buy.price = Number(buy.oprice);
+                        }
+                    }
+                }
+    // end
+</script>
+{php include wl_template('common/footer');}

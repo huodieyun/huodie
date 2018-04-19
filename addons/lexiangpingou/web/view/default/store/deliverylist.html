@@ -1,0 +1,199 @@
+{php include wl_template('common/header');}
+<!--<span class="price" style="display:none;">0.01</span>-->
+<div class="app-init-container">
+	<div class="ui-nav">
+		<ul class="nav nav-tabs">
+			<li {if $op == 'base'}class="active"{/if}><a href="{php echo web_url('store/deliverylist', array('op' => 'base'))}">基本设置</a></li>
+			{if $checkfunction['status']}
+			{if checkstr($_W['user']['perms'],'deliverylist.list')}
+			<li {if $op == 'display'}class="active"{/if}><a href="{php echo web_url('store/deliverylist', array('op'=>'display'))}">运费模板列表</a></li>
+			{/if}
+			{if checkstr($_W['user']['perms'],'deliverylist.add')}
+			<li {if $op == 'post'}class="active"{/if}><a href="{php echo web_url('store/deliverylist', array('op'=>'post'))}">添加运费模板</a></li>
+			{/if}
+			{/if}
+		</ul>
+	</div>
+	
+	
+	<div class="panel panel-default">
+	<div class="panel-body table-responsive" style="padding: 0px;">
+		<div class="main_bd">
+        <div class="plugins_wrp" style="{if $op != 'base'}display:none;{/if}">
+            <dl>
+                <dd>
+                    <ul id="js_plugins">
+						<li class="item_wrp" style="width: 100%;">
+							<div class="plugin_item">
+								<!--<div class="plugin_icon"><img src="{TG_URL_WRES}images/function/freightmodal.png" style="cursor:pointer;"></div>-->
+								<div  id="link-icon1" class="plugin_icon" >
+									<div id="link-icon" style="width:100%;height:100%;position:absolute;background-color:rgba(0,0,0,0.3);cursor:pointer;">
+										<img src="{TG_URL_WRES}images/3.svg"style="position:absolute;width:60%;left:20%;">
+									</div>
+									<img src="{TG_URL_WRES}images/function/freightmodal.png" style="cursor:pointer;">
+								</div>
+								{if $_W['user']['merchant_id'] == 0}
+								<div class="plugin_status">
+									<i class="access"></i>
+									<span class="status_txt">
+										{if $checkfunction['status']}	
+											
+										<div id="renewal" style="font-size:20px;margin-top:-30px;width: 60px;height:60px;border-radius:50%;font-weight:900;background-color:#ff5466;color:white;margin-right: -25px;text-align:center;line-height:60px;cursor:pointer;">续费</div>
+								
+										<span style="display:block;margin-left:-70px;color:#888;font-size:14px;">截止日期：{php echo date('Y-m-d', $checkfunction['endtime'])}</span>
+										
+										{else}
+										<div id="buyDaifu" style="font-size:20px;margin-top:-20px;width: 60px;height:60px;border-radius:50%;font-weight:900;background-color:#ff5466;color:white;margin-right: -25px;text-align:center;line-height:60px;cursor:pointer;">购买</div>
+										{/if}
+									</span>
+								</div>
+								{/if}
+								<div class="plugin_content">
+									<h3 class="title">{$_W['page']['title']}</h3>
+									<p class="desc" style="    width: 100%;">
+										启用快递运费功能后，能自定义设置商品区域快递配送运费。同时支持同一商品多运费模板，支持与自提、送货上门、送货时间共同搭配使用。
+										
+									</p>
+								</div>
+							</div>
+						</li>
+					</ul>
+                </dd>
+            </dl>
+        </div>
+    </div>
+	</div>
+</div>
+	
+	{if $op == 'display'}
+	<div class="page-trade-delivery panel panel-default">
+		<div class="freight-list panel-body table-responsive">
+			<!--<div class="freight-head" style="margin-bottom:20px;"><a href="{php echo url('store/deliverylist/post', array());}" class="btn btn-success">新建运费模板</a></div>-->
+			<form action="" method="post" class="form-horizontal form" enctype="multipart/form-data">
+			<table class="table table-hover">
+				<thead class="js-freight-cost-list-header">
+					<tr>
+						<th style="width:300px;" class="text-left">运费模板</th>
+						<th style="width:150px;">开启状态</th>
+						<th style="width:350px" class="text-right">操作</th>
+					</tr>
+				</thead>
+				<tbody>
+				{loop $prices $key $price}
+					<tr>
+						<td class="text-left">{$price['name']}</td>
+						<td>
+							{if checkstr($_W['user']['perms'],'deliverylist.state')}
+							<input class="status" status-id="{$price['id']}" type="checkbox" value="2" {if $price['status'] == 2}checked="checked"{/if} />
+							{/if}
+						</td>
+						<td class="text-right ">
+							{if checkstr($_W['user']['perms'],'deliverylist.edit')}
+							<a href="{php echo web_url('store/deliverylist', array('op'=>'post','id'=>$price['id']))}">编辑</a> -
+							{/if}
+							{if checkstr($_W['user']['perms'],'deliverylist.delete')}
+							<a href="javascript:;" price-id="{$price['id']}" class="js-delete-delivery">删除</a> -
+							{/if}
+							<a href="javascript:;" price-id="{$price['id']}" class="js-select-delivery">查看</a>
+						</td>
+					</tr>
+					<tr class="price-id-{$price['id']} hidden">
+						<td colspan="3">
+							<table class="table table-hover mb0">
+								<thead class="js-freight-cost-list-header">
+								<tr>
+									<th>可配送至</th>
+									<th style="width:120px;">首重运费（元）</th>
+									<th style="width:120px;">首重(g)</th>
+									<th style="width:120px;">续重运费(元)</th>
+									<th style="width:120px;">续重(g)</th>
+								</tr>
+								</thead>
+								<tbody>
+									{loop $price['region'] $district}
+									{if !empty($district)}
+									<tr>
+										<td style="white-space: normal;"><span>{$district['cities']}</span></td>
+										<td>{$district['first_fee']}</td>
+										<td>{$district['first_weight']}</td>
+										<td>{$district['second_fee']}</td>
+										<td>{$district['second_weight']}</td>
+									</tr>
+									{/if}
+									{/loop}
+								</tbody>
+							</table>
+						</td>
+					</tr>
+					{/loop}
+				</tbody>
+			</table>
+			</form>
+		</div>
+	</div>
+	{/if}
+</div>
+<script>
+
+	$(function(){
+		require(['bootstrap.switch'],function($){
+			// 启用状态
+			$('.status:checkbox').bootstrapSwitch({onText: '启用', offText: '禁用'});
+			$('.status:checkbox').on('switchChange.bootstrapSwitch', function(event, state) {
+				var status_id = $(this).attr('status-id');
+				var status = state ? 2 : 1;
+				$.post("{php echo web_url('store/deliverylist', array('op'=>'editstatus'))}", {id : status_id, status : status}, function (data){
+				}, 'json');
+			});
+
+		});
+		var linkicon=document.getElementById("link-icon");
+		var linkicon2=document.getElementById("link-icon1");
+		
+		linkicon2.onmouseleave = function () {
+			linkicon.style.setProperty( 'display', 'none' );
+		}
+		
+		linkicon2.onmouseover = function () {
+			linkicon.style.setProperty( 'display', 'block' );
+		}
+		
+		linkicon.onclick=function (ev) {
+			document.getElementById('detailimg').src='{TG_URL_WRES}images/function/kdyf.jpg';
+			document.getElementById("detailname").innerHTML = "运费模板";
+			document.getElementById("detailshow").style.setProperty("display","block");
+		}
+		$('.js-select-delivery').click(function() {
+			var $this = $(this);
+			var $price_id = $this.attr('price-id');
+			var $content = $this.parent().parent().next();
+			if ($content.hasClass('hidden')) {
+				$content.removeClass('hidden');
+				$this.text('收起');
+			} else {
+				$content.addClass('hidden');
+				$this.text('查看');
+			}
+		});
+		$('.js-delete-delivery').click(function(e) {
+		
+			e.stopPropagation();
+			var id = $(this).attr('price-id');
+			var $this = $(this);
+			util.nailConfirm(this, function(state) {
+				if (!state) {
+					return;
+				}
+				$.post("{php echo web_url('store/deliverylist', array('op'=>'delete'))}", {id : id}, function(data){
+					if(data.errno){
+						util.tips(data.message);
+					} else {
+						$this.parent().parent().remove();
+					};
+				}, 'json');
+			});
+		});
+	})
+</script>
+
+{php include wl_template('common/footer');}

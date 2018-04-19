@@ -1,0 +1,12 @@
+<input type="hidden" name="name" value="{$default['name']}" />
+<input type="hidden" name="blank" value="{$default['blank']}" />
+<input type="hidden" name="cardno" value="{$default['cardno']}" />
+<label style=" font-weight: 0;float: left; padding: 6px 0 6px 0;">请在下方确认你的银行卡信息  </label>
+<div class="form-group  col-xs-12"  style="padding-left: 15px; float: left; padding: 6px 0 6px 0;">持卡人：{$default['name']}</div>
+<div class="form-group  col-xs-12" style="padding-left: 15px; float: left; padding: 6px 0 6px 0;">开户行：{$default['blank']}</div>
+<span style="padding-left: 15px; float: left; padding: 6px 0 6px 0;">银行卡号：{$default['cardno']}</span>
+<div class="form-group  col-xs-12" style="padding-left: 15px; float: left; padding: 6px 0 6px 0; margin-top: 20px;">
+<a class="btn btn-success" onclick="$('.change').show()" >变更用卡</a>
+<a class="btn btn-info" href="{php echo web_url('agent/agent',array('ops' =>'xk'))}" style="margin-left: 20px;">添加新卡</a>
+<a class="btn btn-warning" onclick="alerts(this.value)" href="{php echo web_url('agent/agent',array('op' =>'delete','cardno'=>$default['cardno'],'openid'=>$default['openid']))}" style="margin-left: 20px;">删除该卡</a>
+</div>

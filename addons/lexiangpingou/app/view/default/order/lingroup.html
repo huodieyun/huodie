@@ -1,0 +1,898 @@
+{php include wl_template('common/header');}
+<style> 
+		.link-rule{
+		height:100%;
+		width:100%;
+		background-color:
+		rgba(128,128,128,0.5);
+		position:fixed;top:0px;
+		left:0px;
+		z-index:10000;
+	}
+	.link-rule>div{
+		text-align:center;
+		position:absolute;
+		top:0;
+		bottom:0;
+		left:8px;
+		right:8px;
+		margin-top:auto;
+		margin-bottom:auto;
+		height:85%;
+		background-color:white;
+		border-radius:8px;
+	}
+	.link-rule>div>div:first-child{
+		 font-weight:bold;
+		 background-color:#ececec;
+		 font-size:20px;
+		 line-height:40px;
+		 border-radius:8px 8px 0 0;
+		 height:40px;
+	}
+	.link-rule>div div:nth-child(2){
+		 text-align:left;
+		 position:absolute;
+		 top:48px;
+		 bottom:45px;
+		 left:19px;
+		 right:19px;
+		 overflow:scroll;
+	}
+	.link-rule>div div:last-child{
+		 position:absolute;
+		 left:0px;
+		 right:0px;
+		 width:150px;
+		 height:30px;
+		 bottom:5px;
+		 background-color:#0894ec;
+		 color:white;
+		 font-size:18px;
+		 margin-left:auto;
+		 margin-right:auto;
+		 line-height:30px;
+		 border-radius:5px;
+	}
+		button{
+			background-color: {$_W['system_color']};
+		}
+	.order_bd{padding: 0px 10px;border-bottom-color: rgb(222, 222, 222);border-bottom-width: 1px;border-bottom-style: solid;background-color: rgb(255, 255, 255);}
+	.order_goods{padding: 15px 0px 15px 75px;font-size: 12px;border-bottom-color: rgb(215, 215, 215);border-bottom-width: 1px;border-bottom-style: solid;display: block;position: relative;min-height: 60px;}
+:last-child.order_goods{border-bottom-color: currentColor;border-bottom-width: 0px;border-bottom-style: none;}
+.order_goods_img{left: 0px;top: 5px;position: absolute;}
+.order_goods_img img{border: 1px solid rgb(215, 215, 215);border-image: none;width: 60px;height: 60px;display: block;}
+.order_goods_name{color: rgb(0, 0, 0);overflow: hidden;padding-right: 20px;margin-bottom: 10px;white-space: nowrap;-ms-word-break: break-all;-ms-word-wrap: break-word;-ms-text-overflow: ellipsis;}
+.order_goods_attr{color: rgb(102, 102, 102);}
+.order_goods_attr_item{line-height: 22px;}
+.order_goods_attr_item em{color: rgb(223, 33, 39);}
+.order_goods_attr_item::after{height: 0px;clear: both;display: block;visibility: hidden;content: "";}
+.order_goods_attr_tit{line-height: 22px;float: left;}
+.order_goods_num{float: left;}
+.order_goods_num::after{height: 0px;clear: both;display: block;visibility: hidden;content: "";}
+.order_goods_num span{border: 1px solid rgb(221, 221, 221);border-image: none;width: 20px;height: 20px;text-align: center;line-height: 20px;float: left;position: relative;background-color: rgb(238, 238, 238);}
+.order_goods_num input{border: 1px solid rgb(221, 221, 221);border-image: none;width: 20px;height: 20px;text-align: center;line-height: 20px;float: left;position: relative;background-color: rgb(238, 238, 238);}
+.order_goods_num .minus::after{background: 0px 0px rgb(152, 152, 152);left: 50%;top: 50%;width: 10px;height: 2px;margin-top: -1px;margin-left: -5px;position: absolute;content: "";}
+.order_goods_num .minus_disabled::after{background: 0px 0px rgb(147, 143, 142);}
+.order_goods_num .num{background: 0px 0px rgb(255, 255, 255);border-width: 1px 0px;border-style: solid none;border-radius: 0px;border-image: none;width: 42px;height: 20px;text-align: center;line-height: normal;font-size: 14px;-moz-border-bottom-colors: none;-moz-border-left-colors: none;-moz-border-right-colors: none;-moz-border-top-colors: none;}
+.order_goods_num .plus::after{background: 0px 0px rgb(152, 152, 152);border-radius: 2px;left: 50%;top: 50%;width: 10px;height: 2px;margin-top: -1px;margin-left: -5px;position: absolute;content: "";}
+.order_goods_num .plus::before{background: 0px 0px rgb(152, 152, 152);left: 50%;top: 50%;width: 2px;height: 10px;margin-top: -5px;margin-left: -1px;position: absolute;content: "";}
+.order_goods_num .plus_disabled::before{background: 0px 0px rgb(147, 143, 142);}
+.order_goods_num .plus_disabled::after{background: 0px 0px rgb(147, 143, 142);}
+.order_goods_num_disabled .minus::after{background: 0px 0px rgb(147, 143, 142);}
+.order_goods_num_disabled .num{color: rgb(187, 187, 187);}
+.order_goods_num_disabled .plus::before{background: 0px 0px rgb(147, 143, 142);}
+.order_goods_num_disabled .plus::after{background: 0px 0px rgb(147, 143, 142);}
+.order_goods_price{height: 22px;color: rgb(223, 33, 39);line-height: 22px;font-size: 16px;float: right;}
+.order_goods_price i{font-size: 9px;}
+
+		#guide img{
+			width: inherit;
+			height: inherit;
+		}
+
+
+</style>
+<div class="page-group">
+    <div class="page page-current" id="page-order-list">
+    <div class="content" style="padding-bottom: 60px;">
+		{if $tuaninfo['groupstatus']==3}
+        <div class="H5_con" id="H5_con1">
+	    <div class="tips topStateWrap tips_succ tips_succ2" id="originTopWrap">
+			<div class="tips_ico"></div>
+			<div class="tips_tit">组团进行中</div>
+			<div class="tips_txt">赶快召唤小伙伴加入吧！</div>
+		</div>
+   		</div>
+   		{elseif $tuaninfo['groupstatus']==2}
+   		<div class="H5_con" id="H5_con1">
+        <div class="tips topStateWrap tips_succ tips_succ2" id="originTopWrap">
+            <div class="tips_ico"></div>
+            <div class="tips_tit">团购成功</div>
+            <div class="tips_txt">我们会尽快为您发货，请耐心等待</div>
+        </div>
+        </div>
+        {else}
+        <div class="H5_con" id="H5_con1">
+        <div class="tips topStateWrap tips_err tips_succ2" id="originTopWrap">
+            <div class="tips_ico"></div>
+            <div class="tips_tit">团购失败</div>
+            <div class="tips_txt">组团失败，不要气馁重新再来！</div>
+        </div>
+        </div>
+        {/if}
+		{php $onum=1;}
+
+{if $onum==1}
+                <div class="order_bd">
+                    <div id="orderList" class="order_glist">
+                        <div class="only"> 
+                        <div class="order_goods" >
+                                <div class="order_goods_img" style="margin-top:5px;">
+								
+										<img src="{$order['avatar']}" style="width:60px;height:60px" alt="" title="">									
+									
+                                    {/if}
+                                </div>
+                                <div class="order_goods_info">
+                                <input type="hidden" name="name" value="{$goods['cname']}" id="gname">
+                                    <div class="order_goods_name"style="font-size:13px"><span id="tuanLbl"></span>团长代收：{$order['addname']} </div>
+                                    <div class="order_goods_attr" style="margin-top:-5px;">
+                                        <div class="order_goods_attr_item">
+                                            <span class="order_goods_attr_tit">收货地址：</span>
+                                            <div class="order_goods_num"><?php echo substr($order['address'],0,18);?>******</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                    </div>
+                </div>
+            </div> 
+		
+
+        <div class="H5_con">
+            <div class="tm {if $tuaninfo['groupstatus']==2}tm_succ{elseif $tuaninfo['groupstatus']==1}tm_err{/if}">
+                <div class="td tuanDetailWrap">
+                    <div class="td_img">
+                        <a href="{php app_url('goods/detail', array('id' => $goods['id'],'tuan_id'=>$tuan_id))}" class="external goItemPage"><img src="{$goods['share_image']}" alt=""></a>
+                    </div>
+                    <div class="td_info">
+                        <p class="td_name">{$goods['gname']}</p>
+                        <p class="td_mprice"><span class="tuanTotal">{$tuaninfo['neednum']}</span>人团：<i>￥</i><b>{if !empty($tuaninfo['price'])}{$tuaninfo['price']}{else}{$goods['gprice']}{/if}</b><i> /件</i></p>
+                        <p class="td_attr" style="display: none;">属性：<span></span></p>
+						<p class="td_attr" style="display: block;">团单号：{$order['tuan_id']}<span></span></p>
+                        <p><a class="goItemPage td_lk external" href="{php echo app_url('goods/detail', array('id' => $goods['id'],'tuan_id'=>$tuan_id))}">查看详情</a></p>
+                        <p class="td_num"></p>
+                    </div>
+					<div style="margin-left:-100px;background-color:white;color:#888;"  class="editor"></div>
+                </div>
+            </div>
+        </div>
+					{if $goods['isshowsend']==1}
+			 <div class="step" style="margin-top:-10px;" data-unuse="1" style=" text-align:center;">
+                <div class="step_hd">
+                    <b>成团记录：</b>只显示最新成功组团成功的几个团
+
+                </div> 
+                
+                      <MARQUEE loop=-1 scrollAmount=1 scrollDelay=1 direction=up width=100% height=63
+					&#111;nmouseout="this.start()" &#111;nmouseover="this.stop()">
+					  {loop $sendadd $adv}  
+					{$adv['content']}
+					{/loop}
+					 </MARQUEE>
+                            
+                            </div>
+							{/if}
+        <div class="pp" style="margin-top:-5px;">
+            <div class="pp_users">
+            	{loop $orders $or}
+            	<a href="#" class="pp_users_item pp_users_normal"><img src="{$or['avatar']}"></a>
+            	{/loop}
+            	{loop $num_arr $item}
+                <a href="#" class="pp_users_item pp_users_normal"><img src="{TG_URL_ARES}images/avatar.png"></a>
+                {/loop}
+            	{if $tuaninfo['groupstatus']!=2}
+            	<div class="pp_tips" id="flag_0_a">还差<b>{$tuaninfo['lacknum']}</b>人，盼你如南方人盼暖气</div>
+            	{/if}
+            </div>
+            {if $tuaninfo['groupstatus']==2}<div class="pp_tips">对于诸位大侠的相助，团长感激涕零</div>{/if}
+            
+            <div class="pp_state">
+            	{if $tuaninfo['groupstatus']==3}
+                <div class="pp_time"></div>
+                {elseif $tuaninfo['groupstatus']==2}
+                <div class="pp_state_txt">团购成功，我们将尽快发货</div>
+                {else}
+                <div class="pp_state_txt">团购失败，召唤小伙伴失败</div>
+                {/if}
+            </div>
+            <div class="pp_list" >
+                <div id="showYaoheList" >
+                	{php $onum=1;}
+                	{loop $orders $or}
+                    <div class="pp_list_item" style="background-color:#f97b87;border-color:#f97b87;">
+                        <img src="{$or['avatar']}" class="pp_list_avatar">
+						<div class="pp_list_info">
+						<span class="pp_list_name">
+						{if $onum==1}团长{/if}<b>{$or['nickname']}</b>{if $onum==1}发话{else}驾哈雷赶到{/if}
+						</span>
+						<span class="pp_list_time">{php echo date('m-d H:i', $tuaninfo['starttime'])}{if $onum==1}开团{else}参团{/if}</span>
+						</div>
+						<div class="pp_list_words">{if $onum==1}好货不容留，快来跟我一起抢。{else}立马参团，有钱就是任性。{/if}</div>     
+                    </div>
+                    {if $onum==2}
+                    {php break;}
+                    {/if}
+                    {php $onum++;}
+                    {/loop}
+            	</div>
+        	</div>
+        	<div class="pp_state">
+                <div class="pp_state_txt" onclick="$('.m-detail-record').toggle();" style="background-color: white;">查看更多</div>
+            </div>
+        <div class="m-detail-record" style="display: none;">
+            <div class="w-bar">参团记录 <span class="w-bar-hint">(自{php echo date('m-d H:i', $tuaninfo['starttime'])}开团)</span></div>
+                <div class="m-detail-record-wrap">
+	                <div id="pro-view-4">
+	                <ul class="m-detail-record-list" data-pro="entry" id="morelist">
+	                	{loop $orders $or}
+	                	<li id="pro-view-5">
+	                		<div class="f-clear">
+	                			<div class="avatar"><a href="#"><img width="35" height="35" src="{$or['avatar']}"></a></div>
+	                			<div class="text"><p class="f-breakword"><a href="#">{$or['nickname']}   </a>{if !empty($lists['ip'])}<span class="address">( IP:{$lists['ip']}  {$lists['ipaddress']})</span>{/if}</p><p><span class="num">参团时间：     {php echo date('Y-m-d H:i:s',$or['createtime'])} {if $or['ordertype']==1}<font color="#4CA052">代付</font>{/if}</p></div>
+	                		</div> 
+	                	</li>
+	                	{/loop}
+	                </ul>
+	               	</div>
+                </div>
+            </div>
+   		</div>
+        {if $setting['group_rule_switch'] != 2}
+        <section class="stepGuild" style="margin-top:-5px;">
+	        <div class="step_tit"><i></i>邻购玩法<span><span id="lookdetail">查看详情&gt;</span></span></div>
+	        <div class="step_flow">
+	            <div class="step_item"><span class="step_num">1</span><span>选择<br>心仪商品</span></div>
+	            <div class="step_item"><span class="step_num">2</span><span class="steps">支付开团<br>或参团</span></div>
+	            <div class="step_item {if $tuaninfo['groupstatus']==3 || $tuaninfo['groupstatus']==1 }step_item_on{/if}"><span class="step_num">3</span><span class="steps">邀请好友<br>参团支付</span></div>
+	            <div class="step_item {if $tuaninfo['groupstatus']==2}step_item_on{/if}"><span class="step_num">4</span><span class="steps">达到人数<br>团购成功</span></div>
+	        </div>
+	    </section>
+		{/if}
+		<!--猜你喜欢-->		
+	
+
+<h2 class="guesslike">猜你喜欢 ❤</h2>
+<ul class="aboutProduct"></ul><!--aboutProduct-->
+<script type="text/javascript">guesslike("{php echo app_url('goods/ajaxlist/goods_rand')}");</script>
+
+
+		
+		
+		
+    </div>
+	 {if $goods['hasoption']==1||$goods['one_limit']>=1}
+	    	{php include wl_template('goods/goods_option');}
+	    {/if}
+    <div class="H5_con fixopt" id="fixopt" style="display: block;">
+        <div class="address_new">
+            {if !empty($myorder)}
+                {if $tuaninfo['groupstatus']==3} 
+                <span style="display:block;float:left;width: 80%;margin-left: 5px;">
+                <button style="fllow:left;width: 100%;color:#fff" onclick="_system._guide(true);hecheng()">还差{$tuaninfo['lacknum']}人组团成功,立即召唤小伙伴</button>
+                </span>
+                 <span style="display:block;float:right;width: 15%;">
+	             <button style="width: 90%;color:#fff"><a href="{php echo app_url('home/index')}" class="nav-controller external">首页
+	            </a></button>
+	            </span>
+                {else}
+				
+                <span style="display:block;float:left;width: 80%;margin-left: 5px;">
+					{if $goods['hasoption']==1||$goods['one_limit']>=1}
+						<a onclick='choose(2)'>
+							<button style="fllow:left;width: 100%;color:#fff">团购已{if $tuaninfo['groupstatus']==1}失败{/if}{if $tuaninfo['groupstatus']==2}成功{/if},点击新开一团</button>
+						</a>
+					{else}
+						 <a href="{php echo app_url('order/orderconfirm',array('groupnum'=>$goods['groupnum'],'id'=>$goods['id'],'newtuan'=>'newtuan'));}" class="external">
+						<button style="fllow:left;width: 100%;color:#fff">团购已{if $tuaninfo['groupstatus']==1}失败{/if}{if $tuaninfo['groupstatus']==2}成功{/if},点击新开一团</button>
+						</a>
+					{/if}
+					</span>
+					
+				   <span style="display:block;float:right;width: 15%;">
+					 <button style="width: 90%;color:#fff"><a href="{php echo app_url('home/index')}" class="nav-controller external">首页
+					</a></button>
+					</span>
+                {/if}
+            {else}
+	            {if $tuaninfo['groupstatus']==3}
+	            <span style="display:block;float:left;width: 80%;margin-left: 5px;">
+	            	{if $goods['hasoption']==1||$goods['one_limit']>1}
+	           			 <a onclick='choose(2)'>
+	           		{else}
+	           			 <a href="{php echo app_url('order/orderconfirm',array('id' => $goods['id'],'tuan_id' => $tuan_id,'groupnum'=>$tuaninfo['neednum']));} " class="external">
+	           		{/if}
+	           <button style="fllow:left;width: 100%;color:#fff">我要参团</button> 
+	            </a>
+	            </span>
+	            <span style="display:block;float:right;width: 15%;">
+	             <button style="width: 90%;color:#fff"><a href="{php echo app_url('home/index')}" class="nav-controller external">首页
+	            </a></button>
+	            </span>
+	            {else}
+	            
+	            <span style="display:block;float:left;width: 80%;margin-left: 5px;">
+	            	{if $goods['hasoption']!=1}
+	             	{if $goods['one_limit']>1}
+	           			 <a onclick='choose(2)'>
+	           		{else}
+	           			 <a href="{php echo app_url('order/orderconfirm',array('id' => $goods['id'],'tuan_id' => $tuan_id,'groupnum'=>$tuaninfo['neednum']));} " class="external">
+	           		{/if}
+	            <button style="fllow:left;width: 100%;color:#fff">团购已{if $tuaninfo['groupstatus']==1}失败{/if}{if $tuaninfo['groupstatus']==2}成功{/if},点击新开一团</button> 
+	           	</a>
+	           	{else}
+	           	{if $goods['hasoption']==1||$goods['one_limit']>1}
+	           			 <a onclick='choose(2)'>
+	           		{else}
+	           			 <a href="{php echo app_url('order/orderconfirm',array('id' => $goods['id'],'tuan_id' => $tuan_id,'groupnum'=>$tuaninfo['neednum']));} " class="external">
+	           		{/if}
+	            <button style="fllow:left;width: 100%;color:#fff">团购已{if $tuaninfo['groupstatus']==1}失败{/if}{if $tuaninfo['groupstatus']==2}成功{/if},点击新开一团</button> 
+	           	</a>
+	           	{/if}
+	            </span>
+	            <span style="display:block;float:right;width: 15%;">
+	             <button style="width: 90%;color:#fff"><a href="{php echo app_url('home/index')}" class="nav-controller external">首页
+	            </a></button>
+	            </span>
+	            {/if}
+            {/if}
+        </div>
+        </div>
+		<input type="hidden" name="times" id="times" value="{$times}" />
+		 	<input type="hidden" name="one_limit" id="one_limit" value="{$goods['one_limit']}" />
+		 	<input type="hidden" name="many_limit" id="many_limit" value="{$goods['many_limit']}" />
+		 <input type="hidden" id="buytype" value="" />
+	    <input type="hidden" id="buytype2" value="{$goods['groupnum']}" />
+	    <input type="hidden" id="optionid" name="optionid" value=""/>
+		<div id="cover"></div>
+		<div id="guide" style="top: 15%;left: 4%;">
+			{if intval($config['base']['group_style'])==0}
+			<div onclick="$('#guide,#cover').fadeOut()" style="position: fixed;bottom: 3%;color: #000;left: 45%;font-size: 14px;width: 25px;height: 25px; border-radius: 50%;background: #fff;text-align: center;line-height: 25px;">X</div>
+			<!--<div class="wandh" style="display:none;position: fixed;z-index:2002;top: 10%;left: 5%;background: #fff;padding:15px 10px;width: 90%;box-sizing: border-box">-->
+				<!--<div style="font-size: 16px;font-weight: 600">{$_Session['btitle']}</div>-->
+				<!--<div><img style="width:100%;margin: 5px 0" src="{$goods['gimg']}" alt=""/></div>-->
+				<!--<div style="align-items: center;display: flex;-webkit-align-items: center;display: -webkit-flex;">-->
+					<!--<div style="width: 80px;height: 80px;margin-right: 10px;"><img style="width: 100%;height: 100%" src="{php echo $createqrcode->createQrcode($tourl)}" alt=""/></div>-->
+					<!--<div style="width: 70%">-->
+						<!--<p><b>{php echo $config['share']['share_title']}</b></p>-->
+						<!--<p>-->
+							<!--<span style="font-size: 16px;font-weight: 600;color: #e4393c">￥{$goods['gprice']}</span>-->
+							<!--<s>￥{$goods['mprice']}</s>-->
+						<!--</p>-->
+					<!--</div>-->
+				<!--</div>-->
+				<!--<div style="text-align: center;font-size: 12px;	color:#aaa;margin-top: 10px">截屏保存图片，长按识别二维码</div>-->
+			<!--</div>-->
+			<div class="canvasImg">
+				<div id="imgBox" style="position: fixed;top:3%;"></div>
+				<p style="text-align: center;text-align: center;position: fixed;bottom: 10%;color: #fff;width: 90%;">长按图片保存</p>
+			</div>
+			{else}
+			<img src="{TG_URL_ARES}images/guide1.png">
+			{/if}
+		</div>
+ 	</div>
+</div>
+<div class="link-rule" style="display:none;">
+	<div>
+		<div>邻购须知</div> 
+		<div>
+			<div style="color:#6fbfd8;">什么是邻购团？</div>
+			<p>邻购是基于邻近好友的组团购买，从而获得超低团购价,每个商品都有单独购买价和邻购价，团长选择商品并支付后，邻购即可开启。邻购所有成员收货地址只能是同一个且由团长填写。在规定时间内参与人数达到规定人数，邻购方能成功。若规定时间内邻购人数达不到规定人数，则失败，系统将自动原路退款；</p>
+			<div style="color:#6fbfd8;">如何邻购成功？</div>
+			<p>邻购是基于邻近好友的转发扩散，获取团购优惠。首先选择商品开团：选择邻购的商品下单，团即刻开启，但团长完成支付，方能获取转发链接，并在团开启规定时间内邀请到相应人数的好友支付，此团方能成功。</p>
+			<div style="color:#6fbfd8;">团长干嘛的？</div>
+			<p>邻购所有成员收货地址只能是同一个且由团长填写，首先选择心仪的商品下单，并完成支付后即为团长。团长视为本次交易的发起人，且为第一位支付成功的成员。</p>
+			<div style="color:#6fbfd8;">邻购成员是什么？</div>
+			<p>通过分享出去的该团入口进入并完成付款加入该团的团员，参团成员也可以将该团分享出去邀约更多的团员参团，所有参团团员必须认可团长所填写的收获地址。</p>
+			<div style="color:#6fbfd8;">领购失败是怎么回事？</div>
+			<p>团长开团在规定时间内未能找到相应开团人数的好友参团，则该团失败，系统会在48个小时内自动原路退款至你的支付账户。</p>
+		</div>
+		<div id="link-know" style="background-color:#6fbfd8;">已了解</div>
+	</div>
+</div>
+{if $tuaninfo['groupstatus']==3}
+<script>
+
+$(document).ready(function(){
+    function FreshTime(){
+        var str ='{php echo date('Y-m-d H:i:s',$tuaninfo['starttime'])}';
+        str = str.replace(/-/g,"/");
+        var starttime= new Date(str);//开始时间
+        var nowtime = new Date();//当前时间
+        var now_time = parseInt(nowtime.getTime());
+        var start_time = parseInt(starttime.getTime());
+        var lefttime = parseInt({$lasttime}*3600-((nowtime.getTime()-start_time)/1000)); //计算剩余时间\
+        var bar_width =  (1-(lefttime/({$lasttime}*3600)))*100+"%"; //计算进度条百分比
+        if (lefttime > 0) {
+            hh=parseInt((lefttime/3600));
+            mm=parseInt((lefttime/60)%60);
+            ss=parseInt(lefttime%60);
+            $(".pp_time").html('剩余<span id="ti_time_hour">'+hh+'</span>:<span id="ti_time_min">'+mm+'</span>:<span id="ti_time_sec">'+ss+'</span>结束');
+            $('#progressbar').css("width",bar_width);
+        }else{
+            
+        }
+    }
+    FreshTime();
+    var sh;
+    sh=setInterval(FreshTime,1000);
+});
+</script>
+
+{/if}
+
+<script>
+document.getElementById("link-know").onclick=function(){
+		document.querySelector('.link-rule').style.setProperty("display","none");
+	}
+	document.getElementById("lookdetail").onclick=function(){
+		document.querySelector('.link-rule').style.setProperty("display","block");
+	}
+	function bb(b){
+		var many_limit = $("#many_limit").val();
+	    var one_limit = $("#one_limit").val();
+	    var times = $("#times").val();
+	    many_limit = parseInt(many_limit);one_limit=parseInt(one_limit);times=parseInt(times);
+		if(b==1){
+			location.href = "{php echo app_url('order/orderconfirm',array('groupnum'=>1));}";
+		}else{
+			var nn = "{$goods['groupnum']}";
+			location.href = "{php echo app_url('order/orderconfirm')}" + "&groupnum=" + nn;
+		}
+	}
+	
+    $("#num").blur(function(){
+		var inputnum=$("#num").val();
+		var marketprice = 0;
+	    var productprice = 0;
+		var options = {php echo json_encode($options)};
+		
+		var ret = option_selected();
+	    var len = options.length;
+	        for (var i = 0; i < len; i++) {
+	            var o = options[i];
+	            var ids = ret.all.join("_");
+	            if (o.specs == ids) {
+	                optionid = o.id;
+	                stock = o.stock;
+	                marketprice = o.marketprice;
+	                productprice = o.productprice;
+	                break;
+	            }
+	        }
+	    if(marketprice==0){
+	     	marketprice = "{php echo $goods['gprice']}";
+	    }
+		var goodsPrice=marketprice;
+		var totalPrice = goodsPrice*inputnum;
+		totalPrice = totalPrice.toFixed(2);
+		$("#option_gprice").html(totalPrice);
+	});
+	
+	$("#up").bind('click',function(){
+		var num = $('#num').val();
+			num = parseInt(num)+1;
+			$('#num').val(num);
+		var marketprice = 0;
+	    var productprice = 0;
+		var options = {php echo json_encode($options)};
+		var ret = option_selected();
+	    var len = options.length;
+	        for (var i = 0; i < len; i++) {
+	            var o = options[i];
+	            var ids = ret.all.join("_");
+	            if (o.specs == ids) {
+	                optionid = o.id;
+	                stock = o.stock;
+	                marketprice = o.marketprice;
+	                productprice = o.productprice;
+	                break;
+	            }
+	        }
+	     if(marketprice==0){
+	     	marketprice = "{php echo $goods['gprice']}";
+	     }
+		var goodsPrice=marketprice;
+		var inputnum=num;
+		var totalPrice = goodsPrice*inputnum;
+		totalPrice = totalPrice.toFixed(2);
+		$("#option_gprice").html(totalPrice);
+	});
+	
+	$("#down").bind('click',function(){
+		var num = $('#num').val();
+		num = parseInt(num)-1;
+		if(num<=0){
+			num=1;
+		}
+		$('#num').val(num);
+		var marketprice = 0;
+	    var productprice = 0;
+		var options = {php echo json_encode($options)};
+		var ret = option_selected();
+	    var len = options.length;
+	        for (var i = 0; i < len; i++) {
+	            var o = options[i];
+	            var ids = ret.all.join("_");
+	            if (o.specs == ids) {
+	                optionid = o.id;
+	                stock = o.stock;
+	                marketprice = o.marketprice;
+	                productprice = o.productprice;
+	                break;
+	            }
+	        }
+	     if(marketprice==0){
+	     	marketprice = "{php echo $goods['gprice']}";
+	     }
+		var goodsPrice=marketprice;
+		var inputnum=num;
+		var totalPrice = goodsPrice*inputnum;
+		totalPrice = totalPrice.toFixed(2);
+		$("#option_gprice").html(totalPrice);
+	});
+
+   $("#num2").blur(function(){
+	var inputnum=$("#num2").val();
+	var gp=$("#gn").val();
+		gp = inputnum * gp;
+		$("#option_price").html(gp);
+	});
+	
+	$("#up2").bind('click',function(){
+		var num = $('#num2').val();
+			num = parseInt(num)+1;
+			$('#num2').val(num);
+		var gp=$("#gn").val();
+			gp = num * gp;
+			$("#option_price").html(gp);
+	});
+	
+	$("#down2").bind('click',function(){
+		var num = $('#num2').val();
+		num = parseInt(num)-1;
+		if(num<=0){
+			num=1;
+		}
+		$('#num2').val(num);
+		var gp=$("#gn").val();
+			gp = num * gp;
+			$("#option_price").html(gp);
+	});
+
+    var options = {php echo json_encode($options)};
+    var specs = {php echo json_encode($specs)};
+    var hasoption = {php echo $goods['hasoption'] == '1' ? 'true' : 'false'};
+	
+    var selected = [];
+    function option_selected() {
+        var ret = {
+            no: "",
+            all: []
+        };
+        if (!hasoption) {
+            return ret;
+        }
+        $(".optionid").each(function () {
+            ret.all.push($(this).val());
+            if ($(this).val() == '') {
+                ret.no = $(this).attr("title");
+                return false;
+            }
+        })
+        return ret;
+    }
+	
+	function closechoose(){
+		$('.footer').show();
+        $('.good_choose_layer').fadeOut(100);
+		$('.good_choose').fadeOut(100); 
+    }
+
+	function exchange(numb) {
+		$('#div_nav .boxx .sp').removeClass('on');
+		$('.section_specification').removeClass('on');
+		$('.section_detail').removeClass('on');
+		$('a#shangpin'+numb).addClass('on');
+		if(numb==0) {
+			$('.section_specification').addClass('on');
+		}else{
+			$('.section_detail').addClass('on');
+		}
+	}
+	
+	function showStores(obj){
+        if($(obj).attr('show')=='1'){
+            $(obj).next('div').slideUp(100);
+            $(obj).removeAttr('show').find('i').removeClass('fa-angle-down').addClass('fa-angle-up');
+        }else{
+            $(obj).next('div').slideDown(100);
+            $(obj).attr('show','1').find('i').removeClass('fa-angle-up').addClass('fa-angle-down');
+        }
+    }
+</script>
+<script type="text/javascript">
+    var _system={
+        $:function(id){return document.getElementById(id);},
+   _client:function(){
+      return {w:document.documentElement.scrollWidth,h:document.documentElement.scrollHeight,bw:document.documentElement.clientWidth,bh:document.documentElement.clientHeight};
+   },
+   _scroll:function(){
+      return {x:document.documentElement.scrollLeft?document.documentElement.scrollLeft:document.body.scrollLeft,y:document.documentElement.scrollTop?document.documentElement.scrollTop:document.body.scrollTop};
+   },
+   _cover:function(show){
+      if(show){
+     this.$("cover").style.display="block";
+     this.$("cover").style.width=(this._client().bw>this._client().w?this._client().bw:this._client().w)+"px";
+     this.$("cover").style.height=(this._client().bh>this._client().h?this._client().bh:this._client().h)+"px";
+  }else{
+     this.$("cover").style.display="none";
+  }
+   },
+   _guide:function(click){
+      this._cover(true);
+      this.$("guide").style.display="block";
+      this.$("guide").style.top=(_system._scroll().y+5)+"px";
+      window.onresize=function(){_system._cover(true);_system.$("guide").style.top=(_system._scroll().y+5)+"px";};
+  if(click){_system.$("cover").onclick=function(){
+         _system._cover();
+         _system.$("guide").style.display="none";
+ _system.$("cover").onclick=null;
+ window.onresize=null;
+  };}
+   },
+   _zero:function(n){
+      return n<0?0:n;
+   }
+}
+
+
+
+	//canvas 图片合成
+	function hecheng(){
+		draw(function(){
+			document.getElementById('imgBox').innerHTML='<img src="'+base64[0]+'">';
+		})
+	}
+
+
+	var data=[{if empty($goods['share_image'])}"{php echo saveImage(tomedia($goods['gimg']))}"{else}"{php echo $goods['share_image']}"{/if},"{php echo $createqrcode->createQrcode($tourl)}"],base64=[];
+
+	function draw(fn){
+		var c=document.createElement('canvas'),
+			ctx=c.getContext('2d'),
+			len=data.length;
+		c.width=screen.width-30;
+		c.height=(c.width-10)+125;
+		ctx.rect(0,0,c.width,c.height);
+		ctx.fillStyle='#fff';
+
+		ctx.fill();
+		function drawing(n){
+			if(n<len){
+
+				var img=new Image;
+				//img.crossOrigin = 'Anonymous'; //解决跨域
+				img.src=data[n];
+
+				img.onload=function(){
+					if(n==0){
+
+						ctx.drawImage(img,5,5,c.width-10,(c.width-10));//距 left  top  width   height
+					}else{
+						ctx.drawImage(img,0,(c.width-10)+5,120,120);
+						var heighta=(c.width-10)+110;
+//						title
+						ctx.font="400 16px Arial";
+						ctx.fillStyle="#101010";
+						ctx.lineWidth=2;
+						var str="{$config['share']['share_title']}";
+						var lineWidth = 0;
+						var initHeight=(c.width-10)+30;//绘制字体距离canvas顶部初始的高度
+						var lastSubStrIndex= 0; //每次开始截取的字符串的索引
+						//ctx.fillText(str,80,180);//left  top
+						for(var i=0;i<str.length;i++){
+							lineWidth+=ctx.measureText(str[i]).width+1.5;
+							if(lineWidth>(c.width-100)){
+								ctx.fillText(str.substring(lastSubStrIndex,i),115,initHeight);//绘制截取部分
+								initHeight+=20;//20为字体的高度
+								lineWidth=0;
+								lastSubStrIndex=i;
+							}
+							if(i==str.length-1){//绘制剩余部分
+								ctx.fillText(str.substring(lastSubStrIndex,i+1),115,initHeight);
+							}
+						}
+
+						//oprice
+						ctx.font="400 16px Arial";
+						ctx.fillStyle="#e4393c";
+						ctx.fillText("￥{$goods['gprice']}",115,heighta);//left  top
+
+						//mprice
+						ctx.font="italic 400 14px Arial";
+						ctx.fillStyle="#aaa";
+						ctx.fillText("￥{$goods['mprice']}",195,heighta);//left  top
+
+					}
+					drawing(n+1);//递归
+				}
+			}else{
+				//保存生成作品图片
+				base64.push(c.toDataURL("image/jpeg",1));
+				//alert(JSON.stringify(base64));
+				fn();
+			}
+		}
+		drawing(0);
+	}
+
+
+
+
+
+
+	(function(prototype) {
+
+		var pixelRatio = (function(context) {
+					var backingStore = context.backingStorePixelRatio || context.webkitBackingStorePixelRatio || context.mozBackingStorePixelRatio || context.msBackingStorePixelRatio || context.oBackingStorePixelRatio || context.backingStorePixelRatio || 1;
+
+					return (window.devicePixelRatio || 1) / backingStore;
+				})(prototype),
+
+				forEach = function(obj, func) {
+					for (var p in obj) {
+						if (obj.hasOwnProperty(p)) {
+							func(obj[p], p);
+						}
+					}
+				},
+
+				ratioArgs = {
+					'fillRect': 'all',
+					'clearRect': 'all',
+					'strokeRect': 'all',
+					'moveTo': 'all',
+					'lineTo': 'all',
+					'arc': [0, 1, 2],
+					'arcTo': 'all',
+					'bezierCurveTo': 'all',
+					'isPointinPath': 'all',
+					'isPointinStroke': 'all',
+					'quadraticCurveTo': 'all',
+					'rect': 'all',
+					'translate': 'all',
+					'createRadialGradient': 'all',
+					'createLinearGradient': 'all'
+				};
+
+		if (pixelRatio === 1) return;
+
+		forEach(ratioArgs, function(value, key) {
+			prototype[key] = (function(_super) {
+				return function() {
+					var i, len,
+							args = Array.prototype.slice.call(arguments);
+
+					if (value === 'all') {
+						args = args.map(function(a) {
+							return a * pixelRatio;
+						});
+					} else if (Array.isArray(value)) {
+						for (i = 0, len = value.length; i < len; i++) {
+							args[value[i]] *= pixelRatio;
+						}
+					}
+
+					return _super.apply(this, args);
+				};
+			})(prototype[key]);
+		});
+
+		// Stroke lineWidth adjustment
+		prototype.stroke = (function(_super) {
+			return function() {
+				this.lineWidth *= pixelRatio;
+				_super.apply(this, arguments);
+				this.lineWidth /= pixelRatio;
+			};
+		})(prototype.stroke);
+
+		// Text
+		//
+		prototype.fillText = (function(_super) {
+			return function() {
+				var args = Array.prototype.slice.call(arguments);
+
+				args[1] *= pixelRatio; // x
+				args[2] *= pixelRatio; // y
+
+				this.font = this.font.replace(/(\d+)(px|em|rem|pt)/g,
+
+						function(w, m, u) {
+							return (m * pixelRatio) + u;
+						});
+
+				_super.apply(this, args);
+
+				this.font = this.font.replace(/(\d+)(px|em|rem|pt)/g,
+
+						function(w, m, u) {
+							return (m / pixelRatio) + u;
+						});
+			};
+		})(prototype.fillText);
+
+		prototype.strokeText = (function(_super) {
+			return function() {
+				var args = Array.prototype.slice.call(arguments);
+
+				args[1] *= pixelRatio; // x
+				args[2] *= pixelRatio; // y
+
+				this.font = this.font.replace(/(\d+)(px|em|rem|pt)/g,
+
+						function(w, m, u) {
+							return (m * pixelRatio) + u;
+						});
+
+				_super.apply(this, args);
+
+				this.font = this.font.replace(/(\d+)(px|em|rem|pt)/g,
+
+						function(w, m, u) {
+							return (m / pixelRatio) + u;
+						});
+			};
+		})(prototype.strokeText);
+	})(CanvasRenderingContext2D.prototype);;
+	(function(prototype) {
+		prototype.getContext = (function(_super) {
+			return function(type) {
+				var backingStore, ratio,
+						context = _super.call(this, type);
+
+				if (type === '2d') {
+
+					backingStore = context.backingStorePixelRatio || context.webkitBackingStorePixelRatio || context.mozBackingStorePixelRatio || context.msBackingStorePixelRatio || context.oBackingStorePixelRatio || context.backingStorePixelRatio || 1;
+
+					ratio = (window.devicePixelRatio || 1) / backingStore;
+
+					if (ratio > 1) {
+						this.style.height = this.height + 'px';
+						this.style.width = this.width + 'px';
+						this.width *= ratio;
+						this.height *= ratio;
+					}
+				}
+
+				return context;
+			};
+		})(prototype.getContext);
+	})(HTMLCanvasElement.prototype);
+	{if !empty($myorder)&&$tuaninfo['groupstatus']==3}
+	$('.bottombutton').click();
+	{/if}
+    function escape2Html(str){
+        var arrEntities={'lt':'<','gt':'>','nbsp':' ','amp':'&','quot':'"'};
+        return str.replace(/&(lt|gt|nbsp|amp|quot);/ig,function(all,t){return arrEntities[t];});
+    }
+    {if $goods['selltype']==5}
+    $(".editor").html({$goods['luckcontent']}+escape2Html("{$goods['goodsdesc']}"));
+    {else}
+    $(".editor").html(escape2Html("{$goods['goodsdesc']}"));
+    {/if}
+</script>
+{php include wl_template('common/footer');}

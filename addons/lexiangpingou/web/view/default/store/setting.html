@@ -1,0 +1,1825 @@
+{php include wl_template('common/header');} 
+<ul class="nav nav-tabs" id="myTab">
+	<li class="active"><a href="#tab_param3">模版设置</a></li>
+	{if checkstr($_W['user']['perms'],'copyright.tab_basic')}
+	<li  ><a href="#tab_basic">基本设置</a></li>
+	{/if}
+	{if checkstr($_W['user']['perms'],'copyright.tab_share')}
+	<li><a href="#tab_share">分享设置</a></li>
+	{/if}
+	<li><a href="#tab_param" style="display:none;">证书设置</a></li>
+	{if checkstr($_W['user']['perms'],'copyright.tab_param2')}
+	<li><a href="#tab_param2">商城设置</a></li>
+	{/if}
+	<li class="active" style="float:right;background-color: #44b549;"><a target="_blank" style="cursor:pointer; color:#fff;" href="http://doc.lexiangpingou.cn/paremeterSet.html">图文说明</a></li>
+	<!--<li><a href="#tab_param5">商品标签设置</a></li>-->
+</ul>
+	<style>
+	.all{
+		display:inline-block;
+		width:450px;
+		height:300px;
+		border:1px solid #66ade9;
+		position:relative;
+
+		overflow: hidden;
+		margin:10px 50px 10px 50px;
+		vertical-align: top;
+	}
+	.productpic{
+		width:450px;
+		height:225px;
+	}
+	.name{
+		position:absolute;
+		left:20px;
+		top:150px;
+		font-size:30px;
+		color:white;
+		font-weight:bolder;
+	}
+	.describe{
+		margin-left:10px;
+		margin-top:5px;
+		line-height:30px;
+		width:300px;
+		font-size:22px;
+		color:gray;
+	}
+	.biaoqian{
+		position:absolute;
+		left:0px;
+		top:0px;
+		width:225px;
+		height:159px;
+		color:white;
+		font-size:30px;
+		background-color:#66ade9;
+		text-align:center;
+		line-height: 280px;
+		transform-origin: 0 159px;
+		transform:rotate(-45deg);
+
+	}
+	.setting,.edit{
+		width:60px;
+		height:60px;
+		border-radius:50%;
+		background-color:#66ade9;
+		color:white;
+		font-size:30px;
+		font-weight:bold;
+		position:absolute;
+		right:30px;
+		top:195px;
+		text-align:center;
+		line-height:60px;
+		cursor:pointer;
+	}
+	.edit{
+		right:100px;
+		font-size: 21px;
+		line-height:70px;
+	}
+		.bottom{
+			height:75px;
+			width:35%;
+			position:absolute;
+			top:300px;
+			left:0px;
+			cursor: pointer;
+		}
+		.cord{
+			padding-left:20px;
+			height:40px;
+			width:40px;
+			margin-top:10px
+
+		}
+		.yulan{
+			font-size:24px;
+			color:gray;
+			line-height:60px;
+			height:45px;
+			position:absolute;
+			margin-left:10px;
+		}
+		.cordMain{
+			position:absolute;
+			left:10px;
+			bottom:67.50px;
+			height:187.5px;
+			width:187.5px;
+		}
+		.beijing{
+			position:absolute;
+			left:0px;
+			top:0px;
+			height:225px;
+			width:100%;
+			background-color:rgba(0,0,0,0.3);
+		}
+		.imgset{
+			margin-top:-18px;
+		}
+		.lookover{
+			position: absolute;
+			margin:auto;
+			left:0px;
+			right:0px;
+			bottom:0px;
+			top:0px;
+
+		}
+		.nactive{
+			display:none;
+		}
+		.price,.nprice,.npaycord,.paycord,.tmpname,.ntmpname{
+			display:none;
+		}
+		 .datedesc{
+		 	display: block;
+		 	line-height:30px;
+		 	padding-left:3px;
+		 	cursor:pointer;
+		 }
+		 #selectDate{
+		 	position:absolute;
+		 	width:90px;
+		 	height:150px;
+			top:130px;
+			left:100px;
+			border:1px solid black;
+			background-color: white;
+		 }
+		 .selectDateadd{
+		 	display:none;
+		 }
+		 #Main{
+		 	width:100%;
+		 	height:auto;
+		 	background-color: white;
+		 }
+		 p{
+		 	margin-top:0.8em;
+		 	margin-bottom:0.8em;
+		 }
+		 .use{
+			font-size:21px;
+			line-height:70px;
+			background-color:#66ade9;
+			
+		 }
+		 .buy{
+			font-size:21px;
+			line-height:60px;
+			background-color:#ff5466;
+		 }
+	.editBJ{
+		display: none;
+		position: fixed;
+		top: 0;
+
+		left: 0;
+		width: 100%;
+		z-index: 9999;
+		background: rgba(0,0,0,0.7);
+		height: 100%;
+	}
+	.editBJ>div{
+		width: 40%;
+		left: 30%;
+		position: absolute;
+		top: 8%;
+	}
+	.img-thumbnail{
+		max-height: 150px;
+	}
+	</style>
+<div class="main">
+	<form action="" method="post" class="form-horizontal form" id="setting-form">
+		<div class="panel panel-default">
+			<!-- <div class="panel-heading">系统设置</div> -->
+			<div class="panel-body">
+				<div class="tab-content">
+					<div class="tab-pane  " id="tab_basic">
+					<div class="panel-heading" style="padding-left:0;padding-right:0;background-color: #f5f5f5;border-color: #ddd;color: #333;padding: 14px 15px; margin:-14px -15px; margin-bottom:15px;">
+					基本设置<a target="_blank" style="float:right; font-weight:bold; cursor:pointer;" href="http://doc.lexiangpingou.cn/paremeterSet.html#jbsz">图文说明>></a>
+					</div>
+
+						<div class="form-group">
+							<label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label">是否开启年终数据表
+							</label>
+							<div class="col-xs-12 col-sm-8">
+								<label class="radio radio-inline">
+									<input onclick="fansData()" type="radio" name="fans_data_apply" value="1" {if intval($settings['fans_data_apply']) == 1 }checked="checked"{/if}> 显示
+								</label>
+								<label class="radio radio-inline">
+									<input onclick="fansData()" type="radio" name="fans_data_apply" value="2" {if intval($settings['fans_data_apply']) == 2 || empty($settings['fans_data_apply'])}checked="checked"{/if}> 不显示
+								</label>
+								<span class="help-block">默认:不显示</span>
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label">年终数据统计类型
+							</label>
+							<div class="col-xs-12 col-sm-8">
+								<label class="radio radio-inline">
+									<input onclick="fansData()" type="radio" name="fans_data_spring" value="1" {if intval($settings['fans_data_spring']) == 1 }checked="checked"{/if}> 农历
+								</label>
+								<label class="radio radio-inline">
+									<input onclick="fansData()" type="radio" name="fans_data_spring" value="2" {if intval($settings['fans_data_spring']) == 2 || empty($settings['fans_data_apply'])}checked="checked"{/if}> 阳历
+								</label>
+								<span class="help-block">默认:阳历</span>
+							</div>
+						</div>
+						<div id="fansDataImg" class="form-group" {if intval($settings['fans_data_apply']) == 2 || empty($settings['fans_data_apply'])}hidden{/if}>
+							<label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label">年度数据背景图</label>
+							<div class="col-sm-8">
+								{php echo tpl_form_field_image('fans_data_image', $settings['fans_data_image'] ? $settings['fans_data_image'] : TG_URL_ARES.'images/member/long.png');}
+								<span class="help-block">避免图片变形，图片请设置为750 × 1334。</span>
+							</div>
+						</div>
+
+                        <!--状态开关-->
+                        <div class="form-group">
+                            <label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label">开启送货仓库点区域配送</label>
+                            <div class="col-xs-12 col-sm-8">
+                                <label class="radio radio-inline">
+                                    <input type="radio" name="area_delivery" value="1" {if intval($settings['area_delivery']) == 1}checked="checked"{/if}> 是
+                                </label>
+                                <label class="radio radio-inline">
+                                    <input type="radio" name="area_delivery" value="2" {if intval($settings['area_delivery']) == 2}checked="checked"{/if}> 否
+                                </label>
+                                <span class="help-block" style="color:red;">开启送货仓库点区域配送后，必须在【送货上门】【送货仓库点】设置正确的配送区域</span>
+                            </div>
+                        </div>
+					<div class="form-group">
+						<label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label">抽奖团未中奖限购</label>
+						<div class="col-xs-12 col-sm-8">
+							<label class="radio radio-inline">
+								<input type="radio" name="cj_isallow" value="1" {if intval($settings['cj_isallow']) == 1}checked="checked"{/if}> 是
+							</label>
+							<label class="radio radio-inline">
+								<input type="radio" name="cj_isallow" value="2" {if intval($settings['cj_isallow']) == 2}checked="checked"{/if}> 否
+							</label>
+							<span class="help-block" style="color:red;">开启抽奖团未中奖限购，已参与过该抽奖团的用户即使未中奖也不可再次购买</span>
+						</div>
+					</div>
+                    <div class="form-group">
+                        <label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label">开启核销二次扫码退款</label>
+                        <div class="col-xs-12 col-sm-8">
+                            <label class="radio radio-inline">
+                                <input type="radio" name="hexiaotuikuan" value="1" {if intval($settings['hexiaotuikuan']) == 1}checked="checked"{/if}> 是
+                            </label>
+                            <label class="radio radio-inline">
+                                <input type="radio" name="hexiaotuikuan" value="2" {if intval($settings['hexiaotuikuan']) == 2}checked="checked"{/if}> 否
+                            </label>
+                            <span class="help-block"></span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label">是否显示拼团玩法</label>
+                        <div class="col-xs-12 col-sm-8">
+                            <label class="radio radio-inline">
+                                <input type="radio" name="group_rule_switch" value="1" {if intval($settings['group_rule_switch']) == 1}checked="checked"{/if}> 是
+                            </label>
+                            <label class="radio radio-inline">
+                                <input type="radio" name="group_rule_switch" value="2" {if intval($settings['group_rule_switch']) == 2}checked="checked"{/if}> 否
+                            </label>
+                            <span class="help-block">默认显示</span>
+                        </div>
+                    </div>
+                    {if in_array($_W['uniacid'] , [33,53,2180])}
+                    <div class="form-group">
+                        <label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label">是否开启微信登录</label>
+                        <div class="col-xs-12 col-sm-8">
+                            <label class="radio radio-inline">
+                                <input type="radio" name="wechat_login" value="1" {if intval($settings['wechat_login']) == 1}checked="checked"{/if}> 是
+                            </label>
+                            <label class="radio radio-inline">
+                                <input type="radio" name="wechat_login" value="2" {if intval($settings['wechat_login']) == 2}checked="checked"{/if}> 否
+                            </label>
+                            <span class="help-block">默认开启</span>
+                        </div>
+                    </div>
+                    {/if}
+                        <div class="form-group">
+                            <label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label">是否开启自提门店定位</label>
+                            <div class="col-xs-12 col-sm-8">
+                                <label class="radio radio-inline">
+                                    <input type="radio" name="zitidingwei" value="1" {if intval($settings['zitidingwei']) == 1}checked="checked"{/if}> 是
+                                </label>
+                                <label class="radio radio-inline">
+                                    <input type="radio" name="zitidingwei" value="2" {if intval($settings['zitidingwei']) == 2}checked="checked"{/if}> 否
+                                </label>
+                                <span class="help-block"></span>
+                            </div>
+                        </div>
+
+						<div class="form-group">
+							<label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label">是否开启自提订单合并核销</label>
+							<div class="col-xs-12 col-sm-8">
+								<label class="radio radio-inline">
+									<input type="radio" name="hbhexiao" value="1" {if intval($settings['is_hbhexiao']) == 1}checked="checked"{/if}> 是
+								</label>
+								<label class="radio radio-inline">
+									<input type="radio" name="hbhexiao" value="2" {if intval($settings['is_hbhexiao']) == 2 || intval($settings['is_hbhexiao']) == ''}checked="checked"{/if}> 否
+								</label>
+								<span class="help-block"></span>
+							</div>
+						</div>
+                        <div class="form-group">
+                            <label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label">邻里团专用小区</label>
+                            <div class="col-xs-12 col-sm-8">
+                                <label class="radio radio-inline">
+                                    <input type="radio" name="is_village" value="1" {if intval($settings['is_village']) == 1}checked="checked"{/if}> 是
+                                </label>
+                                <label class="radio radio-inline">
+                                    <input type="radio" name="is_village" value="2" {if intval($settings['is_village']) == 2 ||intval($settings['is_village']) == ''}checked="checked"{/if}> 否
+                                </label>
+                                <span class="help-block"></span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label">是否开启商品评价审核</label>
+                            <div class="col-xs-12 col-sm-8">
+                                <label class="radio radio-inline">
+                                    <input type="radio" name="judgment" value="1" {if intval($settings['judgment']) == 1 }checked="checked"{/if}> 是
+                                </label>
+                                <label class="radio radio-inline">
+                                    <input type="radio" name="judgment" value="2" {if intval($settings['judgment']) == 2}checked="checked"{/if}> 否
+                                </label>
+                                <span class="help-block"></span>
+                            </div>
+                        </div>
+
+						<div class="form-group">
+							<label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label">是否开启自动退款</label>
+							<div class="col-xs-12 col-sm-8">
+								<label class="radio radio-inline">
+									<input type="radio" name="auto_refund" value="1" {if intval($settings['auto_refund']) == 1 }checked="checked"{/if}> 是
+								</label>
+								<label class="radio radio-inline">
+									<input type="radio" name="auto_refund" value="2" {if intval($settings['auto_refund']) == 2}checked="checked"{/if}> 否
+								</label>
+								<span class="help-block"></span>
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label">是否开启线下补款</label>
+							<div class="col-xs-12 col-sm-8">
+								<label class="radio radio-inline">
+									<input type="radio" name="bukuan_status" value="1" {if intval($settings['bukuan_status']) == 1 }checked="checked"{/if}> 是
+								</label>
+								<label class="radio radio-inline">
+									<input type="radio" name="bukuan_status" value="0" {if intval($settings['bukuan_status']) == 0}checked="checked"{/if}> 否
+								</label>
+								<span class="help-block"></span>
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label">是否开启首单免运费</label>
+							<div class="col-xs-12 col-sm-8">
+								<label class="radio radio-inline">
+									<input type="radio" name="firstfree" value="1" {if intval($settings['firstfree']) == 1 }checked="checked"{/if}> 是
+								</label>
+								<label class="radio radio-inline">
+									<input type="radio" name="firstfree" value="0" {if intval($settings['firstfree']) == 0}checked="checked"{/if}> 否
+								</label>
+								<span class="help-block"></span>
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label">是否开启售后</label>
+							<div class="col-xs-12 col-sm-8">
+								<label class="radio radio-inline">
+									<input type="radio" name="service" value="1" {if intval($settings['service']) == 1 }checked="checked"{/if}> 是
+								</label>
+								<label class="radio radio-inline">
+									<input type="radio" name="service" value="0" {if intval($settings['service']) == 0}checked="checked"{/if}> 否
+								</label>
+								<span class="help-block"></span>
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label">是否开启兼职</label>
+							<div class="col-xs-12 col-sm-8">
+								<label class="radio radio-inline">
+									<input type="radio" name="job" value="1" {if intval($settings['job']) == 1 }checked="checked"{/if}> 是
+								</label>
+								<label class="radio radio-inline">
+									<input type="radio" name="job" value="0" {if intval($settings['job']) == 0}checked="checked"{/if}> 否
+								</label>
+								<span class="help-block"></span>
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label">是否开启猜你喜欢</label>
+							<div class="col-xs-12 col-sm-8">
+								<label class="radio radio-inline">
+									<input type="radio" name="guess" value="1" {if intval($settings['guess']) == 1 }checked="checked"{/if}> 是
+								</label>
+								<label class="radio radio-inline">
+									<input type="radio" name="guess" value="0" {if intval($settings['guess']) == 0}checked="checked"{/if}> 否
+								</label>
+								<span class="help-block"></span>
+							</div>
+						</div>
+						<div class="form-group" style="display:none;">
+							<label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label">首页搜索</label>
+							<div class="col-xs-12 col-sm-8">
+								<label class="radio radio-inline" >
+									<input type="radio" name="search" value="1" {if intval($settings['search']) == 1}checked="checked"{/if}> 开
+								</label>
+								<label class="radio radio-inline" >
+									<input type="radio" name="search" value="0" {if intval($settings['search']) == 0}checked="checked"{/if}> 关
+							</label>
+							<span class="help-block">默认开启。</span>
+							</div>
+						</div>
+						<div class="form-group" >
+							<label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label">组团分享样式</label>
+							<div class="col-xs-12 col-sm-8">
+								<label class="radio radio-inline" >
+									<input type="radio" name="group_style" value="1" {if intval($settings['group_style']) == 1}checked="checked"{/if}> 箭头引导
+								</label>
+								<label class="radio radio-inline" >
+									<input type="radio" name="group_style" value="0" {if intval($settings['group_style']) == 0}checked="checked"{/if}>二维码
+								</label>
+								<span class="help-block">默认开启。</span>
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label">首页折扣显示</label>
+							<div class="col-xs-12 col-sm-8">
+								<label class="radio radio-inline" >
+									<input type="radio" name="iszhe" value="1" {if intval($settings['iszhe']) == 1}checked="checked"{/if}> 关
+								</label>
+								<label class="radio radio-inline" >
+									<input type="radio" name="iszhe" value="0" {if intval($settings['iszhe']) == 0}checked="checked"{/if}> 开
+								</label>
+							<span class="help-block">默认开启。</span>		
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label">市场价显示</label>
+							<div class="col-xs-12 col-sm-8">
+								<label class="radio radio-inline" >
+									<input type="radio" name="ismarketprice" value="1" {if intval($settings['ismarketprice']) == 1}checked="checked"{/if}> 关
+								</label>
+								<label class="radio radio-inline" >
+									<input type="radio" name="ismarketprice" value="0" {if intval($settings['ismarketprice']) == 0}checked="checked"{/if}> 开
+								</label>
+							<span class="help-block">默认开启。</span>	
+</div>							
+						</div>
+						<div class="form-group">
+							<label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label">销量显示</label>
+							<div class="col-xs-12 col-sm-8">
+							<label class="radio radio-inline" >
+									<input type="radio" name="issell" value="1" {if intval($settings['issell']) == 1}checked="checked"{/if}> 关
+								</label>
+								<label class="radio radio-inline" >
+									<input type="radio" name="issell" value="0" {if intval($settings['issell']) == 0}checked="checked"{/if}> 开
+								</label>
+							<span class="help-block">默认开启。</span>	
+</div>							
+						</div>
+						<div class="form-group">
+							<label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label">是否首页报单</label>
+							<div class="col-xs-12 col-sm-8">
+								<label class="radio radio-inline">
+									<input type="radio" name="order_alert" value="1" {if intval($settings['order_alert']) == 1 }checked="checked"{/if}> 显示
+								</label>
+								<label class="radio radio-inline">
+									<input type="radio" name="order_alert" value="2" {if intval($settings['order_alert']) == 2 || empty($settings['order_alert'])}checked="checked"{/if}> 不显示
+								</label>
+								<span class="help-block">默认:不显示</span>
+							</div>
+						</div>
+
+						<div class="form-group">
+							<label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label">首页报单切换时间</label>
+							<div class="col-xs-12 col-sm-2 input-group" >
+								<input type="text" name="order_alert_time" class="form-control" value="{$settings['order_alert_time']}" />
+								<span class="input-group-addon">秒</span>
+							</div>
+							<span class="help-block" style="margin-left: 16.66666667%;">默认5秒,是否首页报单设置为否，本功能无效</span>
+						</div>
+						<div class="form-group">
+							<label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label">满</label>
+							<div class="col-xs-12 col-sm-2 input-group" >
+								<input type="text" name="over_free" class="form-control" value="{$settings['over_free']}" />
+								<span class="input-group-addon">包邮</span>
+							</div>
+							<span class="help-block" style="margin-left: 16.66666667%;">不填或填0表示不开启满包邮</span>
+						</div>
+						<div class="form-group">
+							<label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label">自动签收时间</label>
+							<div class="col-xs-12 col-sm-2 input-group" >
+								<input type="text" name="gettime" class="form-control" value="{$settings['gettime']}" />
+								<span class="input-group-addon">天</span>
+							</div>
+							<span class="help-block" style="margin-left: 16.66666667%;">自发货后计时，签收时间。默认为5天</span>
+						</div>
+						<div class="form-group">
+							<label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label">极限单品自动签收时间</label>
+							<div class="col-xs-12 col-sm-2 input-group" >
+								<input type="text" name="jpgettime" class="form-control" value="{$settings['jpgettime']}" />
+								<span class="input-group-addon">天</span>
+							</div>
+							<span class="help-block" style="margin-left: 16.66666667%;">自发货后计时，签收时间。默认为5天</span>
+						</div>
+						<div class="form-group">
+							<label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label">自动取消时间</label>
+							<div class="col-xs-12 col-sm-2 input-group" >
+								<input type="text" name="cancle_time" class="form-control" value="{$settings['cancle_time']}" />
+								<span class="input-group-addon">小时</span>
+							</div>
+							<span class="help-block" style="margin-left: 16.66666667%;">自订单提交后计时，自动取消时间。默认为10小时</span>
+						</div>
+						<div class="form-group">
+							<label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label">未支付提醒时间</label>
+							<div class="col-xs-12 col-sm-2 input-group" >
+								<input type="text" name="noprice_time" class="form-control" value="{$settings['noprice_time']}" />
+								<span class="input-group-addon">小时</span>
+							</div>
+							<span class="help-block" style="margin-left: 16.66666667%;">自订单提交后计时，未支付提醒时间。默认为5小时</span>
+						</div>
+						<div class="form-group">
+							<label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label">第三方客服美洽ID</label>
+							<div class="col-xs-12 col-sm-2 input-group" >
+								<input type="text" name="meiqia" class="form-control" value="{$settings['meiqia']}" />
+
+							</div>
+							<span class="help-block" style="margin-left: 16.66666667%;">输入美洽客服ID</span>
+						</div>
+						<div class="form-group">
+							<label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label">是否开启自提时间</label>
+							<div class="col-xs-12 col-sm-8">
+								<label class="radio radio-inline">
+									<input onclick="selfTime()" type="radio" name="is_self_time" value="1" {if intval($settings['is_self_time']) == 1 }checked="checked"{/if}> 显示
+								</label>
+								<label class="radio radio-inline">
+									<input onclick="selfTime()" type="radio" name="is_self_time" value="2" {if intval($settings['is_self_time']) == 2 || empty($settings['is_self_time'])}checked="checked"{/if}> 不显示
+								</label>
+								<span class="help-block">默认:不显示</span>
+							</div>
+						</div>
+						<div id="selfTime" class="form-group" {if intval($settings['is_self_time']) == 2 || empty($settings['is_self_time'])}hidden{/if}>
+							<label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label">自提时间</label>
+							<div class="col-xs-12 col-sm-2 input-group" >
+								{php echo tpl_form_field_daterange('selfTime', array('starttime' => $settings['self_time_start'], 'endtime'=>$settings['self_time_end']));}
+							</div>
+							<span class="help-block" style="margin-left: 16.66666667%;">请选择自提时间</span>
+						</div>
+						<div class="form-group">
+					<label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label">商城配送方式</label>
+					<div class="col-xs-12 col-sm-8">
+						<div class="input-group">
+						<label class="radio radio-inline" >
+							<input type="radio" name="deliverytype" value="0" {if intval($settings['deliverytype']) ==0}checked="checked"{/if}> 无
+						</label>
+					
+					{if $isdeliverytype['status']&&$iszt['status']}
+						<label class="radio radio-inline"  onclick="$('.type').hide();$('.type1').show();">
+							<input type="radio" name="deliverytype" value="1" {if intval($settings['deliverytype']) ==1 }checked="checked"{/if}> 快递+自提
+						</label>
+						{/if}
+						{if $isdeliverytype['status']&&$issh['status']}
+						<label class="radio radio-inline"  onclick="$('.type').hide();$('.type1').show();">
+							<input type="radio" name="deliverytype" value="2" {if intval($settings['deliverytype']) ==2 }checked="checked"{/if}> 快递+送货上门
+						</label>
+						{/if}
+						{if $issh['status']&&$iszt['status']}
+						<label class="radio radio-inline"  onclick="$('.type').hide();$('.type1').show();">
+							<input type="radio" name="deliverytype" value="3" {if intval($settings['deliverytype']) ==3 }checked="checked"{/if}> 自提+送货上门
+						</label>
+						{/if}
+						{if $isdeliverytype['status']}
+						<label class="radio radio-inline"  onclick="$('.type').hide();$('.type1').show();">
+							<input type="radio" name="deliverytype" value="4" {if intval($settings['deliverytype']) ==4 }checked="checked"{/if}> 快递
+						</label>
+						{/if}
+						{if $issh['status']}
+						<label class="radio radio-inline"  onclick="$('.type').hide();$('.type1').show();">
+							<input type="radio" name="deliverytype" value="5" {if intval($settings['deliverytype']) ==5 }checked="checked"{/if}> 送货上门
+						</label>
+						{/if}
+						{if $iszt['status']}
+						<label class="radio radio-inline"  onclick="$('.type').hide();$('.type1').show();">
+							<input type="radio" name="deliverytype" value="6" {if intval($settings['deliverytype']) ==6 }checked="checked"{/if}> 自提
+						</label>
+						{/if}
+						{if $isdeliverytype['status']&&$issh['status']&&$iszt['status']}
+						<label class="radio radio-inline" >
+							<input type="radio" name="deliverytype" value="7" {if intval($settings['deliverytype']) ==7}checked="checked"{/if}> 快递+自提+送货上门
+						</label>
+						{/if}
+						</div>
+					</div>
+				</div>
+				{if $isdeliverytype['status']}
+			<div class="form-group">
+	<label class="col-xs-12 col-sm-3 col-md-2 control-label">运费模板选择</label>
+	<div class="col-sm-9 col-xs-12 chks">
+		<div class='input-group'>
+			<input type="text" name="dispatchs" maxlength="30" value="{loop $dispatchs $dispatch} {$dispatch['nickname']}; {/loop}" id="dispatchs" class="form-control" readonly />
+			<div class='input-group-btn'>
+				<button class="btn btn-default" type="button" onclick="popwin = $('#modal-module-menus1').modal();">选择运费模板</button>
+			</div>
+		</div>
+
+		<div style="margin-top:.5em;" class="input-group multi-audio-details clear-fix" id='dispatch'>
+			{loop $dispatch_list $store}
+			<div style="height: 40px; position:relative; float: left; margin-right: 18px;" class="multi-audio-item" dispatchid="{$store['id']}">
+				<div class="input-group">
+					<input type="hidden" value="{$store['id']}" name="dispatchs[]">
+					<input type="text" value="{$store['name']}" readonly="" class="form-control">
+					<div class="input-group-btn">
+						<button type="button" onclick="remove_dispatch(this)" class="btn btn-default"><i class="fa fa-remove"></i></button>
+					</div>
+				</div>
+			</div>
+			{/loop}
+		</div>
+		<span class='help-block'>配送方式选择中有快递时,必须最少选择一个运费模板</span>
+
+		<div id="modal-module-menus1" class="modal fade" tabindex="-1">
+			<div class="modal-dialog" style='width: 920px;'>
+				<div class="modal-content">
+					<div class="modal-header">
+						<button aria-hidden="true" data-dismiss="modal" class="close" type="button">×</button>
+						<h3>选择运费模板</h3></div>
+					<div class="modal-body">
+						<div class="row">
+							<div class="input-group">
+								<input type="text" class="form-control" name="keyword1" value="" id="search-kwd1" placeholder="请输入运费模板" />
+								<span class='input-group-btn'><button type="button" class="btn btn-default" onclick="search_dispatch();">搜索</button></span>
+							</div>
+						</div>
+						<div id="module-menus1" style="padding-top:5px;"></div>
+					</div>
+					<div class="modal-footer"><a href="#" class="btn btn-default" data-dismiss="modal" aria-hidden="true">关闭</a></div>
+				</div>
+
+			</div>
+		</div>
+	</div>
+
+</div>
+{/if}
+{if $iszt['status']}
+<div class="form-group">
+	<label class="col-xs-12 col-sm-3 col-md-2 control-label">自提门店选择</label>
+	<div class="col-sm-9 col-xs-12 chks">
+		<div class='input-group'>
+			<input type="text" name="saler" maxlength="30" value="{loop $salers $saler} {$saler['nickname']}; {/loop}" id="saler" class="form-control" readonly />
+			<div class='input-group-btn'>
+				<button class="btn btn-default" type="button" onclick="popwin = $('#modal-module-menus').modal();">选择门店</button>
+			</div>
+		</div>
+
+		<div style="margin-top:.5em;" class="input-group multi-audio-details clear-fix" id='stores'>
+			{loop $stores $store}
+			<div style="height: 40px; position:relative; float: left; margin-right: 18px;" class="multi-audio-item" storeid="{$store['id']}">
+				<div class="input-group">
+					<input type="hidden" value="{$store['id']}" name="storeids[]">
+					<input type="text" value="{$store['storename']}" readonly="" class="form-control">
+					<div class="input-group-btn">
+						<button type="button" onclick="remove_store(this)" class="btn btn-default"><i class="fa fa-remove"></i></button>
+					</div>
+				</div>
+			</div>
+			{/loop}
+		</div>
+		<span class='help-block'>配送方式选择中有自提时,必须最少选择一个自提点</span>
+
+		<div id="modal-module-menus" class="modal fade" tabindex="-1">
+			<div class="modal-dialog" style='width: 920px;'>
+				<div class="modal-content">
+					<div class="modal-header">
+						<button aria-hidden="true" data-dismiss="modal" class="close" type="button">×</button>
+						<h3>选择门店</h3></div>
+					<div class="modal-body">
+						<div class="row">
+							<div class="input-group">
+								<input type="text" class="form-control" name="keyword" value="" id="search-kwd" placeholder="请输入门店名称" />
+								<span class='input-group-btn'><button type="button" class="btn btn-default" onclick="search_stores();">搜索</button></span>
+							</div>
+						</div>
+						<div id="module-menus" style="padding-top:5px;"></div>
+					</div>
+					<div class="modal-footer"><a href="#" class="btn btn-default" data-dismiss="modal" aria-hidden="true">关闭</a></div>
+				</div>
+
+			</div>
+		</div>
+	</div>
+
+</div>
+{/if}
+<script language='javascript'>
+	function search_stores() {
+			$("#module-menus").html("正在搜索....")
+			$.get('{php echo web_url('application/bdelete/selectstore')}', {
+				keyword: $.trim($('#search-kwd').val())
+			}, function(dat){
+				$('#module-menus').html(dat);
+			});
+		}
+	function remove_store(obj){
+	        var storeid = $(obj).closest('.multi-audio-item').attr('storeid');
+	        	$('.multi-audio-item[storeid="' + storeid +'"]').remove();
+	    }
+	function select_store(o) {
+	                        if($('.multi-audio-item[storeid="' + o.id +'"]').length>0){
+	                            return;
+	                        }
+	                        var html ='<div style="height: 40px; position:relative; float: left; margin-right: 18px;" class="multi-audio-item" storeid="' + o.id +'">';
+	                html+='<div class="input-group">';
+	                    html+='<input type="hidden" value="' + o.id +'" name="storeids[]">';
+	                    html+='<input type="text" value="' + o.storename +'" readonly="" class="form-control">';
+	                    html+='<div class="input-group-btn"><button type="button" onclick="remove_store(this)" class="btn btn-default"><i class="fa fa-remove"></i></button></div>';
+	             html+='</div></div>';
+	                        $('#stores').append(html);
+	 	}
+
+	function search_dispatch() {
+			$("#module-menus1").html("正在搜索....")
+			$.get('{php echo web_url('application/bdelete/selectdispatch')}', {
+				keyword: $.trim($('#search-kwd1').val())
+			}, function(dat){
+				$('#module-menus1').html(dat);
+			});
+		}
+	function remove_dispatch(obj){
+	        var dispatchid = $(obj).closest('.multi-audio-item').attr('dispatchid');
+	        	$('.multi-audio-item[dispatchid="' + dispatchid +'"]').remove();
+	    }
+	function select_dispatch(o) {
+	                        if($('.multi-audio-item[dispatchid="' + o.id +'"]').length>0){
+	                            return;
+	                        }
+	                        var html ='<div style="height: 40px; position:relative; float: left; margin-right: 18px;" class="multi-audio-item" dispatchid="' + o.id +'">';
+	                html+='<div class="input-group">';
+	                    html+='<input type="hidden" value="' + o.id +'" name="dispatchs[]">';
+	                    html+='<input type="text" value="' + o.name +'" readonly="" class="form-control">';
+	                    html+='<div class="input-group-btn"><button type="button" onclick="remove_dispatch(this)" class="btn btn-default"><i class="fa fa-remove"></i></button></div>';
+	             html+='</div></div>';
+	                        $('#dispatch').append(html);
+	 	}
+</script>
+						<!--<div class="form-group goodstip" id="share_type" {if $settings['sharestatus']!=1}style="display:none;"{/if}>
+							<label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label">分享团显示方式</label>
+							<div class="col-xs-12 col-sm-8">
+								<label class="radio radio-inline">
+									<input type="radio" name="share_type" value="1" {if intval($settings['share_type']) == 1}checked="checked"{/if}> 直接显示
+								</label>
+								<label class="radio radio-inline">
+									<input type="radio" name="share_type" value="2" {if intval($settings['share_type']) == 2}checked="checked"{/if}> 附近团按钮
+								</label>
+							</div>
+						</div>-->
+						<!--<div class="form-group">
+							<label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label">自动签收时间</label>
+							<div class="col-xs-12 col-sm-2 input-group" >
+								<input type="text" name="gettime" class="form-control" value="{$settings['gettime']}" />
+								<span class="input-group-addon">天</span>
+							</div>
+							<span class="help-block" style="margin-left: 16.66666667%;">自发货后计时，签收时间。默认为5天</span>
+						</div>
+						<div class="form-group">
+							<label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label">核销订单维持“待核销”天数</label>
+							<div class="col-xs-12 col-sm-2 input-group" >
+								<input type="text" name="checkgettime" class="form-control" value="{$settings['checkgettime']}" />
+								<span class="input-group-addon">天</span>
+							</div>
+							<span class="help-block" style="margin-left: 16.66666667%;">自购买后计时N天后该订单金额成为商家可结算金额。默认为5天（没有核销商品的可不填）</span>
+						</div>-->
+					<!-- 关注参数设置开始 -->
+					
+					
+					<!-- 关注参数设置结束 -->
+					
+					</div>
+					<div class="tab-pane" id="tab_share">
+					<div class="panel-heading" style="padding-left:0;padding-right:0;background-color: #f5f5f5;border-color: #ddd;color: #333;padding: 14px 15px; margin:-14px -15px; margin-bottom:15px;">
+					分享设置<a target="_blank" style="float:right; font-weight:bold; cursor:pointer;" href="http://doc.lexiangpingou.cn/paremeterSet.html#fxsz">图文说明>></a>
+					</div>
+						<div class="form-group">
+							<label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label">分享标题</label>
+							<div class="col-sm-8">
+								<input type="text" name="share_title" class="form-control" value="{$settings['share_title']}" />
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label">分享图片</label>
+							<div class="col-sm-8">
+								{php echo tpl_form_field_image('share_image', $settings['share_image']);}
+								<span class="help-block">避免图片变形，图片请设置为300*300。</span>
+							</div>
+								
+						</div>
+						
+						<div class="form-group">
+							<label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label">分享描述</label>
+							<div class="col-sm-8">
+								<textarea style="height:150px;" id="description" name="share_desc" class="form-control description" cols="60">{$settings['share_desc']}</textarea>
+							</div>
+						</div>
+					</div>
+					<div class="tab-pane" id="tab_param" style="display">
+					<div class="form-group">
+							<label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label">AppSecret</label>
+							<div class="col-xs-12 col-sm-8">
+								<input type="text" name="secret" class="form-control" value="{$acct['secret']}" />
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label">微信支付商户号(MchId)</label>
+							<div class="col-xs-12 col-sm-8">
+								<input type="text" name="mchid" class="form-control" value="{$settings['mchid']}" />
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label">商户支付密钥(API密钥)</label>
+							<div class="col-xs-12 col-sm-8">
+								<input type="text" name="apikey" class="form-control" value="{$settings['apikey']}" />
+							</div>
+						</div>
+						<div class="form-group">
+		                    <label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label">商户支付证书</label>
+		                    <div class="col-sm-8 col-xs-12">
+		                        <textarea class="form-control" name="cert" rows="8" placeholder="为保证安全性, 不显示证书内容. 若要修改, 请直接输入"></textarea>
+		                        <span class="help-block">从商户平台上下载支付证书, 解压并取得其中的 <mark>apiclient_cert.pem</mark> 用记事本打开并复制文件内容, 填至此处</span>
+		                    </div>
+		                </div>
+		                <div class="form-group">
+		                    <label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label">支付证书私钥</label>
+		                    <div class="col-sm-8 col-xs-12">
+		                        <textarea class="form-control" name="key" rows="8" placeholder="为保证安全性, 不显示证书内容. 若要修改, 请直接输入"></textarea>
+		                        <span class="help-block">从商户平台上下载支付证书, 解压并取得其中的 <mark>apiclient_key.pem</mark> 用记事本打开并复制文件内容, 填至此处</span>
+		                    </div>
+		                </div>
+						<div class="form-group">
+		                    <label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label">根证书私钥</label>
+		                    <div class="col-sm-8 col-xs-12">
+		                        <textarea class="form-control" name="rootca" rows="8" placeholder="为保证安全性, 不显示证书内容. 若要修改, 请直接输入"></textarea>
+		                        <span class="help-block">从商户平台上下载支付证书, 解压并取得其中的 <mark>rootca.pem</mark> 用记事本打开并复制文件内容, 填至此处</span>
+		                    </div>
+		                </div>
+					</div>
+					
+					<div class="tab-pane " id="tab_param2">
+					<div class="panel-heading" style="padding-left:0;padding-right:0;background-color: #f5f5f5;border-color: #ddd;color: #333;padding: 14px 15px; margin:-14px -15px; margin-bottom:15px;">
+					商城设置<a target="_blank" style="float:right; font-weight:bold; cursor:pointer;" href="http://doc.lexiangpingou.cn/paremeterSet.html#scsz">图文说明>></a>
+					</div>
+					<div class="plugins_wrp">
+            <dl>
+                <dd>
+                    <ul id="js_plugins">
+						<li class="item_wrp" style="width: 100%;">
+							<div class="plugin_item">
+								<!--<div class="plugin_icon"><img src="{TG_URL_WRES}images/function/definearea.png" style="cursor:pointer;"></div>-->
+								<div  id="link-icon1" class="plugin_icon" >
+									<div id="link-icon" style="display:none;width:100%;height:100%;position:absolute;background-color:rgba(0,0,0,0.3);cursor:pointer;">
+										<img src="{TG_URL_WRES}images/3.svg"style="position:absolute;width:60%;left:20%;">
+									</div>
+									<img src="{TG_URL_WRES}images/function/mxgg.png" style="cursor:pointer;">
+								</div>
+								<div class="plugin_status">
+									<i class="access"></i>
+									<span class="status_txt">
+										{if $checkfunction['status']}	
+											
+										<div id="renewal" style="font-size:20px;margin-top:-30px;width: 60px;height:60px;border-radius:50%;font-weight:900;background-color:#ff5466;color:white;margin-right: -25px;text-align:center;line-height:60px;cursor:pointer;">续费</div>										
+										<!--<input class="flag" type="checkbox" name="help"  value="{$setting['helpbuy']}" {if $setting['helpbuy'] == 1}checked{/if} />-->
+										<span style="display:block;margin-left:-70px;color:#888;font-size:14px;">截止日期：{php echo date('Y-m-d', $checkfunction['endtime'])}</span>
+										
+										{else}
+										
+										<div id="buyDaifu1" style="font-size:20px;margin-top:-20px;width: 60px;height:60px;border-radius:50%;font-weight:900;background-color:#ff5466;color:white;margin-right: -25px;text-align:center;line-height:60px;cursor:pointer;">购买</div>
+										{/if}
+									</span>
+								</div>
+								<div class="plugin_content">
+									<h3 class="title">{$checkfunction['name']}</h3>
+									<p class="desc" style="    width: 100%;">
+										可自定义图片将原本枯燥的等待加载时间变为酷炫的秒显广告。
+									</p>
+								</div>
+							</div>
+						</li>
+					</ul>
+                </dd>
+            </dl>
+        </div>
+						<div class="form-group">
+							<label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label">商城名称</label>
+							<div class="col-xs-12 col-sm-8">
+								<input type="text" name="sname" class="form-control" value="{$settings['sname']}" />
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label">商城LOGO</label>
+							<div class="col-sm-8">
+								{php echo tpl_form_field_image('slogo', $settings['slogo']);}
+								<span class="help-block">避免图片变形，图片请设置为300*300。</span>
+							</div>
+							
+						</div>
+						{if $checkfunction['status']}
+						<div class="form-group">
+							<label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label">秒显图</label>
+							<div class="col-sm-8">
+								{php echo tpl_form_field_image('homeimg', $acct['homeimg']);}
+								
+								<span class="help-block">建议尺寸大小600*965px</span>
+							</div>
+						</div>
+						{/if}
+						<div class="form-group">
+							<label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label">全民兼职背景图</label>
+							<div class="col-sm-8">
+								{php echo tpl_form_field_image('saler_img', $settings['saler_img']);}
+
+								<span class="help-block">建议尺寸大小600*965px</span>
+							</div>
+						</div>
+						<!--<div class="form-group">
+							<label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label">拼团宣传群二维码</label>
+							<div class="col-sm-8">
+								{php echo tpl_form_field_image('qrcode', $settings['qrcode']);}
+								<span class="help-block">用户通过该二维码加入拼团群，可快速拉人成团</span>
+							</div>
+						</div>-->
+						<div class="form-group goodstip" >
+							<label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label">顶部引导关注提示</label>
+							<div class="col-xs-12 col-sm-8">
+								<label class="radio radio-inline">
+									<input type="radio" name="guanzhu" value="1" {if $settings['guanzhu']==1}checked="checked"{/if}> 未关注时显示
+								</label>
+								<label class="radio radio-inline">
+									<input type="radio" name="guanzhu" value="2" {if $settings['guanzhu']==2}checked="checked"{/if}> 不显示
+								</label>
+								<span class="help-block">可能会涉及到诱导关注违规，如需开启违规后果自负</span>
+							</div>
+
+						</div>
+						<div class="tab-pane" id="tab_followed" >
+							<div class="form-group">
+								<label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label">关注二维码</label>
+								<div class="col-sm-8">
+									{php echo tpl_form_field_image('followed_image', $settings['followed_image']);}
+									<span class="help-block">建议尺寸大小100*100px</span>
+									<span class="help-block">可能会涉及到诱导关注违规，如需开启违规后果自负</span>
+								</div>
+
+							</div>
+
+						</div>
+						<div class="tab-pane" id="tab_followed">
+							<div class="form-group">
+								<label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label">客服二维码</label>
+								<div class="col-sm-8">
+									{php echo tpl_form_field_image('kefu_image', $settings['kefu_image']);}
+									<span class="help-block">建议尺寸大小100*100px</span>
+								</div>
+							</div>
+						</div>
+
+						<div class="tab-pane">
+							<div class="form-group">
+								<label class="col-xs-12 col-sm-3 col-md-2 control-label">售后人员</label>
+								<div class="col-sm-9 col-xs-12">
+									<input type='hidden' id='openid' name='service_openid' value="{$settings['service_openid']}" />
+									<div class='input-group'>
+										<input type="text" name="service_nickname" maxlength="30" value="{if !empty($settings)}{$settings['service_nickname']}{/if}" id="serviceMan" class="form-control" readonly />
+										<div class='input-group-btn'>
+											<button class="btn btn-default" type="button" onclick="popwin = $('#modal-module-serviceMan').modal();">选择售后人员</button>
+											<button class="btn btn-danger" type="button" onclick="clearSale()">清空</button>
+										</div>
+									</div>
+									{if !empty($serviceMan)}
+									<span class='help-block'><img style="width:100px;height:100px;border:1px solid #ccc;padding:1px" src="{$serviceMan['avatar']}" id="avatar" /></span>
+									{/if}
+									<div id="modal-module-serviceMan" class="modal fade" tabindex="-1">
+										<div class="modal-dialog">
+											<div class="modal-content">
+												<!-- <div class="modal-header"><button aria-hidden="true" data-dismiss="modal" class="saler_close pull-right" type="button">×</button><h3>选择订单通知接收员</h3></div> -->
+												<div class="modal-header">
+													<button aria-hidden="true" data-dismiss="modal" class="close" type="button">×</button>
+													<h3>选择售后人员</h3>
+												</div>
+												<div class="modal-body" >
+													<div class="row">
+														<div class="input-group">
+															<input type="text" class="form-control" name="keyword" value="" id="search-kwd2" placeholder="请输入管理员昵称" />
+															<span class="input-group-btn">
+																<button type="button" class="btn btn-default" onclick="searchMembers();">搜索</button>
+															</span>
+														</div>
+													</div>
+													<!-- 显示售后人员 -->
+													<div id="serviceMan-body"></div>
+												</div>
+												<div class="modal-footer">
+													<a href="#" class="btn btn-default" data-dismiss="modal" aria-hidden="true">关闭</a>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+
+						{if $acct['is_merchant'] == 1}
+                        <div class="form-group">
+							<label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label"><span style="color:red;">*</span>官网客服电话</label>
+							<div class="col-sm-8 col-xs-12">
+								<input type="text" name="kftel" class="form-control" value="{$settings['kftel']}" />
+							</div>
+						</div>
+                        <div class="form-group">
+							<label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label"><span style="color:red;">*</span>官网商家热线</label>
+							<div class="col-sm-8 col-xs-12">
+                                <input type="text" name="sjtel" class="form-control" value="{$settings['sjtel']}" />
+							</div>
+						</div>
+                        <div class="form-group">
+							<label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label"><span style="color:red;">*</span>官网公司全称</label>
+							<div class="col-sm-8 col-xs-12">
+                                <input type="text" name="gsname" class="form-control" value="{$settings['gsname']}" />
+							</div>
+						</div>
+                        <div class="form-group">
+							<label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label"><span style="color:red;">*</span>官网底部版权域名</label>
+							<div class="col-sm-8 col-xs-12">
+                                <input type="text" name="gwbqym" class="form-control" value="{$settings['gwbqym']}" />
+							</div>
+						</div>
+                        <div class="form-group">
+							<label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label"><span style="color:red;">*</span>官网网站ICP备案号</label>
+							<div class="col-sm-8 col-xs-12">
+                                <input type="text" name="icp" class="form-control" value="{$settings['icp']}" />
+							</div>
+						</div>
+                        <div class="form-group">
+							<label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label"><span style="color:red;">*</span>官网公网备案号</label>
+							<div class="col-sm-8 col-xs-12">
+                                <input type="text" name="gwbah" class="form-control" value="{$settings['gwbah']}" />
+							</div>
+						</div>
+                        <div class="form-group">
+							<label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label"><span style="color:red;">*</span>官网公网备案详情链接</label>
+							<div class="col-sm-8 col-xs-12">
+                                <input type="text" name="gwbalj" class="form-control" value="{$settings['gwbalj']}" />
+							</div>
+						</div>
+
+                        <div class="form-group">
+                            <label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label"><span style="color:red;">*</span>公司简介</label>
+                            <div class="col-sm-8 col-xs-12">
+                                {php echo tpl_ueditor('company_profile', $settings['company_profile']);}
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label"><span style="color:red;">*</span>招商加盟</label>
+                            <div class="col-sm-8 col-xs-12">
+                                {php echo tpl_ueditor('company_join', $settings['company_join']);}
+                            </div>
+                        </div>
+                        {/if}
+                        <div class="form-group" style="display:none;">
+							<label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label">拼团介绍</label>
+							<div class="col-sm-8 col-xs-12">
+								{php echo tpl_ueditor('content', $settings['content']);}
+								<span class="help-block">为空则为默认介绍</span>
+							</div>
+						</div>
+					</div>
+					<div class="tab-pane active" id="tab_param3">
+					<div class="panel-heading" style="padding-left:0;padding-right:0;background-color: #f5f5f5;border-color: #ddd;color: #333;padding: 14px 15px; margin:-14px -15px; margin-bottom:15px;">
+					模板设置<a target="_blank" style="float:right; font-weight:bold; cursor:pointer;" href="http://doc.lexiangpingou.cn/paremeterSet.html#mbsz">图文说明>></a>
+					</div>
+					{loop $functionlist $list}
+						<div class="all" >
+							<img class="productpic" src="{$list['img']}" alt="" title="yangping">
+							<div class="beijing" style="display:none;"><img src="{TG_URL_WRES}images/3.svg" width="90px" height="90px" class="lookover"></div>
+							
+							{if $list['status']==1}
+							<div class="biaoqian">已购买</div>
+							{/if} 
+							{if $list['status']==2}
+							<div class="biaoqian">使用中</div>
+							{/if}
+							
+							<p style="display:none;" class="name">{$list['name']}</p>
+							<p class="describe" style="margin-bottom: -4px;">{$list['name']}</p>
+
+                            {if $_W['uniacid'] == 33 }
+							<span data-id="{$list['id']}" class="edit" onclick="edit(this)">
+							编辑
+							</span>
+                            {/if}
+
+							<span id="{$list['id']}" class="setting {if $list['status']==1}use{/if}{if $list['status']==0}buy{/if} {if $list['status']==2}use set{/if}">
+							{if $list['status']==1}
+							启用
+							{/if}
+							{if $list['status']==2}
+							<img class="imgset" src="{TG_URL_WRES}images/1.svg" width="37.5" height="37.5">
+							{/if}
+							{if $list['status']==0}
+							购买
+							{/if}
+							
+							</span>
+						
+							<!--<div class="bottom">
+								<img class="cord" width="50px" height="50px" alt="erweimabiao" src="{TG_URL_WRES}images/2.svg">
+								<span class="yulan">手机预览</span>
+							</div>-->	
+							<img class="cordMain" style="display:none;" src="{TG_URL_WRES}images/paylogo.png" alt="erweimatupian">
+							<span {if $list['status']==0}class="price"{else}class="nprice"{/if}>{$list['price']}</span>
+							<img src="{TG_URL_WRES}images/paylogo.png" {if $list['status']==0}class="paycord"{else}class="npaycord"{/if}>
+							<span {if $list['status']==0}class="tmpname"{else}class="ntmpname"{/if}>{$list['name']}</span>
+							<span style="padding-left:10px;font-size:0.75em;color:#999;display:block;width:330px;">{$list['des']}</span>
+							{if $list['status']!=0}<span style="position:absolute;right:30px;bottom:20px;font-size:12px;color:gray;">有效期至:</span>
+							<span style="position:absolute;right:30px;bottom:5px;font-size:12px;color:gray;">{php echo date('Y-m-d', $list['endtime'])}<span class="renewal" style="background-color:#fd6730;color:white;cursor:pointer;margin-left:2px;border-radius:2px;font-size:12px;padding-left:3px;padding-right:3px;padding-bottom:1px;padding-top:1px;">续费</span></span>{/if}
+							<img style="display:none;" class="picforyuelan" src="{$list['yimg']}"/>
+						</div>
+						{/loop}
+						
+					</div>
+				
+				</div>
+			</div>
+		</div>
+
+		<div id="yuelan" style="display:none;position:fixed;top:20px;left:0px;right:0px;margin-left:auto;margin-right:auto;width:600px;height:800px;border:1px solid black;background-color:white;">
+	<div style="background-color:#f3f3f3;position:relative;text-align:center;width:100%;height:60px;line-height:60px;font-size:15px;">
+		商城阅览
+		<img id="closed" onclick="click()" style="position:absolute;right:40px;top:0px;bottom:0px;margin-top:auto;margin-bottom:auto;cursor:pointer;" src="{TG_URL_WRES}images/4.svg" width="20px" height="20px">
+	</div>
+	<div style="width:100%;height:740px;position:relative;overflow: scroll;">
+		<img id="yuelanimg" src="{TG_URL_WRES}images/pic.jpg" style="position:absolute;left:0px;right:0px;top:20px;margin:auto;width:400px;height:auto;" >
+	</div>
+</div>
+<div class="openDIV nactive" style="background-color:rgba(0,0,0,0.3);width:100%;height:100%;position:fixed;left:0px;top:0px;z-index:9999;">
+		<div style="border-right:2px solid gray;border-bottom:2px solid gray;border-left:1px solid gray;border-top:1px solid gray;position:fixed;z-index:2;top:20px;left:0px;right:0px;margin-left:auto;margin-right:auto;width:400px;height:300px;background-color: white;overflow: hidden;">
+			<div style="height:60px;width:100%;position:relative;font-size:28px;padding-left:20px;line-height:60px;background-color:#f9f9f9;"><span id="buyfunctions">购买商场模板</span>
+			<img id="close" style="position:absolute;right:40px;top:0px;bottom:0px;margin-top:auto;margin-bottom:auto;cursor:pointer;" src="{TG_URL_WRES}images/4.svg" width="20px" height="20px">
+			</div>
+			<span style="padding-left:15px;color:orange;font-size:1.0em;"  >请选择使用时长，即可扫码购买自动开通功能</span>
+			<p style="padding-left:20px;color:gray;margin-top:18px;">模板名称：<span id="template" style="padding-left:5px;color:#3c3c3c;">小清新1号</span></p>
+			<p style="padding-left:20px;color:gray;">使用时长：<span style="padding-left:5px;color:#3c3c3c;cursor:pointer;" id="valueDate">3个月</span></p>
+			<p style="padding-left:20px;color:gray;">优惠时长：<span style="padding-left:5px;color:#3c3c3c;" id="freeDate">3个月</span></p>
+			<p style="padding-left:20px;color:gray;">支付方式：<img style="position:absolute;padding-top:2px;" width="18px" height="18px" src="{TG_URL_WRES}images/05.svg"><span style="position:absolute;padding-left:23px;color:#3c3c3c;"> 微信支付</span></p>
+			<p  style="padding-left:20px;color:gray;">单月价格：<span style="padding-left:5px;color:orange;font-size:1.2em;"  id="valuePay">99.00</span>元</p>
+			<p  style="padding-left:20px;color:gray;">总价格：<span style="padding-left:22px;color:orange;font-size:1.2em;"  id="totalPay">99.00</span>元</p>
+			
+			<img style="position:absolute;right:30px;bottom:50px;" src="{php echo web_url('store/setting/qr', array('raw' => base64_encode($url)));}" width="150px" height="150px" id="cordvalue">
+			<p id="saomaid" style="margin-left:245px;margin-top:-28px;" >扫码完成支付<p/>
+			<div id="selectDate" class="selectDateadd">
+				<span class="datedesc" style="display: none">1个月</span>
+				<span class="datedesc">3个月</span>
+				<span class="datedesc">6个月</span>
+				<span class="datedesc">12个月</span>
+				<span class="datedesc">24个月</span>
+			</div>
+		</div>
+</div>	
+	
+		<div class="form-group col-sm-12" style="position:relative;">
+			<input id='submit' type="submit" name="submit" value="提交" class="btn btn-primary col-lg-1" />
+			<div id="replaceSubmit" style="width: 90px;
+height: 32px;
+position: absolute;
+z-index: 1;
+left: 16px;
+top: 1px;
+background: hsla(0, 0%, 0%, 0) none repeat scroll 0% 0%;
+cursor: pointer"></div>
+			<input type="hidden" name="token" value="{$_W['token']}" />
+		</div>
+	</form>
+</div>
+
+<div class="editBJ">
+	<div class="panel panel-default">
+		<div class="panel-heading">
+			编辑
+			<span style="float:right;" onclick="$('.editBJ').css('display','none')">关闭</span>
+		</div>
+		<div class="panel-body">
+			<div class="form-group" style="height: 50px">
+				<label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label">标题</label>
+				<div class="col-md-8">
+					<input type="text" name="title" class="form-control title" value="">
+				</div>
+			</div>
+			<div class="form-group" style="height: 50px">
+				<label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label">介绍</label>
+				<div class="col-md-8">
+					<input type="text" name="detail" class="form-control detail" value="">
+				</div>
+			</div>
+			<div class="form-group" style="height: 50px">
+				<label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label">价格</label>
+				<div class="col-md-8">
+					<input type="text" name="price" class="form-control pricea" value="">
+				</div>
+			</div>
+			<div class="form-group" style="height: 200px">
+				<label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label">封面</label>
+				<div class="col-md-8">
+					{php echo tpl_form_field_image('title_img', $goods['gimg']);}
+				</div>
+			</div>
+			<div class="form-group" style="height: 200px">
+				<label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label">详情</label>
+				<div class="col-md-8">
+					{php echo tpl_form_field_image('detail_img', $goods['gimg']);}
+				</div>
+			</div>
+			<div class="form-group col-sm-12">
+				<input type="button" value="提交" class="btn btn-primary col-lg-1" onclick="update2(this)" style="margin-left: 120px">
+				<!--<input type="hidden" name="token" value="e404298d" />-->
+			</div>
+		</div>
+	</div>
+</div>
+<script language='javascript'>
+	//编辑
+	function edit(e){
+		$('.editBJ').fadeIn();
+		$('.editBJ input.btn').attr('data-id',$(e).attr('data-id'));
+		$.get("{php echo web_url('store/setting/template_query')}",{id:$(e).attr('data-id')},function(res){
+			var data=JSON.parse(res).data;
+			console.log(data);
+			$('input.title').val(data.name);//标题
+			$('input.detail').val(data.des);//介绍
+			$('input.pricea').val(data.price);//价格
+			$('input[name="title_img"]').val(data.img);//封面图
+			$('input[name="title_img"]').parent().next().find('img').attr('src',data.img);
+			$('input[name="detail_img"]').val(data.yimg);//详情图
+			$('input[name="detail_img"]').parent().next().find('img').attr('src',data.yimg)
+		})
+	}
+	//保存
+	function update2(e){
+		console.log($(e).attr('data-id'));
+		$.get(
+			"{php echo web_url('store/setting/template_update')}",
+			{
+				"data[id]":$(e).attr('data-id'),
+				"data[name]":$('input.title').val(),
+				"data[des]":$('input.detail').val(),
+				"data[price]":$('input.pricea').val(),
+				"data[img]":$('input[name="title_img"]').val(),
+				"data[yimg]":$('input[name="detail_img"]').val()
+			},
+			function(res){
+				if(JSON.parse(res).status=='1'){
+					location.reload();
+				}
+			}
+		)
+	}
+
+
+
+var linkicon=document.getElementById("link-icon");
+		var linkicon2=document.getElementById("link-icon1");
+		
+		linkicon2.onmouseleave = function () {
+			linkicon.style.setProperty( 'display', 'none' );
+		}
+		
+		linkicon2.onmouseover = function () {
+			linkicon.style.setProperty( 'display', 'block' );
+		}
+		
+		linkicon.onclick=function (ev) {
+			document.getElementById('detailimg').src='{TG_URL_WRES}images/function/mxgg.jpg';
+			document.getElementById("detailshow").style.setProperty("display","block");
+		}
+                function search_members() {
+                    if ($.trim($('#search-kwd').val()) == '') {
+                        Tip.focus('#search-kwd', '请输入关键词');
+                        return;
+                    }
+                    $("#module-menus").html("正在搜索....");
+                    $.get('{php echo web_url('store/query')}', { 
+                        keyword: $.trim($('#search-kwd').val())
+                    }, function (dat) {
+                        $('#module-menus').html(dat);
+                    });
+                }
+                function select_member(o) {
+
+                    if ($('.multi-item[openid="' + o.openid + '"]').length > 0) {
+                        return;
+                    }
+                    var html = '<div class="multi-item" openid="' + o.openid + '">';
+                    html += '<img class="img-responsive img-thumbnail" src="' + o.avatar + '" onerror="this.src=\'./resource/images/nopic.jpg\'; this.title=\'图片未找到.\'"  style="width:100px;">';
+                    html += '<div class="img-nickname" style="display:none;">' + o.nickname + '</div>';
+					html += '<div class="img-openid" style="display:none;">' + o.from_user + '</div>';
+                    html += '<input type="hidden" value="' + o.openid + '" name="openids[]">';
+                    html += '<em onclick="remove_member(this)"  class="close">×</em>';
+                    html += '</div>';
+                    $("#saler_container").append(html);
+                    refresh_members();
+                }
+
+                function remove_member(obj) {
+                    $(obj).parent().remove();
+                    refresh_members();
+                }
+                function refresh_members() {
+					var openid="";
+                    var nickname = "";
+                    $('.multi-item').each(function () {
+                        nickname += " " + $(this).find('.img-nickname').html() + "; ";
+						 openid += "" + $(this).find('.img-openid').html() + "";
+                    });
+                    $('#salers').val(nickname);
+					 $('#saleropenid').val(openid);
+                }
+
+            </script>
+<script>
+	window.onload=function(){
+		document.getElementById('closed').onclick=function(){
+			document.getElementById('yuelan').style.setProperty("display","none");
+		};
+		var bottoms=document.querySelectorAll(".bottom");
+		var cordMains=document.querySelectorAll('.cordMain');
+		for (var i=0;i<bottoms.length;i++){
+			bottoms[i].onmouseover=function(ev){
+				for (var j=0;j<bottoms.length;j++){
+					if (ev.target==bottoms[j]){
+						cordMains[j].style.display="block";
+					}
+				}				
+			}
+			bottoms[i].onmouseleave=function(ev){
+				for (var j=0;j<bottoms.length;j++){
+					if (ev.target==bottoms[j]){
+						cordMains[j].style.display="none";
+					}
+				}	
+			}
+	}
+	var nprices=[],
+	nimgs=[];
+	var nprice=document.querySelectorAll('.nprice');
+	var nimg=document.querySelectorAll('.npaycord');
+		for (var i=0;i<nprice.length;i++){
+			nprices.push(nprice[i].innerHTML);
+			nimgs.push(nimg[i].src);
+		}
+	if (document.getElementById("renewal")){
+		var renew = document.getElementById("renewal");
+		renew.onclick = function () {
+			if (openDIV.classList.contains("nactive")){
+					var cordvalue=document.getElementById("cordvalue");	
+				if ( document.querySelector('.price') ) {
+					valuePay.innerHTML=Number(document.querySelector('.price').innerHTML).toFixed(2);
+					}
+					document.getElementById("cordvalue").src=decodeURI(nimgs[0]);
+					document.getElementById("buyfunctions").innerHTML = "购买功能";
+					valuePay.innerHTML=Number({$checkfunction['price']}).toFixed(2);
+					valueDate.innerHTML="请选择时长";
+					document.getElementById("template").innerHTML="秒显广告";
+					document.getElementById("totalPay").innerHTML="0.00";
+					document.getElementById("freeDate").innerHTML=0+"个月";
+					//document.getElementById("shaomaid").style.display="none";		
+					temId='{$tid}';
+					openDIV.classList.remove("nactive");			
+			}
+		}
+	}	
+	var renewal=document.getElementsByClassName("renewal");
+	for (var i=0;i<renewal.length;i++){
+		renewal[i].onclick=function(ev){
+		document.getElementById("cordvalue").src=decodeURI(nimgs[0]);
+		var ntmpnames=document.querySelectorAll(".ntmpname");
+		if (openDIV.classList.contains("nactive")){
+				for (var j=0;j<renewal.length;j++){
+						if (ev.target==renewal[j]){
+							var cordvalue=document.getElementById("cordvalue");							
+							valuePay.innerHTML=nprices[j];
+							document.getElementById("saomaid").style.setProperty("display","none");
+							valueDate.innerHTML="请选择时长";
+							totalPay.innerHTML="0.00";
+							document.getElementById("freeDate").innerHTML=0+"个月";
+							document.getElementById("template").innerHTML=ntmpnames[j].innerHTML;	
+							temId=renewal[j].parentNode.parentNode.querySelector(".setting").id;						
+						}
+					}
+				
+			openDIV.classList.remove("nactive");
+		}
+	}
+	}
+		var openyuelans=document.querySelectorAll('.lookover');
+		var productpics=document.querySelectorAll('.productpic');
+		var beijings=document.querySelectorAll('.beijing');
+		var pictures=[];
+		var picforyuelan=document.querySelectorAll('.picforyuelan');
+		for (var i=0;i<productpics.length;i++){
+			var picSrc=picforyuelan[i].src;
+			pictures.push(decodeURI(picSrc));
+			productpics[i].onmouseover=function(ev){
+				
+				for (var j=0;j<productpics.length;j++){			
+					if (ev.target==productpics[j]){
+						beijings[j].style.display="block";
+					}
+				}
+			}
+			beijings[i].onmouseover=function(ev){
+				for (var j=0;j<productpics.length;j++){
+					if (ev.target==beijings[j]){
+						beijings[j].style.display="block";
+					}
+				}
+			}
+			openyuelans[i].onclick=function(ev){
+				for (var j=0;j<productpics.length;j++){
+					if (ev.target==openyuelans[j]) {
+                        var yuelan=document.getElementById('yuelan');
+						document.getElementById("yuelanimg").src=pictures[j];
+						yuelan.style.setProperty("display","block");
+                    }					
+				}
+			}
+			beijings[i].onclick=function(ev){
+				for (var j=0;j<productpics.length;j++){
+					if (ev.target==beijings[j]) {
+                        var yuelan=document.getElementById('yuelan');
+						document.getElementById("yuelanimg").src=pictures[j];
+						yuelan.style.setProperty("display","block");
+                    }					
+				}
+			}
+			beijings[i].onmouseleave=function(ev){
+				for (var j=0;j<productpics.length;j++){
+					if (ev.target==beijings[j]){
+						beijings[j].style.display="none";
+					}
+				}
+			}
+		}
+		var alls=document.getElementsByClassName('all');
+		/* for (var i=0;i<alls.length;i++){
+			alls[i].addEventListener('mouseenter',function(ev){
+				for (var j=0;j<alls.length;j++){
+					if (ev.target==alls[j]){
+						alls[j].style.marginBottom="0px";
+					}else{
+						alls[j].style.marginBottom="55px";
+					}
+				}
+			},false);
+		} */
+		var prices=[];
+		var imgs=[];
+		var price=document.querySelectorAll('.price');
+		var img=document.querySelectorAll('.paycord');
+		for (var i=0;i<img.length;i++){
+			prices.push(price[i].innerHTML);
+			imgs.push(img[i].src);
+		}
+		var temId;
+		var close=document.getElementById("close"),
+		openDIV=document.querySelector(".openDIV");
+		close.addEventListener('click',function(){
+			openDIV.classList.toggle("nactive");
+			window.clearInterval(intervalEvent);
+		},false);
+		
+		var intervalEvent;
+		var valuePay=document.getElementById("valuePay");
+		var buyes=document.querySelectorAll(".buy");
+		var tmpnames=document.querySelectorAll(".tmpname");
+		for (var i=0;i<buyes.length;i++){
+			buyes[i].addEventListener("click",function(ev){
+			document.getElementById("saomaid").style.setProperty("display","none");
+			//alert(document.getElementById("freeDate").innerHTML);
+				if (openDIV.classList.contains("nactive")){
+					for (var j=0;j<buyes.length;j++){
+						if (ev.target==buyes[j]){
+							var cordvalue=document.getElementById("cordvalue");							
+							valuePay.innerHTML=prices[j];
+							cordvalue.src=decodeURI(imgs[j]);
+							valueDate.innerHTML="请选择时长";
+							totalPay.innerHTML="0.00";
+							document.getElementById("freeDate").innerHTML=0+"个月";
+							document.getElementById("template").innerHTML=tmpnames[j].innerHTML;	
+							temId=buyes[j].id;						
+						}
+					}
+				
+				openDIV.classList.remove("nactive");	
+				}
+			},false);
+		}
+		var valueDate=document.getElementById("valueDate"),
+		selectDate=document.getElementById("selectDate");
+		valueDate.onclick=function(){
+			selectDate.classList.toggle("selectDateadd");
+		}
+		var orderno;
+		var datedesc=document.querySelectorAll(".datedesc");
+		var uniacid=33;//火蝶官方公众号ID
+		for (var i=0;i<datedesc.length;i++){
+			datedesc[i].onclick=function(ev){
+				var n,m;
+				for (var j=0;j<datedesc.length;j++){
+					if (ev.target==datedesc[j]){
+						switch (j){
+							case 0:
+							n=1;
+							m=0;
+							break;
+							case 1:
+							n=3;
+							m=0;
+							break;
+							case 2:
+							n=6;
+							m=1;
+							break;
+							case 3:
+							n=12;
+							m=2;
+							break;
+							case 4:
+							n=24;
+							m=5;
+							break;
+						}
+						var str=n+"个月";
+						valueDate.innerHTML=str;
+						document.getElementById("freeDate").innerHTML=m+"个月";
+						document.getElementById("totalPay").innerHTML=((n-m)*Number(valuePay.innerHTML)).toFixed(2);
+						var root='{$_W['siteroot']}';
+						var buyuniacid=3;
+						
+						orderno=RandomS();
+						var surl=root+"app/index.php?i="+uniacid+"&c=entry&m=lexiangpingou&do=pay&ac=payfunction&id="+temId+"&num="+n+"&buyuniacid="+buyuniacid;
+						var  baseurl;
+						var data=new FormData();
+						data.append('id',temId);	
+						data.append('num',n);
+						data.append('orderno',orderno);	
+						data.append('uniacid',uniacid);	
+						var url="{php echo web_url('store/setting/qr');}";
+						var xhr=new XMLHttpRequest();
+						xhr.onreadystatechange=function(){
+							if (xhr.readyState==4){
+								if ((xhr.status>=200 && xhr.status<300)|| xhr.status==304){
+									
+									document.getElementById("cordvalue").src="{TG_URL}"+"data/qrcode/"+uniacid+"/"+orderno+".png";
+									
+								}
+							}
+						}
+						xhr.open("post",url,true);
+						xhr.send(data);
+						
+						
+					}
+				}
+				document.getElementById("saomaid").style.setProperty("display","block");
+				selectDate.classList.toggle("selectDateadd");
+				var buyFormdata=new FormData();
+	/*验证是否购买*/var buyUrl="{php echo web_url('service/order_service',array('op'=>'check'))}";
+					if (intervalEvent){
+						window.clearInterval(intervalEvent);
+					}							
+					intervalEvent=window.setInterval(function(){
+					
+						var requestXhr=new XMLHttpRequest();
+						requestXhr.onreadystatechange=function(){
+						if (requestXhr.readyState==4){
+							if ((requestXhr.status>=200 && requestXhr.status<300)||requestXhr.status==304){								
+								if (JSON.parse(requestXhr.responseText).errno==0){
+									util.tips(JSON.parse(requestXhr.responseText).message);
+									openDIV.classList.add("nactive");
+									window.clearInterval(intervalEvent); 
+									location.reload();
+								}
+							}else{
+								util.tips(requestXhr.status.toString());
+							}
+						}
+					}
+					requestXhr.open('post',buyUrl,true);
+					buyFormdata.append("orderno",orderno);
+					requestXhr.send(buyFormdata);
+				},1000);	
+			}
+		}
+if (document.getElementById("buyDaifu1")){
+		var buyDaifu1=document.getElementById("buyDaifu1");
+			buyDaifu1.onclick=function(ev){
+			if (openDIV.classList.contains("nactive")){
+					var cordvalue=document.getElementById("cordvalue");	
+				if ( document.querySelector('.price') ) {
+					valuePay.innerHTML=Number(document.querySelector('.price').innerHTML).toFixed(2);
+					}
+					document.getElementById("cordvalue").src=decodeURI(imgs[0]);
+					document.getElementById("buyfunctions").innerHTML = "购买功能";
+					valuePay.innerHTML=Number({$checkfunction['price']}).toFixed(2);
+					valueDate.innerHTML="请选择时长";
+					document.getElementById("template").innerHTML="秒显广告";
+					document.getElementById("totalPay").innerHTML="0.00";
+					document.getElementById("freeDate").innerHTML=0+"个月";
+					//document.getElementById("shaomaid").style.display="none";		
+					temId='{$tid}';
+					openDIV.classList.remove("nactive");			
+			}
+		}
+	}		
+		function RandomS(){
+			var now=new Date();
+			var year=now.getFullYear();
+			var month=now.getMonth()+1<10?0+""+(now.getMonth()+1):now.getMonth()+1;
+			var date=now.getDate()<10?0+""+now.getDate():now.getDate();
+			var time=now.getHours()<10?0+""+now.getHours():now.getHours();
+			var minutes=now.getMinutes()<10?0+""+now.getMinutes():now.getMinutes();
+			var seconds=now.getSeconds()<10?0+""+now.getSeconds():now.getSeconds();
+			var randoms=parseInt(Math.random()*9+1)+""+parseInt(Math.random()*9)+""+parseInt(Math.random()*9)+""+parseInt(Math.random()*9)+""+parseInt(Math.random()*9);
+			return month+""+date+""+time+""+minutes+""+seconds+""+randoms;
+		}
+		var uses=document.getElementsByClassName("use");
+		var names=document.getElementsByClassName("name");
+		var biaoqians=document.getElementsByClassName("biaoqian");
+		for (var i=0;i<uses.length;i++){
+			uses[i].onclick=function(ev){
+				for (var j=0;j<uses.length;j++){
+					if (ev.target==uses[j]){
+						if (!ev.target.classList.contains("set")){
+						ev.target.innerHTML="\<img class=\"imgset\" src=\"{TG_URL_WRES}images/1.svg\" width=\"37.5\" height=\"37.5\"\>";
+						document.querySelector(".set").innerHTML="启用";
+						document.querySelector(".set").style.cssText="font-size:21px;line-height:60px;background-color:#66ade9";
+						document.querySelector(".set").parentNode.querySelector('.biaoqian').innerHTML="已购买";
+						document.querySelector(".set").classList.remove('set');
+						ev.target.classList.add('set');
+						ev.target.style.cssText="";
+						biaoqians[j].innerHTML="使用中";
+						var data=new FormData();
+						var name=names[j].innerHTML;
+                            name = '';
+						var id=uses[j].id;
+						data.append('id',id);
+						data.append('name',name);
+						var url="{php echo web_url('store/setting/ajax');}";
+						var xhr=new XMLHttpRequest();
+						xhr.onreadystatechange=function(){
+							if (xhr.readyState==4){
+								if ((xhr.status>=200 && xhr.status<300)|| xhr.status==304){
+									util.tips(JSON.parse(xhr.responseText).message);
+								}
+							}
+						}
+						xhr.open("post",url,true);
+						xhr.send(data);
+						}
+					}
+				}
+			}
+		}
+	}
+	
+</script>
+<script>
+var buttons=document.getElementsByClassName("ss");
+for (var i=0;i<buttons.length;i++){
+	buttons[i].onclick=function(ev){
+		var modal=document.querySelector("#modal-module-menus2 h3");
+		modal.innerHTML=ev.target.innerHTML;
+		popwin = $('#modal-module-menus2').modal();
+	}
+}
+function show(){
+	var modal=document.querySelector("#modal-module-menus2 h3");
+		modal.innerHTML="选择门店";
+		popwin = $('#modal-module-menus2').modal();
+}
+$(function () {
+		window.optionchanged = false;
+		$('#myTab a').click(function (e) {
+			e.preventDefault();//阻止a链接的跳转行为
+			$(this).tab('show');//显示当前选中的链接及关联的content
+		})
+	});
+	var radios = document.querySelectorAll("input[name='deliverytype']");
+	var radioslen = radios.length;
+	var bytes = 0;
+	for (var i = 0; i < radioslen; i++)(function (i){
+		var num = parseInt(radios[i].value);
+		if (radios[i].checked) {
+			bytes = (bytes & 0) | (1 << num);
+		}
+		radios[i].addEventListener('click', function (ev){			
+			bytes = (bytes & 0) | (1 << num);
+		},false);
+	}(i));
+	var dispatchs = document.getElementById("dispatchs");
+	var salers = document.getElementById("saler");
+	function isFreight() {
+		var selectfreights = document.querySelectorAll("input[name='dispatchs[]']").length;
+		if (bytes == 2 || bytes == 4 || bytes == 16 ||bytes == 128) {
+			if (selectfreights > 0) {
+				return true;
+			}
+			else {
+				util.tips("未选择运费模板");
+				return false;
+			}
+		}
+		return true;
+	}	
+	function isBedelete() {
+		
+		var bedelete = document.querySelectorAll("input[name='storeids[]']").length;
+		if (bytes == 2 || bytes == 8 || bytes == 64 ||bytes == 128) {
+			if (bedelete > 0) {
+				return true;
+			}
+			else {
+				util.tips("未选择自提方式");
+				return false;
+			}
+		}
+		
+		return true;
+	}
+	var submit = document.getElementById("submit");
+	var replaceSubmit = document.getElementById("replaceSubmit");	
+	replaceSubmit.onclick = function (ev) {	
+		if (isBedelete() && isFreight()) {
+			var events = document.createEvent("MouseEvents");
+			events.initMouseEvent("click", true, true, document.defaultView, 0, 0, 0, 0, 0, false, false, false, false, 0, null);
+			submit.dispatchEvent(events);
+		}
+	}
+
+	function fansData() {
+		var checked = $('input[name=fans_data_apply]:checked').val();
+		if (checked == "1") {
+			$('#fansDataImg').show();
+		} else {
+			$('#fansDataImg').hide();
+		}
+	}
+
+	// 添加售后人员
+	function searchMembers() {
+	    if ($.trim($('#search-kwd2').val()) == '') {
+	        util.message('请选择输入查询人员昵称！');
+	        return false;
+	    }
+	    $("#serviceMan-body").html("正在搜索....")
+	    $.get("{php echo web_url('store/bdelete/display',array('op'=>'selectsaler'))}", {
+	        keyword: $.trim($('#search-kwd2').val())
+	    }, function(dat){
+	        $('#serviceMan-body').html(dat);
+	    })
+	}
+	function select_member(data) {
+		$("#openid").val(data.openid);
+		$("#serviceMan").val(data.nickname);
+		$('#modal-module-serviceMan').modal('hide');
+	}
+	function clearSale() {
+		$('input[name=service_nickname]').val('');
+		$('input[name=service_openid]').val('');
+	}
+	// 自提时间选择
+	function selfTime() {
+		var checked = $('input[name=is_self_time]:checked').val();
+		if (checked == "1") {
+			$('#selfTime').show();
+		} else {
+			$('#selfTime').hide();
+		}
+	}
+
+    function point_value() {
+        var checked = $('input[name=is_points]:checked').val();
+        if (checked == "1") {
+            $('#point_value').show();
+        } else {
+            $('#point_value').hide();
+        }
+    }
+</script>
+{php include wl_template('common/footer');}

@@ -1,0 +1,446 @@
+
+{php include wl_template('common/header');}
+{if $config['base']['meiqia']>0}
+<script type='text/javascript'>
+    (function(m, ei, q, i, a, j, s) {
+        m[a] = m[a] || function() {
+            (m[a].a = m[a].a || []).push(arguments)
+        };
+        j = ei.createElement(q),
+            s = ei.getElementsByTagName(q)[0];
+        j.async = true;
+        j.charset = 'UTF-8';
+        j.src = i + '?v=' + new Date().getUTCDate();
+        s.parentNode.insertBefore(j, s);
+    })(window, document, 'script', '//static.meiqia.com/dist/meiqia.js', '_MEIQIA');
+    _MEIQIA('entId', {$config['base']['meiqia']});
+	</script>
+	{/if}
+{if $miaoxianfunction['status']}
+<div id="link-logo" style="width:100%;height:100%;transition-property:height opacity;transition-duration:0.5s;background-color:white;transition-timing-function:ease-out;position:fixed;left:0px;top:0px;z-index:100008;display:none;color:white">
+	<img src="{if !empty($acct['homeimg'])}{php echo tomedia($acct['homeimg']);}{else}{TG_URL_ARES}images/sylg2.png{/if}" alt="首页logo" style="border:1px solid black;width:100%;height:100%;">
+  <div id="link-see" style="display:none;position:absolute;left:0;right:0;bottom:60px;margin:auto;width:100px;height:35px;background-color:#6fbfd8;border-radius:5px;line-height:35px;text-align:center;">进去看看</div>
+</div>	
+
+<script>
+if (! sessionStorage.getItem('miao')){
+  var linklogo = document.getElementById("link-logo");
+    linklogo.style.setProperty("display","block");
+	setTimeout( function () {
+			linklogo.style.setProperty("opacity","0");
+			setTimeout( function() {linklogo.style.setProperty("display","none");},500);
+			sessionStorage.setItem("miao","1");
+	},1500)
+}
+
+</script>	
+{/if}
+<style>
+	/*红色模板  图标颜色*/
+	{if $uniacid_tpl['tpl']==8203||$uniacid_tpl['tpl']==8204}
+	.fnZone i{
+		background: url(../../../../../../addons/lexiangpingou/app/resource/images/list/pinnew.png) no-repeat;;
+		background-size: 46px;
+	}
+	{/if}
+</style>
+<div class="page-group" style="">
+
+    <div class="page page-current" id="page-goods-list">
+		<div class="content infinite-scroll native-scroll" data-distance="10">
+		<div class="topbar"><h3 class="title">乐享拼购</h3><div class="barfn"><i class="refresh"></i><i class="share"></i></div></div>
+	    <!--<div class="address">
+	        <i class="pos"></i><span class="zone">全国发货</span><span class="zoneTip">（点击这里选择更多地区）</span><i class="arrow"></i>
+	    </div>-->
+	    {php include wl_template('common/followed');}
+	    <div class="banner" id="banner" style="visibility: visible;">
+	        <ul class="imgs">
+	        	{loop $advs $adv}
+	        	<li {if !empty($adv['link'])} onclick="document.location = '{$adv['link']}';"{else}#{/if}>
+	        		<img src="{php echo tomedia($adv['thumb'])}">
+	        	</li>
+	        	{/loop}
+	        </ul>
+	        <ul class="dotList" style="">
+	        	{php $slideNum = 1;} {loop $advs $adv}
+					<li{if $slideNum==1 } class="cur" {/if}></li>
+				{php $slideNum++;} {/loop}
+	        </ul>
+	    </div>
+	    <script>
+		    $(function() {
+		        new Swipe($('#banner')[0], {
+		            speed:500,
+		            auto:{$intervals},
+		            callback: function(){
+		                var lis = $(".dotList").children();
+		                lis.removeClass("cur").eq(this.index).addClass("cur");
+		            }
+		        });
+		    });
+		</script>
+	    {if $category}
+		<div class="j-rmd-types rmd-types">
+			{loop $category $itme}
+            <a href="{if !empty($itme['url'])}{$itme['url']}{else}{php echo app_url('goods/list/display', array('gid' => $itme['id']));}{/if}" onclick="sessionStorage.removeItem('position');" class="external">
+                <img src="{php echo tomedia($itme['thumb']);}" alt="">
+                <span>{$itme['name']}</span>
+            </a>
+			
+            {/loop}
+    	</div>
+    	{/if}
+	    <div class="appCode" style="display: none;">
+	        <div class="codeBox imgShow">
+	            <img src="" alt="">
+	        </div>
+	        <div class="codeBox codeRight">
+	          <p><i></i><span class="des"></span></p>
+	          <div class="inputZone">
+	                <div style="display: inline-block;float: left;width:70%;">
+	                    <input type="text" placeholder="" id="codeInput">  
+	                </div>
+	                <div style="display: inline-block;width:30%">
+	                    <span class="codeBtn">确认</span>
+	                </div>
+	          </div>
+	        </div>
+	    </div>
+			<!--公告-->
+			{php include wl_template('common/notes');}
+			<!--广告轮播-->
+			{php include wl_template('common/advs');}
+			<!--魔方-->
+			{php include wl_template('common/cube');}
+	    <div class="list" id="orderlist">
+	        <div class="listCon">
+	        <ul class="ul_1">
+	        </ul>
+	        </div>
+			<div class="loading_more" style="padding-top: 10px;display: none;font-size:1.2em;font-weight:bold;"><span class="loading"><i class="icon_load"></i>正在玩命的加载中......</span>
+			</div>
+			
+	        <div class="error">加载失败，点击重新加载</div>
+			
+	        <div class="noData" style="font-size:1.0em;color:#c3c3c3;">
+			全部数据加载完毕
+		{if !$banquanfunction['status']}	<div><a href="http://www.lexiangpingou.cn"><img src="{TG_URL_ARES}images/bbb.png" width="40%"></a><div>火蝶科技技术热线:400-626-1079</div></div>{/if}
+			</div>
+			
+	    </div>
+	    <div class="mask"></div>
+	    
+		
+		</div>
+
+		{php include wl_template('common/footerbar');}
+	</div>
+	
+</div>
+
+<div id="gotop" style="display:none;position:fixed;right:10px;bottom:60px;width:45px;height:45px;border-radius:50%;z-index:10086;background-color:c3c3c3;">
+  <img src="{TG_URL_ARES}images/gotop.png" width="45px" height="45px">
+</div>
+<div id="animationS" onclick="$(this).fadeOut()" style="display:none;background-color:hsl(240, 19%, 95%);width:100%;height:100%;left:0px;bottom:0px;position:fixed;
+z-index:10000000">
+<img src="{if !empty($acct['homeimg'])}{php echo tomedia($acct['homeimg']);}{else}{/if}" style="width:100%;height:100%;">
+<div class="preloader-indicator-modal" style="position:fixed;left:0px;right:0px;bottom:50px;margin:auto;width:84px;height:84px;" >
+	<span class="preloader preloader-white"></span>
+</div>
+</div>
+<script type="text/html" id="goodslist">
+{{# for(var i = 0, len = d.list.length; i < len; i++){ }}
+<li class="gli" style="position:relative;">
+	<a href="{{ d.list[i].a }}" class="external externals" id="{{ d.list[i].id }}" onclick="sesso(this)" >
+		<img class="noneimg" src="{TG_URL_ARES}images/none.png" alt="" style="display: none;position:absolute;width:100px;z-index: 2;left: calc(50% - 50px);top: 50px;">
+		<div class="img"><img src="{{ d.list[i].gimg }}" alt="" style="opacity: 1;"><div class="icon_position">{if $config['base']['iszhe']==0}<div class="discount"><span>{{ Math.round((d.list[i].gprice/d.list[i].mprice)*10) }}折<br>{{ d.list[i].groupnum }}人团</span></div>{/if}
+		{{# if(d.list[i].goodstab != null && typeof(d.list[i].goodstab.length) != "undefined" && d.list[i].goodstab){ }}
+		<!--<div class="pricedown">{{ d.list[i].goodstab }}</div>-->
+		{{# } }}
+		</div>
+		{{# var lenn = d.list[i].params.length; if(lenn >= 3){ }}
+		<ul class="desPos">
+			<li class="firstLine " expos="0">{{ d.list[i].params[0].value }}</li>
+			<li class="" expos="0">{{ d.list[i].params[1].value }}</li>
+			<li class="lastLine" expos="0">{{ d.list[i].params[2].value }}</li>
+		</ul>
+		{{# } }}
+		</div>
+		<div class="txt"><h5>{{ d.list[i].gname }}</h5><p>	{{# if(d.list[i].indexdesc != null ){ }}{{ d.list[i].indexdesc }}{{# } }}</p></div>
+		<div class="fnWrap" ><div class="fnZone" style="margin-left:18px;background-color:{$_W['system_color']};color:white;width: 275px"><i></i><span><b class="price">{{# if( d.list[i].selltype==1||d.list[i].selltype==2||d.list[i].selltype==4||d.list[i].selltype==5||d.list[i].selltype==6){ }}￥{{ d.list[i].gprice }}{{# } }}{{# if( d.list[i].selltype==0||d.list[i].selltype==3||d.list[i].selltype==7||d.list[i].selltype==10){ }}￥{{ d.list[i].oprice }}{{# } }}/{{ d.list[i].unit }}</b><b class="people" style="{{# if(d.list[i].selltype==7||d.list[i].selltype==10){ }}display:none{{# } }}">{{ d.list[i].groupnum }}人团</b></span>
+		
+		<span class="btn" style="background-color:{$_W['system_color']};color:white;padding:0 20px 0 0px;">
+		<span style="height:20px;border-left:1px solid white;margin-top:5px;margin-bottom:5px;padding-right:15px;"></span>
+		<span class="isshow" style="display:none;">{{ d.list[i].isshow }}</span>
+		<span class="isupjia" style="display:none;">{{ d.list[i].isupjia }}</span>
+		<span class="typenotice">
+
+            <!--不同模式文字   单买，随意团 -->
+		{php include wl_template('common/selltype');}
+
+		</span>
+		</span>
+		</div>
+		</div>
+		<div class="kucun" style="display:none;">{{ d.list[i].gnum }}</div>
+	</a>
+	<span class="noticeup" onclick="notice(this)" style="position:absolute;background-color:rgba(0,0,0,0);left:200px;bottom:10px;width:100px;height:40px;display:none;"></span>
+</li>
+
+{{# } }}
+</script>
+<script>
+	console.log('拼团 list1');
+	var content = document.getElementsByClassName("content")[0];
+	content.addEventListener("touchmove", function (ev) {
+		ev.stopImmediatePropagation();
+	}, false);
+	content.addEventListener("touchstart", function (ev) {
+		ev.stopImmediatePropagation();
+	}, false);
+	content.addEventListener("touchend", function (ev) {
+		ev.stopImmediatePropagation();
+	}, false);
+	var urlNotice = "{php echo app_url('goods/list/notice')}";
+	var urlNoticeRemove = "{php echo app_url('goods/list/noticeremove')}";
+	var noticeups = document.getElementsByClassName("noticeup");
+	var User = JSON.parse(localStorage.getItem("user"))|| {};
+	function notice(ev) {
+		var id = ev.parentNode.getElementsByTagName("a")[0].id;
+		var typeNotice = ev.parentNode.getElementsByClassName("typenotice")[0];
+		if (typeNotice.textContent == "上架通知" && confirm("该商品已售罄，确认开启该商品的上架通知么")) {
+			postAjax(id, urlNoticeRemove);
+			typeNotice.textContent = "等待通知";
+			User[id] = "1";
+			localStorage.setItem("user",JSON.stringify(User));
+		}
+		else if (typeNotice.textContent == "等待通知" && confirm("该商品已售罄，确认取消该商品的上架通知么")) {
+			postAjax(id, urlNotice);
+			typeNotice.textContent = "上架通知";
+			delete User[id];
+			localStorage.setItem("user",JSON.stringify(User));
+		}
+	}
+	function setSealout() {
+		var typeNotices = document.getElementsByClassName("typenotice");
+		var noneimg = document.getElementsByClassName("noneimg");
+		var kuncuns = document.getElementsByClassName("kucun");
+		var ids = document.getElementsByClassName("externals");
+		var noticeups = document.getElementsByClassName("noticeup");
+		var isshow = document.getElementsByClassName("isshow");
+		var isupjia = document.getElementsByClassName("isupjia");
+		for (var i = 0; i < typeNotices.length; i++) {
+			if (Number(kuncuns[i].textContent) < 1 || Number(isshow[i].textContent) == 3){
+			  if (Number(isupjia[i].textContent) == 1){
+				noticeups[i].style.setProperty("display", "block");
+				if (User[ids[i].id]){
+					typeNotices[i].textContent = '等待通知';
+				}
+				else{				
+					typeNotices[i].textContent = '上架通知';
+				}	
+			  }
+			  else {
+				typeNotices[i].textContent = '已售罄';
+				noneimg[i].style.display = 'block';
+			  }
+			}
+			
+		}
+		
+	}
+	function postAjax(id, url, weight, str){
+		var formData = new FormData();
+			formData.append('id', id);
+			if (weight !== undefined){
+			  formData.append("weight",weight);
+			}
+			else {
+				formData.append("type",1);
+			}
+			if (str !==undefined){
+			  formData.append("str",str);
+			}
+			var xhr = new XMLHttpRequest();
+			xhr.open('post', url, true);
+			xhr.send(formData);
+			console.log(id + ' ' + weight + ' ' + str);
+			xhr.onreadystatechange = function() {
+				if (xhr.readyState ==4) {
+				  if ((xhr.status >=200 && xhr.status<300) || xhr.status ==304){
+					 isPost = true;
+				     console.log(xhr.responseText);
+					 return !!xhr.responseText;					 
+				  }
+				  else {
+					isPost = true;
+					console.log("cuowu");
+				  }
+				}
+			}
+	}
+	var gotop = document.getElementById("gotop");
+	var orderlist = document.getElementById("orderlist");
+	gotop.onclick = function ( ev ) {
+		document.getElementById("banner").scrollIntoView();		
+	}
+	var sesso;
+	$(function() {
+		'use strict';
+		//商品列表页
+		$(document).on("pageInit", "#page-goods-list", function(e, id, page) {
+			var loading = false;
+			var thispagesize = 4;
+			var thispagesizemax = 100;
+			var thispage = 1;
+
+			function addItems(thispage, thispagesize) {
+				var ajaxurl = "{php echo app_url('goods/list/ajax',array('cid' => $cid))}" + "&page=" + thispage + "&pagesize=" + thispagesize;
+				$.ajax({
+					type: "POST",
+					url: ajaxurl,
+					dataType: 'json',
+					beforeSend: function(XMLHttpRequest) {},
+					success: function(data) {
+						thispagesizemax = data.total;
+						if (data.list.length > 0) {
+							var gettpl = document.getElementById('goodslist').innerHTML;
+							laytpl(gettpl).render(data, function(html){
+							    $(".ul_1").append(html);
+							});
+						} else {
+							$(".loading_more").remove();
+							$('.noData').show();
+						}
+						setSealout();
+					},
+					error: function() {
+						$('.error').show();
+					}
+				});
+			}
+			addItems(thispage, thispagesize);
+			$(page).on('infinite', function() {
+				if (loading) return;
+				loading = true;
+				$(".loading_more").show();
+				if (orderlist.getBoundingClientRect().top < -500){
+					gotop.style.setProperty("display", "block");					
+				} 
+				else {
+					gotop.style.setProperty("display", "none");
+				}
+				setTimeout(function() {
+					loading = false;
+					thispage++;
+					addItems(thispage, thispagesize);
+//					$(".loading_more").hide();
+					$.refreshScroller();
+				}, 200);
+			});
+			sesso=function sessionProcess(elem) {
+				//sessionStorage.removeItem("miao");
+				var externals = document.getElementsByClassName("externals");
+				var len = externals.length;
+				for ( var i = 0; i < len; i++ ) {
+				  if ( elem === externals[i] ) {
+					var classclassname = elem.className.slice(9);
+					sessionStorage.setItem("position",classclassname+i.toString());
+				  }
+				}
+				
+			}
+			if (sessionStorage.getItem("position") !== null){
+				document.getElementById("animationS").style.setProperty("display","block");
+				setTimeout(function() {
+					  var classname = sessionStorage.getItem("position").slice(-1*sessionStorage.getItem("position").length,-1*sessionStorage.getItem("position").length+9);
+					  var index = parseInt(sessionStorage.getItem("position").slice(-1*sessionStorage.getItem("position").length+9));
+					  var i = index;
+					  var n = ( i /4 +2 )* 500;
+					  setTimeout(function(){
+						loadData(i);
+						  setTimeout(function(){
+							document.getElementsByClassName(classname)[index].scrollIntoView();
+
+							setTimeout(function(){
+								document.getElementById("animationS").style.setProperty("display","none");
+							},0)
+						  },0)
+					  },0)
+				},0);
+			}
+			function loadData(i) {
+				if (i<3) return;
+				thispage++;
+				addItems(thispage,thispagesize);
+				setTimeout(function(){
+					loadData(i-4);
+				},200)
+				
+			}
+		});
+		$.init();
+		
+	});
+	
+	/*function sessionProcess(elem) {
+	  sessionStorage.removeItem(sessionStorage.key(3));
+	  sessionStorage.setItem(elem.id,"1");
+	}
+	setTimeout(function() {
+	  var id = sessionStorage.key(3);
+	  if (id.indexOf("li")>0){
+	    document.getElementById(id).scrollIntoView();
+	  }	  
+	},500);*/
+
+
+setTimeout(function(){
+    $('#animationS').fadeOut();
+},1500)
+
+</script>
+<!--
+<script type="text/javascript">
+
+			wx.ready(function(){
+
+
+				mineLocation();
+			});
+			var mineLocation=function(){
+				// 定位
+
+				wx.getLocation({
+
+					success: function (res) {
+					
+						var ajaxurl = "{php echo app_url('goods/list/location')}" + "&latitude=" + res.latitude + "&longitude=" + res.longitude;
+						$.ajax({
+							type: "POST",
+							url: ajaxurl,
+							dataType: 'json',
+							beforeSend: function(XMLHttpRequest) {},
+							success: function(data) {
+								alert(data.city);
+								alert(data.province);
+								alert(data.district);
+							},
+							error: function() {
+								
+							}
+						});
+						
+
+					}
+
+					
+
+					
+
+				});
+
+			};
+			</script>-->
+{php include wl_template('common/footer');}
+	

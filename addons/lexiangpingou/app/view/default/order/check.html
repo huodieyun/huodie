@@ -1,0 +1,279 @@
+{php include wl_template('common/header');}
+<style>
+    #actualAdress {
+        border:1px solid #ddd;padding:0 5px;border-radius:5px;
+    }
+    .select_store {
+        box-sizing: border-box;
+        padding: 0 15px;
+        background: #fff;
+        text-align: left;
+        line-height: 50px;
+    }
+    .select_store .refund{
+        text-align: left;
+        line-height: 20px;
+    }
+    .select_store .refund>input {
+        vertical-align: top;
+        margin-right: 5px;
+    }
+</style>
+<div class="page-group">
+    <div class="page page-current" id="page-order-check">
+    	<div class="content infinite-scroll" >
+            {if $is_hexiao_member && $order['status'] != 2 && $order['status'] != 8 && $order['status'] != 3 && $result != 'success'}
+            <div class="msg">
+                <div class="weui_msg">
+                    <div class="weui_icon_area"><i class="weui_icon_warn weui_icon_msg"></i></div>
+                    <div class="weui_text_area">
+                        {if $order['status'] == 1}
+                        <h2 class="weui_msg_title">非常抱歉！此订单所属团还未成功</h2>
+                        {else}
+                        <h2 class="weui_msg_title">非常抱歉！此订单已核销/退款</h2>
+                        {/if}
+                        <p class="weui_msg_desc">点击确定，可返回微信</p>
+                    </div>
+                    <div class="weui_opr_area">
+                        <p class="weui_btn_area">
+                            <a id="closewindow" class="weui_btn weui_btn_primary">确定</a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+            {else}
+                {if $is_hexiao_member}
+                    {if $result=='success'}
+                    <div class="msg">
+                    <div class="weui_msg">
+                        <div class="weui_icon_area"><i class="weui_icon_success weui_icon_msg"></i></div>
+                        <div class="weui_text_area">
+                            <h2 class="weui_msg_title">{if $order['status'] != 3 && $order['is_once_card'] == 0}退款{else}核销{/if}成功</h2>
+                            <p class="weui_msg_desc">点击确定，可返回微信</p>
+                        </div>
+                        <div class="weui_opr_area">
+                            <p class="weui_btn_area">
+                                <a id="closewindow" class="weui_btn weui_btn_primary">确定</a>
+                            </p>
+                        </div>
+                    </div>
+                    </div>
+                    {else if $kaiguan['hexiaotuikuan'] != 1 && $order['status'] == 3}
+                    <div class="msg">
+                        <div class="weui_msg">
+                            <div class="weui_icon_area"><i class="weui_icon_warn weui_icon_msg"></i></div>
+                            <div class="weui_text_area">
+                                <h2 class="weui_msg_title">非常抱歉！此订单已核销</h2>
+                                <p class="weui_msg_desc">点击确定，可返回微信</p>
+                            </div>
+                            <div class="weui_opr_area">
+                                <p class="weui_btn_area">
+                                    <a id="closewindow" class="weui_btn weui_btn_primary">确定</a>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    {elseif count($orders) > 1&&$order['status'] == 3}
+                    <div class="msg">
+                        <div class="weui_msg">
+                            <div class="weui_icon_area"><i class="weui_icon_warn weui_icon_msg"></i></div>
+                            <div class="weui_text_area">
+                                <h2 class="weui_msg_title">非常抱歉！自提合并订单不支持合并退款</h2>
+                                <p class="weui_msg_desc">点击确定，可返回微信</p>
+                            </div>
+                            <div class="weui_opr_area">
+                                <p class="weui_btn_area">
+                                    <a id="closewindow" class="weui_btn weui_btn_primary">确定</a>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    {else}
+                    <div class="list-block cards-list" style="margin: 0;">
+                    <div class="select_store">
+                        {if $order['status'] == 8 || ($order['status'] == 1 && $order['selltype'] == 7)}
+                            <label>实际提货点：</label>
+                            <select id= "actualAdress" name="actualAdress" style="display: inline;width: auto;height: 28px; line-height: 28px;" >
+                                <option value="">请点击选择核销门店</option>
+                                {loop $stores $item}
+                                <option value="{$item['id']}">{$item['storename']}</option>
+                                {/loop}
+                            </select>
+                        {elseif $order['status'] == 3}
+                            <label>实际退货点：</label>
+                            <select id= "actualAdress" name="actualAdress" style="display: inline;width: auto;height: 28px; line-height: 28px;" >
+                                <option value="">请点击选择退货门店</option>
+                                {loop $stores $item}
+                                <option value="{$item['id']}">{$item['storename']}</option>
+                                {/loop}
+                            </select>
+                            {if $order['selltype'] != 7}
+                                <p class="refund">
+                                    <input type="radio" class="weui-check s11" name="type" value="0" onclick="$('.price').show()" checked="checked">部分退款
+                                    <input type="radio" class="weui-check s11" name="type" value="1" onclick="$('.price').hide()">全额退款
+                                </p>
+                                <p class="price">
+                                    <label>退款金额</label>
+                                    <input type="text" maxlength="11" id="price" name="price" placeholder="请点击输入退款金额" style="width:70%; display:inline-block;" value="" />
+                                </p>
+                            {else}
+                                <p class="refund">
+                                    <!--<input type="radio" class="weui-check" name="type" value="0" class="s11" onclick="$('.price').show()" checked="checked">部分退款-->
+                                    <input type="radio" class="weui-check s11" name="type" value="1" onclick="$('.price').hide()">全额退款
+                                    <input type="radio" class="weui-check s11" name="type" value="2" onclick="$('.price').hide()">只退定金
+                                    {if $order['bukuanstatus'] == 2}
+                                    <input type="radio" class="weui-check s11" name="type" value="3" onclick="$('.price').hide()">只退补款
+                                    {/if}
+                                </p>
+                            {/if}
+                        {/if}
+                    </div>
+                      <ul>
+                        {loop $orders $order}
+                        <li class="card" style="border-radius: .2rem;">
+                          <div class="card-header"><h3 class="font-size-14">{if $order['dispatchtype'] == 1}送货上门{elseif $order['status'] == 8}到店自提{elseif $order['status'] == 3}到店退货{/if}核销凭证</h3></div>
+                          <div class="card-content">
+                            <div class="card-content-inner">
+
+                                {if $order['dispatchtype'] == 1}
+                                <div class="voucher-address font-size-14" style="margin-top:-10px;">
+                                    <p>订单号：{$order['orderno']}</p>
+                                    <p>团长：{if $order['tuan_first']==1}是{else}否{/if}</p>
+                                    <p>收货人：{$order['addname']}&nbsp; {$order['mobile']}</p>
+                                    <label>实际收货人：</label>
+                                    <select id="actualAdress" name="actualAdress" style="display: inline;width: auto;height: 28px;" >
+                                        <option value="">请点击选择实际收货人</option>
+                                        <option value="1">本人签收</option>
+                                        <option value="2">朋友代收</option>
+                                    </select>
+                                    <p>派送员：{$store['nickname']}</p>
+                                    <p>实际派送员：{$hexiao_member['nickname']}</p>
+                                </div>
+                                {elseif $order['status'] == 8 || ($order['status'] == 1 && $order['selltype'] == 7)}
+                                <div class="voucher-address font-size-14" style="margin-top:-10px;">
+                                    <p>订单号：{$order['orderno']}</p>
+                                    <p>团长：{if $order['tuan_first']==1}是{else}否{/if}</p>
+                                    <p>提货人：{$order['addname']}&nbsp; {$order['mobile']}</p>
+                                    <p>提货点：{$order['store']['storename']}</p>
+                                </div>
+                                {elseif $order['status'] == 3}
+                                <div class="voucher-address font-size-14" style="margin-top:-10px;">
+                                    <input id="retreat" type="hidden" name="retreat" value="1" />
+                                    <p>订单号：{$order['orderno']}</p>
+                                    <p>团长：{if $order['tuan_first']==1}是{else}否{/if}</p>
+                                    <p>退货人：{$order['addname']}&nbsp; {$order['mobile']}</p>
+                                    <p>核销员：{$hexiao_member['nickname']}</p>
+                                    <!--<p class="price">-->
+                                        <!--<label>退款金额</label>-->
+                                        <!--<input type="text" maxlength="11" id="price" name="price" placeholder="请点击输入退款金额" style="width:70%; display:inline-block;" value="" />-->
+                                    <!--</p>-->
+                                </div>
+                                {/if}
+                                <div class="voucher-goods-info font-size-14">
+
+                                    {loop $order['goods'] $vv}
+                                        <p>商品名称：{$vv['gname']} </p>
+                                        {if !empty($vv['item'])}<p>商品规格：{$vv['item']} </p>{/if}
+                                        <p>数量：{$vv['gnum']}</p>
+                                        <p>商品金额：{php echo sprintf("%.2f" , $vv['oprice'])}元</p>
+                                    {/loop}
+                                    <p>实付金额：{php echo sprintf("%.2f" , $order['price'])}元</p>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                        {/loop}
+                      </ul>
+                    </div>
+                    <div class="weui_btn_area">
+                        {if $order['status'] == 3 && $order['dispatchtype'] == 3}
+                        <a id="conbdel"  class="weui_btn weui_btn_warn">确认退款</a>
+                        {else}
+                        <a id="conbdel"  class="weui_btn weui_btn_primary">确认{if $order['selltype']==7 && $order['status'] != 3}收款{/if}核销</a>
+                        {/if}
+                        <a id="closewindow" class="weui_btn weui_btn_default">返回微信</a>
+                    </div>
+                    {/if}
+                {else}
+                <div class="msg">
+                <div class="weui_msg">
+                    <div class="weui_icon_area"><i class="weui_icon_msg weui_icon_warn"></i></div>
+                    <div class="weui_text_area">
+                        <h2 class="weui_msg_title">非核销人员</h2>
+                        <p class="weui_msg_desc">点击确定，可返回微信</p>
+                    </div>
+                    <div class="weui_opr_area">
+                        <p class="weui_btn_area">
+                            <a id="closewindow" class="weui_btn weui_btn_primary">确定</a>
+                        </p>
+                    </div>
+                </div>
+                </div>
+                {/if}
+            {/if}
+    	</div>
+	</div>
+</div>
+<script>
+	$(document).on('click','#conbdel',function(){
+        var retreat = 0;
+        var type = 0;
+        var price = 0;
+	    {if $order['dispatchtype'] == 3 && $order['status'] == 3}
+            retreat = document.getElementById("retreat").value;
+            type = $('.s11:checked').val();
+        {if $order['selltype'] != 7}
+        price = document.getElementById("price").value;
+        {/if}
+            if (!type) {
+                $.toast("未选择退款模式");
+                return;
+            }
+            if (type == 0) {
+                if (!price) {
+                    $.toast("未填写实际退款金额");
+                    return;
+                } else if (Number(price) > {$order['price']}) {
+                    $.toast("退款金额大于实际可退款金额");
+                    return;
+                }
+            }
+        {/if}
+		var id = document.getElementById("actualAdress").value;
+		if (id == '') {
+            {if $order['dispatchtype'] == 1}
+            $.toast("未选择实际收货人");
+            {else}
+			$.toast("未选择实际门店地址");
+            {/if}
+			return;
+		}
+            var tip = '此操作不可恢复，确认核销？';
+            {if $order['status'] == 3 && $order['dispatchtype'] == 3}
+            tip = '此操作不可恢复，确认退款？'
+            {/if}
+		$.confirm(tip,
+	        function () {
+				var commUrl=location.href.split('lexiangpingou&')[0];
+//	          	$.post("{php echo app_url('order/check',array('mid' => $orderno))}",{id:id},function(d){
+                $.post(commUrl+"lexiangpingou&do=order&ac=check&mid="+"{$_GPC['mid']}",{id:id,retreat:retreat,type:type,price:price},function(d){
+
+                    if(d.status == 1){
+//						location.href = "{php echo app_url('order/check',array('mid' => $orderno,'result' => 'success'))}";
+                        location.href = commUrl+"lexiangpingou&do=order&ac=check&mid="+"{$_GPC['mid']}"+'&result=success';
+					}else{
+						$.toast(d.result);
+					}
+				},"json");
+	        }
+	    );
+	});
+
+	wx.ready(function(){
+		$('#closewindow').click(function(){
+			wx.closeWindow();
+		});
+	});
+</script>
+{php include wl_template('common/footer');}

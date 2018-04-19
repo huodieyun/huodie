@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="WebServers">
+    <option name="servers">
+      <webServer id="f198232b-011b-4d81-b379-5bbad7319e03" name="正式站" url="http://101.37.193.222">
+        <fileTransfer host="101.37.193.222" port="22" privateKey="D:\huodie1802.ppk" rootFolder="/home/wwwroot/lnmp/domain/huodie/web" accessType="SFTP" username="root" keyPair="true">
+          <advancedOptions>
+            <advancedOptions dataProtectionLevel="Private" />
+          </advancedOptions>
+        </fileTransfer>
+      </webServer>
+      <webServer id="e71017aa-80cf-4ea0-8fb5-a159f845bf53" name="预约正式站" url="http://101.37.193.222">
+        <fileTransfer host="101.37.193.222" port="22" privateKey="D:\huodie1802.ppk" rootFolder="/home/wwwroot/lnmp/domain/www.huodiesoft.com/web" accessType="SFTP" username="root" keyPair="true">
+          <advancedOptions>
+            <advancedOptions dataProtectionLevel="Private" />
+          </advancedOptions>
+        </fileTransfer>
+      </webServer>
+      <webServer id="24e1f11d-bac3-4387-95fb-7ce2f6616629" name="测试站" url="http://101.37.133.141">
+        <fileTransfer host="101.37.133.141" port="22" privateKey="D:\huodie2018.ppk" rootFolder="/home/wwwroot/lnmp5.4/domain/huodietest/web" accessType="SFTP" username="root" keyPair="true">
+          <advancedOptions>
+            <advancedOptions dataProtectionLevel="Private" />
+          </advancedOptions>
+        </fileTransfer>
+      </webServer>
+    </option>
+  </component>
+</project>

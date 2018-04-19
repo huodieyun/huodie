@@ -1,0 +1,466 @@
+{php $newUI = true;}
+{php include wl_template('common/header');}
+<script type="text/javascript">
+	function tokenGen() {
+		var letters = 'abcdefghijklmnopqrstuvwxyz0123456789';
+		var token = '';
+		for(var i = 0; i < 32; i++) {
+			var j = parseInt(Math.random() * (31 + 1));
+			token += letters[j];
+		}
+		$(':text[name="wechat[apikey]"]').val(token);
+	}
+	require(['angular'], function(angular){
+		angular.module('app', []).controller('paySetting', function($scope){
+			$scope.delivery = {
+				switch: {if $pay['delivery']['switch']}'true'{else}'false'{/if}
+			};
+			$scope.credit = {
+				switch: {if $pay['credit']['switch']}'true'{else}'false'{/if}
+			};
+			$scope.card = {
+				switch: {if empty($pay['card']['switch'])}'1'{else}{$pay['card']['switch']}{/if}
+			};
+			$scope.alipay = {
+				switch: {if $pay['alipay']['switch']}'true'{else}'false'{/if}
+			};
+			$scope.unionpay = {
+				switch: {if $pay['unionpay']['switch']}'true'{else}'false'{/if}
+			};
+			$scope.baifubao = {
+				switch: {if $pay['baifubao']['switch']}'true'{else}'false'{/if}
+			};
+			$scope.line = {
+				switch: {if $pay['line']['switch']}'true'{else}'false'{/if}
+			};
+			{if !empty($accounts)}
+			$scope.wechat = {
+				switch: {if $pay['wechat']['switch']}'true'{else}'false'{/if},
+				account: '{$pay['wechat']['account']}'
+			};
+			{/if}
+		});
+		angular.bootstrap(document, ['app']);
+		//支付宝和微信支付开启验证
+		$("#payform").submit(function(){
+			var $scope = angular.element('#payform').scope();
+			if($scope.alipay.switch == 'true') {
+				if($.trim($(':text[name="alipay[account]"]').val()) == '') {
+					util.message('必须输入收款支付宝账号.', '', 'error');
+					return false;
+				}
+				if($.trim($(':text[name="alipay[partner]"]').val()) == '') {
+					util.message('必须输入合作者身份.', '', 'error');
+					return false;
+				}
+				if($.trim($(':text[name="alipay[secret]"]').val()) == '') {
+					util.message('必须输入收款支付宝校验密钥.', '', 'error');
+					return false;
+				}
+			}
+			$(':hidden[name="alipay[t]"]').val('');
+			if($(':radio[name="wechat[switch]"]:checked').val() == 'true') {
+				if($scope.wechat.account.key == '') {
+					util.message('必须输入身份标识.', '', 'error');
+					return false;
+				}
+				if($scope.wechat.account.token == '') {
+					util.message('必须输入身份密钥.', '', 'error');
+					return false;
+				}
+				if($(':radio[name="wechat[version]"]:checked').val() == '1' && $.trim($(':text[name="wechat[signkey]"]').val()) == '') {
+					util.message('必须输入通信密钥.', '', 'error');
+					return false;
+				}
+				if($(':radio[name="wechat[version]"]:checked').val() == '1' && $.trim($(':text[name="wechat[partner]"]').val()) == '') {
+					util.message('必须输入商户身份.', '', 'error');
+					return false;
+				}
+				if($(':radio[name="wechat[version]"]:checked').val() == '1' && $.trim($(':text[name="wechat[key]"]').val()) == '') {
+					util.message('必须输入商户密钥.', '', 'error');
+					return false;
+				}
+
+				if($(':radio[name="wechat[version]"]:checked').val() == '2' && $.trim($(':text[name="wechat[mchid]"]').val()) == '') {
+					util.message('必须输入微信支付商户号.', '', 'error');
+					return false;
+				}
+				if($(':radio[name="wechat[version]"]:checked').val() == '2' && $.trim($(':text[name="wechat[apikey]"]').val()) == '') {
+					util.message('必须输入商户支付密钥.', '', 'error');
+					return false;
+				}
+			}
+		});
+		
+		//支付宝测试
+		$("#tPost").click(function(){
+			var $scope = angular.element('#payform').scope();
+			if($scope.alipay.switch == 'true') {
+				if($.trim($(':text[name="alipay[account]"]').val()) == '') {
+					util.message('必须输入收款支付宝账号.', '', 'error');
+					return false;
+				}
+				if($.trim($(':text[name="alipay[partner]"]').val()) == '') {
+					util.message('必须输入合作者身份.', '', 'error');
+					return false;
+				}
+				if($.trim($(':text[name="alipay[secret]"]').val()) == '') {
+					util.message('必须输入收款支付宝账号.', '', 'error');
+					return false;
+				}
+				if(confirm('你可能需要修改您的浏览器 User-Agent 来模拟手机浏览才能正常测试, 请确认已经修改好.')) {
+					$(':hidden[name="alipay[t]"]').val('true');
+					$('#payform')[0].submit();
+				}
+			}
+		});
+
+		$('#recharge-add').click(function(){
+			var html ='<div class="form-group item">' +
+						'<label class="col-xs-12 col-sm-3 col-md-2 control-label">充值返现</label>' +
+						'<div class="col-sm-4">' +
+							'<div class="input-group">' +
+								'<span class="input-group-addon">充</span>' +
+								'<input type="text" name="recharge[]" value="" class="form-control">' +
+								'<span class="input-group-addon">元</span>' +
+								'<span class="input-group-addon">返</span>' +
+								'<input type="text" name="back[]" value="" class="form-control">' +
+								'<span class="input-group-addon">元</span>' +
+							'</div>' +
+						'</div>' +
+						'<div class="col-sm-1" style="margin-top:5px">' +
+							'<a href="javascript:;" class="recharge-del"><i class="fa fa-times-circle"></i> </a>' +
+						'</div>' +
+					'</div>';
+			if($('#recharge .item').size() >= 4) {
+				util.message('最多可添加4个充值返余额', '', 'error');
+				return false;
+			}
+			$('#recharge').append(html);
+		});
+
+		$('.recharge-del').click(function(){
+			$(this).parent().parent().remove();
+			return false;
+		});
+	});
+</script>
+<ul class="nav nav-tabs">
+	<li {if $op == 'payment'}class="active"{/if}><a href="{php echo web_url('gzhset/payment', array('op' => 'payment'))}">设置微信支付开关</a></li>
+	<li {if $op == 'apppayment'}class="active"{/if}><a href="{php echo web_url('gzhset/payment', array('op' => 'apppayment'))}">设置APP微信支付</a></li>
+	<li class="ex-button"><a class="ex-b-lastA" target="_blank" href="https://doc.lexiangpingou.cn/paySetting.html">图文说明</a></li>
+</ul>
+
+<div class="main">
+	<form id="payform" action="{php echo web_url('gzhset/payment')}" enctype="multipart/form-data" method="post" class="form-horizontal form" onsubmit="return validate();" ng-controller="paySetting">
+		<!--<div class="panel panel-default">
+			<div class="panel-heading">
+				设置货到支付开关
+			</div>
+			<div class="panel-body">
+				<div class="form-group">
+					<label class="col-xs-12 col-sm-3 col-md-2 control-label">货到支付</label>
+					<div class="col-sm-8 col-xs-12">
+						<label class="radio-inline">
+							<input type="radio" name="delivery[switch]" ng-model="delivery.switch" value="true"/>
+							开启
+						</label>
+						<label class="radio-inline">
+							<input type="radio" name="delivery[switch]" ng-model="delivery.switch" value="false"/>
+							关闭
+						</label>
+						<span class="help-block">是否支持货到付款</span>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				设置余额支付开关
+			</div>
+			<div class="panel-body">
+				<div class="form-group">
+					<label class="col-xs-12 col-sm-3 col-md-2 control-label">余额支付</label>
+					<div class="col-sm-8 col-xs-12">
+						<label class="radio-inline">
+							<input type="radio" name="credit[switch]" ng-model="credit.switch" value="true"/>
+							开启
+						</label>
+						<label class="radio-inline">
+							<input type="radio" name="credit[switch]" ng-model="credit.switch" value="false"/>
+							关闭
+						</label>
+						<span class="help-block">是否使用粉丝中心的余额直接支付</span>
+					</div>
+				</div>
+				<div id="recharge">
+					{if !empty($recharge)}
+						{loop $recharge $item}
+							<div class="form-group item">
+								<label class="col-xs-12 col-sm-3 col-md-2 control-label">充值返现</label>
+								<div class="col-sm-4">
+									<div class="input-group">
+										<span class="input-group-addon">充</span>
+										<input type="text" name="recharge[]" value="{$item['recharge']}" class="form-control">
+										<span class="input-group-addon">元</span>
+										<span class="input-group-addon">返</span>
+										<input type="text" name="back[]" value="{$item['back']}" class="form-control">
+										<span class="input-group-addon">元</span>
+									</div>
+								</div>
+								<div class="col-sm-1" style="margin-top:5px">
+									<a href="javascript:;" class="recharge-del"><i class="fa fa-times-circle"></i> </a>
+								</div>
+							</div>
+						{/loop}
+					{/if}
+				</div>
+				<div class="form-group">
+					<label class="col-xs-12 col-sm-3 col-md-2 control-label"></label>
+					<div class="col-sm-9 col-xs-12">
+						<a href="javascript:;" id="recharge-add"><i class="fa fa-plus-circle"></i> 添加充值返余额</a> 最多可添加4个
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				设置卡券使用开关
+			</div>
+			<div class="panel-body">
+				<div class="form-group">
+					<label class="col-xs-12 col-sm-3 col-md-2 control-label">卡券使用开关</label>
+					<div class="col-sm-8 col-xs-12">
+						<label class="radio-inline">
+							<input type="radio" name="card[switch]" ng-model="card.switch" value="1"/>
+							不开启卡券使用
+						</label>
+						<label class="radio-inline">
+							<input type="radio" name="card[switch]" ng-model="card.switch" value="2"/>
+							使用微信卡券
+						</label>
+						<label class="radio-inline">
+							<input type="radio" name="card[switch]" ng-model="card.switch" value="3"/>
+							使用系统卡券
+						</label>
+						<span class="help-block">设置支付时候是否可以使用卡券。微信卡券只能在微信浏览器中使用</span>
+					</div>
+				</div>
+			</div>
+		</div>
+		-->
+
+		<div class="panel panel-default" {if $op != 'payment'}style="display:none;"{/if}>
+			<div class="panel-heading">
+				设置微信支付开关
+			</div>
+			<div class="panel-body">
+				{if !empty($accounts)}
+				<div class="form-group" >
+					<label class="col-xs-12 col-sm-3 col-md-2 control-label">微信支付</label>
+					<div class="col-sm-9 col-xs-12" >
+						
+						<label  class="radio-inline">
+							<input  type="radio" name="wechat[switch]" ng-model="wechat.switch" value="true" onclick="$('.s').hide();$('#mchid').show();$('#apikey').show();" />
+							开启
+						</label>
+						<label class="radio-inline">
+							<input type="radio" name="wechat[switch]" ng-model="wechat.switch" value="false" />
+							关闭
+						</label>
+						<span class="help-block" style="display:none;" >是否使用微信支付</span>
+					</div>
+				</div>
+				<script>
+					function (){
+						require(['bootstrap.switch'],function($){
+							// 启用状态
+							$('.status:checkbox').bootstrapSwitch({onText: '启用', offText: '禁用'});
+							$('.status:checkbox').on('switchChange.bootstrapSwitch', function(event, state) {
+								var status_id = $(this).attr('status-id');
+								var status = state ? 2 : 1;
+								$.post("{php echo web_url('store/deliverylist', array('op'=>'editstatus'))}", {id : status_id, status : status}, function (data){
+								}, 'json');
+							});
+						
+						});
+					}
+				</script>
+				{if empty($pay['wechat']['version']) && !empty($pay['wechat']['signkey'])}
+					{php $pay['wechat']['version'] = 1;}
+				{/if}
+				<div class="form-group">
+						<label class="col-xs-12 col-sm-3 col-md-2 control-label">配置说明</label>
+						<div class="col-sm-9 col-xs-12">
+						<div class="alert alert-danger hide">
+							因微信公众平台对部分认证订阅号开放申请微信支付的能力,系统在设置支付公众号时,认证的订阅号会出现在下拉选择框,请您根据自己的公众号类型进行选择。 <a href="https://mp.weixin.qq.com/cgi-bin/announce?action=getannouncement&key=1430372687&version=4&lang=zh_CN" target="_blank">详情请查看这里（登陆公众号后可查看）</a>.
+						</div>
+						<div class="alert alert-warning">
+							你必须向微信公众平台提交企业信息以及银行账户资料，审核通过并签约后才能使用微信支付功能 <a href="https://mp.weixin.qq.com/paymch/readtemplate?t=mp/business/faq_tmpl" target="_blank">申请及详情请查看这里</a>.
+						</div>
+						<div class="alert alert-warning">
+							
+							<h4>JS API网页支付参数</h4>
+							<p>支付授权目录: {$rooturl}app/</p>
+							
+							<p>共享收货地址: 选择"是"</p>
+							
+						</div>
+							
+							{if $_W['account']['level'] < 4}
+								<span class="help-block"><strong class="text-danger">微信支付要求公众号为“认证服务号”，本公众号没有微信支付的权限</strong></span>
+							{/if}
+							<input type="hidden" name="wechat[account]" value="{$_W['account']['acid']}"/>
+						</div>
+					</div>
+				
+				
+					<div class="form-group" style="display: none;">
+						<label class="col-xs-12 col-sm-3 col-md-2 control-label">接口类型</label>
+						<div class="col-sm-9 col-xs-12">
+							<label class="radio-inline" onclick="$('.s').show();$('#mchid').hide();$('#apikey').hide();">
+								<input type="radio" name="wechat[version]" value="1" {if $pay['wechat']['version'] == 1} checked="checked"{/if} autocomplete="off" />
+								旧版
+							</label>
+							<label class="radio-inline" onclick="$('.s').hide();$('#mchid').show();$('#apikey').show();">
+								<input type="radio" name="wechat[version]" value="2" {if $pay['wechat']['version'] == 2 || empty($pay['wechat']['version'])} checked="checked"{/if} autocomplete="off" />
+								新版(2014年9月之后申请的)
+							</label>
+							<span class="help-block">由于微信支付接口调整，需要根据申请时间来区分支付接口</span>
+						</div>
+					</div>
+					
+					<div class="form-group">
+						<label class="col-xs-12 col-sm-3 col-md-2 control-label">身份标识<br />(appId)</label>
+						<div class="col-sm-9 col-xs-12">
+							<input type="text" class="form-control" value="{$_W['account']['key']}" readonly="readonly" autocomplete="off">
+							<span class="help-block">公众号身份标识 <a href="{php echo url('account/post', array('uniacid' => $_W['uniacid']))}">请通过修改公众号信息来保存</a></span>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-xs-12 col-sm-3 col-md-2 control-label">身份密钥<br />(appSecret)</label>
+						<div class="col-sm-9 col-xs-12">
+							<input type="text" class="form-control" name="secret" value="{$wechats['secret']}"  autocomplete="off"/>
+							<span class="help-block">公众平台API(参考文档API 接口部分)的权限获取所需密钥Key <a href="{php echo url('account/post', array('uniacid' => $_W['uniacid']))}">请通过修改公众号信息来保存</a></span>
+						</div>
+					</div>
+					<div class="form-group" id="mchid" {if $pay['wechat']['version'] == 1} style="display:none;" {/if}>
+						<label class="col-xs-12 col-sm-3 col-md-2 control-label">微信支付商户号(MchId)</label>
+						<div class="col-sm-9 col-xs-12">
+							<input type="text" name="wechat[mchid]" class="form-control" value="{$pay['wechat']['mchid']}" autocomplete="off"/>
+							<span class="help-block">公众号支付请求中用于加密的密钥Key</span>
+						</div>
+					</div>
+					<div class="form-group s" id="signkey"  style="display:none;" >
+						<label class="col-xs-12 col-sm-3 col-md-2 control-label">通信密钥(paySignKey)</label>
+						<div class="col-sm-9 col-xs-12">
+							<input type="text" name="wechat[signkey]" class="form-control" value="{$pay['wechat']['signkey']}" autocomplete="off"/>
+							<span class="help-block">公众号支付请求中用于加密的密钥Key</span>
+						</div>
+					</div>
+					<div class="form-group s" id="apikey" {if $pay['wechat']['version'] == 1} style="display:none;" {/if}>
+						<label class="col-xs-12 col-sm-3 col-md-2 control-label">商户支付密钥(API密钥)</label>
+						<div class="col-sm-9 col-xs-12">
+							<div class="input-group">
+								<input type="text" name="wechat[apikey]" id="apikey" class="form-control" maxlength="32" value="{if empty($pay['wechat']['signkey'])}{php echo random(32);}{else}{php echo substr($pay['wechat']['signkey'], 0 , 32)}{/if}" autocomplete="off"/>
+								<span onclick="tokenGen();" style="cursor:pointer" class="input-group-addon">生成新的</span>
+							</div>
+							<span class="help-block">此值需要手动在腾讯商户后台API密钥保持一致</span>
+						</div>
+					</div>
+					<div class="form-group">
+		                    <label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label">商户支付证书</label>
+		                    <div class="col-sm-8 col-xs-12">
+		                        <textarea class="form-control" name="cert" rows="8" placeholder="为保证安全性, 不显示证书内容. 若要修改, 请直接输入"></textarea>
+		                        <span class="help-block">从商户平台上下载支付证书, 解压并取得其中的 <mark>apiclient_cert.pem</mark> 用记事本打开并复制文件内容, 填至此处</span>
+		                    </div>
+		                </div>
+		                <div class="form-group">
+		                    <label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label">支付证书私钥</label>
+		                    <div class="col-sm-8 col-xs-12">
+		                        <textarea class="form-control" name="key" rows="8" placeholder="为保证安全性, 不显示证书内容. 若要修改, 请直接输入"></textarea>
+		                        <span class="help-block">从商户平台上下载支付证书, 解压并取得其中的 <mark>apiclient_key.pem</mark> 用记事本打开并复制文件内容, 填至此处</span>
+		                    </div>
+		                </div>
+						<div class="form-group">
+		                    <label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label">根证书私钥</label>
+		                    <div class="col-sm-8 col-xs-12">
+		                        <textarea class="form-control" name="rootca" rows="8" placeholder="为保证安全性, 不显示证书内容. 若要修改, 请直接输入"></textarea>
+		                        <span class="help-block">从商户平台上下载支付证书, 解压并取得其中的 <mark>rootca.pem</mark> 用记事本打开并复制文件内容, 填至此处</span>
+		                    </div>
+		                </div>
+					<!--<div class="form-group s" {if $pay['wechat']['version'] == 2} style="display:none;" {/if}>
+						<label class="col-xs-12 col-sm-3 col-md-2 control-label">商户身份<br />(partnerId)</label>
+						<div class="col-sm-9 col-xs-12">
+							<input type="text" name="wechat[partner]" class="form-control" value="{$pay['wechat']['partner']}" autocomplete="off"/>
+							<span class="help-block">财付通商户身份标识</span>
+							<span class="help-block">公众号支付请求中用于加密的密钥Key</span>
+						</div>
+					</div>
+					<div class="form-group s" {if $pay['wechat']['version'] == 2} style="display:none;" {/if}>
+						<label class="col-xs-12 col-sm-3 col-md-2 control-label">商户密钥<br />(partnerKey)</label>
+						<div class="col-sm-9 col-xs-12">
+							<input type="text" name="wechat[key]" class="form-control" value="{$pay['wechat']['key']}" autocomplete="off"/>
+							<span class="help-block">财付通商户权限密钥Key</span>
+						</div>
+					</div>-->
+					
+			
+				{else}
+				<div class="form-group">
+					<label class="col-xs-12 col-sm-3 col-md-2 control-label">微信支付</label>
+					<div class="col-sm-9 col-xs-12">
+						<div class="alert alert-warning">
+							你必须向微信公众平台提交企业信息以及银行账户资料，审核通过并签约后才能使用微信支付功能 .
+						</div>
+						<span class="help-block">你还没有支持微信支付的账号, <a href="{php echo url('account/post/list', array('uniacid' => $_W['uniacid']))}">请添加或修改你的微信账号为认证服务号</a></span>
+					</div>
+				</div>
+				{/if}
+			</div>
+		</div>
+
+
+		<div class="panel panel-default" {if $op != 'apppayment'}style="display:none;"{/if}>
+			<div class="panel-heading">
+				设置微信APP支付
+			</div>
+			<div class="panel-body">
+				<div class="form-group">
+					<label class="col-xs-12 col-sm-3 col-md-2 control-label">移动应用id<br />(appId)</label>
+					<div class="col-sm-9 col-xs-12">
+						<input type="text" name="appid" class="form-control" value="{$wechats['appid']}" autocomplete="off">
+						<span class="help-block">App身份标识</span>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-xs-12 col-sm-3 col-md-2 control-label">移动应用密钥<br />(appSecret)</label>
+					<div class="col-sm-9 col-xs-12">
+						<input type="text" class="form-control" name="appsecret" value="{$wechats['appsecret']}"  autocomplete="off"/>
+						<span class="help-block">移动应用API(参考文档API 接口部分)的权限获取所需密钥Key</span>
+					</div>
+				</div>
+				<div class="form-group" id="mchid">
+						<label class="col-xs-12 col-sm-3 col-md-2 control-label">微信支付商户号(MchId)</label>
+						<div class="col-sm-9 col-xs-12">
+							<input type="text" name="appmchid" class="form-control" value="{$pay['app_payment']['appmchid']}" autocomplete="off"/>
+							<span class="help-block">公众号支付请求中用于加密的密钥Key</span>
+						</div>
+					</div>
+					<div class="form-group s" id="apikey">
+						<label class="col-xs-12 col-sm-3 col-md-2 control-label">商户支付密钥(API密钥)</label>
+						<div class="col-sm-9 col-xs-12">
+							<input type="text" name="appapikey" id="apikey" class="form-control" maxlength="32" value="{if empty($pay['app_payment']['appapikey'])}{php echo random(32);}{else}{php echo substr($pay['app_payment']['appapikey'], 0 , 32)}{/if}" autocomplete="off"/>
+							<span class="help-block">此值需要手动在腾讯商户后台API密钥保持一致</span>
+						</div>
+					</div>
+			</div>
+		</div>
+		<div class="form-group col-sm-12">
+			<input name="do-submit" type="submit" value="提交" class="btn btn-primary col-lg-1" />
+			<input type="hidden" name="token" value="{$_W['token']}" />
+		</div>
+	</form>
+</div>
+
+{php include wl_template('common/footer');}

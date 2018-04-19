@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="initial-scale=1.0,maximum-scale=1.0,minimum-scale=1,user-scalable=no">
+    <meta content="yes" name="apple-mobile-web-app-capable">
+    <meta content="black" name="apple-mobile-web-app-status-bar-style">
+    <meta content="telephone=no" name="format-detection">
+    <meta content="email=no" name="format-detection">
+    <title>{$nickname}的共享聊天记录</title>
+    <link rel="stylesheet" href="{MD_ROOT}static/css/reset.css"/>
+    <link rel="stylesheet" href="{MD_ROOT}static/iconfont/iconfont.css"/>
+	<link rel="stylesheet" href="{MD_ROOT}/emoji/emoji.css"/>
+	{php echo register_jssdk(false);}
+    <script>
+        var deviceWidth = document.documentElement.clientWidth;
+        document.documentElement.style.fontSize = deviceWidth / 7.5 + 'px';
+    </script>
+	<style>
+	.main{padding:0.2rem 0.2rem 0 0.2rem;margin-bottom:1rem;display:inline-block;width:7.1rem;}
+	.main .weclome{width:5.5rem;margin:0 auto 0.3rem auto;height:0.6rem;line-height:0.6rem;border-radius:0.2rem;font-size:0.28rem;text-align:center;background:#D4D4D4;color:#fff;overflow:hidden;}
+	.message {
+		margin-bottom:0.3rem;
+		float: left;
+		width: 100%;
+	}
+    .message.me {
+        float: right;
+        text-align: right;
+        clear: right;
+    }
+
+    .message .avatar {
+        width: 0.7rem;
+        height: 0.7rem;
+        border-radius: 0.1rem;
+        -moz-border-radius: 0.1rem;
+        -webkit-border-radius: 0.1rem;
+        float: left;
+        cursor: pointer;
+    }
+
+    .message.me .avatar {
+        float: right;
+    }
+
+    .message .nickname {
+        padding-left:0.2rem;
+        font-size:0.25rem;
+        height:0.5rem;
+        line-height:0.5rem;
+        color: #4f4f4f;
+        overflow: hidden;
+    }
+
+	.message .nickname .time {
+		margin-left:0.1rem;
+		margin-right:0.1rem;
+		font-size:0.25rem;
+	}
+
+    .message.me .nickname {
+        padding-right:0.25rem;
+    }
+
+	.message.me .nickname .time {
+		margin-left:0.1rem;
+		margin-right:0.1rem;
+		font-size:0.25rem;
+	}
+
+    .message .content {
+        overflow: hidden;
+    }
+
+	.bubble {
+		max-width: 70%;
+		min-height: 0.5rem;
+		display: inline-block;
+		vertical-align: top;
+		position: relative;
+		text-align: left;
+		font-size: 0.3rem;
+		border-radius:3px;
+		-moz-border-radius:3px;
+		-webkit-border-radius:3px;
+		margin:0 0.25rem;
+	}
+
+    .bubble.bubble_default {
+        background-color: #fff;
+    }
+
+    .bubble:before, .bubble:after {
+        position: absolute;
+        top:0.15rem;
+        border:0.1rem solid transparent;
+        content: " ";
+    }
+    .bubble.left:before, .bubble.left:after {
+        right: 100%;
+    }
+    .bubble.left:after {
+        border-right-color: #FFF;
+        border-right-width: 4px;
+    }
+    .bubble.right:before, .bubble.right:after {
+        left: 100%;
+    }
+    .bubble.right:after {
+        border-left-color: #FFF;
+    }
+    .bubble.bubble_primary {
+        background-color: #b2e281;
+    }
+	.bubble.bubble_primary.left:after {
+		border-right-color: #b2e281;
+		border-right-width: 4px;
+	}
+	.bubble.bubble_primary.right:after {
+		border-left-color: #b2e281;
+		border-left-width: 4px;
+	}
+	.bubble.bubble_primary.right.arrow_primary:before {
+		border-left-color: #b2e281;
+		border-left-width: 4px;
+	}
+	.bubble.bubble_primary.right.arrow_primary:after {
+		border-left-color: #fff;
+		border-left-width: 4px;
+		margin-left: -2px;
+	}
+	.bubble_cont {
+		word-wrap: break-word;
+		word-break: break-all;
+		min-height: 0.5rem;
+	}
+
+    .bubble_cont .plain {
+        padding:0.1rem 0.2rem;
+		letter-spacing:1px;
+    }
+	.footer{position:fixed;bottom:0px;width:7rem;padding:0 0.25rem;height:1rem;background:#eeeeee;border-top:#DDDDDD 1px solid;clear:both;z-index:9999;left:0;}
+	.footer .quick{display:inline-block;float:left;width:0.9rem;margin-right:0.1rem;text-align:center;border-radius:0.2rem;height:0.7rem;line-height:0.7rem;font-size:0.28rem;margin-top:0.15rem;background:#F6D144;color:#666;}
+	.footer input{display:inline-block;float:left;width:3.4rem;height:0.7rem;line-height:0.7rem;font-size:0.28rem;margin-top:0.15rem;padding:0;border:none;background:#fff;border-radius:0.1rem;text-indent:5px;}
+	.footer .camera{display:inline-block;float:left;width:0.8rem;text-align:center;height:0.7rem;line-height:0.7rem;margin-top:0.15rem;font-size:0.4rem;padding:0;}
+	.footer .camera span{font-size:0.4rem;color:#666;}
+	.footer .voice{display:inline-block;float:left;width:0.8rem;text-align:center;height:0.7rem;line-height:0.7rem;margin-top:0.15rem;font-size:0.4rem;padding:0;}
+	.footer .voice span{font-size:0.4rem;color:#666;}
+	.footer button{display:inline-block;float:right;width:1rem;height:0.7rem;line-height:0.7rem;font-size:0.25rem;border-radius:0.1rem;border:none;margin-top:0.15rem;padding:0;background:#51C332;color:#fff;}
+	
+	.previmg{position:absolute;z-index:9999;width:100%;height:100%;background:#000;display:none;text-align:center;}
+	.voiceplay{height:0.3rem;margin-top:0.05rem;}
+	</style>
+</head>
+<body style="background-color:{$setting['bgcolor']};margin:0;">
+<div class="main" style="-webkit-overflow-scrolling:touch;">
+	<div class="weclome">{$nickname}的共享聊天记录</div>
+	<div class="message-box" id="messagelist">
+		{if $chatcon}
+		{loop $chatcon $row}
+			{if $row['openid'] == $toopenid}<div class="message">{else}<div class="message me">{/if}
+				<img class="avatar" src="{$row['avatar']}" />
+				<div class="content">
+					<div class="nickname">
+						{if $row['openid'] == $toopenid}{$row['nickname']}{/if}<span class="time">{php echo date('Y-m-d H:i:s',$row['time'])}</span>{if $row['openid'] != $toopenid}{$row['nickname']}{/if}
+					</div>
+					{if $row['openid'] == $toopenid}<div class="bubble bubble_default left">{else}<div class="bubble bubble_primary right">{/if}
+						<div class="bubble_cont">
+							{if $row['type'] == 3 || $row['type'] == 4}
+								<div class="plain" style="padding:2px;"><img src="{$row['content']}" style="max-width:100%;" /></div>
+							{elseif $row['type'] == 5 || $row['type'] == 6}
+								<div class="plain" style="color:#900;width:2rem;height:0.4rem;" onclick="playvoice('{$row['content']}');">
+									{if $row['openid'] == $toopenid}
+									<img src="{MD_ROOT}static/voicerighton.png" class="voiceplay" />
+									{else}
+									<img src="{MD_ROOT}static/voicelefton.png" class="voiceplay" />
+									{/if}
+								</div>
+							{else}
+								<div class="plain">{$row['content']}</div>
+							{/if}
+						</div>
+					</div>
+				</div>
+			</div>
+		{/loop}
+		{/if}
+	</div>
+</div>
+
+<div class="previmg">
+	<img src="" style="max-width:100%;max-height:100%;" />
+</div>
+
+<script type="text/javascript" src="{MD_ROOT}static/mui/js/jquery.min.js"></script>
+<script type="text/javascript">
+$(function(){
+	$('.bubble_cont img:not(.voiceplay)').click(function(){
+		$('.main').hide();
+		$('.previmg').css('top',$(document).scrollTop()+'px').show();
+		$('.previmg img').attr('src',$(this).attr('src')).css('margin-top',($('.previmg').height()-$('.previmg img').height())/2+'px');
+	});
+	$('.previmg').click(function(){
+		$('.previmg').hide();
+		$('.main').show();
+	});
+})
+
+function playvoice(serverid){
+	wx.downloadVoice({
+		serverId: serverid,
+		success: function (res) {
+			wx.playVoice({
+				localId: res.localId, // 需要播放的音频的本地ID，由stopRecord接口获得
+			});
+		}
+	});
+}
+</script>
+<script type="text/javascript">
+$(function(){
+
+})
+</script>
+<script type="text/javascript">
+wx.ready(function () {
+	sharedata = {
+		title: '{$nickname}的共享聊天记录',
+		desc: '{$setting["sharedes"]}',
+		link: '{$setting["shareurl"]}',
+		imgUrl: '{php echo tomedia($setting["sharethumb"]);}',
+		trigger: function (res) {
+			//alert('用户点击发送给朋友');
+		},
+		success: function (res) {
+			//alert('已分享');
+		},
+		cancel: function (res) {
+			//alert('已取消');
+		},
+		fail: function (res) {
+			alert("分享失败");
+		}
+	};
+	wx.onMenuShareAppMessage(sharedata);
+	wx.onMenuShareTimeline(sharedata);
+	wx.onMenuShareQQ(sharedata);
+	wx.onMenuShareWeibo(sharedata);
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,696 @@
+{if $uniacid_tpl['tpl']==8146||$uniacid_tpl['tpl']==8147||$uniacid_tpl['tpl']==8172||$uniacid_tpl['tpl']==8174||$uniacid_tpl['tpl']==8175||$uniacid_tpl['tpl']==8190||$uniacid_tpl['tpl']==8193||$uniacid_tpl['tpl']==8197||$uniacid_tpl['tpl']==8203||$uniacid_tpl['tpl']==8204||$uniacid_tpl['tpl']==8205||$uniacid_tpl['tpl']==8210||$uniacid_tpl['tpl']==8213}
+<ul class="bottombarr" data-curind="0" style="z-index: 2500;position: fixed;bottom: 0">
+	<!--<a class="home external {if $_GPC['ac']=='index'}cur{/if}" href="{php echo app_url('home/index')}"><i></i><span>首页</span></a>-->
+	<a id="gohome" class="home external {if $_GPC['ac']=='list'}cur{/if}" href="{php echo app_url('goods/list')}"><i></i><span>首页</span></a>
+	<a class="myGroup external {if $_GPC['ac']=='mygroup'}cur{/if}" href="{php echo app_url('order/mygroup/0')}"><i></i><span>我的团</span></a>
+	<a class="myOrder external {if $_GPC['ac']=='order'}cur{/if}" href="{php echo app_url('order/order')}"><i></i><span>我的订单</span></a>
+	<a class="myService external {if $_GPC['ac']=='home'}cur{/if}" href="{php echo app_url('member/home')}"><i></i><span>个人中心</span></a>
+</ul>
+{/if}
+{if $uniacid_tpl['tpl']==8196||$uniacid_tpl['tpl']==8198||$uniacid_tpl['tpl']==8199||$uniacid_tpl['tpl']==8201||$uniacid_tpl['tpl']==8207||$uniacid_tpl['tpl']==8208||$uniacid_tpl['tpl']==8209||$uniacid_tpl['tpl']==8211}
+{if $uniacid_tpl['tpl']==8196||$uniacid_tpl['tpl']==8198||$uniacid_tpl['tpl']==8199||$uniacid_tpl['tpl']==8201||$uniacid_tpl['tpl']==8207||$uniacid_tpl['tpl']==8208||$uniacid_tpl['tpl']==8211}
+<ul class="bottombarr" data-curind="0" style="z-index: 2500;position: fixed;bottom: 0">
+	<!--<a class="home external {if $_GPC['ac']=='index'}cur{/if}" href="{php echo app_url('home/index')}"><i></i><span>首页</span></a>-->
+	<a id="gohome" class="shouye external {if $_GPC['ac']=='list'}cur{/if}" href="{php echo app_url('goods/list')}"><i></i><span>首页</span></a>
+	<a class="fenlei external {if $_GPC['ac']=='fenlei'}cur{/if}" href="{php echo app_url('goods/fenlei')}"><i></i><span>分类</span></a>
+	<a class="sousuo external {if $_GPC['ac']=='search'}cur{/if}" href="{php echo app_url('goods/search')}"><i></i><span>搜索</span></a>
+	<a id="buycart1" onclick="opencart()" class="myService external" href="##"><i></i><b>0</b><span>购物车</span></a>
+	<a class="wode external {if $_GPC['ac']=='home'}cur{/if}" href="{php echo app_url('member/home')}"><i></i><span>个人中心</span></a>
+</ul>
+{/if}
+<style>
+	#buycart1{
+		position: relative;
+	}
+	#buycart1 b{
+		position: absolute;
+		top: 0;
+		right:6px;
+		color: #fff;
+		width: 20px;
+		height: 20px;
+		text-align: center;
+		line-height: 20px;
+		border-radius: 50%;
+		background: {$_W['system_color']};
+		opacity: 0.9;
+	}
+	#continueBuy,#goPay,.ed5BD,.pinTuanJia>div:first-child,button,.weui_btn_blue{
+		background-color:{$_W['system_color']}!important;
+	}
+	.link-ding-header div:first-child,.weui_btn_blue,.link-ding-body>div div:last-child,.link-total span{
+		color: {$_W['system_color']};
+	}
+	.ed5CO{
+		color: {$_W['system_color']}!important;
+	}
+
+
+	.tablerow {margin-bottom: 5px;}
+	.buyimg {display:table-cell;width:80px;}
+	.buyimg img{width:40px;height:40px;border-radius:20px;}
+	.buyprice {width: 80px;height: 100%;display: table-cell;line-height: 40px;text-align: right;padding-right: 10px;}
+	.buydes {  width: 105px;height: 100%;display: table-cell;position: relative;top: 7.5px;}
+	.buyplus {  float: left;width: 35px;text-align: center;height: 25px;border-radius: 12.5px;background-color: {$_W['system_color']};color: white;}.buynum {  width: 25px;height: 25px;left: 0px;right: 0px;margin: auto;position: absolute;text-align: center;line-height: 25px;top: 0;}
+	.buyminus {  text-align: center;float: right;width: 35px;height: 25px;border-radius: 12.5px;background-color: {$_W['system_color']};color: white;}
+	.key{display:none;}
+
+	.bottombarr{
+		padding-top: 5px;
+		background: #383838;
+	}
+	.shouye i{
+		background: url("../../../../addons/lexiangpingou/app/resource/images/bottomimg8.png") no-repeat;
+		background-position: 2px 0px;
+		background-size: 240px;
+	}
+	.bottombarr .fenlei i{
+		background: url("../../../../addons/lexiangpingou/app/resource/images/bottomimg8.png") no-repeat;
+		background-position: -46px 0px;
+		background-size: 240px;
+	}
+	.sousuo i{
+		background: url("../../../../addons/lexiangpingou/app/resource/images/bottomimg8.png") no-repeat;
+		background-position: -94px 0px;
+		background-size: 240px;
+	}
+	#buycart1 i{
+		background: url("../../../../addons/lexiangpingou/app/resource/images/bottomimg8.png") no-repeat;
+		background-position: -144px 0px;
+		background-size: 240px;
+	}
+	.wode i{
+		background: url("../../../../addons/lexiangpingou/app/resource/images/bottomimg8.png") no-repeat;
+		background-position: -192px 0px;
+		background-size: 240px;
+	}
+</style>
+
+
+<div id="cartDetails" style="transition-duration:0.5s;transition-property:height opacity;opacity:1;transition-timing-function:ease-out;overflow:hidden;
+position:fixed;top:0px;left:0px;width:100%;height:0%;background-color:rgba(0,0,0,0.5);z-index:100860;">
+	<div style="  position: absolute;width: 94%;height: 85%;background-color: white;top: 5%;left: 3%;margin-bottom: auto;margin-top: auto;border-radius: 5px;box-shadow: 2px 2px 2px black;">
+		<div style="  width: 80%;margin-left: 10%;height: 40px;font-size: 1.5em;line-height: 40px;color:{$_W['system_color']};text-align: center;border-bottom: 1px solid #eee;box-sizing: border-box;">您选择的商品</div>
+		<div style="  border-bottom: 1px solid #f0f0f0;overflow: auto;position: absolute;left: 10%;right: 10%;top: 50px;bottom: 50px;">
+			<div id="buycartDetails"></div>
+		</div>
+		<div style="width:100%;height:40px;position:absolute;left:0;bottom:10px;">
+			<div id="continueBuy" onclick="continueBuy()" style="width:30%;float:left;margin-left:15%;height:30px;background-color:{$_W['system_color']};color:white;line-height:30px;text-align:center;border-radius:3px;margin-top:10px;">继续选购</div>
+			<div  style="width:30%;float:left;margin-left:2.5%;height:30px;background-color:{$_W['system_color']};color:white;line-height:30px;text-align:center;border-radius:3px;margin-top:10px;display:none;" onclick="clearBuycart();">一键清除</div>
+			<div id="goPay" style="width:30%;float:left;margin-left:10%;height:30px;background-color:{$_W['system_color']};color:white;line-height:30px;text-align:center;border-radius:3px;margin-top:10px;" onclick="Buycart();">立即结算</div>
+		</div>
+	</div>
+</div>
+{/if}
+{if $uniacid_tpl['tpl']==8196||$uniacid_tpl['tpl']==8198||$uniacid_tpl['tpl']==8199||$uniacid_tpl['tpl']==8201||$uniacid_tpl['tpl']==8202||$uniacid_tpl['tpl']==8207||$uniacid_tpl['tpl']==8208||$uniacid_tpl['tpl']==8209||$uniacid_tpl['tpl']==8211}
+<script>
+	updataCar();
+	function opencart(){
+		updataCar();
+//        if(Number($('#buycart1 b').html())<1){$.toast('购物车为空')}
+		$('#cartDetails').css( "height", "100%" );
+		$('#cartDetails').css( "opacity", "1" );
+		setTimeout(function(){
+			$('.preloader-indicator-overlay,.preloader-indicator-modal').remove();
+		},1000)
+	}
+	//点击购物车中的继续购买
+	$('#continueBuy').on('click',function () {
+		updataCar();
+		$('#cartDetails').css( "height", "0px" );
+		$('#cartDetails').css( "opacity", "0" );
+	});
+	//跳转结算页面
+	function Buycart(){
+		updataCar();
+		setTimeout(function(){location.href = "{php echo app_url('order/shoporderconfirm')}";},500)
+	}
+	function continueBuy() {
+		updataCar();
+		$('#cartDetails').css( "height", "0px" );
+		$('#cartDetails').css( "opacity", "0" );
+	}
+	function updataCarHtml(){
+		Buy=JSON.parse(sessionStorage.getItem('Buy'));
+		GuigeSelect=JSON.parse(sessionStorage.getItem('GuigeSelect'));
+		var str="";
+		for (var key in Buy) {
+			if (GuigeSelect[key] ===undefined) {//没有规格商品
+				if (Buy[key]['num'] !=undefined){
+					str+='<div class="tablerow"><div class="buyimg"><span class="cartDetailGuige"></span><img src='+Buy[key]['img']+'></div><div class="buyprice">￥'+Buy[key]['price']+'</div><div class="buydes"><div class="buyplus" onclick="minuscarNumber(this)"><img src="http://wx866e0a731d303c29.w9.huodiesoft.com/addons/lexiangpingou/app/resource/images/minus.png" style="width:14px;heigth:14px;"></div><span class="key">'+key+'</span><div class="buynum" data-id='+Buy[key].id+'>'+Buy[key]['num']+'</div><div class="buyminus" onclick="pluscarNumber(this)"><img src="http://wx866e0a731d303c29.w9.huodiesoft.com/addons/lexiangpingou/app/resource/images/plus.png" style="width:14px;heigth:14px;"></div></div></div>';
+				}
+			}else{//有规格商品
+				var numArray =[];
+				var guigeArray = [];
+				for (var li in GuigeSelect[key]) {
+					numArray.push(GuigeSelect[key][li]);//值
+					guigeArray.push(li);//属性
+				}
+				str+='<div class="tablerow"><div class="buyimg"><img src='+Buy[key]['img']+'></div>';
+				for(var i=0;i<numArray.length;i+=4){
+					str+='<div class="tablerow"><div class="buyimg"><span class="cartDetailGuige" style="font-size:0.8em;color:hsl(354, 90%, 73%)">'+guigeArray[i]+'</span></div><div class="buyprice">￥'+numArray[i+1]+'</div><div class="buydes"><div class="buyplus" onclick="minuscarNumber(this)"><img src="http://wx866e0a731d303c29.w9.huodiesoft.com/addons/lexiangpingou/app/resource/images/minus.png" style="width:14px;heigth:14px;"></div><span class="key">'+key+'</span><div class="buynum" data-id='+Buy[key].id+'>'+numArray[i]+'</div><div class="buyminus" onclick="pluscarNumber(this)"><img src="http://wx866e0a731d303c29.w9.huodiesoft.com/addons/lexiangpingou/app/resource/images/plus.png" style="width:14px;heigth:14px;"></div></div></div>';
+				}
+				str+='</div>';
+			}
+		}
+		$('#buycartDetails').html(str);
+	}
+	function updataCar(RorF,ev,evid){
+		$.post("{php echo app_url('goods/ajaxlist/collect')}",function(data){
+			data=JSON.parse(data);
+			var BuyObj={};
+			var GuigeSelectObj={};
+			var carSum=0;//购物车总数量
+			var carPriceSum=0;//购物车总价格
+			//规格 颜色，价格，库存，重量
+			var color;
+			var colorPrice;
+			var colorStock;
+			var colorWeight;
+			if(data.length>0){
+				for(var j=0;j<data.length;j++) {
+					var Buy={},GuigeSelect={};
+					var keyNum,num=0;
+					carSum+=Number(data[j].num);
+					carPriceSum+=Number(data[j].num)*Number(data[j].price);
+					for(var key in BuyObj){//遍历数据判断有无相同id的数据
+						if (key===undefined) return;
+						if(BuyObj[key].id==data[j].id){
+							keyNum=key;
+							num++;
+						}
+					}
+					if(num>0){//判断有无相同id，有则合并数据，并且Buy中只修改num数据
+						color = data[j].item;
+						colorPrice = color + 'Price';
+						colorStock = color + 'Stock';
+						colorWeight = color + 'Weight';
+						GuigeSelectObj[keyNum][color] = data[j].num;
+						GuigeSelectObj[keyNum][colorPrice] = data[j].oprice;
+						GuigeSelectObj[keyNum][colorStock] = data[j].kucun;
+						GuigeSelectObj[keyNum][colorWeight] = data[j].weight;
+
+						BuyObj[keyNum].num = parseInt(BuyObj[keyNum].num)+1;
+
+					}else {
+						Buy.img = data[j].img;
+						Buy.price = data[j].price;
+						Buy.title = data[j].title;
+						Buy.weight = data[j].weight;
+						Buy.kucun = data[j].kucun;
+						Buy.id = data[j].id;
+						Buy.num = data[j].num;
+						Buy.onelimit = data[j].onelimit;
+						Buy.manylimit = data[j].manylimit;
+						Buy.historylimit = data[j].historylimit;
+						BuyObj[j] = Buy;
+
+						if (data[j].item != '') {
+							color = data[j].item;
+							colorPrice = color + 'Price';
+							colorStock = color + 'Stock';
+							colorWeight = color + 'Weight';
+							GuigeSelect[color] = data[j].num;
+							GuigeSelect[colorPrice] = data[j].oprice;
+							GuigeSelect[colorStock] = data[j].kucun;
+							GuigeSelect[colorWeight] = data[j].weight;
+
+							GuigeSelectObj[j] = GuigeSelect;
+						}
+					}
+				}
+				console.log('数据库数据：');
+				console.log(data);
+				sessionStorage.setItem('Buy', JSON.stringify(BuyObj));
+				sessionStorage.setItem('GuigeSelect', JSON.stringify(GuigeSelectObj));
+				sessionStorage.setItem('carObjSJK', JSON.stringify(data));
+				updataCarHtml();
+				$('#totalnum').css('display','block');
+				$('#totalnum').html(carSum);//更新购物车总数量
+				$('#buycart1 b').html(carSum);//更新购物车总数量
+				$('#sumprice').html('去结算 ￥'+carPriceSum.toFixed(2));//更新购物车总价格
+
+				var ObjSJK = JSON.parse(sessionStorage.getItem('carObjSJK'));
+				//界面加，购买数量及价格变化
+//                if(RorF){//有规格商品
+				if(false){//有规格商品
+					var glis = $('#orderlist li.gli>a');
+					for (var ij = 0; ij < glis.length; ij++) {
+						if ($(glis[ij]).attr('id') == $('#guigeimg').attr('data-id')) {
+							ev = $(glis[ij]).next().next()[0];
+						}
+					}
+					var bPrice = $(ev).parent().find('b.price');
+					var sumPrice = 0, sumNum = 0;
+					$(ev).parent().find('.cross').css('display', 'inline-block');//显示 x
+					for (var i = 0; i < ObjSJK.length; i++) {
+						if (ObjSJK[i].id == $('#guigeimg').attr('data-id')) {
+							sumNum += Number(ObjSJK[i].num);
+							sumPrice += Number(ObjSJK[i].num) * Number(ObjSJK[i].oprice);
+						}
+					}
+					bPrice.html(sumNum).next().children().css('display', 'none');
+					$(ev).parent().find('.totalPrice').html('小计￥' + sumPrice.toFixed(2)).css('display', 'inline-block');
+					$(ev).children('span').css('font-size','30px').html('<img src="{TG_URL_ARES}images/plus.png" style="width:20px;heigth:20px;">').css('line-height', '15px');//买变加号,不显示减号
+//                }else if(!RorF&&RorF!=undefined){//无规格商品
+				}else if(false){//无规格商品
+					var bPrice=$(ev).parent().find('b.price');
+					for(var i=0;i<ObjSJK.length;i++) {
+						if (ObjSJK[i].id==evid) {
+							$(ev).parent().find('.cross').css('display', 'inline-block');//显示 x
+							bPrice.html(ObjSJK[i].num).next().children().css('display','none');
+							var sumPrice = Number(bPrice.html()) * Number(ObjSJK[i].oprice);
+							$(ev).parent().find('.totalPrice').html('小计￥' + sumPrice.toFixed(2)).css('display','inline-block');
+							$(ev).children('span').css('font-size','30px').html('<img src="{TG_URL_ARES}images/plus.png" style="width:20px;heigth:20px;">').css('line-height', '15px').parent().siblings('.minus').css('display', 'inline-block');//买变加号,并显示减号
+							return false;
+						}
+					}
+				}
+			}else if(data.length==0){
+				sessionStorage.setItem('Buy','{}');
+				sessionStorage.setItem('GuigeSelect','{}');
+				sessionStorage.setItem('carObjSJK','{}');
+				$('#buycartDetails').empty();
+				$('#totalnum').css('display','none');
+				$('#sumprice').html('￥ 0');
+			}
+		})
+	}
+
+	//购物车减-
+	function minuscarNumber(ev) {
+		var minusKey=$(ev).next().html();
+		var sessionBuy=JSON.parse(sessionStorage.getItem('Buy'));
+		var minusguige=$(ev).parent().siblings('.buyimg').children('.cartDetailGuige').html();
+
+		$.post("{php echo app_url('goods/ajaxlist/remove')}",
+				{
+					id:sessionBuy[minusKey].id,
+					guige:minusguige
+				},
+				function(data){
+					if(data==1){
+						$(ev).siblings('.buynum').html($(ev).siblings('.buynum').html()-1);//对应商品数量减1
+						Buy[$(ev).siblings('span.key').html()]['num']--;//session数据减1，解决限购问题
+						sessionStorage.setItem('Buy',JSON.stringify(Buy));
+
+//						if($('#buycart1 b').html()=='1'){
+////							$('#buycart1 b').css('display','none');
+//						}else{
+							$('#buycart1 b').html($('#buycart1 b').html() - 1);//购物车总数量减1
+//						}
+						if($(ev).siblings('.buynum').html()==0){//当该商品数量为0时，删除该商品
+							if($(ev).parent().parent().siblings('.tablerow').length==0){
+								if($(ev).parent().parent().parent().attr('id')=='buycartDetails'){
+									$(ev).parent().parent().remove();
+								}else {
+									$(ev).parent().parent().parent().remove();
+								}
+							}else{
+								$(ev).parent().parent().remove();
+							}
+						}
+//                        jiemianMinus(ev,true);
+					}else if(data==0){
+						$.toast('删除失败');
+					}
+				}
+		);
+	}
+	//购物车买+
+	function pluscarNumber(ev) {
+		var evid=$(ev).siblings('.buynum').attr('data-id');
+		var evnew=$('a[id='+evid+']').siblings('.numbers').prev();
+		if (LimiteBuy(evnew)) {
+			var addKey = $(ev).prev().prev().html();
+			var sessionBuy = JSON.parse(sessionStorage.getItem('Buy'));
+			var minusguige = $(ev).parent().siblings('.buyimg').children('.cartDetailGuige').html();
+			$.post("{php echo app_url('goods/ajaxlist/add')}",
+					{
+						id: sessionBuy[addKey].id,
+						guige: minusguige
+					},
+					function (data) {
+						if (data == 1) {
+							$(ev).siblings('.buynum').html(Number($(ev).siblings('.buynum').html()) + 1);
+							$('#totalnum').html(Number($('#totalnum').html()) + 1);//购物车总数量加1
+							$('#buycart1 b').html(Number($('#buycart1 b').html()) + 1);//购物车总数量加1
+//                            $('#sumprice').html('去结算 ￥' + (Number($('#sumprice').html().slice(5)) + Number($(ev).parent().prev().html().slice(1))).toFixed(2));//购物车总价
+							var danjia=$(ev).parent().siblings('.buyprice')[0].innerHTML.slice(1);
+							var idstr = $(ev).siblings('.buynum').attr('data-id');
+							var e = $("a[id=" + idstr + "]");
+//                            e.find('b.price').html(Number(e.find('b.price').html()) + 1);//界面数量加1
+//                            e.parent().find('b.totalPrice').html('小计￥' + (Number(e.parent().find('b.totalPrice').html().slice(3)) + Number(danjia)).toFixed(2));//小计
+							updataCar()
+						} else if (data == 0) {
+							$.toast('添加失败');
+						} else if (data == -1) {
+							$.toast('库存不足');
+						} else if (data == 2) {
+							$.toast('该商品限购');
+						}
+					}
+			);
+		}
+	}
+</script>
+{/if}
+<script>
+	var gohome = document.getElementById("gohome");
+	gohome.onclick = function() {
+	  sessionStorage.removeItem("position");
+	}
+</script>
+<!--红色底部代码-->
+{if $uniacid_tpl['tpl']==8190||$uniacid_tpl['tpl']==8193||$uniacid_tpl['tpl']==8197||$uniacid_tpl['tpl']==8203||$uniacid_tpl['tpl']==8204||$uniacid_tpl['tpl']==8210}
+<link rel="stylesheet" href="{TG_URL_ARES}css/list6footer.css?time=New Date()">
+{/if}
+
+{if $uniacid_tpl['tpl']==8198||$uniacid_tpl['tpl']==8208}
+
+<style>
+	.bottombarr{
+		padding-top: 5px;
+		background: #383838;
+	}
+	.shouye i{
+		background: url("../../../../addons/lexiangpingou/app/resource/images/bottomimg8.png") no-repeat;
+		background-position: 2px 0px;
+		background-size: 240px;
+	}
+	body .bottombarr .myOrder i,.bottombarr .myOrder.cur i{
+		background: url("../../../../addons/lexiangpingou/app/resource/images/bottomimg8.png") no-repeat;
+		background-position: -47px 0px;
+		background-size: 240px;
+	}
+	.wode i{
+		background: url("../../../../addons/lexiangpingou/app/resource/images/bottomimg8.png") no-repeat;
+		background-position: -192px 0px;
+		background-size: 240px;
+	}
+	#buycart1>i{
+		background: url("../../../../addons/lexiangpingou/app/resource/images/bottomimg8.png") no-repeat;
+		background-position: -143px 0px;
+		background-size: 240px;
+	}
+</style>
+<ul class="bottombarr" data-curind="0" style="z-index: 2500;position: fixed;bottom: 0">
+	<a id="gohome" class="shouye external {if $_GPC['ac']=='list'}cur{/if}" href="{php echo app_url('goods/list')}"><i></i><span>首页</span></a>
+	<a id="buycart1" onclick="opencart()" class="myService external" href="##"><i></i><b>0</b><span>购物车</span></a>
+	<a class="myOrder external {if $_GPC['ac']=='order'}cur{/if}" href="{php echo app_url('order/order')}"><i></i><span>我的订单</span></a>
+	<a class="wode external {if $_GPC['ac']=='home'}cur{/if}" href="{php echo app_url('member/home')}"><i></i><span>个人中心</span></a>
+</ul>
+{/if}
+
+{if $uniacid_tpl['tpl']==8211}
+<style>
+	#buycart1{
+		position: relative;
+	}
+	#buycart1 b{
+		position: absolute;
+		top: 0;
+		right:6px;
+		color: #fff;
+		width: 20px;
+		height: 20px;
+		text-align: center;
+		line-height: 20px;
+		border-radius: 50%;
+		background: #ff4444;
+		opacity: 0.9;
+	}
+	.bottombarr{
+		padding-top: 5px;
+		background: #fff;
+	}
+	.shouye i{
+		background: url("../../../../addons/lexiangpingou/app/resource/images/bottomimg33.png") no-repeat;
+		background-position: -50px 0px;
+		background-size: 200px;
+	}
+	body .bottombarr .myOrder i,.bottombarr .myOrder.cur i{
+		background: url("../../../../addons/lexiangpingou/app/resource/images/bottomimg33.png") no-repeat;
+		background-position: -153px 0px;
+		background-size: 200px;
+	}
+	.wode i{
+		background: url("../../../../addons/lexiangpingou/app/resource/images/bottomimg33.png") no-repeat;
+		background-position: -25px 0px;
+		background-size: 200px;
+	}
+	#buycart1>i{
+		background: url("../../../../addons/lexiangpingou/app/resource/images/bottomimg33.png") no-repeat;
+		background-position: -176px 0px;
+		background-size: 200px;
+	}
+</style>
+<ul class="bottombarr" data-curind="0" style="z-index: 2500;position: fixed;bottom: 0">
+	<a id="gohome" class="shouye external {if $_GPC['ac']=='list'}cur{/if}" href="{php echo app_url('goods/list')}"><i></i><span>首页</span></a>
+	<a id="buycart1" onclick="opencart()" class="myService external" href="##"><i></i><b>0</b><span>购物车</span></a>
+	<a class="myOrder external {if $_GPC['ac']=='order'}cur{/if}" href="{php echo app_url('order/order')}"><i></i><span>我的订单</span></a>
+	<a class="wode external {if $_GPC['ac']=='home'}cur{/if}" href="{php echo app_url('member/home')}"><i></i><span>个人中心</span></a>
+</ul>
+{/if}
+
+{if $uniacid_tpl['tpl']==8199||$uniacid_tpl['tpl']==8200||$uniacid_tpl['tpl']==8201||$uniacid_tpl['tpl']==8206||$uniacid_tpl['tpl']==8207}
+<style>
+	.bottombarr a span{
+		margin-top: -5px;
+	}
+	#buycart1{
+		position: relative;
+	}
+	#buycart1 b{
+		display: none;
+		position: absolute;
+		top: 0;
+		right:6px;
+		color: #fff;
+		width: 20px;
+		height: 20px;
+		text-align: center;
+		line-height: 20px;
+		border-radius: 50%;
+		background: {$_W['system_color']};
+		opacity: 0.9;
+	}
+	.bottombarr{
+		background: #fff;
+	}
+	.shouye i{
+		background: url("../../../../addons/lexiangpingou/app/resource/images/bottomimg9.png") no-repeat;
+		background-position: -21px 0px;
+		background-size: 240px;
+	}
+	.bottombarr .fenlei i{
+		background: url("../../../../addons/lexiangpingou/app/resource/images/bottomimg9.png") no-repeat;
+		background-position: -70px 0px;
+		background-size: 240px;
+	}
+	.sousuo i{
+		background: url("../../../../addons/lexiangpingou/app/resource/images/bottomimg9.png") no-repeat;
+		background-position: -119px 0px;
+		background-size: 240px;
+	}
+	#buycart1 i{
+		background: url("../../../../addons/lexiangpingou/app/resource/images/bottomimg9.png") no-repeat;
+		background-position: -169px 0px;
+		background-size: 240px;
+	}
+	.wode i{
+		background: url("../../../../addons/lexiangpingou/app/resource/images/bottomimg9.png") no-repeat;
+		background-position: -219px 0px;
+		background-size: 240px;
+	}
+	.orderlist{
+		top:36px!important;
+	}
+
+</style>
+<ul class="bottombarr" data-curind="0" style="z-index: 2500;position: fixed;bottom: 0">
+	<!--<a class="home external {if $_GPC['ac']=='index'}cur{/if}" href="{php echo app_url('home/index')}"><i></i><span>首页</span></a>-->
+	<a id="gohome" class="shouye external {if $_GPC['ac']=='list'}cur{/if}" href="{php echo app_url('goods/list')}"><i></i><span>首页</span></a>
+	<a class="fenlei external {if $_GPC['ac']=='fenlei'}cur{/if}" href="{php echo app_url('goods/fenlei',array('op' => 'duoshanghu'))}"><i></i><span>分类</span></a>
+	<a class="sousuo external {if $_GPC['ac']=='search'}cur{/if}" href="{php echo app_url('goods/search')}"><i></i><span>搜索</span></a>
+	<a id="buycart1" onclick="opencart()" class="myService external" href="##"><i></i><b>0</b><span>购物车</span></a>
+	<a class="wode external {if $_GPC['ac']=='home'}cur{/if}" href="{php echo app_url('member/home')}"><i></i><span>个人中心</span></a>
+</ul>
+{/if}
+<!--//多商户-->
+{if $uniacid_tpl['tpl']==8200}
+<ul class="bottombarr" data-curind="0" style="z-index: 2500;position: fixed;bottom: 0">
+	<!--<a class="home external {if $_GPC['ac']=='index'}cur{/if}" href="{php echo app_url('home/index')}"><i></i><span>首页</span></a>-->
+	<a id="gohome" class="shouye external {if $_GPC['ac']=='list'}cur{/if}" href="{php echo app_url('goods/list')}"><i></i><span>首页</span></a>
+	<a class="fenlei external {if $_GPC['ac']=='fenlei'}cur{/if}" href="{php echo app_url('goods/fenlei',array('op' => 'duoshanghu'))}"><i></i><span>分类</span></a>
+	<a class="sousuo external {if $_GPC['ac']=='search'}cur{/if}" href="{php echo app_url('goods/search')}"><i></i><span>搜索</span></a>
+	<a id="buycart1" class="myService external" href="{php echo app_url('goods/list',array('op' => 'cart'))}"><i></i><b>0</b><span>购物车</span></a>
+	<a class="wode external {if $_GPC['ac']=='home'}cur{/if}" href="{php echo app_url('member/home')}"><i></i><span>个人中心</span></a>
+</ul>
+{/if}
+<!--多商户改-->
+{if $uniacid_tpl['tpl']==8206}
+<style>
+	.sousuo i{
+		background: url("../../../../addons/lexiangpingou/app/resource/images/bottomimg10.png") no-repeat;
+		background-position: -119px 0px;
+		background-size: 240px;
+	}
+	.bottombarr .fenlei i{
+		background-position: -120px 0px;
+	}
+	.bottombarr a{
+		width: 25%;
+	}
+</style>
+<ul class="bottombarr" data-curind="0" style="z-index: 2500;position: fixed;bottom: 0">
+	<!--<a class="home external {if $_GPC['ac']=='index'}cur{/if}" href="{php echo app_url('home/index')}"><i></i><span>首页</span></a>-->
+	<a id="gohome" class="shouye external {if $_GPC['ac']=='list'}cur{/if}" href="{php echo app_url('goods/list')}"><i></i><span>首页</span></a>
+	<a class="sousuo external {if $_GPC['ac']=='search'}cur{/if}" href="{php echo app_url('goods/list15')}"><i></i><span>商城</span></a>
+	<a id="buycart1" class="myService external" href="{php echo app_url('goods/list',array('op' => 'cart'))}"><i></i><b>0</b><span>购物车</span></a>
+	<a class="fenlei external {if $_GPC['ac']=='fenlei'}cur{/if}" href="{php echo app_url('goods/fenlei',array('op' => 'fenlei17'))}"><i></i><span>搜索</span></a>
+	<a class="wode external {if $_GPC['ac']=='home'}cur{/if}" href="{php echo app_url('member/home')}"><i></i><span>个人中心</span></a>
+</ul>
+{/if}
+
+{if $uniacid_tpl['tpl']==8202}
+{php include wl_template('common/footerbar13');}
+{/if}
+
+{if $uniacid_tpl['tpl']==8201}
+<style>
+	#buycart1 b{
+		display: block;
+		position: absolute;
+		top: 0;
+		right:6px;
+		color: #fff;
+		width: 20px;
+		height: 20px;
+		text-align: center;
+		line-height: 20px;
+		border-radius: 50%;
+	background: {$_W['system_color']};
+	opacity: 0.9;
+	}
+</style>
+{/if}
+{if $uniacid_tpl['tpl']==8209}
+<style>
+	.bottombarr{
+		background: #fff;
+	}
+	#gohome i{
+		background: url("../../../../addons/lexiangpingou/app/resource/images/bottomimg11.png") no-repeat;
+		background-position: -21px 0;
+		background-size: 240px;
+	}
+	.bottombarr .shequ i{
+		background: url("../../../../addons/lexiangpingou/app/resource/images/bottomimg11.png") no-repeat;
+		background-position: -120px 0;
+		background-size: 240px;
+	}
+	#buycart1 i{
+		background: url("../../../../addons/lexiangpingou/app/resource/images/bottomimg11.png") no-repeat;
+		background-position: -169px 0;
+		background-size: 240px;
+	}
+	.bottombarr .myService i{
+		background: url("../../../../addons/lexiangpingou/app/resource/images/bottomimg11.png") no-repeat;
+		background-position: -219px 0;
+		background-size: 240px;
+	}
+
+	#gohome.cur i{
+		background-position: 0 0;
+		background-size: 240px;
+	}
+	.bottombarr .shequ.cur i{
+		background-position: -94px 0;
+		background-size: 240px;
+	}
+	.bottombarr .myService.cur i{
+		background: url("../../../../addons/lexiangpingou/app/resource/images/bottomimg11.png") no-repeat;
+		background-position: -195px 0;
+		background-size: 240px;
+	}
+</style>
+	<ul class="bottombarr" data-curind="0" style="z-index: 2500;position: fixed;bottom: 0">
+		<!--<a class="home external {if $_GPC['ac']=='index'}cur{/if}" href="{php echo app_url('home/index')}"><i></i><span>首页</span></a>-->
+		<a id="gohome" class="home external {if $_GPC['ac']=='list'&&$_GPC['op']!='store_goods'&&$_GPC['op']!='store_list1'}cur{/if}" href=""><i></i><span>社区网超</span></a>
+		<a class="shequ external {if $_GPC['op'] == 'store_goods'}cur{/if}" href=""><i></i><span>社区团购</span></a>
+		<a id="buycart1" onclick="opencart()" class="myService external" href="##"><i></i><b style="display: none!important;">0</b><span id="buycartimg">购物车</span></a>
+		<a class="wode myService external {if $_GPC['ac']=='home'}cur{/if}" href="{php echo app_url('member/home')}"><i></i><span>关于我们</span></a>
+	</ul>
+<script>
+	console.log(sessionStorage.getItem('COUNTY_NAME'));
+    function reloadPosition (success) {
+    	wx.ready(function () {
+	        var shareData = {
+	            title: "{$config['share']['share_title']}",
+	            desc: "{$config['share']['share_desc']}",
+	            link: "{$tourl}",
+	            imgUrl: "{php echo tomedia($config['share']['share_image'])}"
+	        };
+	        wx.getLocation({
+				type: 'gcj02', //返回可以用于wx.openLocation的经纬度
+				success: function(res) {
+					var locationADD={
+						latitude:res.latitude,
+						longitude:res.longitude
+					};
+					success&&success(locationADD);
+				}
+			});
+	    });
+    }
+    reloadPosition(function(locationADD) {
+    	if(sessionStorage.getItem('COUNTY_NAME') != null) {
+	    	var local_county = sessionStorage.getItem('COUNTY_NAME');
+	    	local_county = JSON.parse(local_county);
+	    	shequIcon(locationADD.latitude, locationADD.longitude, local_county.storeid, local_county.countyname);
+	    	gohomeIcon(locationADD.latitude, locationADD.longitude, local_county.shop_storeid, local_county.shop_name);
+	    	{if $_GPC['ac']=='list'&&$_GPC['op']!='store_list1'}window.initStoreid();{/if}
+	    } else {
+	    	getAddress(locationADD.longitude, locationADD.latitude, function (countyname) {
+				countyname = typeof countyname == 'undefined' ? '': countyname;
+				var obj = {
+					'countyname': countyname,
+					'storeid': {php echo intval($_W['storeid'])},
+					'shop_name': countyname,
+					'shop_storeid': {php echo intval($_W['shop_storeid'])}
+				}
+				sessionStorage.setItem('COUNTY_NAME',JSON.stringify(obj));
+				window.initStoreid();
+		    	shequIcon(locationADD.latitude, locationADD.longitude, {php echo intval($_W['storeid'])}, countyname);
+	    		gohomeIcon(locationADD.latitude, locationADD.longitude, {php echo intval($_W['shop_storeid'])}, countyname);
+			});
+	    }
+    });
+
+	function getAddress(longitude,latitude, success){
+		//通过baiduMap API获取街道名称
+        var map = new BMap.Map("allmap");
+        var point = new BMap.Point(longitude,latitude);
+        var gc = new BMap.Geocoder();
+        gc.getLocation(point, function(rs){
+            var addComp = rs.addressComponents;
+			success&&success(addComp.district)
+        });
+    }
+
+
+	function shequIcon (latitude, longitude, id , countyname) {
+        $('.shequ').attr('href', "{php echo app_url('goods/list/store_goods',array('type' => '2'))}" + "&lat=" + latitude + "&lng=" + longitude + "&storeid=" + id + "&countyname=" + countyname);
+	}
+
+	function gohomeIcon (latitude, longitude, id , shop_name) {
+        if (shop_name == '') {
+            $('#gohome').attr('href', "{php echo app_url('goods/list/store_list1',array('type' => '1'))}");
+        } else {
+            $('#gohome').attr('href', "{php echo app_url('goods/list' , array('shop_storeid' => $_W['shop_storeid']))}" + "&lat=" + latitude + "&lng=" + longitude + "&shop_storeid=" + id + "&shop_name=" + shop_name);
+        }
+	}
+
+</script>
+{/if}

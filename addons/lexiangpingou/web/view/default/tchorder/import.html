@@ -1,0 +1,427 @@
+{php include wl_template('common/header');}
+<style type='text/css'>
+       .trbody td {text-align: center; vertical-align:top;border-left:1px solid #ccc; border-bottom: 1px solid #ddd;}
+</style>
+<style>
+	.order-rank img{width:16px; height:16px;}
+	.js-remark,.js-admin-remark{word-break:break-all; overflow:hidden; background: #FDEEEE;color: #ED5050;padding: 5px 10px;}
+	td.goods-info{position:relative; padding-left:60px;}
+	.goods-info .img{margin-top:25px; background: url({IMAGE_LOADING}) center center no-repeat; width:50px;height:50px;float: left;clear: both;}
+	.goods-info span {white-space: nowrap;overflow: hidden;text-overflow: ellipsis;display: block;}
+	.status-text{cursor:pointer;}
+	.table>thead>tr>th, .table>tbody>tr>th, .table>tfoot>tr>th, .table>thead>tr>td, .table>tbody>tr>td, .table>tfoot>tr>td {border-top: 1px solid rgba(221, 221, 221, 0);}
+	.atitle:last-child hr{display:none;}
+	.choose_kd {
+		display: -webkit-box;
+        display: -webkit-flex;
+        display: -ms-flexbox;
+        display: flex;
+        -webkit-box-pack: justify;
+        -webkit-justify-content: space-between;
+        -ms-flex-pack: justify;
+        justify-content: space-between;
+        -webkit-box-align: center;
+        -webkit-align-items: center; 
+        -ms-flex-align: center;
+        align-items: center;
+	}
+	.choose_kd .form-group {
+		display: -webkit-box;
+        display: -webkit-flex;
+        display: -ms-flexbox;
+        display: flex;
+        -webkit-box-pack: justify;
+        -webkit-justify-content: space-between;
+        -ms-flex-pack: justify;
+        justify-content: space-between;
+        -webkit-box-align: center;
+        -webkit-align-items: center; 
+        -ms-flex-align: center;
+        align-items: center;
+        flex-flow: row nowrap;
+	}
+	.choose_kd .form-group .control-label {
+		text-align: center;
+	}
+	#mimeograph {
+		margin-bottom: 16px;
+	}
+</style>
+<ul class="nav nav-tabs">
+	<li {if $op == 'display' && $status == '' }class="active"{/if}>
+        <a href="{php echo web_url('order/tchorder', array('op' => 'mimeograph'))}">全部待发货({$total_all})</a>
+    </li>
+    <li {if $op == 'display' && $status == '1' && $godluck == ''} class="active"{/if}>
+        <a href="{php echo web_url('order/tchorder', array('op' => 'mimeograph', 'status' => 1))}">团购成功待发货({$total_tuan})</a>
+    </li>
+	<li {if $op == 'display' && $status == '0'} class="active"{/if}>
+        <a href="{php echo web_url('order/tchorder', array('op' => 'mimeograph', 'status' => 0))}">单独购买待发货({$total_single})</a>
+    </li>
+	<li {if $op == 'display' && $status == '1' && $godluck == '1'} class="active"{/if}>
+        <a href="{php echo web_url('order/tchorder', array('op' => 'mimeograph', 'godluck' => 1))}">中奖待发货({$total_choujian})</a>
+    </li>
+</ul>
+{if $op == 'mimeograph'}
+<div class="main">
+    <div class="panel panel-info">
+	    <div class="panel-heading">批量发货步骤</div>
+	    <div class="panel-body">
+            <div class="form-group">
+                <label class="col-xs-12 col-sm-2 col-md-2 col-lg-12 control-label" style="text-align: left;padding-right: 30px;">
+                1.按条件搜索出需要导出的待发货订单文件。
+                </label>
+                 <label class="col-xs-12 col-sm-2 col-md-2 col-lg-12 control-label" style="text-align: left;padding-right: 30px;">
+                2.导出订单文件，填写快递单号、快递公司。
+                </label>
+                 <label class="col-xs-12 col-sm-2 col-md-2 col-lg-12 control-label" style="text-align: left;padding-right: 30px;">
+                3.导入该订单文件<span style="color: red;">（xls或csv格式文件）</span>，批量发货完成。
+                </label>
+            	 <label class="col-xs-12 col-sm-2 col-md-2 col-lg-12 control-label" style="text-align: left;padding-right: 30px;">
+                4.<span style="color: red;">注意：不能删除导出表格中任意的列项，只需填好快递单号和快递公司即可保存导回系统中</span>
+                </label>
+				 <label class="col-xs-12 col-sm-2 col-md-2 col-lg-12 control-label" style="text-align: left;padding-right: 30px;">
+                5.<span style="color: red;">注意：抽奖团中奖订单请在中奖订单里发货</span>
+                </label>
+	   		</div>
+	    </div>
+	</div> 
+	<div class="panel panel-info">
+	    <div class="panel-heading">筛选</div>
+	    <div class="panel-body">
+            <form action="./index.php" method="get" class="form-horizontal" role="form" id="form2">
+                <input type="hidden" name="c" value="site" />
+                <input type="hidden" name="a" value="entry" />
+                <input type="hidden" name="m" value="lexiangpingou" />
+                <input type="hidden" name="do" value="order" />
+                <input type="hidden" name="ac" value="import" />
+                <input type="hidden" name="status" value="{$status}"/>
+				 <input type="hidden" name="godluck" value="{$godluck}"/>
+                 <input type="hidden" name="op" value="{$op}"/>
+                 <div class="form-group">
+
+					<label class="col-xs-12 col-sm-4 col-md-4 col-lg-1 control-label">商品名称</label>
+                    <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
+                        <select name="goodsid2" class="form-control">
+                            <option value="">--所有--</option>
+                            {loop $allgoods $key $type}
+                            <option value="{$type['id']}" {if $_GPC['goodsid2']==$type['id']}selected="selected"{/if}>{$type['gname']}</option>
+                            {/loop}
+                        </select>
+                    </div>
+					<label class="col-xs-12 col-sm-4 col-md-4 col-lg-1 control-label">订单号</label>
+                    <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
+                        <input class="form-control" name="keyword" id="" type="text" value="{$_GPC['keyword']}" placeholder="可查询商品ID">
+                    </div>
+                 </div>
+                 <div class="form-group">
+				<label class="col-md-4 col-lg-1 control-label">用户地址</label>
+                    <div class="col-md-4">
+                        <input class="form-control" name="address" id="" type="text" value="{$_GPC['address']}" placeholder="用户地址">
+                    </div>
+					
+					<label class="col-xs-12 col-sm-4 col-md-4 col-lg-1 control-label">地址类型</label>
+                    <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
+                        <select name="addresstype" class="form-control" >
+                            <option value="">--所有--</option>                            
+                            <option value="1" {if $_GPC['addresstype']==1}selected="selected"{/if}>公司</option>
+                           <option value="2" {if $_GPC['addresstype']==2}selected="selected"{/if}>家庭</option>
+                        </select>
+                    </div>
+				
+                     
+                </div>
+                <div class="form-group">
+                    <label class="col-xs-12 col-sm-4 col-md-4 col-lg-1 control-label">用户信息</label>
+                    <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
+                        <input class="form-control" name="member" id="" type="text" value="{$_GPC['member']}" placeholder="可查询手机号 / 姓名">
+                    </div>
+                     <label class="col-xs-12 col-sm-4 col-md-4 col-lg-1 control-label">下单时间</label>
+                        <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
+                            {php echo tpl_form_field_daterange('time', array('starttime'=>date('Y-m-d H:i:s', $starttime),'endtime'=>date('Y-m-d H:i:s', $endtime)),true);}
+                        </div>
+                        <div class="col-sm-3 col-lg-2" style="text-align:right;"><button class="btn btn-default"><i class="fa fa-search"></i> 搜索</button>
+                        </div>
+                </div>
+            </form>
+	    </div>
+	</div>
+	<div class="panel panel-info">
+	    <div class="panel-heading">发货</div>
+	    <div class="panel-body">
+            {if checkstr($_W['user']['perms'],'import.output')}
+           <div class="form-group">
+                <label class="col-xs-12 col-sm-4 col-md-4 col-lg-1 control-label" style="text-align: right;padding-right: 30px;">导出订单</label>
+            	<a href='{php echo web_url('order/import', array('op' => 'output','status'=>$status,'keyword'=>$keyword,'member'=>$member,'godluck' => $godluck,'starttime'=>$starttime,'endtime'=>$endtime,'time'=>$time,'goodsid'=>$_GPC['goodsid'],'godluck'=>$_GPC['godluck'],'address'=>$_GPC['address'],'addresstype'=>$_GPC['addresstype'],'goodsid2'=>$_GPC['goodsid2'],'merchantid'=>$_GPC['merchantid']))}'>
+            		<button class="btn btn-info"><i class="fa fa-download"></i> 导出订单</button>
+            	</a>
+	   		</div>
+            {/if}
+	    	<form name="sendForm" enctype="multipart/form-data" class="form-horizontal" action="{php echo web_url('order/import', array('op' => 'import'))}" method="post">
+                {if checkstr($_W['user']['perms'],'import.input')}
+	   		    <div class="form-group">
+                    <label class="col-xs-12 col-sm-4 col-md-4 col-lg-1 control-label">导入发货订单</label>
+                    <div class="col-sm-5 col-lg-7 col-xs-12">
+                        <input type="file" name="fileName" class="btn btn-success" />
+                    </div>
+                    <div class="col-sm-3 col-lg-2" style="text-align:right;"><button id="searchBtn" type="submit" class="btn btn-success"> 导 入 </button>
+                    </div>
+                </div>
+                {/if}
+	   		</form>
+	    </div>
+	</div> 
+		<div class="order-list">
+		<div class="panel-body table-responsive collapse in" id="order-template-item-4" style="padding: 0;">
+			
+		</div>
+
+
+		<div class="panel panel-default" >
+			
+				<table class="table" style="background-color:#888">
+					<thead style="">
+						<tr>
+							<th style="width:60px;" class="text-center"><input type="checkbox" onclick="var ck = this.checked;$(':checkbox').each(function(){this.checked = ck});" />全选框</th>
+							<!--<th style="width:180px;">是否打印</th>-->
+							<th style="width:180px;">订单号/商品</th>
+							<th style="width:80px; text-align:center;">属性</th>
+							<!--<th style="width:80px; text-align:center;">所属商家</th>-->
+							<th style="width:100px; text-align:center;">状态</th>
+							<th style="width:110px; text-align:center;">时间</th>
+							<th style="width:160px; text-align:center;">联系人</th>
+							<th style="width:50px; text-align:center;">操作</th>
+						</tr>
+					</thead>
+				
+			</table>
+			<div class="panel-body table-responsive" style="padding: 0px;">
+				<table class="table table-bordered">
+					<tbody>
+					{loop $list $item}
+					<?php
+				 $s1=pdo_fetch("select * from" . tablename('tg_member') . " where from_user ='".$item['openid']."'");
+
+				  $pmember=pdo_fetch("select * from" . tablename('tg_member') . " where id ='".$s1['parentid']."'");
+				?>
+						<tr>
+							<td class="text-center" style="width:60px;"><input type="checkbox" name="checkbox[]"  value="{$item['id']}" /></td>
+							<td class="goods-info line-feed" style="width:180px;padding-left: 10px;">
+							<b style="font-size: 16px;">
+                                所属商家：{$item['merchant_name']}<br/>
+                                订单号: <b class="orderno">{$item['orderno']}</b>
+                            </b>
+							{if $item['g_id']>0}
+								<div class="img">
+								<img width="50" height="50" class="oscrollLoading" src="{php echo tomedia($item['gimg'])}" data-url="{php echo tomedia($item['gimg'])}" height="50" width="50" onerror="this.src='{IMAGE_NOPIC_SMALL}'" >
+								
+								</div>
+								<div class="title" style="text-align:left;padding-left: 60px;">								
+									<p class="gname">{$item['gname']}</p>
+									<p>	{if $item['optionname']}规格：{$item['optionname']},{/if}数量:{$item['gnum']},单价:{$item['goodsprice']}</p>
+								</div>
+								{else}
+								<?php 
+								$col=pdo_fetchall("select * from ".tablename('tg_collect')." where  orderno=:orderno",array('orderno'=>$item['orderno']));
+								?>
+								 {loop $col $v}
+								 <?php 
+								$gs=pdo_fetch("select * from ".tablename('tg_goods')." where  id=:id",array('id'=>$v['sid']));
+								?>
+									 <div class="img">
+									<img width="50" height="50" class="oscrollLoading" src="{php echo tomedia($gs['gimg'])}" data-url="{php echo tomedia($gs['gimg'])}" height="50" width="50" onerror="this.src='{IMAGE_NOPIC_SMALL}'" >
+									
+									</div>
+									<div class="atitle" style="text-align: left;padding-left: 60px;margin-top: 25px;height: 65px;line-height: 12px;">								
+										<p>{$gs['gname']}</p>
+										<p>{if !empty($v['item'])}规格：{$v['item']},{/if}</p>
+										<p>数量:{$v['num']},单价:{$v['oprice']}</p>
+										
+										<hr style="margin-top: 10px;margin-bottom: 0px;"/>
+									</div>
+									
+								 {/loop}
+								{/if}
+							</td>
+							<td class="text-left" style="width:80px;">
+							
+							<p>运费:{$item['freight']}</p>
+							<p>实付:{if empty($item['pay_price'])}{$item['price']}{else}{$item['pay_price']}{/if}元</p>
+							</td>
+						<!--	<td class="text-center" style="width:80px;">{if empty($item['merchant']['name'])}{$_W['account']['name']}{else}{$item['merchant']['name']}{/if}</td>-->
+							<td class="text-left" style="width:100px;">
+								<p></p>
+								<p><span>团长:</span> <span class="label btn-success">{if $item['tuan_first']==1}是{else}否{/if}</span></p>
+						
+						<!--	支付方式:<span class="label label-primary"> {$item['paytype']}</span><br>-->
+							
+							<p><span style="color:black;">状态:<span>
+						{if $item['status'] == '待付款'}<span class="label label-warning">待付款</span>{/if}
+						{if $item['status'] == '已付款'}<span class="label label-info">已付款</span>{/if}
+						{if $item['status'] == '待收货'}<span class="label label-primary">待收货</span>{/if}
+						{if $item['status'] == '已签收'}<span class="label label-warning">已签收</span>{/if}
+						{if $item['status'] == '已退款'}<span class="label label-danger">已退款</span>{/if}
+						{if $item['status'] == '强退款'}<span class="label label-danger">强退款</span>{/if}
+						{if $item['status'] == '部分退款'}<span class="label label-danger">部分退款</span>{/if}
+						{if $item['status'] == '团长免单'}<span class="label label-success">团长免单</span>{/if}
+						{if $item['status'] == '待发货'}<span class="label label-success">待发货</span>{/if}
+						{if $item['status'] == '已取消'}<span class="label label-success">已取消</span>{/if}
+						{if $item['status'] == '已关闭'}<span class="label label-success">已关闭</span>{/if}
+						{if $item['status'] == '申请退款'}<span class="label label-danger">申请退款</span>{/if}
+						{if $item['status'] == '货到付款'}<span class="label label-danger">货到付款</span>{/if}
+						{if $item['status'] == '不处理'}<span class="label label-danger">不处理</span>{/if}
+					
+						{if $item['status'] == '全额退款并要求退货'}<span class="label label-danger">全额退款并要求退货</span>{/if}
+						{if $item['status'] == '全额退款'}<span class="label label-danger">全额退款</span>{/if}
+						{if $item['status'] == '再次申诉'}<span class="label label-danger">再次申诉</span>{/if}</p>
+						{if $item['is_tuan']==1 || $item['is_tuan']==3}
+                                {if checkstr($_W['user']['perms'],'received.group_detail')}
+					<p><a href="{php echo web_url('order/group/group_detail', array('groupnumber' => $item['tuan_id'],'dispatchtype'=>$dispatchtype))}">
+
+					<span style="color:black;font-weight:normal;">类型:<span><span class="label label-warning">团：{$item['tuan_id']}</span></a></p>
+                                {/if}
+					{elseif $item['is_tuan']==0}
+                                {if checkstr($_W['user']['perms'],'received.group_detail')}
+					<p><a href="{php echo web_url('order/order/detail', array( 'id' => $item['id'],'is_tuan'=>1,'dispatchtype'=>$dispatchtype))}">
+					<span style="color:black;">类型：<span><span class="label label-success">{if $item['g_id']==0}购物车{else}单买{/if}</span>
+					</a></p>{/if}
+					{elseif $item['is_tuan']==2}
+                                {if checkstr($_W['user']['perms'],'received.group_detail')}
+										<p><a href="{php echo web_url('order/group/group_detail', array('groupnumber' => $item['tuan_id'],'dispatchtype'=>$dispatchtype))}">
+										<span style="color:black;">类型：<span><span class="label label-default">团满退款单</span></a></p>
+					{/if}
+					{/if}
+							{if $item['dispatchtype']==1}	<p><span>核销状态:</span> <span class="label btn-success">{if !empty($item['veropenid'])}是{else}否{/if}</span></p>{/if}
+						{if !empty($item['veropenid'])}	<p><span>核销员:</span> <span class="label btn-success">{$saler['nickname']}</span></p>{/if}
+							{if !empty($pmember['nickname'])}<b>推广员:</b> <span class="label btn-success">{$pmember['nickname']}</span>	{/if}
+						
+							</td>
+							<td class="text-left" style="width:110px;">	  <p><span>下单:  </span>{php echo date('Y-m-d', $item['createtime'])}</p>
+						
+						 {if !empty($item['ptime'])}<p><span>支付: </span>{php echo date('Y-m-d H:i', $item['ptime'])}</p>{/if}
+						   {if !empty($item['hexiaotime'])}<p><span>核销: </span>{php echo date('Y-m-d H:i', $item['hexiaotime'])}</p>{/if}</td>
+							<td class="text-left" style="width:160px;">							
+								<p><span>昵称:</span> <span class="label btn-success">{$s1['nickname']}</span>	</p>
+								<p><span>姓名:</span> <span class="label btn-success cname">{if $item['cname']}{$item['cname']}{else}{$item['addname']}{/if}</span>	</p>
+								<p><span>电话:</span> <span class="label btn-success tel">{if $item['tel']}{$item['tel']}{else}{$item['mobile']}{/if}</span>	</p>
+								<p><span>地址:</span> <span class="label btn-success address">{$item['address']}</span></p>
+								
+							</td>
+							<td class="text-center" style="width:50px;text-align:center;">
+							<span class="text-muted"></span>
+                                {if checkstr($_W['user']['perms'],'import.update')}
+							<a href="{php echo web_url('order/order/update', array('id' => $item['id'],'dispatchtype'=>$dispatchtype))}" >修改价格</a><br/>
+								{/if}
+                                {if checkstr($_W['user']['perms'],'import.dayin')}
+							<a  href="{php echo web_url('order/order/dayin', array('id' => $item['id'],'dispatchtype'=>$dispatchtype))}" >小票打印</a><br/>
+                                {/if}
+                                {if checkstr($_W['user']['perms'],'import.detail')}
+							<a  href="{php echo web_url('order/order/detail', array('id' => $item['id'],'dispatchtype'=>$dispatchtype))}" target="_blank">查看详情</a><br/>
+                                {/if}
+                                {if checkstr($_W['user']['perms'],'import.remarks')}
+							<a  href="javascript:;" class="js-order-edit-remark" order-id="{$item['id']}">备注</a>
+                                {/if}
+						</td>
+
+						</tr>
+						{/loop}
+					</tbody>
+				</table>
+			</div>
+			
+			<div  class="panel-footer js-remark" {if empty($item['remark'])}style="display: none;"{/if} style="background-color:white;color:#428bca;">
+				买家备注:{$item['remark']}	
+			</div>
+			<div class="panel-footer js-admin-remark{$item['id']} " order-id="{$item['id']}" {if empty($item['adminremark'])}style="display: none;"{/if} style="background-color:lightgoldenrodyellow">
+				卖家备注：<span id="js-admin-remark{$item['id']}" style="">{$item['adminremark']}</span>
+			</div>
+		</div>
+
+	</div>
+	<div class="choose_kd">
+		<div class="form-group col-sm-12">
+	        <label for="firstname" class="col-sm-2 control-label">快递选择</label>
+	        <div class="col-sm-10">
+	           <select name="kd_type" id="kd_type" class="form-control">
+					<option selected>请选择快递</option>
+					<option value="SF">顺丰快递</option>
+					<!--<option value="ZJS">宅急送</option>-->
+
+					<option value="ZTO">中通快递</option>
+				</select>
+	        </div>
+	    </div>
+		<input type="button" type="button" name="button" value="全部打印" id="mimeograph" class="btn btn-primary">
+	</div>
+</div>
+
+{$pager}
+<script type="text/javascript">
+	require(['daterangepicker'], function($){
+		$('.daterange').on('apply.daterangepicker', function(ev, picker) {
+			$('#form1')[0].submit();
+		});
+	});
+</script>
+	<script>
+	require(['bootstrap'],function($){
+		$('.btn').hover(function(){
+			$(this).tooltip('show');
+		},function(){
+			$(this).tooltip('hide');
+		});
+	});
+</script>
+<!--打印调用的ajax-->
+<script>
+	$("#mimeograph").click(function () {
+	    //获取到所有的选择框中的值
+		var checkeds=$('.table-bordered input[name ="checkbox[]"]');
+		var k  = 0;
+		var arr=[];
+		for(var i=0;i<checkeds.length;i++){
+			if(checkeds[i].checked){
+				var obj={};
+				k++;
+				var parent=$(checkeds[i]).parent().parent();
+				obj['orderno']=parent.find('.orderno').html();
+				obj['gname']=parent.find('.gname').html();
+				obj['cname']=parent.find('.cname').html();
+				obj['tel']=parent.find('.tel').html();
+				var address=parent.find('.address').html();
+				obj['addressp']="";
+				if(new RegExp('省').test(address)){
+					obj['addressp']=address.split('省')[0];
+					obj['addresss']=address.split('省')[1].split('市')[0];
+					obj['addressq']=address.split('省')[1].split('市')[1].split('区')[0];
+					obj['addressj']=address.split('省')[1].split('市')[1].split('区')[1];
+				}else{
+					obj['addresss']=address.split('市')[0];
+					obj['addressq']=address.split('市')[1].split('区')[0];
+					obj['addressj']=address.split('市')[1].split('区')[1];
+				}
+				arr.push(obj);
+			}
+		}
+		if (k==0){
+		    util.tips("不能空打",5000);
+		    return false;
+		}
+		var kd_type = $("#kd_type").val();
+		if (kd_type == "请选择快递") {
+			alert("请选择快递方式");
+			return false;
+		}
+        $('header').remove();
+		$.post(
+		   "{php echo web_url('order/tchorder')}",
+			{'op':'print_post','arr':arr,'kd_type':kd_type},
+			function(data){
+				$('body').html(data);
+                setTimeout(function(){window.print()},700);
+            }
+
+		);
+        });
+</script>
+{/if}
+{php include wl_template('common/footer');}

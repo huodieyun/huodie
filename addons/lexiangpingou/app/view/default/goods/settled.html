@@ -1,0 +1,420 @@
+{php include wl_template('common/header');}
+<link rel="stylesheet" href="{TG_URL_ARES}weiui/weui.min.css">
+<script src="{TG_URL_ARES}weiui/jquery-weui.min.css"></script>
+<!--<script src="{TG_URL_ARES}weiui/jquery-weui.min.js"></script>-->
+<style>
+    body{
+        position: inherit;
+        overflow: inherit;
+    }
+    .weui-cells:before,.weui-cells:after{
+        border: none;
+    }
+    .weui-cells{
+        margin-top: 0;
+    }
+    .weui-cell.weui-check__label{
+        padding: 0;
+    }
+    #sjlogo{
+        width: 77px;
+        height: 77px;
+        float: left;
+        margin-right: 10px;
+        background: #888;
+    }
+    .fixbg{
+        position: fixed;
+        top:0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0,0,0,0.7);
+        padding: 10px;
+        display: none;
+    }
+    .gz>div,.xy>div{
+        background-color: #fff;
+        border-radius: 5px;
+        height: 100%;
+    }
+    .gz>div div,.xy>div div{
+        padding: 10px;
+        height: 90%;
+        overflow-y: auto;
+    }
+    .gz h4,.xy h4{
+        background: {$_W['system_color']};
+        color: #fff;
+        text-align: center;
+        font-size: 18px;
+        padding: 5px;
+        border-top-left-radius: 5px;
+        border-top-right-radius: 5px;
+    }
+    .weui-cells_checkbox .weui-check:checked+.weui-icon-checked:before{
+        color:{$_W['system_color']} ;
+    }
+    .weui-btn{
+        background-color: {$_W['system_color']};
+    }
+    .modal{
+        position: fixed;
+    }
+    .shzt{
+        position: fixed;
+        z-index: 10;
+        top:0;
+        left: 0;
+        width: 100%;
+        height:100%;
+        background: #fff;
+        text-align: center;
+        font-size: 18px;
+    }
+</style>
+<div style="height: 100%">
+    <div><img src="{$uniacid['regbg']}" width="100%" alt=""/></div>
+    <div style="padding-right:10px;" class="weui-cells">
+        <div class="weui-cell">
+            <div class="weui-cell__bd">
+                <input class="weui-input name" type="text" placeholder="用户名" value="{$uniac['uname']}">
+            </div>
+        </div>
+        <div class="weui-cell">
+            <div class="weui-cell__bd">
+                <input class="weui-input pwd" type="password" placeholder="密码" value="{$uniac['password']}">
+            </div>
+        </div>
+        <div class="weui-cell">
+            <div class="weui-cell__bd">
+                <input class="weui-input mobile" type="text" placeholder="手机号（可用于找回密码）" value="{$uniac['mobile']}">
+            </div>
+        </div>
+        {if $boom == 1}
+        <div class="weui-cell">
+            <div class="weui-cell__bd">
+                <input style="width: 60%;display: inline-block" class="weui-input code" type="text" placeholder="短信验证码" value="{$uniac['code']}"/>
+                <input onclick="getCorda(this)" type="button" value="点击获得验证码" id="getCord" class="weui-btn btn btn-primary btn-block getCord"
+                       style="height: 30px;width:40%;font-size:12px;float:right;"/>
+            </div>
+        </div>
+        {/if}
+        <div class="weui-cell">
+            <div class="weui-cell__bd">
+                <input class="weui-input sjname" type="text" placeholder="商家名称" value="{$uniac['name']}">
+            </div>
+        </div>
+
+        <div class="weui-cell">
+            <div class="weui-cell__bd">
+                <input id="city-picker" class="weui-input addr" type="text" placeholder="商家地址" value="{$uniac['address']}">
+            </div>
+        </div>
+        <!--<div class="weui-cell">-->
+            <!--<div class="weui-cell__bd">-->
+                <!--<p>地理位置</p>-->
+                <!--<p></p>-->
+            <!--</div>-->
+            <!--<div class="weui-cell__ft" onclick="addressa(this)">点击获取</div>-->
+        <!--</div>-->
+        <a class="weui-cell weui-cell_access" href="javascript:;">
+            <div class="weui-cell__bd">
+                <p>规则</p>
+            </div>
+            <div onclick="$('.gz').slideDown()" class="weui-cell__ft">查看详情</div>
+        </a>
+        <a class="weui-cell weui-cell_access" href="javascript:;">
+            <div class="weui-cell__bd">
+                    <div class="weui-cells weui-cells_checkbox">
+                        <label class="weui-cell weui-check__label" for="s11">
+                            <div class="weui-cell__hd">
+                                <input type="checkbox" class="weui-check" name="checkbox1" id="s11">
+                                <i class="weui-icon-checked"></i>
+                            </div>
+                            <div class="weui-cell__bd">
+                                <p>入驻申请协议</p>
+                            </div>
+                        </label>
+                    </div>
+            </div>
+            <div onclick="$('.xy').slideDown()" class="weui-cell__ft">查看详情</div>
+        </a>
+
+        <!--<div class="weui-cell">-->
+            <!--<div class="weui-cell__bd">-->
+                <!--<div class="weui-cells weui-cells_form">-->
+                    <!--<div class="weui-cell">-->
+                        <!--<div class="weui-cell__bd">-->
+                            <!--<div class="weui-uploader">-->
+                                <!--<div class="weui-uploader__hd">-->
+                                    <!--<p class="weui-uploader__title">商家logo</p>-->
+                                <!--</div>-->
+                                <!--<div class="weui-uploader__bd">-->
+                                    <!--<ul class="weui-uploader__files" id="uploaderFiles">-->
+                                        <!--<img id="sjlogo" src="" alt=""/>-->
+                                    <!--</ul>-->
+                                    <!--<div class="weui-uploader__input-box">-->
+                                        <!--<input onclick="uploadImg()" id="uploaderInput" class="weui-uploader__input" multiple="">-->
+                                    <!--</div>-->
+                                <!--</div>-->
+                            <!--</div>-->
+                        <!--</div>-->
+                    <!--</div>-->
+                <!--</div>-->
+            <!--</div>-->
+        <!--</div>-->
+
+    </div>
+    <a style="margin:50px 10px 50px 10px;" href="javascript:;" class="weui-btn weui-btn_primary">立即入驻</a>
+    <div onclick="$(this).slideUp()" class="gz fixbg">
+        <div>
+            <h4>规则</h4>
+            <div></div>
+        </div>
+    </div>
+    <div onclick="$(this).slideUp()" class="xy fixbg">
+        <div>
+            <h4>入驻申请协议</h4>
+            <div></div>
+        </div>
+    </div>
+</div>
+<!--审核状态-->
+<div class="shzt">
+    <div><i style="font-size: 6rem;color: #1aad19;" class=""></i></div>
+    <div class="shzt_txt">
+
+    </div>
+</div>
+<script>
+
+    {if $boom == 1}
+    var url = "{php echo $_W['siteroot']}/minapi.php?op=code&uniacid={$_W['uniacid']}";
+    var getCord = document.getElementById("getCord");
+    getCord.onclick = function (ev) {
+        if (getCord.value == '点击获得验证码' || getCord.value == '发送失败' || getCord.value == '重新发送验证码') {
+            ajaxData(0, url);
+        }else {
+            // var num = $(".code").val();
+            // console.log(num); 
+            // ajaxData(num, url);
+            $.toast('倒计时还未结束',1000);
+            return;
+        }
+
+    };
+
+    function ajaxData(num, url){
+
+        var mobile = $(".mobile").val();
+
+        if(!(/^1[34578]\d{9}$/.test(mobile))){
+            $.toast('手机号码不正确');
+            return false;
+        }
+        //去除单击事件，防止多次点击
+        $('#getCord').attr('onclick','');
+        var xhr = new XMLHttpRequest();
+        var formData = new FormData();
+
+        formData.append('num', num);
+        if (num == 0) {
+            formData.append("mobile", mobile);
+            formData.append('retrieve', 1);
+        }
+        else if (num.length == 6) {
+            formData.append('retrieve', 2);
+        }
+        else {
+            $.toast("验证码不正确");
+//            alert("验证码不正确");
+            return false;
+        }
+        xhr.open('post', url, true);
+        xhr.send(formData);
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState == 4) {
+                if ((xhr.status >= 200 && xhr.status < 300) || xhr.status == 304) {
+                    var res = JSON.parse(xhr.responseText);
+                    if(res.result){
+                        $.toast(res.result);
+                        return false;
+                    }
+                    if (res['status'] == 1) {
+                        window.localStorage.setItem('mobile_code',res['code'])
+//                        $.toast(res['code']);
+                         var a = 60;
+                         var timp = setInterval(function () {
+                             a--;
+                             getCord.value = a + '秒';
+                             if (a == 0) {
+                                 $('#getCord').attr('onclick','getCorda(this)');
+                                 getCord.value = '重新发送验证码';
+                                 clearInterval(timp);
+                             }
+                         }, 1000);
+                    }else if(res['status'] == -1){
+                        $.toast(res.result);
+                    }else if(res['status'] == 2){
+                        $.toast(res.result);
+                        window.history(-1);
+                    }
+                }
+            }
+        }
+    }
+    {/if}
+
+    //审核状态
+    $.get(
+        "{php echo $_W['siteroot']}minapi.php?op=merchant_status",
+        {uniacid:"{$_W['uniacid']}",openid:"{$_W['openid']}"},
+        function(data){
+            if(JSON.parse(data).status=='0'){
+                $('.weui-btn').removeClass('weui-btn_primary').html('入驻审核中...').off('click');
+                $('.shzt i').addClass('iconal-tishi').css('color','#1aad19');
+                $('.shzt_txt').html('<h3>资料提交成功，系统审核中...</h3>');
+            }else if(JSON.parse(data).status=='1'){
+                $('.weui-btn').removeClass('weui-btn_primary').html('入驻已成功').off('click');
+                $('.shzt i').addClass('iconal-wancheng').css('color','#1aad19');
+                $('.shzt_txt').html('<h3>入驻申请审核成功</h3><h3>感谢您的支持</h3>');
+            }else if(JSON.parse(data).status=='2'){
+                $('.weui-btn').removeClass('weui-btn_primary').html('审核失败').off('click');
+                $('.shzt i').addClass('iconal-roundclose').css('color','#e4393c');
+                $('.shzt_txt').html('<h3>入驻申请审核失败</h3><h3>感谢您的支持</h3>');
+            }else {
+                $('.shzt').css('display','none');
+            }
+    });
+
+    $('.gz>div>div').html(escapeHtml("{$uniacid['merchant_role']}"));
+    $('.xy>div>div').html(escapeHtml("{$uniacid['applycontent']}"));
+
+    //提交申请
+    $('.weui-btn_primary').click(function(){
+        if($('.name').val()==""){
+            $.toast('请填写用户名');
+            return;
+        }
+        if($('.pwd').val()==""){
+            $.toast('请填写密码');
+            return;
+        }
+        if($('.pwd').val().length<8){
+            $.toast('密码长度少于8位');
+            return;
+        }
+        if($('.mobile').val()==""){
+            $.toast('请填写手机号码');
+            return;
+        }
+        var mobile = $('.mobile').val();
+        if(!(/^1[34578]\d{9}$/.test(mobile))){
+            $.toast('手机号码不正确');
+            return false;
+        }
+        {if $boom == 1}
+        if($('.code').val()==""){
+            $.toast('请填写短信验证码');
+            return;
+        }
+        {/if}
+        if($('.sjname').val()==""){
+            $.toast('请填写商家名称');
+            return;
+        }
+        if($('.addr').val()==""){
+            $.toast('请填写商家地址');
+            return;
+        }
+        if(!$('.weui-check')[0].checked){
+            $.toast('认真阅读入驻协议后请勾选');
+            return;
+        }
+        {if $boom == 1}
+        var num = $('.code').val();
+        var _code = window.localStorage.getItem('mobile_code');
+
+        if (num != _code) {
+            $.toast('短信验证码不正确');
+            return false;
+//            alert('短信验证码不正确', '', 'error');
+//            return false;
+        }
+        {/if}
+        $.get(
+                "{php echo $_W['siteroot']}minapi.php?op=merchant_add", 
+            {
+                uniacid:"{$_W['uniacid']}",
+                openid:"{$_W['openid']}",
+                userName:$('.name').val(),
+                pwd:$('.pwd').val(),
+                sjName:$('.sjname').val(),
+                address:$('.addr').val(),
+                mobile:$('.mobile').val(),
+                code:$('.code').val()
+            },
+            function(data){
+                if(JSON.parse(data).status==1){
+                    $.toast('提交成功，请等待审核结果');
+                    window.localStorage.removeItem('mobile_code');
+                    setTimeout(function(){location.reload()},1000);
+                }else if(JSON.parse(data).status==0){
+                    $.toast(JSON.parse(data).message);
+                    return false
+                }
+        })
+    });
+
+    $("#city-picker").cityPicker({
+        toolbarTemplate: '<header class="bar bar-nav">\
+            <button class="button button-link pull-right close-picker">OK</button>\
+            <h1 class="title"></h1>\
+            </header>'
+    });
+
+    function uploadImg(){
+        wx.chooseImage({
+            count: 1, // 默认9
+            sizeType: ['original', 'compressed'], // 可以指定是原图还是压缩图，默认二者都有
+            sourceType: ['album', 'camera'], // 可以指定来源是相册还是相机，默认二者都有
+            success: function (res) {
+                var localId = res.localIds; // 返回选定照片的本地ID列表，localId可以作为img标签的src属性显示图片
+                $('#sjlogo').attr('src',"http://wx866e0a731d303c29.w9.huodiesoft.com/attachment/images/53/2017/04/yvKvQW5jlTqqQ7CTTkcnLr2ah7hcTz.jpg");
+                alert(localId);
+                wx.uploadImage({
+                    localId: localId, // 需要上传的图片的本地ID，由chooseImage接口获得
+                    isShowProgressTips: 1, // 默认为1，显示进度提示
+                    success: function (res) {
+                        var serverId = res.serverId; // 返回图片的服务器端ID
+                        alert(serverId);
+                    }
+                });
+            }
+        });
+    }
+
+    function addressa(e){
+        wx.getLocation({
+            type: 'wgs84', // 默认为wgs84的gps坐标，如果要返回直接给openLocation用的火星坐标，可传入'gcj02'
+            success: function (res) {
+                var latitude = res.latitude; // 纬度，浮点数，范围为90 ~ -90
+                var longitude = res.longitude; // 经度，浮点数，范围为180 ~ -180。
+                var speed = res.speed; // 速度，以米/每秒计
+                var accuracy = res.accuracy; // 位置精度
+                $(e).prev().find('p:last-child').html("经度:"+longitude+"   "+"纬度:"+latitude);
+            }
+        });
+//        wx.openLocation({
+//            latitude: 90, // 纬度，浮点数，范围为90 ~ -90
+//            longitude: 110, // 经度，浮点数，范围为180 ~ -180。
+//            name: '', // 位置名
+//            address: '', // 地址详情说明
+//            scale: 1, // 地图缩放级别,整形值,范围从1~28。默认为最大
+//            infoUrl: '' // 在查看位置界面底部显示的超链接,可点击跳转
+//        });
+    }
+</script>
+
+{php include wl_template('common/footer');}

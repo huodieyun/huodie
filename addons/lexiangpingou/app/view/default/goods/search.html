@@ -1,0 +1,87 @@
+{php include wl_template('common/header');}
+<style>
+    .bottombarr .sousuo span{
+        color:#e02e23;
+    }
+    .bottombarr .sousuo i{
+        background-position: -95px 0px;
+    }
+    body{
+        background-color: #f7f7f7;
+    }
+    .search_top{
+        height:60px;
+        line-height: 60px;
+        font-size: 22px;
+        text-align: center;
+        color: #3d4145;
+        background-color: #ddd;
+    }
+    /*.input-search{*/
+        /*display: flex;*/
+        /*display: -webkit-flex;*/
+        /*padding: 30px 10px 10px 10px;*/
+        /*justify-content: center;*/
+        /*-webkit-justify-content: center;*/
+    /*}*/
+    /*#keywordBox{*/
+        /*width: 70%;*/
+        /*padding: 0 10px;*/
+        /*border: 1px solid #ddd;*/
+        /*border-radius:0 ;*/
+    /*}*/
+    /*.input-search>button{*/
+        /*width: 18%;*/
+        /*height: 44px;*/
+        /*border-radius: 0 5px 5px 0;*/
+        /*color: #fff;*/
+    /*}*/
+    /*.input-search i.iconal-sousuo{*/
+        /*font-size: 22px;*/
+    /*}*/
+    .input-search{position:relative; margin-top:0.8em; height:auto; height:3em; overflow:hidden;margin: 10px 30px;}
+    .input-search span{position:absolute; left:0em; right:2.9em; border:1px solid #eee;
+        -webkit-border-radius:  5px 0 0 5px;
+        -moz-border-radius: 5px 0 0 5px;
+        border-radius: 5px 0 0 5px;background-color: #fff}
+    .input-search span input{width:100%; height:42px; font-size:1.2em; border:1px solid #fcfcfc; padding:0 0.6em; box-sizing:border-box; border-radius:0; border:none; border-radius:0.4em 0 0 0.4em;}
+    .input-search button{width:3.6em; height:42px;  background:#e6e6e6!important; display:block; position:absolute; right:0em; border-radius: 0 5px 5px 0; border:none;}
+    .input-search button i{color:#999; font-size:1.5em;}
+    {if $uniacid_tpl['tpl']==8199||$uniacid_tpl['tpl']==8200}
+    .sousuo i{
+        background-position: -95px 0!important;
+    }
+    .bottombarr a:nth-child(3) span{
+        color: #e02e23;
+        opacity: 0.9;
+    }
+    {/if}
+</style>
+<div class="search_top">搜索</div>
+<!--<div class="input-search">-->
+    <!--<input name="keywords" placeholder="请输入搜索关键词！" id="keywordBox">-->
+    <!--<button type="submit"><i class="iconal-sousuo"></i></button>-->
+<!--</div>-->
+
+<div class="input-search">
+    <span>
+        <input name="keywords" type="search" placeholder="请输入搜索关键词！" id="keywordBox">
+    </span>
+    <button id="submit" value="搜索"><i class="iconal-sousuo"></i></button>
+</div>
+
+
+<script>
+    $('#submit').click(function(){
+        var value=$('#keywordBox').val();
+        if(value==""){
+            return false;
+        }
+        location.href="{php echo app_url('goods/list/search')}"+"&keyword="+value;
+    })
+
+</script>
+
+
+{php include wl_template('common/footerbar');}
+{php include wl_template('common/footer');}

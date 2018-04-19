@@ -1,0 +1,437 @@
+{php include wl_template('common/header');}
+<style>
+	.provice-check,.checked,.checked1 {
+		position:relative;
+		margin-left:4em;
+		padding-top:1em;	
+		font-size: 1.6em;
+	}
+	.provice-check::before,.checked::before,.checked1::before {
+		position:absolute;
+		content:'';
+		left: -1.5em;
+		top: 1.3em;
+		width:0.8em;
+		height:0.8em;
+		border-radius:50%;
+		border:1px solid #6fbfd8;
+	}
+	#provice-box {
+		position:fixed;
+		left:0px;
+		top:0px;
+		width:100%;
+		height:100%;
+		background: rgba(0, 0, 0, 0.3);
+		z-index: 1000000;	
+		display: none;
+	}
+	#check-box {
+		position:absolute;
+		left:10%;
+		top:10%;
+		right:10%;
+		bottom:10%;
+		background: linear-gradient(white 15px, hsla(0,0%,100%,0)) 0 0 / 100% 50px,
+	            radial-gradient(at top, rgba(0,0,0,.2), transparent 70%) 0 0 / 100% 15px,
+	            linear-gradient(to top, white 15px, hsla(0,0%,100%,0)) bottom / 100% 50px,
+	            radial-gradient(at bottom, rgba(0,0,0,.2), transparent 70%) bottom / 100% 15px;
+		color:black;
+		border-radius:5px;
+		background-attachment: local, scroll, local, scroll;
+		overflow-y:scroll;
+		background-repeat: no-repeat;
+		background-color: white;
+	}
+	@media screen and (min-width:760px){
+		.picker-modal{
+			display: block;
+			bottom:32%;
+		}
+	}
+</style>
+<div class="page-group">
+			<div id="provice-box">
+					<div id="check-box">
+						{loop $addrfirst $val}
+							<div class="provice-check" data-value="{$val['id']}">{$val['name']}</div>
+						{/loop} 
+					</div>
+				</div>
+    <div class="page page-current" id="page-createadd">
+    	<header class="bar bar-nav">
+			<a class="button button-link button-nav pull-left back" href="{php echo app_url('address/addmanage')}"><span class="icon icon-left"></span>返回</a>
+			<h1 class="title">编辑地址</h1>
+		</header> 
+		<div class="content native-scroll">
+			<div class="list-block">
+		      <ul>
+		        <!-- Text inputs -->
+		        <li>
+		          <div class="item-content">
+		            <div class="item-inner">
+		              <div class="item-title label">姓名</div>
+		              <div class="item-input">
+		                <input type="text" placeholder="请输入您的姓名" id="myname" value="{$addres['cname']}">
+		              </div>
+		            </div>
+		          </div>
+		        </li>
+		        <li>
+		          <div class="item-content">
+		            <div class="item-inner">
+		              <div class="item-title label">电话</div>
+		              <div class="item-input">
+		                <input type="tel" placeholder="请输入您的电话号码" maxlength="11" id="myphone" value="{$addres['tel']}">
+		              </div>
+		            </div>
+		          </div>
+		        </li>
+				{if $autoaddr}
+				<!--自定义地址-->
+				
+				<li>
+		          <div class="item-content">
+		            <div class="item-inner">
+		              <div class="item-title label">{if $setting['addrtype']==0}省{/if}{if $setting['addrtype']==1}市{/if}{if $setting['addrtype']==2}市{/if}{if $setting['addrtype']==3}市{/if}</div>
+		              <div class="item-input">
+						<input name="provice" type="text" id="provice" placeholder="点击选择{if $setting['addrtype']==0}省{/if}{if $setting['addrtype']==1}市{/if}{if $setting['addrtype']==2}市{/if}{if $setting['addrtype']==3}市{/if}" readonly/>
+		                 <!--<select name="provice" id="provice">
+							<option value="" >请选择</option>
+						  {loop $addrfirst $val}
+							  <option value="{$val['id']}" {if $val['name']==$addres['province']}selected="selected"{/if}>{$val['name']}</option>
+							{/loop}       
+						  </select>-->
+		              </div>
+		            </div>
+		          </div>
+		        </li>
+				<li>
+		          <div class="item-content">
+		            <div class="item-inner">
+		              <div class="item-title label">{if $setting['addrtype']==0}市{/if}{if $setting['addrtype']==1}县/区{/if}{if $setting['addrtype']==2}学校{/if}{if $setting['addrtype']==3}区{/if}</div>
+		              <div class="item-input">
+						<input name="city" type="text" id="city" placeholder="点击选择{if $setting['addrtype']==0}市{/if}{if $setting['addrtype']==1}县/区{/if}{if $setting['addrtype']==2}学校{/if}{if $setting['addrtype']==3}区{/if}" readonly/>
+		                 <!--<select name="city" id="city">
+							<option value="{$city['id']}" selected="selected">{$addres['city']}</option>   
+						  </select>-->
+		              </div>
+		            </div>
+		          </div>
+		        </li>  
+				<li>
+		          <div class="item-content">
+		            <div class="item-inner">
+		              <div class="item-title label">{if $setting['addrtype']==0}县/区{/if}{if $setting['addrtype']==1}街道{/if}{if $setting['addrtype']==2}单元{/if}{if $setting['addrtype']==3}小区{/if}</div>
+		              <div class="item-input">
+					  <input name="county" type="text" id="county" placeholder="点击选择{if $setting['addrtype']==0}县/区{/if}{if $setting['addrtype']==1}街道{/if}{if $setting['addrtype']==2}单元{/if}{if $setting['addrtype']==3}小区{/if}" readonly/>
+		                 <!--<select name="county" id="county">							
+							  <option value="{$county['id']}"  selected="selected">{$addres['county']}</option>							 
+						  </select>-->
+		              </div>
+		            </div>
+		          </div>
+		        </li>
+				{else}
+		        <li>
+		          <div class="item-content">
+		            <div class="item-inner">
+		              <div class="item-title label">选择地区</div>
+		              <div class="item-input">
+		                <!--<input type="text" id='city-picker' readonly placeholder="请选择您所在的地区">-->
+						  <input type="text" id='city-picker' value="{if !empty($addres['province'])}{$addres['province']} {$addres['city']} {$addres['county']}{/if}" readonly placeholder="请选择您所在的地区">
+					</div>
+		            </div>
+		          </div>
+		        </li>
+				{/if}
+				{if $is_village == 1}
+				<li>
+		          <div class="item-content">
+		            <div class="item-inner">
+		              <div class="item-title label">小区</div>
+		              <div class="item-input">
+		                <input type="text" placeholder="请输入小区地址" id="village" value="{$addres['village']}">
+		              </div>
+		            </div>
+		          </div>
+		        </li>
+		        {/if}
+		        <li>
+		          <div class="item-content">
+		            <div class="item-inner">
+		              <div class="item-title label">详细地址</div>
+		              <div class="item-input">
+		                <input type="text" placeholder="请输入详细地址" id="detailed_address" value="{$addres['detailed_address']}">
+		              </div>
+		            </div>
+		          </div>
+		        </li>
+		        <li>
+		          <div class="item-content">
+		            <div class="item-inner">
+		              <div class="item-title label">地址类型</div>
+		              <div class="item-input">
+		                <select id="type">
+		                  <option value="2" {if $addres['type']==2}selected="selected"{/if}>家庭</option>
+		                  <option value="1" {if $addres['type']==1}selected="selected"{/if}>公司</option>
+		                </select>
+		              </div>
+		            </div>
+		          </div>
+		        </li>
+		        <li>
+		          <div class="item-content">
+		            <div class="item-inner">
+		              <div class="item-title label">是否默认</div>
+		              <div class="item-input">
+		                <label class="label-switch">
+		                  <input type="checkbox" id="status" {if $addres['status']==1}checked{/if}>
+		                  <div class="checkbox"></div>
+		                </label>
+		              </div>
+		            </div>
+		          </div>
+		        </li>
+		      </ul>
+		    </div>
+		    <div class="content-block">
+		      <div class="row">
+		     {if $autoaddr==0}   <div class="col-50" style="display:none;"><a href="{php echo app_url('address/createadd/addwechat');}" class="weui_btn weui_btn_warn external">使用微信地址</a></div>{/if}
+		        <div class="col-100"><a href="javascript:;" id="addrsub" class="weui_btn weui_btn_primary" {if $autoaddr==1}style="width:200px;position:absolute;left:0px;right:0px;margin:auto;"{/if}>保存地址</a></div>
+		      </div>
+		    </div>
+		</div>
+	</div>
+</div>
+<script>
+
+	$(function() {
+	 // 选择不同的省的时候
+	 var provice = document.getElementById("provice"),
+		 city = document.getElementById("city"),
+		 county = document.getElementById("county"),
+		 addressBox = document.getElementById("provice-box"),
+		 checkProvice = document.getElementsByClassName("provice-check");
+		 proviceLen = checkProvice.length,
+		 checkBox = document.getElementById("check-box"),
+		 clickValue = false,
+		 AddressValue = {
+			provice: document.getElementById("check-box").innerHTML
+		 };
+	function checkProviceHandler(ev) {
+		city.value = '';
+		county.value = '';
+		clickValue = false;
+		var datavalue = ev.target.dataset.value;
+		var datatext = ev.target.textContent;
+		provice.value = datatext;
+		provice.dataset.value = datavalue;
+		addressBox.style.display = "none";
+		if (datavalue) {
+			$.ajax({				
+               type: "POST",
+               url: "{php echo app_url('address/createadd/ck');}",
+               data: "provice2="+datavalue,
+               success: function(msg){
+				clickValue = true;
+				AddressValue.city = msg;
+			   /*for (var i = 0; i < proviceLen; i++) (function (i) {
+					checkProvice[i].removeEventListener("click", checkProviceHandler, false);
+				})(i);
+                checkBox.innerHTML = msg;
+				//addressBox.style.display = "none";
+				var citys = document.getElementsByClassName("checked"),
+					cityLen = citys.length;
+				for (var i = 0; i < cityLen; i++) (function (i) {
+					citys[i].addEventListener("click", checkCityHandler, false);
+				})(i);*/
+               }
+            });
+		}
+	}
+	function checkCityHandler(ev) {
+		clickValue = false;
+		var datavalue = ev.target.dataset.value;
+		var datatext = ev.target.textContent;
+		city.value = datatext;
+		city.dataset.value = datavalue;
+		county.value = '';
+		addressBox.style.display = "none";
+		if (datavalue) {
+			$.ajax({			
+               type: "POST",
+               url: "{php echo app_url('address/createadd/ck');}",
+               data: "city2="+datavalue,
+               success: function(msg){
+			   clickValue = true;
+			   AddressValue.county = msg;
+			  /* var citys = document.getElementsByClassName("checked"),
+					cityLen = citys.length;
+				for (var i = 0; i < cityLen; i++) (function (i) {
+					citys[i].removeEventListener("click", checkCityHandler, false);
+				})(i);
+                checkBox.innerHTML = msg;
+				//addressBox.style.display = "none";
+				var countrys = document.getElementsByClassName("checked1"),
+					countryLen = countrys.length;
+				for (var i = 0; i < countryLen; i++) (function (i) {
+					countrys[i].addEventListener("click", checkcountryHandler, false);
+				})(i);*/
+               }
+            });
+		}
+	}
+	function checkcountryHandler(ev) {
+		var datavalue = ev.target.dataset.value;
+		var datatext = ev.target.textContent;
+		county.value = datatext;
+		county.dataset.value = datavalue;
+		addressBox.style.display = "none";
+		var countrys = document.getElementsByClassName("checked1"),
+			countryLen = countrys.length;
+		for (var i = 0; i < countryLen; i++) (function (i) {
+			countrys[i].removeEventListener("click", checkcountryHandler, false);
+		})(i);
+		/*checkBox.innerHTML = AddressValue.provice;
+		checkProvice = document.getElementsByClassName("provice-check");
+		for (var i = 0; i < proviceLen; i++) (function (i) {
+			checkProvice[i].addEventListener("click", checkProviceHandler, false);
+		})(i);*/
+	}
+	for (var i = 0; i < proviceLen; i++) (function (i) {
+		checkProvice[i].addEventListener("click", checkProviceHandler, false);
+	})(i);
+	 function selectProviceHandler(ev) {
+		addressBox.style.display = "block";
+		if (ev.target == provice) {
+			if (clickValue) {
+				
+				checkBox.innerHTML = AddressValue.provice;
+				checkProvice = document.getElementsByClassName("provice-check");
+				for (var i = 0; i < proviceLen; i++) (function (i) {
+					checkProvice[i].addEventListener("click", checkProviceHandler, false);
+				})(i);
+		  }
+
+		}
+		else if (ev.target == city) {
+		  if (clickValue) {
+			checkBox.innerHTML = AddressValue.city;
+			var citys = document.getElementsByClassName("checked"),
+				cityLen = citys.length;
+			for (var i = 0; i < cityLen; i++) (function (i) {
+				citys[i].addEventListener("click", checkCityHandler, false);
+			})(i);
+		  }
+		  else {
+			addressBox.style.display = "none";
+		  }
+		}
+		else if (ev.target == county) {
+		  if (clickValue) {
+			checkBox.innerHTML = AddressValue.county;
+			var countrys = document.getElementsByClassName("checked1"),
+				countryLen = countrys.length;
+			for (var i = 0; i < countryLen; i++) (function (i) {
+				countrys[i].addEventListener("click", checkcountryHandler, false);
+			})(i);
+		  }
+		else {
+			addressBox.style.display = "none";
+		  }		  
+		}
+	 }
+	 {if $autoaddr}
+	 city.addEventListener("click", selectProviceHandler, false );
+	 county.addEventListener("click", selectProviceHandler, false );
+	 provice.addEventListener("click", selectProviceHandler, false);
+	 {/if}
+   
+		'use strict';
+		//编辑地址页
+		$(document).on("pageInit", "#page-createadd", function(e, id, page) {
+			var $content = $(page).find('.content');
+			$("#city-picker").cityPicker({
+			    toolbarTemplate: '<header class="bar bar-nav">\
+			    <button class="button button-link pull-right close-picker">确定</button>\
+			    <h1 class="title">选择收货地址</h1>\
+			    </header>'
+			});
+			{if !empty($_GPC['tuan_id'])&&$goods['selltype'] == 2}
+			$.confirm('您所在的邻里团，将锁定团长的小区',
+			        function () {
+						$('#village').val("{$adress_fee['village']}");
+						$('#city-picker').val("{if !empty($adress_fee['province'])}{$adress_fee['province']} {$adress_fee['city']} {$adress_fee['county']}{/if}");
+			        }
+			    );
+			{/if}
+			$content.on('click','#addrsub',function () {
+		    	var myname = $('#myname').val();
+				var myphone = $('#myphone').val();
+				var citys= $('#city-picker').val();
+				var ctype='{$autoaddr}';
+				var detailed = $('#detailed_address').val();
+				var type = $('#type').val();
+				var status = $('#status').val();
+				var province=$('#provice').val();				
+				var city=$('#city').val();
+				var county=$('#county').val();
+				var village=$('#village').val();
+
+				if (document.getElementById("provice") && document.getElementById("city") && document.getElementById("county")) {
+					var provice = document.getElementById('provice').value,
+					       city = document.getElementById('city').value,
+						 county = document.getElementById('county').value;
+					if (!provice || !city || !county || county == '0' ){
+					  $.toast("请确认填全省市县,以防快递送错");
+				 	  return false;
+					}
+				}
+				//alert(province + " " + city + " " + county);
+				if(!myname){
+				 	$.toast("请输入你的姓名");
+				 	return false;
+				}
+				if(!myphone){
+				 	$.toast("请输入你的电话");
+				 	return false;
+				}
+				if (!(/^1[34578]\d{9}$/.test(myphone))){
+					$.toast('您的手机号码有误');
+					return false;
+				}
+				if(ctype==0)
+				{
+					if(citys.length == 0){
+				 	$.toast("请选择您的地区");
+				 	return false;
+					}
+				}
+				if(ctype==1)
+				{
+					if ( !province && !city && !county) {
+				 	$.toast("请选择您的地区");
+				 	return false;
+					}
+				}
+				if(!detailed){
+				 	$.toast("请输入详细地址");
+				 	return false;
+				}
+				$.post("{php echo app_url('address/createadd/post',array('id'=>$addres['id'],'isshop'=>$isshop))}",{myname:myname,myphone:myphone,citys:citys,detailed:detailed,type:type,status:status,province:province,city:city,county:county,village:village},function(d){
+					if(d.status == 1){
+						$.alert('地址编辑成功', function () {
+					        location.href = "{$bakurl}";
+					    });
+					}else{
+						$.toast(d.result);
+					}
+				},"json");
+		    });
+		});
+		$.init();
+	});
+</script>
+
+{php include wl_template('common/footer');}

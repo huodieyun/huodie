@@ -1,0 +1,246 @@
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <link rel="stylesheet" href="{TG_URL_ARES}css/aliicon/font.css?time=New Date()">
+    <avalon ms-skip="" class="avalonHide">
+        <style id="avalonStyle">
+            .main-view {
+                font-size: 14px;
+            }
+
+            .avalonHide {
+                display: none !important
+            }
+
+            .nav_item i {
+                background: #2e8ded;
+                width: 20px;
+                height: 20px;
+                border-radius: 50%;
+                line-height: 20px;
+                text-align: center;
+                color: #fff;
+                display: inline-block;
+                margin-right: 5px;
+                font-size: 12px;
+            }
+
+            .nav_item {
+                padding: 10px !important;
+            }
+        </style>
+    </avalon>
+    <title>{if empty($_Session['btitle'])}{$pagetitle}{else}{$_Session['btitle']}{/if}</title>
+    {php echo register_jssdk();}
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
+    <meta name="format-detection" content="telephone=no">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Cache-Control" content="no-store">
+    <meta http-equiv="Expires" content="0">
+    <LINK href="../addons/feng_fightgroups/template/css/style_366c9ef.css" rel="stylesheet">
+    <LINK href="../addons/feng_fightgroups/template/css/font-awesome-4.3.0/css/font-awesome.min.css" rel="stylesheet">
+</head>
+<body avalonctrl="root">
+<div class="container">
+    <section class="main-view">
+
+        <div>
+            <div class="nav">
+                <ul class="nav_list">
+                    <li class="nav_item nav_cart">
+                        <div style="padding: 10px 0 ">
+                            <i class="iconal-wodefankui" style="background-color: #af7070"></i>我的佣金团
+                        </div>
+                        <div class="nav_item_bd">
+
+                            <a href="{php echo app_url('order/commander',array('op' => 'display'))}">
+                                <span class="nav_item_txt">全部佣金团<br>￥<?php echo number_format($member['commander_settled'],3)?></span>
+                            </a>
+                            <a href="{php echo app_url('order/commander/my_cash')}">
+                                <span class="nav_item_txt">可提现<br>￥<?php echo number_format($member['commander_settled'] - $member['commander_withdraw'] - $member['commander_apply'],2)?></span>
+                            </a>
+                            <a href="{php echo app_url('order/commander/withdraw' , array('status' => 0))}">
+                                <span class="nav_item_txt">审核中<br>￥<?php echo number_format($apply,2)?></span>
+                            </a>
+                            <a href="{php echo app_url('order/commander/withdraw' , array('status' => 1))}">
+                                <span class="nav_item_txt">已提现<br>￥<?php echo number_format($member['commander_withdraw'],2)?></span>
+                            </a>
+                        </div>
+                    </li>
+
+                    <!--<li class="nav_item nav_green">-->
+                    <!--<div><i class="iconal-friendfill" style="background-color: #039702"></i><a href="{php echo app_url('order/commission')}"> 佣金明细</a></div>-->
+                    <!--</li>-->
+                    <li class="nav_item nav_gold">
+                        <div>
+                            <i class="iconal-wodehongbao" style="background-color: #006699"></i>
+                            <a href="{php echo app_url('order/commander/my_cash')}"> 立即提现 </a>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        {if $op == 'display'}
+        {loop $orders $order}
+        <div class="order" ms-repeat-order="orders">
+            <div class="order_hd">
+
+                {php echo date('Y-m-d H:i:s', $order['createtime']);}
+                团单号：{$order['tuan_id']}
+            </div>
+            <div class="order_bd">
+                <div class="order_glist" style="height:100px">
+                    <!--获得商品的id-->
+                    <!--end获得商品的id-->
+
+                    <a href="{php echo app_url('order/group' , array('tuan_id' => $order['tuan_id']))}">
+                        <div class="order_goods" data-url="">
+                            <div class="order_goods_img">
+                                {$order['goods']['gname']}<br>
+                                <img src="{$order['goods']['gimg']}" style="width:60px;height:60px" alt="" title="">
+                            </div>
+                            <div class="order_goods_info">
+                                <div class="order_goods_attr">
+                                    <div class="order_goods_attr_item">
+                                        <div class="order_goods_price">
+                                            {if $order['commissiontype'] == 1}提成比例：{$order['commission']}%
+                                            {elseif $order['commissiontype'] == 2}单人提成：￥{$order['commission']}{/if}<i></i>
+                                        </div>
+                                    </div>
+                                    <div class="order_goods_attr_item">
+                                        <div class="order_goods_price">团签收人数：{$order['success_num']} 人<i></i></div>
+                                    </div>
+                                    <div class="order_goods_attr_item">
+                                        <span class="order_goods_price">可提现金额：￥{$order['withdraw']}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </div>
+        {/loop}
+        {elseif $op == 'my_cash'}
+        <form name='form' method="post" onsubmit="return toVaild()">
+            <div class="wx_wrap" style="font-size:16px;margin-top:20px;margin-left:20px;">
+                <p style="margin:40px 0;">
+                    <label for="name"><SPAN class="tit">提现金额</SPAN>
+                        <input name="name" id="name" type="text" placeholder="请输入大于1元的金额" value="" style="height:35px;border:none;margin-left:10px;padding-left:5px;line-height:40px;">
+
+                    </label>
+                </p>
+
+            </div>
+
+            <p class="action">
+                <button type="submit" name="submit" value="yes" id= 'submit' class="pay2_btn" style="position:fixed;bottom:0;margin:0;width:100%;background-color:#6fbfd8;">申请提现</button>
+                <input type="hidden" name="token" value="{$_W['token']}"/>
+            </p>
+
+        </form>
+        {elseif $op == 'withdraw'}
+        <div>
+            <div class="order">
+                <form name='form' method="post" onsubmit="return toVaild()">
+                    <table style="width: 100%;overflow-y:auto;overflow-x: hidden; font-size: 12px;">
+                        {if !empty($list)}
+                        <thead>
+                        <!--<th style="width:80px;">银行流水单</th>-->
+                        <th>处理进度</th>
+                        <th>申请提现金额</th>
+                        <th>申请提现时间</th>
+                        <th>发放时间</th>
+                        </thead>
+                        <tbody>
+                        {loop $list $item}
+
+                        <tr>
+                            <td style="width: 20%;text-align: center;">
+                                {if $item['status'] == 0}<label class="label label-default">审核中</label>
+                                {elseif $item['status'] == 1}<label class="label label-danger">已打款</label>
+                                {elseif $item['status'] == -1}<label class="label label-success">拒绝打款</label>
+                                {/if}
+                            </td>
+                            <td style="width: 25%;text-align: center;">{$item['price']}元</td>
+                            <td style="width: 25%;text-align: center;">{php echo date("Y-m-d H:i:s",$item['createtime'])}</td>
+                            <td style="width: 30%;text-align: center;">
+                                {if $item['status'] == 1}
+                                {php echo date("Y-m-d H:i:s",$item['updatetime'])}
+                                {else}
+                                <label class="label label-default">暂未发放</label>
+                                {/if}
+                            </td>
+                        </tr>
+                        {/loop}
+                        {else}
+                        <tr>
+                            <td colspan="4" class="text-center" style="text-align: center">
+                                <span style="color:red;font-weight: 700;font-size:18px;">暂无记录</span>
+                            </td>
+                        </tr>
+                        {/if}
+                        </tbody>
+                    </table>
+                </form>
+            </div>
+        </div>
+        {/if}
+    </section>
+
+</div>
+</body>
+<script>
+    wx.ready(function () {
+        var shareData = {
+            title: "{$share_indexname}",
+            desc: "{$share_indexdesc}",
+            link: "{$tourl}",
+            imgUrl: "{php echo tomedia($share_images)}",
+        };
+        //分享朋友
+        wx.onMenuShareAppMessage({
+            title: shareData.title,
+            desc: shareData.desc,
+            link: shareData.link,
+            imgUrl: shareData.imgUrl,
+            trigger: function (res) {
+            },
+            success: function (res) {
+            },
+            cancel: function (res) {
+            },
+            fail: function (res) {
+                alert(JSON.stringify(res));
+            }
+        });
+        //朋友圈
+        wx.onMenuShareTimeline({
+            title: shareData.title,
+            link: shareData.link,
+            imgUrl: shareData.imgUrl,
+            trigger: function (res) {
+            },
+            success: function (res) {
+            },
+            cancel: function (res) {
+            },
+            fail: function (res) {
+                alert(JSON.stringify(res));
+            }
+        });
+        var shareAddress = {php echo json_encode($shareAddress)};
+        WeixinJSBridge.invoke('editAddress', shareAddress, function (res) {
+            if (res.err_msg == 'edit_address:ok') {
+                $("#myname").val(res.userName);
+                $('#myphone').val(res.telNumber);
+                $('#detailed_address').val(res.addressDetailInfo);
+                var city = res.proviceFirstStageName + " " + res.addressCitySecondStageName + " " + res.addressCountiesThirdStageName;
+                $('#city-picker').val(city);
+            }
+        });
+    });
+
+</script>
+</html>

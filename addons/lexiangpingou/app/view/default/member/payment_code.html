@@ -1,0 +1,65 @@
+{php include wl_template('common/header');}
+<style>
+    .pay_money{
+        padding:15px 35px;
+        background: #f8f8f8;
+        margin: 10px;
+        margin-top: -12%;
+        border-radius: 5px;
+    }
+    .pay_money>p{
+        text-align: left;
+        margin-bottom: 10px;
+    }
+    .fkm{
+        position: fixed;
+        top:0;
+        left: 0;
+        width: 100%;
+        z-index: 5;
+        background: #fff;
+        height: 100%;
+        padding: 10%;
+        display: none;
+    }
+    .list-block .item-inner:after{
+        background-color: #ccc;
+    }
+</style>
+<div style="text-align: center;margin-top: 20%">
+    <div class="pay_money">
+        <p>付款金额</p>
+        <div class="list-block">
+            <div class="item-content">
+                <div class="item-inner">
+                    <div class="item-title label" style="font-size: 26px;text-align: left">￥</div>
+                    <div class="item-input" style="">
+                        <input class="payMoney" style="font-size: 22px;" type="number" placeholder="请输入金额">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <p><a href="#" class="button button-big nextBtn">已和商家确认，立即支付</a></p>
+    </div>
+    <div class="fkm">
+        <div id="qrcode_pic"></div>
+        <b style="font-size: 18px;">请将二维码出示给核销员完成支付</b>
+        <p class="button button-big button-dark" onclick="$('.fkm').slideUp();" style="margin-top: 20%">关闭</p>
+    </div>
+</div>
+<script type="text/javascript" src="{TG_URL_ARES}js/qrcode.js"></script>
+<script>
+    $('.nextBtn').click(function(){
+        if($('.payMoney').val()==''||$('.payMoney').val()<=0){
+            return;
+        }
+        var merchantid=0;
+        var url="{php echo app_url('member/member_check')}merchantid="+merchantid;
+        url+="&price="+$('.payMoney').val()+"&orderno={$orderno}&id={$member['id']}&openid={$member['from_user']}&uniacid={$_W[uniacid]}";
+        $('.fkm').slideDown();
+        console.log(url);
+        $('canvas').remove();
+        $('#qrcode_pic').qrcode({text:url});
+    })
+</script>
+{php include wl_template('common/footer');}

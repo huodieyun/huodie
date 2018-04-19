@@ -1,0 +1,269 @@
+
+{php include wl_template('common/header');}
+
+<ul class="nav nav-tabs">
+    {if checkstr($_W['user']['perms'], 'leader.add')}
+    <li {if $op == 'display' && $status == ''}class="active"{/if}>
+    <a href="{php echo web_url('member/group', array('op' => 'display', 'status' =>''))}">添加分组</a>
+    </li>
+    {/if}
+    {if checkstr($_W['user']['perms'], 'leader.leader') || checkstr($_W['user']['perms'], 'leader.delete')}
+    <li{if $op == 'display' && $status == 1} class="active"{/if}>
+    <a href="{php echo web_url('member/group', array('op' => 'display', 'status' =>'1'))}">组长管理</a>
+    </li>
+    {/if}
+    {if checkstr($_W['user']['perms'], 'leader.delete')}
+    {if $status == 2}
+    <li {if $op == 'display' && $status == 2} class="active"{/if}>
+    <a href="{php echo web_url('member/group', array('op' => 'display', 'status' =>'2'))}">组员管理</a>
+    </li>
+    {/if}
+    {/if}
+</ul>
+{if $status == ''}
+
+<style>
+    .checkbox>label{
+        margin-right: 30px;
+    }
+</style>
+<div class="main">
+    <div class="panel panel-info">
+        <div class="panel-heading">分组</div>
+        <div class="panel-body">
+            <form class="form-horizontal">
+                <div class="form-group">
+                    <label class="col-md-2 control-label">组长</label>
+                    <div class="col-sm-8 col-xs-12">
+                        <select name="type" class="form-control select_zuz">
+                            {loop $group_list $itme}
+                            <option  value="{$itme['openid']}" {if $_GPC['keyword'] == $itme['openid']}selected="selected"{/if}>{$itme['nickname']}</option>
+                            {/loop}
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label">组名</label>
+                    <div class="col-md-8">
+                        <input type="text" name="groupname" class="form-control">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label">提成比例</label>
+                    <div class="col-xs-12 col-sm-8">
+                        <div class="input-group">
+                            <input type="text" name="commission" class="form-control" onkeyup="this.value=this.value.replace(/[^\d.]/g,'')">
+                            <span class="input-group-addon">请填写数字 如50% 写50</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label">选择组员</label>
+                    <div class="col-xs-12 col-sm-8" style="height: 300px">
+                        <div class="checkbox" style="overflow-y: scroll;overflow-x: hidden; height: 300px;">  
+                            {loop $list $itme}
+                            <label class="col-xs-12 col-sm-12" style="height: 40px; line-height: 40px; font-size: 16px; border-bottom: 1px solid #ccc"> 
+                                <input class="col-xs-12 col-sm-12" type="checkbox" value="{$itme['openid']}" style="margin:14px 0 0 34px">  
+                                {$itme['nickname']}
+                            </label>
+                            {/loop}
+                        </div>
+                    </div>
+                </div>
+                {if checkstr($_W['user']['perms'], 'leader.add')}
+                <div class="form-group">
+                    <label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label"></label>
+                    <div class="col-md-8">
+                        <input value="全选" class="btn btn-primary col-lg-1 allcheck" readonly="" style="margin-right: 40px;">
+                        <input value="提交" class="btn btn-primary col-lg-1 submita" readonly="" style="">
+                    </div>
+                </div>
+                {/if}
+            </form>
+        </div>
+    </div>
+</div>
+<script>
+    $('.submita').click(function(){
+        if($('input[name="groupname"]').val()==''){
+            util.message('请填写组名');
+            return false;
+        }
+        if($('input[name="commission"]').val()==''){
+            util.message('提成比例');
+            return false;
+        }
+        var zuyuan=[];
+        var check=$('.checkbox input');
+        for(var i=0;i<check.length;i++){
+            if(check[i].checked){
+                zuyuan.push(check[i].value)
+            }
+        }
+        if(zuyuan.length<=0){
+            util.message('请选择组员');
+            return false;
+        }
+        var url=location.href+'&op=submit';
+        $.post(
+            url,
+            {
+                zuzhang:$('select').val(),
+                groupname:$('input[name="groupname"]').val(),
+                commission:$('input[name="commission"]').val(),
+                zuyuan:zuyuan
+            },
+            function(data){
+                if(JSON.parse(data).status==1){
+                    util.message('提交成功！');
+                   setTimeout(function(){location.reload()},800)
+                }
+            }
+        )
+    })
+
+    $('.allcheck').click(function () {
+        if($(this).val() === '全选'){
+            $('input[type="checkbox"]').prop('checked',true);
+            $(this).val('取消全选').removeClass('col-lg-1').addClass('col-lg-2') 
+        }else{
+            $('input[type="checkbox"]').removeAttr('checked');
+            $(this).val('全选').removeClass('col-lg-2').addClass('col-lg-1')
+        } 
+    });
+
+    function getQueryString(name) {
+        var reg = new RegExp('(^|&)' + name + '=([^&]*)(&|$)', 'i');
+        var r = window.location.search.substr(1).match(reg);
+        if (r != null) {
+            return unescape(r[2]);
+        }
+        return null;
+    }
+
+    var _url = "{php echo web_url('member/group', array('op' => 'check'))}";
+    $('.select_zuz').change(function () {
+        var _val = $('.select_zuz  option:selected').val();
+
+        $.get(_url+'&openid='+_val,function (res) {
+            var data=JSON.parse(res).list;
+            if(data.length<0){return false;}
+            var html="";
+            for(var i=0;i<data.length;i++){
+                html+='<label class="col-xs-12 col-sm-12" style="height: 40px; line-height: 40px; font-size: 16px; border-bottom: 1px solid #ccc"> ' +
+                '<input class="col-xs-12 col-sm-12" type="checkbox" value="'+data[i].openid+'" style="margin:14px 0 0 34px">'+data[i].nickname+'</label>';
+            }
+            $('.checkbox').html(html);
+        })
+    })
+    
+</script>
+
+{elseif $status == 1}
+<div class="panel panel-default">
+    <div class="panel-body table-responsive">
+        <table class="table table-hover">
+            <thead class="navbar-inner">
+            <tr>
+                <th style="width:10%;">组名</th>
+                <th style="width:10%;">组长昵称</th>
+                <th style="width:10%;">组长提成比</th>
+                <th style="width:10%;">可申请金额</th>
+                <th style="width:10%;">待审核金额</th>
+                <th style="width:10%;">已审核金额</th>
+                <th style="width:10%;">已提现金额</th>
+                <th style="width:20%; text-align:center;">操作</th>
+            </tr>
+            </thead>
+            <tbody>
+            {loop $group $key $item}
+            <tr>
+                <td>{$item['groupname']}</td>
+                <td>{$item['nickname']}</td>
+                <td>{$item['commission']}%</td>
+                <td><span class="label label-warning">￥{if !empty($item['apply'])}{php echo number_format($item['apply'],2)}{else}0.00{/if}</span></td>
+                <td><span class="label label-danger">￥{if !empty($item['account'])}{$item['account']}{else}0.00{/if}</span></td>
+                <td><span class="label label-success">￥{if !empty($item['get'])}{$item['get']}{else}0.00{/if}</span></td>
+                <td><span class="label label-success">￥{if !empty($item['give'])}{$item['give']}{else}0.00{/if}</span></td>
+                <td style="text-align:center;">
+                    {if checkstr($_W['user']['perms'], 'leader.delete')}<a class="btn btn-default" href="{php echo web_url('member/group', array('op' => 'display', 'status' =>'2' , 'id' => $item['id']))}" style="margin-bottom:5px">我的组员</a>{/if}
+                    {if checkstr($_W['user']['perms'], 'leader.leader')}<a class="btn btn-danger js-delete-goods" href="javascript:;" goods-id="{$item['id']}">删除</a>{/if}
+                </td>
+            </tr>
+            {/loop}
+            </tbody>
+        </table>
+    </div>
+</div>
+<script>
+    $('.js-delete-goods').click(function(e) {
+        e.stopPropagation();
+        var id = $(this).attr('goods-id');
+        var _this = $(this).parent().parent();
+        op = 'deleteAll';
+        html = '确认删除?【删除组长后，其下的所有组员将全部变成未分组的，且所有未提现的提成都不能再提现】';
+        util.nailConfirm(this, function(state) {
+            if(!state) return;
+            $.post("{php echo web_url('member/group', array('op' => 'delete'))}", {funcop : op, id : id}, function(data){
+                if(!data.errno){
+                    _this.remove();
+                };
+                util.tips(data.message, 2000);
+            }, 'json');
+        }, {html: html});
+    });
+</script>
+{elseif $status == 2}
+<div class="panel panel-default">
+    <div class="panel-body table-responsive">
+        <table class="table table-hover">
+            <thead class="navbar-inner">
+            <tr>
+                <th style="width:10%;"></th>
+                <th style="width:10%;">组员昵称</th>
+                <th style="width:10%;">真实姓名</th>
+                <th style="width:10%;">权益</th>
+                <th style="width:20%; text-align:center;">操作</th>
+            </tr>
+            </thead>
+            <tbody>
+            {loop $list $item}
+            <tr>
+                <td><img src="{if !empty($item['member']['avatar'])}{$item['member']['avatar']}{else}resource/images/noavatar_middle.gif{/if}" width="48"></td>
+                <td>{$item['member']['nickname']}</td>
+                <td>{$item['member']['realname']}</td>
+                <?php
+						$level=pdo_fetch('select * from '.tablename('tg_member_leave').' where id = :id',array(':id' => $item['member']['level']));
+                ?>
+                <td>{$level['name']}</td>
+                {if checkstr($_W['user']['perms'], 'leader.delete')}
+                <td style="text-align:center;">
+                    <a class="btn btn-danger js-delete-goods" href="javascript:;" goods-id="{$item['id']}">删除</a>
+                </td>
+                {/if}
+            </tr>
+            {/loop}
+            </tbody>
+        </table>
+    </div>
+</div>
+<script>
+    $('.js-delete-goods').click(function(e) {
+        e.stopPropagation();
+        var id = $(this).attr('goods-id');
+        var _this = $(this).parent().parent();
+        op = 'delete';
+        html = '确认删除?【删除后，所有未提现的提成都不能再提现】';
+        util.nailConfirm(this, function(state) {
+            if(!state) return;
+            $.post("{php echo web_url('member/group', array('op' => 'delete'))}", {funcop : op, id : id}, function(data){
+                if(!data.errno){
+                    _this.remove();
+                };
+                util.tips(data.message, 2000);
+            }, 'json');
+        }, {html: html});
+    });
+</script>
+{/if}
+{php include wl_template('common/footer');}

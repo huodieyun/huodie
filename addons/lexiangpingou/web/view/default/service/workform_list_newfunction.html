@@ -1,0 +1,161 @@
+{php include wl_template('common/header');}
+<script>
+	function develop_start(id){ 
+		var form_id=id;
+
+		if(confirm("注意，正在进行开始开发操作！")){ 
+			$.ajax({
+	             type: "GET",
+	             url: "{php echo web_url('service/workform_list_newfunction',array('op' => 'develop_start'))}",
+	             data:{"form_id":form_id},
+				 dataType: "json",
+	             success: function(data){	
+					util.tips('状态已改变！', 2000);
+					setTimeout(function(){  //使用  setTimeout（）方法设定定时2000毫秒
+					window.location.reload();//页面刷新
+					},1000);
+					
+				 }
+	         });
+			return true; 
+		}else{ 
+			return false; 
+		} 
+	} 
+
+	function sort(str,id)
+	{  	
+		var sort = str; 
+		var form_id = id;
+		$.ajax({
+	             type: "GET",
+	             url: "{php echo web_url('service/workform_list_newfunction',array('op' => 'work_sort'))}",
+	             data:{"form_id":form_id,"sort":sort},
+				 dataType: "json",
+	             success: function(data){	
+					util.tips('排序已改变！', 2000);
+					setTimeout(function(){  //使用  setTimeout（）方法设定定时2000毫秒
+					window.location.reload();//页面刷新
+					},1000);
+					
+				 }
+	         });
+
+	}
+
+</script>
+
+<ul class="nav nav-tabs">
+	<li{if $develop_status == '0'} class="active"{/if}>
+        <a href="{php echo web_url('service/workform_list_newfunction', array('op' => 'display', 'develop_status' =>'0'))}">待开发工单</a>
+    </li>
+    <li{if $develop_status == '2'} class="active"{/if}>
+        <a href="{php echo web_url('service/workform_list_newfunction', array('op' => 'display', 'develop_status' =>'2'))}">已完成开发升级</a>
+    </li>
+
+</ul>
+<div class="main"><a title="" style="overflow: hidden;"></a>
+	<div class="panel panel-info">
+	    <div class="panel-heading">筛选</div>
+	    <div class="panel-body">
+            <form action="{php echo web_url('agent/examine')}" method="get" class="form-horizontal" role="form" id="form1">
+            <input type="hidden" name="c" value="site" />
+            <input type="hidden" name="a" value="entry" />
+            <input type="hidden" name="m" value="lexiangpingou" />
+            <input type="hidden" name="do" value="service" />
+            <input type="hidden" name="ac" value="workform_list_newfunction" />
+            <input type="hidden" name="op" value="display" />
+            <input type="hidden" name="develop_status" value="{$develop_status}" />
+				<div style="padding-left: 116px; padding-bottom: 5px; margin-bottom: 15px; border-bottom: 2px solid #E7E8EB;" ><label>注：</label><span>乐享拼购将按照工单提交时间的先后来决定开发顺序，一般在15个工作日内完成。</span></div>
+
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">工单号</label>
+                    <div class="col-sm-6 ">
+                        <input class="form-control" name="keyword_form_id" id="" type="text" value="{$_GPC['keyword_form_id']}" placeholder="可查询工单号">
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">公众号</label>
+                    <div class="col-sm-6 ">
+                        <input class="form-control" name="keyword_gzname" id="" type="text" value="{$_GPC['keyword_gzname']}" placeholder="根据公众号查询">
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                	<div class="col-md-offset-2 col-sm-2 col-lg-2" style="text-align: left;">
+	                	<button class="btn btn-default"><i class="fa fa-search"></i> 搜索</button>
+	                </div>
+                </div>
+            </form>
+			
+          <!--  <a href='{php echo $this->createWebUrl('grouporder', array('op' => 'output','groupstatus'=>$groupstatus,'starttime'=>$starttime,'endtime'=>$endtime))}'><button class="btn btn-info"><i class="fa fa-download"></i> 导出记录</button></a>-->
+	    </div>
+	</div>
+	<div class="panel panel-default">
+		<div class="panel-body table-responsive">
+			<table class="table table-hover">
+				<thead class="navbar-inner">
+					<tr>
+						{if $_W['uniacid']==53 || $_W['isfounder']}
+							<th style="width:7%;text-align: center;">排序</th>	
+							<th style="width:18%">工单编号</th>
+							<th style="width:15%">公众号</th>
+							<th style="width:26%">工单主题</th>
+							{if $develop_status != '2'}
+								<th style="width:15%">提交时间</th>
+								<th style="width:11%">状态</th>
+							{else}
+								<th style="width:13%">提交时间</th>
+								<th style="width:13%">完成时间</th>
+							{/if}
+							<th style="width:8%;text-align: center;">操作</th>	
+						{else}	
+							<th style="width:18%">工单编号</th>
+							<th style="width:15%">公众号</th>
+							<th style="width:37%">工单主题</th>
+							{if $develop_status != '2'}
+								<th style="width:15%">提交时间</th>
+								<th style="width:11%;text-align: center;">状态</th>
+							{else}
+								<th style="width:15%">提交时间</th>
+								<th style="width:15%;text-align: center;">完成时间</th>
+							{/if}
+						{/if}
+					</tr>
+				</thead>
+				<tbody>
+				{loop $allform $form}
+				<tr>
+					{if $_W['uniacid']==53 || $_W['isfounder']}
+					<td class="text-center"><input id="gorder" onchange="sort(this.value,'{$form['form_id']}')" type="text" class="form-control" value="{$form['sort']}"/> </td>
+					{/if}
+					<td>{$form['form_id']}</td>
+					<td {if $form['vip'] == 1}style="font-weight: bold;"{/if}>{$form['name']}</td>
+					<td>{$form['title']}</td>
+					<td>{$form['create_time']}</td>
+					{if $develop_status != '2'}
+					{if $form['develop_status'] == 0}<td style="text-align:center"><a class="label label-warning">等待开发</a></td>{/if}
+					{if $form['develop_status'] == 1}<td style="text-align:center"><a class="label label-primary">正在开发</a></td>{/if}
+					{if $form['develop_status'] == 2}<td style="text-align:center"><a class="label label-primary">开发完成</a></td>{/if}
+					{else}
+					<td style="text-align:center">{$form['u_time']}</td>
+					{/if}
+					{if $_W['uniacid']==53 || $_W['isfounder']}
+					<td style="text-align:center">
+						<a class="btn btn-default btn-xs" href="{php echo web_url('service/workform_list_newfunction',array('op' => 'detail','form_id' => $form['form_id'],'status'=> $status))}">查看详情</a>
+						{if checkstr($_W['user']['perms'],'workform.start')}
+							{if $form['develop_status'] == 0}<br><a class="btn btn-info btn-xs " style="margin-top: 6px;" onclick="develop_start('{$form['form_id']}')">开始开发</a>{/if}{/if}
+					</td>
+					{/if}
+				</tr>
+				{/loop}
+				</tbody>
+			</table>
+			{$pager}
+		</div>
+	</div>
+</div>
+
+
+{php include wl_template('common/footer');}

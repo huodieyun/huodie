@@ -1,0 +1,125 @@
+{php include wl_template('common/header');}
+
+<style>
+    .container{
+        background:#fff;
+        padding: 10px;
+    }
+    #shangchengFW{
+        height: 632px;
+    }
+    .container label{
+        width: 60px;
+        line-height: 34px;
+    }
+</style>
+<div class="container">
+    <label class="col-xs-12 col-sm-2 col-md-2 col-lg-1 control-label">日期</label>
+    <div class="col-sm-4">
+        <script type="text/javascript">
+            require(["daterangepicker"], function($){
+                $(function(){
+                    $(".daterange.daterange-date").each(function(){
+                        var elm = this;
+                        $(this).daterangepicker({
+                            startDate: $(elm).prev().prev().val(),
+                            endDate: $(elm).prev().val(),
+                            format: "YYYY-MM-DD"
+                        }, function(start, end){
+                            $(elm).find(".date-title").html(start.toDateStr() + " 至 " + end.toDateStr());
+                            $(elm).prev().prev().val(start.toDateStr());
+                            $(elm).prev().val(end.toDateStr());
+                        });
+                    });
+                });
+            });
+        </script>
+        <input name="time[start]" type="hidden" value="2017-03-03">
+        <input name="time[end]" type="hidden" value="2017-03-11">
+        <button class="btn btn-default daterange daterange-date" type="button"><span class="date-title">2017-03-03 至 2017-03-11</span> <i class="fa fa-calendar"></i></button>
+    </div>
+    <div id="shangchengFW"></div>
+</div>
+
+<script>
+    // 路径配置
+    require.config({
+        paths: {
+            echarts: "//www.lexiangpingou.cn/addons/lexiangpingou/web/resource/js/echarts/build/dist"
+        }
+    });
+    require(
+            [
+                'echarts',
+                'echarts/chart/bar', // 使用柱状图就加载bar模块，按需加载
+                'echarts/chart/line',
+                'echarts/chart/funnel',
+                'echarts/chart/pie'
+            ],
+            function (ec) {
+                // 基于准备好的dom，初始化echarts图表
+                var myChart = ec.init(document.getElementById('shangchengFW'));
+                var option = {
+                    title: {
+                        text: '商城访问趋势图&商城指标趋势图',
+                        subtext: '各时间段访问量'
+                    },
+                    tooltip: {
+                        show: true
+                    },
+                    legend: {
+                        data: ['各时间段商城总访问量', '各时间段商城总指标数']
+                    },
+                    toolbox: {
+                        show: true,
+                        feature: {
+                            magicType: {show: true, type: ['line', 'bar']},
+                            restore: {show: true},
+                            saveAsImage: {show: true}
+                        }
+                    },
+                    calculable: true,
+                    xAxis: [
+                        {
+                            type: 'category',
+                            data: ["今日", "昨日", "最近7日", "最近30日"]
+                        }
+                    ],
+                    yAxis: [
+                        {
+                            type: 'value'
+                        }
+                    ],
+                    series: [
+                        {
+                            "name": "访问量",
+                            "type": "bar",
+                            "data": [15, 20, 30, 20, 70, 10],
+                            markPoint: {
+                                data: [
+                                    {type: 'max', name: '最大值'},
+                                    {type: 'min', name: '最小值'}
+                                ]
+                            }
+                        },
+                        {
+                            "name": "指标数",
+                            "type": "bar",
+                            "data": [5, 20, 40, 10, 10, 20],
+                            markPoint: {
+                                data: [
+                                    {type: 'max', name: '最大值'},
+                                    {type: 'min', name: '最小值'}
+                                ]
+                            }
+                        }
+                    ]
+                };
+                myChart.setOption(option);
+            }
+    )
+
+</script>
+
+
+{php include wl_template('common/footer');}

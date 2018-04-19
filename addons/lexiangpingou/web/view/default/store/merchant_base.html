@@ -1,0 +1,167 @@
+{php include wl_template('common/header');}
+<style>
+    .form-group{
+        height: 50px;
+    }
+</style>
+<div class="panel panel-default">
+    <div class="panel-heading"></div>
+    <div class="panel-body">
+        <form action="" method="post" class="form-horizontal form" id="form" style="position: relative">
+            <div class="form-group" >
+                <label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label"><span style='color:red'>*</span>商户登陆地址</label>
+                <div class="col-md-6">
+{php echo $url}
+                </div>
+            </div>
+            <div class="form-group" style="height: 220px">
+                <label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label"><span style='color:red'>*</span>入驻宣传图</label>
+                <div class="col-md-6">
+                    {php echo tpl_form_field_image('regbg', $uniacid['regbg']);}
+                    <span class="help-block">图片建议为640X300</span>
+                </div>
+            </div>
+            <div class="form-group" style="height: 220px">
+                <label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label"><span style='color:red'>*</span>平台logo</label>
+                <div class="col-md-6">
+                    {php echo tpl_form_field_image('platform_logo', $uniacid['platform_logo']);}
+                    <span class="help-block">图片建议为500*500</span>
+                </div>
+            </div>
+            <div class="form-group" style="height: 220px">
+                <label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label"><span style='color:red'>*</span>登录背景图</label>
+                <div class="col-md-6">
+                    {php echo tpl_form_field_image('platform_background', $uniacid['platform_background']);}
+                    <span class="help-block">图片建议为1920*1080</span>
+                </div>
+            </div>
+            <div class="form-group" style="height: 220px">
+                <label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label"><span style='color:red'>*</span>密码找回左图</label>
+                <div class="col-md-6">
+                    {php echo tpl_form_field_image('platform_left_img', $uniacid['platform_left_img']);}
+                    <span class="help-block">图片建议为500*700</span>
+                </div>
+            </div>
+            {if $_W['uniacid'] == 53 || $_W['uniacid'] == 33 || $_W['uniacid'] == 779}
+            <div class="form-group" style="height: 220px">
+                <label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label"><span style='color:red'>*</span>官网商家入驻背景图</label>
+                <div class="col-md-6">
+                    {php echo tpl_form_field_image('gwsjrz_image', $uniacid['gwsjrz_image']);}
+                    <span class="help-block">图片建议为1920*1080</span>
+                </div>
+            </div>
+            {/if}
+            <div class="form-group">
+                <label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label" style="padding: 0px;">登录窗位置样式</label>
+                <div class="col-md-6">
+                    <input type="radio" name="platform_style" value="1" {if $uniacid['platform_style'] == 1}checked = "checked"{/if}/>居中
+                    <input type="radio" name="platform_style" value="2" {if $uniacid['platform_style'] == 2}checked = "checked"{/if}/>居右
+                    <input type="radio" name="platform_style" value="3" {if $uniacid['platform_style'] == 3}checked = "checked"{/if}/>居左
+                    <!--<input type="text" name="platform_style" class="form-control" value="{$uniacid['platform_style']}" />-->
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label"><span style='color:red'>*</span>平台名称</label>
+                <div class="col-md-6">
+                    <input type="text" name="platform_title" class="form-control" value="{$uniacid['platform_title']}" />
+                </div>
+            </div>
+            {if $_W['uniacid'] == 33}
+            <div class="form-group">
+                <label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label"><span style='color:red'>*</span>保证金</label>
+                <div class="col-md-6">
+                    <div class="input-group">
+                        <input type="text" name="margin" class="form-control" value="{$uniacid['margin']}" />
+                        <span class="input-group-addon">元</span>
+                    </div>
+                </div>
+            </div>
+            {/if}
+            <div class="form-group">
+                <label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label"><span style='color:red'>*</span>结算周期</label>
+                <div class="col-md-6">
+                    <div class="input-group">
+                        <input type="number" name="merchant_account_time" class="form-control" value="{$uniacid['merchant_account_time']}" />
+                        <span class="input-group-addon">天</span>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label"><span style='color:red'>*</span>打款周期</label>
+                <div class="col-md-6">
+                    <div class="input-group">
+                        <input type="number" name="merchant_pay_time" class="form-control" value="{$uniacid['merchant_pay_time']}" />
+                        <span class="input-group-addon">天</span>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group" style="height: 300px">
+                <label class="col-xs-12 col-sm-3 col-md-2 control-label"><span style='color:red'>*</span>规则</label>
+                <div class="col-sm-9 col-xs-12">
+                    {php echo tpl_ueditor('merchant_role', $uniacid['merchant_role']);}
+                </div>
+            </div>
+            <div class="form-group" style="height: 300px">
+                <label class="col-xs-12 col-sm-3 col-md-2 control-label"><span style='color:red'>*</span>入驻申请协议</label>
+                <div class="col-sm-9 col-xs-12">
+                    {php echo tpl_ueditor('applycontent', $uniacid['applycontent']);}
+                </div>
+            </div>
+            <div class="form-group col-sm-12 TJButtonCom">
+                <input type="submit" name="submit" value="提交" class="btn btn-primary col-lg-1" style="float: left;position: relative;left:180px;"/>
+                <input type="hidden" name="token" value="{$_W['token']}" />
+            </div>
+        </form>
+    </div>
+</div>
+<script>
+    $(function(){
+        $('#form').submit(function(){
+            return true;
+        });
+    });
+
+    //    var comUrl="{php echo $_W['siteroot']}";
+//    $('#submit').click(function(){
+//        var regbg=$('input[name="regbg"]').val();
+//        var payrate=$('input[name="payrate"]').val();
+//        var merchant_pay_time=$('input[name="merchant_pay_time"]').val();
+//        var merchant_role=$('#ueditor_0').html();
+//        var applycontent=$('#ueditor_1').html();
+//        if(regbg==""){
+//            util.message('入驻宣传头部图片不能为空');
+//        }
+//        if(payrate==""){
+//            util.message('手续费不能为空');
+//        }
+//        if(merchant_pay_time==""){
+//            util.message('打款周期不能为空');
+//        }
+//        $.post(comUrl+'minapi.php?op=merchant_base',
+//                {
+//                    uniacid:"{$_W['uniacid']}",
+//                    regbg:regbg,
+//                    applycontent:applycontent,
+//                    payrate:payrate,
+//                    merchant_role:merchant_role,
+//                    merchant_pay_time:merchant_pay_time
+//                },
+//                function(data){
+//                    util.message('提交成功');
+//                    //location.reload();
+//                }
+//        );
+//    })
+
+</script>
+
+
+<!--
+入驻宣传头部图片 regbg
+手续费（2位小数）payrate
+打款周期（天）merchant_pay_time
+规则（富文本）merchant_role
+入驻申请协议（富文本）applycontent
+{$uniacid['regbg']}
+-->
+{php include wl_template('common/footer');}

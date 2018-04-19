@@ -1,0 +1,299 @@
+{php include wl_template('common/header');}
+<ul class="nav nav-tabs" style="margin-bottom: 0px;">
+    {if $kaiguan['judgment'] != 1}
+    <li {if $op=='' || $op == 'display'}class="active"{/if}>
+        <a href="{php echo web_url('order/judgment_admin/display')}">评价管理 </a>
+    </li>
+    {else}
+    <li {if intval($_GPC['status']) == 0 && $op == 'display'}class="active"{/if}>
+        <a href="{php echo web_url('order/judgment_admin/display' , array('status' => 2))}">待审核评价 </a>
+    </li>
+    <li {if intval($_GPC['status']) == 1 && $op == 'display'}class="active"{/if}>
+        <a href="{php echo web_url('order/judgment_admin/display' , array('status' => 1))}">已显示评价 </a>
+    </li>
+    <li {if intval($_GPC['status']) == -1 && $op == 'display'}class="active"{/if}>
+        <a href="{php echo web_url('order/judgment_admin/display' , array('status' => -1))}">未显示评价 </a>
+    </li>
+    {/if}
+    <li {if $op=='list_virtual'}class="active"{/if}><a href="{php echo web_url('order/judgment_admin/list_virtual')}">虚拟评价 </a></li>
+    <li {if $op=='add_virtual'}class="active"{/if}><a href="{php echo web_url('order/judgment_admin/add_virtual')}">新增虚拟评价 </a></li>
+</ul>
+{if $op == '' || $op == 'display' || $op == 'list_virtual'}
+<div class="clearfix">
+    <div class="panel panel-info" style="margin-top: 20px;">
+        <div class="panel-heading">筛选</div>
+        <div class="panel-body">
+            <form action="" method="get" class="form-horizontal" role="form" id="form1">
+                <input type="hidden" name="c" value="site"/>
+                <input type="hidden" name="a" value="entry"/>
+                <input type="hidden" name="m" value="lexiangpingou"/>
+                <input type="hidden" name="do" value="order"/>
+                <input type="hidden" name="ac" value="judgment_admin"/>
+                <input type="hidden" name="op" value="display"/>
+
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">商品名</label>
+                    <div class="col-sm-6 ">
+                        <input class="form-control" name="keyword_form_id" id="" type="text" value="{$_GPC['keyword_form_id']}" placeholder="可查询商品名">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-md-offset-2 col-sm-2 col-lg-2" style="text-align: left;">
+                        <button class="btn btn-default"><i class="fa fa-search"></i> 搜索</button>
+                    </div>
+                </div>
+            </form>
+
+            <!--  <a href='{php echo $this->createWebUrl('grouporder', array('op' => 'output','groupstatus'=>$groupstatus,'starttime'=>$starttime,'endtime'=>$endtime))}'><button class="btn btn-info"><i class="fa fa-download"></i> 导出记录</button></a>-->
+        </div>
+    </div>
+    <div class="panel panel-default" style="background: none;  padding: 0px; border: none !important;">
+        {loop $list $item}
+
+        <div class="panel panel-default"
+             style="padding: 15px !important; margin-top: 20px; margin-bottom: 0px !important;">
+            <div style="width: 40px; float: left;">
+                <img src="{$item['avatar']}" width="40px" height="40px" class="pp_list_avatar">
+            </div>
+            <div style=" float:left;">
+
+                <span style="margin-left: 6px; font-weight: bold;">{$item['openname']}</span>
+                <span style="margin-left: 6px; color: darkgrey; font-size: 12px;font-weight: bold;">{$item['time']}</span><br/>
+
+                <span style="margin-left: 6px;">商品名：{$item['gname']}</span>
+                {if $item['item'] != ""}
+                <span class="name text-overflow-ellipsis-2" style="margin-left: 6px;">规格：{$item['item']}</span>
+                {/if}
+            </div>
+            <div style="clear: both;"></div>
+
+            <?php
+				$main_content = pdo_fetch("select * from ".tablename('tg_judgment_content')." where judgment_id=:judgment_id order by update_time asc ",array('judgment_id' => $item['judgment_id']));
+                $main_imgs = pdo_fetchall("select img_url from " . tablename('tg_judgment_img') . " where content_id = :content_id order by id desc", array(':content_id' => $main_content['content_id']));
+                $allcontent = pdo_fetchall("select * from ".tablename('tg_judgment_content')." where judgment_id=:judgment_id and content_id <> '". $main_content['content_id'] ."' order by update_time asc",array('judgment_id' => $item['judgment_id']));
+            ?>
+            <div style="font-size: 14px; padding-top: 10px; padding-bottom: 10px; font-weight: 400;">
+                {$main_content['content']}
+            </div>
+            <div style="padding: 3px;">
+                {loop $main_imgs $main_img}
+                <a style="" onclick="img_big('{$_W['attachurl']}{$main_img['img_url']}')">
+                    <img style="border: 1px solid #cccccc; padding: 5px; -moz-border-radius: 3px; -webkit-border-radius: 3px; border-radius: 3px; background: #fff; width: 40px; height:40px; margin-left: 2px; margin-right: 2px;" onerror="this.src='resource/images/gw-wx.gif'" src="{$_W['attachurl']}{$main_img['img_url']}">
+                </a>
+                {/loop}
+            </div>
+            {loop $allcontent $content}
+            {if $content['who']== 1}<label>[ 商家回复 ]</label>{/if}
+            {if $content['who']== 0}<label>[ 用户追评 ]</label>{/if}<span
+            style="margin-left:20px; color: #b8c0cc; font-size: 12px;"><?php echo date('Y-m-d H:i:s',$content['update_time']); ?></span>
+            <div style="font-size: 12px; padding-top: 10px; padding-bottom: 10px; font-weight: 400;">
+                {$content['content']}
+            </div>
+            <?php
+				$imgs = pdo_fetchall("select img_url from" . tablename('tg_judgment_img') . "where content_id = :content_id order by id desc", array(':content_id' => $content['content_id']));
+            ?>
+            {if !empty($imgs)}
+            <div class="clearfix"></div>
+
+            <div style="padding: 3px;">
+                {loop $imgs $img}
+                <a style="" onclick="img_big('{$_W['attachurl']}{$img['img_url']}')"><img
+                    style="border: 1px solid  #cccccc; padding: 5px; -moz-border-radius: 3px; -webkit-border-radius: 3px; border-radius: 3px; background: #fff; width: 40px; height:40px; margin-left: 2px; margin-right: 2px;"
+                    onerror="this.src='resource/images/gw-wx.gif'" src="{$_W['attachurl']}{$img['img_url']}"></a>
+                {/loop}
+            </div>
+
+            {/if}
+
+            {/loop}
+
+            <a onclick="$('#{$item['judgment_id']}').show();">回复</a>
+            <a href="{php echo web_url('order/judgment_admin',array('op' => 'delete','id' => $item['id']))}">删除 </a>
+            {if $kaiguan['judgment'] == 1}
+                {if $item['check_status'] != 1}
+                    <a href="{php echo web_url('order/judgment_admin',array('op' => 'check','id' => $item['id'] , 'status' => 1))}">显示 </a>
+                {/if}
+                {if $item['check_status'] != -1}
+                    <a href="{php echo web_url('order/judgment_admin',array('op' => 'check','id' => $item['id'] , 'status' => -1))}">不显示 </a>
+                {/if}
+            {/if}
+
+        </div>
+        <form class="form form-horizontal" action="./index.php" method="post" role="form" id="form1" style="padding: 15px;">
+            <input type="hidden" name="c" value="site"/>
+            <input type="hidden" name="a" value="entry"/>
+            <input type="hidden" name="m" value="lexiangpingou"/>
+            <input type="hidden" name="do" value="order"/>
+            <input type="hidden" name="ac" value="judgment_admin"/>
+            <input type="hidden" name="op" value="replay"/>
+            <input type="hidden" name="jid" value="{$item['judgment_id']}"/>
+            <div class="panel-body" id="{$item['judgment_id']}" style="display: none; padding: 0px; margin-top: 2px;">
+                <div class="form-group">
+                    <div class="col-md-12" style="position:relative; padding: 0px;">
+                        <div style="position:relative; padding-left: 0px;">
+                            <textarea class="form-control" required oninvalid="setCustomValidity('请填写回复内容')" oninput="setCustomValidity('')" required="required" name="content" id="content" rows="3" placeholder="在此回复。"></textarea>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-12" style="padding: 0px;">
+                        {php echo tpl_form_field_multi_image('img',$piclist);}
+
+                    </div>
+                </div>
+                <input style="float: right;" onclick="submitAction(); return false;" type="submit" name="submit" value="提交" class="btn btn-primary col-lg-1"/>
+            </div>
+        </form>
+        {/loop}
+
+
+    </div>
+    {$pager}
+</div>
+
+<div id="modal-module-img" class="modal fade sc" tabindex="-1">
+    <div class="modal-dialog" style='width:1000px;  height:85%;font-size: 14px; text-align: left; padding: 30px; '>
+        <a class="closeBtn" style="position: absolute; top:40px; right:40px; z-index: 9999999;" data-dismiss="modal"><font color="ff0000">x</font></a>
+        <div class="modal-content" style=" padding: 30px; ">
+
+            <div id="img_show" style=""></div>
+
+            <p style="text-align: center; margin-top: 20px;">
+                <button type="button" class="btn btn-primary" data-dismiss="modal">
+                    关闭
+                </button>
+            </p>
+
+        </div>
+    </div>
+</div>
+<script>
+
+    function img_big(img_url) {
+        var img_url = img_url;
+
+        $("#img_show").html('<img src="' + img_url + '">');
+        $('#modal-module-img').modal();
+
+    }
+
+
+</script>
+{elseif $op == 'add_virtual'}
+<div class="clearfix">
+    <div class="panel panel-info" style="margin-top: 20px;">
+        <form action="" method="post" class="form-horizontal form" id="form" style="position: relative">
+            <div class="panel-heading">筛选</div>
+            <div class="panel-body">
+                <div class="form-group">
+                    <label class="col-xs-12 col-sm-3 col-md-2 control-label">选择商品</label>
+                    <div class="col-sm-9 col-xs-12">
+                        <input type='hidden' id='gid' name='gid' value=""/>
+                        <div class='input-group'>
+                            <input type="text" name="gname" maxlength="30" value="{if !empty($goods)}{$goods['gname']}{/if}" id="gname" class="form-control" readonly/>
+                            <div class='input-group-btn'>
+                                <button class="btn btn-default" type="button" onclick="popwin = $('#modal-module-menus2').modal();">选择商品
+                                </button>
+                            </div>
+                        </div>
+                        <span class='help-block'><img style="width:100px;border:1px solid #ccc;padding:1px" src="./resource/images/nopic.jpg" id="gimg"/></span>
+                        <div id="modal-module-menus2" class="modal fade" tabindex="-1">
+                            <div class="modal-dialog" style='width: 660px;'>
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <!--<button aria-hidden="true" data-dismiss="modal" class="saler_close" type="button" style="float: right">-->
+                                            <!--×-->
+                                        <!--</button>-->
+                                        <h3>选择商品</h3></div>
+                                    <div class="modal-body">
+                                        <div class="row">
+                                            <div class="input-group">
+                                                <input type="text" class="form-control" name="keyword" value="" id="search-kwd2" placeholder="请输入商品名"/>
+                                                <span class='input-group-btn'><button type="button" class="btn btn-default" onclick="search_goods2();">搜索</button></span>
+                                            </div>
+                                        </div>
+                                        <div id="module-menus2" style="padding-top:5px;"></div>
+                                    </div>
+                                    <div class="modal-footer"><a href="#" class="btn btn-default" data-dismiss="modal" aria-hidden="true">关闭</a></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-xs-12 col-sm-3 col-md-2 control-label">选择商品特色</label>
+                    <div class="col-md-9 col-xs-12">
+                        <input type="checkbox" name="ishaoyong">好用</input>
+                        <input type="checkbox" name="iszhengpin">正品</input>
+                        <input type="checkbox" name="ispianyi">便宜</input>
+                        <input type="checkbox" name="iswuliu">物流快</input>
+                        <input type="checkbox" name="iszhiliang">质量好</input>
+                        <input type="checkbox" name="isfuwu">服务好</input>
+                        <input type="checkbox" name="isqita">其他</input>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-xs-12 col-sm-3 col-md-2 control-label">请输入评论</label>
+                    <div class="col-md-9 col-xs-12">
+                        <textarea name="judement_content" class="form-control" cols="70"></textarea>
+                    </div>
+                </div>
+                {if $_W['uniacid'] == 53}
+                <div class="form-group" style="display: none">
+                    <label class="col-xs-12 col-sm-3 col-md-2 control-label">商品评论详情图片</label>
+                    <div class="col-md-9 col-xs-12">
+                        {php echo tpl_form_field_multi_image('img',$img);}
+                    </div>
+                </div>
+                {/if}
+                <br>
+                <div class="form-group col-sm-12 TJButtonCom">
+                    <input type="submit" name="submit" value="提交" class="btn btn-primary col-lg-1" style="float: right;position: relative;top: 5px;left:-5px;"/>
+                    <input type="hidden" name="token" value="{$_W['token']}" />
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<script language='javascript'>
+
+    function search_goods2() {
+//        if( $.trim($('#search-kwd2').val())==''){
+//            util.message('请输入关键词' , '' , 'error');
+//            return;
+//        }
+
+        $("#module-menus2").html("正在搜索....")
+        $.get("{php echo web_url('order/judgment_admin' , array('op' => 'goods_list'))}", {
+            keyword: $.trim($('#search-kwd2').val())
+        }, function (dat) {
+            $('#module-menus2').html(dat);
+        })
+    }
+
+//    function search_goodss() {
+////        if( $.trim($('#search-kwd').val())==''){
+////            util.message('请输入关键词' , '' , 'error');
+////            return;
+////        }
+//
+//        $("#module-menus").html("正在搜索....")
+//        $.get("{php echo web_url('order/judgment_admin' , array('op' => 'goods_list'))}", {
+//            keyword: $.trim($('#search-kwd').val())
+//        }, function (dat) {
+//            $('#module-menus').html(dat);
+//        });
+//    }
+
+    function search_goods(o) {
+        console.log(o);
+        $("#gid").val(o.id);
+        $("#gname").val(o.gname);
+        $("#gimg").attr('src', o.gimg);
+        $(".saler_close").click();
+    }
+
+</script>
+{/if}
+{php include wl_template('common/footer');}

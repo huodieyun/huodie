@@ -1,0 +1,157 @@
+{php include wl_template('common/header');}
+<ul class="nav nav-tabs">
+	<li {if $_GPC['op'] == '' || $_GPC['op'] == 'display'}class="active"{/if}><a href="{php echo web_url('platform/score/display');}">商品总评</a></li>
+    {if $_W['uniacid'] == 33 ||	 $_W['uniacid'] == 53 ||  $_GPC['id']}<li {if $_GPC['op'] == 'detail'}class="active"{/if}><a href="{php echo web_url('platform/score/detail' , array('id' => intval($_GPC['id'])));}">评分详情</a></li>{/if}
+	{if $_GPC['op'] == 'add'}<li class="active"><a href="{php echo web_url('platform/score/add' , array('id' => intval($_GPC['id'])));}">商家评分</a></li>{/if}
+</ul>
+{if $_GPC['op'] == '' || $_GPC['op'] == 'display'}
+
+<div class="panel panel-info">
+	<div class="panel-heading">筛选</div>
+	<div class="panel-body">
+		<form action="./index.php" method="get" class="form-horizontal" role="form">
+			<input type="hidden" name="c" value="site" />
+			<input type="hidden" name="a" value="entry" />
+			<input type="hidden" name="m" value="lexiangpingou" />
+			<input type="hidden" name="do" value="platform" />
+			<input type="hidden" name="ac" value="score" />
+			<input type="hidden" name="op" value="display" />
+			<!--<input type="hidden" name="status" value="{$_GPC['status']}">-->
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-2 col-md-2 col-lg-1 control-label">商品名称</label>
+				<div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
+					<input class="form-control" name="keyword" id="" type="text" value="{$_GPC['keyword']}" placeholder="可模糊查询商品名称">
+				</div>
+				<div class="col-md-2" style="float: right">
+					<button class="btn btn-default min-width"><i class="fa fa-search"></i> 搜索</button>
+				</div>
+			</div>
+		</form>
+	</div>
+</div>
+{if empty($list)}
+<div style="text-align: center;padding: 100px 0;" class="panel panel-default">暂无数据~</div>
+{else}
+	{php include wl_template('platform/core_order');}
+{/if}
+{elseif $_GPC['op'] == 'add'}
+	<!--评分-->
+	<style>
+		.glyphicon-star:before,.glyphicon-star-empty:before{
+			color: #f60;
+			margin: 0 5px;
+			font-size: 24px;
+		}
+	</style>
+	<div class="score" style="background: #fff;padding: 10px">
+		<div class="form-group" style="height: 25px">
+			<label class="col-xs-12 col-sm-3 col-md-1 col-lg-1 control-label">风格</label>
+			<div class="col-md-6">
+				<div class="input-group">
+					<span data-value="1" class="glyphicon glyphicon-star-empty" aria-hidden="true"></span>
+					<span data-value="2" class="glyphicon glyphicon-star-empty" aria-hidden="true"></span>
+					<span data-value="3" class="glyphicon glyphicon-star-empty" aria-hidden="true"></span>
+					<span data-value="4" class="glyphicon glyphicon-star-empty" aria-hidden="true"></span>
+					<span data-value="5" class="glyphicon glyphicon-star-empty" aria-hidden="true"></span>
+				</div>
+			</div>
+		</div>
+		<div class="form-group" style="height: 25px">
+			<label class="col-xs-12 col-sm-3 col-md-1 col-lg-1 control-label">品质</label>
+			<div class="col-md-6">
+				<div class="input-group">
+					<span data-value="1" class="glyphicon glyphicon-star-empty" aria-hidden="true"></span>
+					<span data-value="2" class="glyphicon glyphicon-star-empty" aria-hidden="true"></span>
+					<span data-value="3" class="glyphicon glyphicon-star-empty" aria-hidden="true"></span>
+					<span data-value="4" class="glyphicon glyphicon-star-empty" aria-hidden="true"></span>
+					<span data-value="5" class="glyphicon glyphicon-star-empty" aria-hidden="true"></span>
+				</div>
+			</div>
+		</div>
+		<div class="form-group" style="height: 25px">
+			<label class="col-xs-12 col-sm-3 col-md-1 col-lg-1 control-label">售后</label>
+			<div class="col-md-6">
+				<div class="input-group">
+					<span data-value="1" class="glyphicon glyphicon-star-empty" aria-hidden="true"></span>
+					<span data-value="2" class="glyphicon glyphicon-star-empty" aria-hidden="true"></span>
+					<span data-value="3" class="glyphicon glyphicon-star-empty" aria-hidden="true"></span>
+					<span data-value="4" class="glyphicon glyphicon-star-empty" aria-hidden="true"></span>
+					<span data-value="5" class="glyphicon glyphicon-star-empty" aria-hidden="true"></span>
+				</div>
+			</div>
+		</div>
+		<div class="form-group" style="height: 60px">
+			<label class="col-xs-12 col-sm-3 col-md-1 col-lg-1 control-label">评分内容</label>
+			<div class="col-md-6">
+				<div class="input-group">
+					<textarea name="content" class="form-control" cols="70" value=""></textarea>
+				</div>
+			</div>
+		</div>
+		<div class="form-group" style="min-height: 100px">
+			<label class="col-xs-12 col-sm-3 col-md-1 control-label">图集</label>
+			<div class="col-sm-6" style="float: none;margin-left: 85px;">
+				{php echo tpl_form_field_multi_image('img',$piclist);}
+				<span class="help-block">商品详情幻灯片，建议640X350</span>
+			</div>
+		</div>
+		<div>
+			<a href="javascript:;" class="btn btn-success min-width js-batch js-off-shelves scoreTJ">提交</a>
+		</div>
+	</div>
+<script>
+	//选择评分
+	$('.score span').click(function(){
+        $(this).parents('.form-group').attr('data-value',$(this).attr('data-value'));
+        $(this).removeClass('glyphicon-star-empty').addClass('glyphicon-star').prevAll('span').removeClass('glyphicon-star-empty').addClass('glyphicon-star');
+        $(this).nextAll('span').removeClass('glyphicon-star').addClass('glyphicon-star-empty');
+	});
+	//提交评分
+	$('.scoreTJ').click(function(){
+	    var scoreV=$('.score>div[data-value]');
+	    if(scoreV.length!=3){
+			util.tips('请评分');
+			return false;
+		}
+		if($('.multi-img-details').html()==''){
+            util.tips('请上传图集');
+            return false;
+		}
+        var data={
+		    "id":"{$_GPC['id']}",
+            "data[style_score]":$(scoreV[0]).attr('data-value'),
+            "data[quality_score]":$(scoreV[1]).attr('data-value'),
+            "data[sales_score]":$(scoreV[2]).attr('data-value'),
+            "data[directions]":$('textarea[name="content"]').val()
+		};
+		for(var i=0;i<$('.multi-img-details img').length;i++){
+		    var imgN="data[imgs]["+i+']';
+			data[imgN]=$('.multi-img-details img').attr('src');
+		}
+		$.post("{php echo web_url('platform/score/add_submit')}",
+			data,
+			function(res){
+		    	var data=JSON.parse(res);
+				console.log(data);
+				if(data.status==1){
+				    util.tips(data.message);
+				    setTimeout(function(){
+				        location.href="{php echo web_url('platform/score/detail' , array('id' => intval($_GPC['id'])));}";
+					},1000)
+				}else{
+                    util.tips(data.message);
+                    return;
+				}
+			}
+		)
+
+	});
+</script>
+{elseif $_GPC['op'] == 'order'}
+	{php include wl_template('platform/commodity_order');}
+{elseif $_GPC['op'] == 'detail'}
+	{php include wl_template('platform/core_detail');}
+{/if}
+
+
+{php include wl_template('common/footer');}

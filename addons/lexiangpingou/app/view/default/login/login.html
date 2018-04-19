@@ -1,0 +1,92 @@
+{php include wl_template('common/header');}
+	<link rel="stylesheet" type="text/css" href="{TG_URL_ARES}static/css/iphone_dialog.css">
+<body>
+<div class='login'>
+	<div class='login_title'>
+		<span>账号登录</span>
+	</div>
+	<div class="login_avatar">
+		<img src="{TG_URL_ARES}/images/avatar.png">
+	</div>
+  	<div class='login_fields'>
+		<div class='login_fields__user'>
+		  <div class='icon'>
+			<img src='{TG_URL_ARES}/images/user_name.png'>
+		  </div>
+		  <input placeholder='用户名' type='text' id="username">
+<!-- 			<div class='validation'>
+			  <img src='img/tick.png'>
+			</div> -->
+		  </input>
+		</div>
+		<div class='login_fields__password'>
+			<div class='icon'>
+				<img src={TG_URL_ARES}/images/yan_zheng_ma.png'>
+			</div>
+		  	<input placeholder='验证码' type='text' id="sms_code">
+			<div class='send'>
+				<span>发送验证码</span>
+			</div>
+		</div>
+		<div class='login_fields__submit' id="submit">
+		  <input type='button' value='登录'>
+		</div>
+  	</div>
+</div>
+</body>
+<script>
+    //检查是否在数据库中
+    //点击发送按钮
+    $(".send").click(function () {
+        var phone = $("#username").val();
+        $.ajax({
+            url:"{php echo app_url('login/login',array('op'=>'login'))}",
+            type:"post",
+            dataType:"json",
+            data:{
+                phone:phone
+            },
+            success:function (res) {
+                //执行发送短信 send_sms
+                $.ajax({
+                    url:"{php echo app_url('login/login',array('op'=>'send_sms'))}",
+                    type:"post",
+                    dataType:"json",
+                    data:{
+                        phone:phone
+                    },
+                    success:function (res) {
+                        alert(5345614561156);
+                        $("#submit").click(function () {
+                            var sms = $("#sms_code").val();
+                            $.ajax({
+                                url:"{php echo app_url('login/login',array('op'=>'check'))}",
+                                type:"post",
+                                dataType:"json",
+                                data:{
+                                    phone:phone,
+                                    num:sms
+                                },
+                                success:function (res) {
+                                    alert(123456);
+                                },
+                                error:function (res) {
+                                    alert(654321);
+                                }
+                            });
+                        });
+
+                    },
+                    error:function (res) {
+                        alert(22222);
+                    }
+                });
+            },
+            error:function (res) {
+                alert(2222222222222);
+            }
+        });
+    });
+
+</script>
+{php include wl_template('common/footer');}

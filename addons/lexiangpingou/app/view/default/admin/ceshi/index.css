@@ -1,0 +1,12 @@
+body { background: #e7e8eb;}
+.container{background: #fff; padding:20px 20px 20px 20px ;}
+
+@media all and (min-width: 750px) {
+		.btn-col{margin-top:40px;}
+    }
+
+#mytab{ border: 0;}
+.tishi{color: #777777; margin-left: 3%;}
+.list-head{padding: 0px 10px 10px 0px;}
+.table th, .table td { text-align: center; }
+.ddlist table tr td{ height: 37px;}

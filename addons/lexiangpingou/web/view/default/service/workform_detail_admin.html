@@ -1,0 +1,243 @@
+{php include wl_template('common/header');}
+<style type="text/css">
+
+.send {
+position:relative;
+max-width: 900px;
+padding: 20px;
+background:#F8C301;
+border-radius:5px; /* 圆角 */
+margin:30px auto 0;
+}
+
+.send .arrow {
+
+width:0;
+height:0;
+font-size:0;
+border:solid 8px;
+
+}
+#img_show {text-align: center; padding: 30px;}
+.closeBtn{ font-family:arial; font-size:24px;color:#999; text-decoration:none; float:right; display: inline-block;width:36px;height:36px;line-height:36px;color:#333;text-align:center;position:absolute;top:0px;right:0px;color:#bbb;}
+.closeBtn:hover{text-shadow:0px 1px 3px #333;color:#333;}
+</style>
+<script>
+	function img_big(img_url){
+		var img_url =img_url;
+		
+		$("#img_show").html('<img src="'+img_url+'">'); 
+		$('#modal-module-img').modal();
+
+	}
+	function workform_over(id){ 
+		var form_id=id;
+		if(confirm("注意，工单完成后将无法进行回复操作！")){ 
+			$.ajax({
+	             type: "GET",
+	             url: "{php echo web_url('service/workform_list_admin',array('op' => 'workform_over'))}",
+	             data:{"form_id":form_id},
+				 dataType: "json",
+	             success: function(data){	
+	             	
+					util.tips('本工单已完成！', 2000);
+					setTimeout(function(){  //使用  setTimeout（）方法设定定时2000毫秒
+					window.location.reload();//页面刷新
+					},1000);
+					
+				 }
+	         });
+			return true; 
+		}else{ 
+			return false; 
+		} 
+	}
+	function develop_over(id){
+		var form_id=id;
+		if(confirm("注意，工单完成后将无法进行回复操作！")){
+			$.ajax({
+	             type: "GET",
+	             url: "{php echo web_url('service/internal',array('op' => 'develop_over'))}",
+	             data:{"form_id":form_id},
+				 dataType: "json",
+	             success: function(data){
+
+					util.tips('本工单已完成！', 2000);
+					setTimeout(function(){  //使用  setTimeout（）方法设定定时2000毫秒
+					window.location.reload();//页面刷新
+					},1000);
+
+				 }
+	         });
+			return true;
+		}else{
+			return false;
+		}
+	}
+	function develop_false(id){ 
+		var form_id=id;
+		if(confirm("是否确定不予开发？")){ 
+			$.ajax({
+	             type: "GET",
+	             url: "{php echo web_url('service/workform_list_admin',array('op' => 'develop_false'))}",
+	             data:{"form_id":form_id},
+				 dataType: "json",
+	             success: function(data){	
+	             	
+					util.tips('本工单不予开发。', 2000);
+					setTimeout(function(){  //使用  setTimeout（）方法设定定时2000毫秒
+					window.location.reload();//页面刷新
+					},1000);
+					
+				 }
+	         });
+			return true; 
+		}else{ 
+			return false; 
+		} 
+	}
+	$(function(){
+
+		$('#form1').submit(function(){
+		if($('textarea[name="content"]').val() == ''){
+				util.message('请描述您遇到的情况或者需求。');
+				return false;
+		}
+		});
+	});
+</script>
+<div class="clearfix">
+	<div class="panel panel-default" style="padding-bottom: 30px;">
+		<div class="panel-heading" style=" padding-bottom: 10px;">
+			{if $_GPC['after'] == 1}<a class="closeBtn" style="position: absolute; top:6px; right:20px; z-index: 9999999;" href="javascript:history.go(-2)"><font color="ff0000">x</font></a>{else}<a class="closeBtn" style="position: absolute; top:6px; right:20px; z-index: 9999999;" href="javascript:history.go(-1)"><font color="ff0000">x</font></a>{/if}
+			<span style=" width: 90px; font-size: 20px; font-weight:  300; position: relative; display: block; margin: 0 auto;">
+			<a href="#top" style=" position: absolute;  top:36px; width: 80px;" class="btn btn-info btn-xs" target="_self">↓ 跳转底部  ↓</a>
+			沟通记录
+			</span>
+			<div class="clearfix"></div>
+			
+			<span style="font-size: 12px; float: right; color: #666666; width: 200px; text-align: left;">工单号：{$form_id}</span>
+			<div class="clearfix"></div>
+			
+			<span style="font-size: 12px; float: right; color: #666666; width: 200px; text-align: left;">创建时间：{$form_admin['create_time']}</span>
+			<div class="clearfix"></div>
+			
+			<span style="font-size: 12px; float: right; color: #666666; width: 200px; text-align: left;">当前状态：
+				{if $form_admin['status'] != 2 && $form_admin['status'] != -2 && $form_admin['status'] != -3}处理中
+				{elseif $form_admin['status'] == 2 && $form_admin['type'] == 2 && $form_admin['vip'] == 1}等待开发中
+				{elseif $form_admin['status'] == -2}不予开发
+				{elseif $form_admin['status'] == 2 && $form_admin['type'] <> 2}工单结束
+				{elseif $form_admin['status'] == -3}非vip功能提交
+				{/if}
+			</span>
+			<div class="clearfix"></div>
+		</div>
+		<div style="font-size: 14px; color: #666666;  margin-top: 20px;padding-bottom: 10px; border-bottom: 2px solid #E7E8EB;  text-align: left; margin-left: 20px; margin-right: 20px;"><span style="font-weight: bold;">工单主题：</span>{$form_admin['title']}</div>
+		{loop $allcontent $content}
+		<div style="padding-top: 20px; text-align:center; font-size: 12px; display: block; margin: 0 auto; color: #666666;">{$content['update_time']}</div>
+		<div style="text-align: center; {if $content['who'] == 33} float: right;{else}float: left;{/if}>">
+			<img style=" margin-top: 30px;  {if $content['who'] == 33} margin-left: 20px; margin-right:20px;{else} margin-right: 20px;margin-left: 20px;{/if}" {if $content['who'] != 33}src="{php echo tomedia('headimg_'.$create_time['uniacid'].'.jpg')}?time={php echo time()}"{else}src="{php echo tomedia('headimg_33.jpg')}?time={php echo time()}"{/if} class="img-responsive img-thumbnail" width="70px" onerror="this.src='resource/images/gw-wx.gif'"/>
+			<br>
+			<span style="display: block;">
+				<?php 
+					$name = pdo_fetch("select name from" . tablename('account_wechats') . "where uniacid = :uniacid  ", array(':uniacid' => $content['who']));
+				?>	
+				{$name['name']}</span>
+		</div>
+		<div class="send" style="{if $content['who'] == 33}float: right; text-align: right; background: #99ccff; color: #336699; font-weight: bold;{else}float: left; background: #E7E8EB; color: #666666;{/if}">
+			<div style="padding-left: 6px; padding-right: 6px;">{$content['content']}</div>
+			<?php 
+				$imgs = pdo_fetchall("select img_url from" . tablename('workform_img') . "where content_id = :content_id order by id desc", array(':content_id' => $content['content_id']));
+			?>		
+			{if !empty($imgs)}
+			<div class="clearfix"></div>
+			<div style="display: block; margin-top: 10px; padding:2px;{if $content['who'] != 33}float: left;{else}float: right;{/if}">
+
+			<div style="padding: 3px;">
+			{loop $imgs $img}
+				<a style="" onclick="img_big('{$_W['attachurl']}{$img['img_url']}')"><img  style="border: 1px solid  #cccccc; padding: 5px; -moz-border-radius: 3px; -webkit-border-radius: 3px; border-radius: 3px; background: #fff; width: 40px; height:40px; margin-left: 2px; margin-right: 2px;" onerror="this.src='resource/images/gw-wx.gif'" src="{$_W['attachurl']}{$img['img_url']}"></a>
+			{/loop}
+			</div>
+			</div>
+			{/if}
+				<div class="arrow" style="position:absolute;top:5px;{if $content['who'] == 33}right:-16px; border-color:#fff #fff #fff #99ccff;{else}left:-16px; border-color:#fff #E7E8EB #fff #fff;{/if}"></div>
+		</div>
+		
+		
+		<div class="clearfix"></div>
+		{/loop}
+	
+	</div>
+	<a name="top" id="top"></a>
+	{if $form_admin['status'] != 2 && $form_admin['status'] != -2 && $form_admin['status'] != -3}
+	<form class="form form-horizontal" action="./index.php" method="post" role="form" id="form1">
+		<input type="hidden" name="c" value="site" />
+        <input type="hidden" name="a" value="entry" />
+        <input type="hidden" name="m" value="lexiangpingou" />
+        <input type="hidden" name="do" value="service" />
+        <input type="hidden" name="ac" value="workform_list_admin" />
+        <input type="hidden" name="op" value="replay" />
+        <input type="hidden" name="form_id" value="{$_GPC['form_id']}" />
+        <input type="hidden" name="status" value="{$_GPC['status']}" />
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				回复信息
+			</div>
+			<div class="panel-body">
+					<div class="form-group">
+						<label class="col-md-2 control-label">情况描述:</label>
+						<div class="col-md-9" style="position:relative">
+							<div  style="position:relative; padding-left: 0px;">
+								<textarea class="form-control" name="content" id="content" rows="10"  placeholder="此处输入通知内容，可以通过右下角拖拽来使输入框边长。" ></textarea>
+							</div>
+						</div>
+					</div>
+					<div class="form-group">
+				        <label class="col-xs-12 col-sm-3 col-md-2 control-label">相关截图</label>
+				        <div class="col-sm-6">
+				           {php echo tpl_form_field_multi_image('img',$piclist);}
+				            <span class="help-block">附上图片说明</span>
+				        </div>
+				    </div>
+			</div>
+		</div>
+		<div class="form-group">
+			<div class="col-sm-12">
+				<input style="float: right; margin-left: 20px;" type="submit" name="submit" value="回复信息" class="btn btn-primary col-lg-1" />
+				{if $_GPC['after'] == 1}<a class="btn btn-default col-lg-1" style="float: right; margin-left: 20px; display: block;" href="javascript:history.go(-2)">返回上页</a>{else}<a class="btn btn-default col-lg-1" style="float: right; margin-left: 20px; display: block;" href="javascript:history.go(-1)">返回上页</a>{/if}
+				{if $internal == 1}
+				<a class="btn btn-warning col-lg-1" style="float: right; margin-left: 20px; display: block;" onclick="develop_over('{$form_id}')">开发完成</a>
+				{else}
+				<a class="btn btn-warning col-lg-1" style="float: right; margin-left: 20px; display: block;" onclick="workform_over('{$form_id}')">{if $form_admin['type'] != 2}工单完成{else}允许开发{/if}</a>
+				{/if}
+				{if $form_admin['type'] == 2 }<a class="btn btn-danger col-lg-1" style="float: right; margin-left: 20px; display: block;" onclick="develop_false('{$form_id}')">不予开发</a>{/if}
+			</div>
+		</div>
+	</form>
+	{else}
+	<a class="btn btn-primary col-lg-1" style="float: right; margin-left: 20px; display: block;" href="javascript:history.go(-1)">返回上页</a>
+	{/if}
+</div>
+<button id="btn_img_show" style="display: none;" style="margin-top: 5px;"    class="btn btn-default" type="button" onclick="popwin = $('#modal-module-img').modal();">1隐藏点击</button>
+<div id="modal-module-img" class="modal fade sc" tabindex="-1">
+							<div class="modal-dialog" style='width:1000px;  height:85%;font-size: 14px; text-align: left; padding: 30px; '>
+								<a class="closeBtn" style="position: absolute; top:40px; right:40px; z-index: 9999999;" data-dismiss="modal"><font color="ff0000">x</font></a>
+								<div class="modal-content" style=" padding: 30px; ">
+									
+								
+									<div id="img_show" style=""></div>
+									
+
+										
+									<p style="text-align: center; margin-top: 20px;">
+										<button type="button" class="btn btn-primary" data-dismiss="modal">
+	 										关闭
+	            						</button>
+									</p>
+									
+								</div>
+							</div>
+						</div>
+
+
+{php include wl_template('common/footer');}

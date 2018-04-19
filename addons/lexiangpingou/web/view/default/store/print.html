@@ -1,0 +1,897 @@
+{php include wl_template('common/header');}
+<style type="text/css">
+	.require{color:red;}
+	.info{padding:6px;width:400px;margin:-20px auto 3px auto;text-align:center;}
+	.address_wrapper {
+		position: absolute;
+		padding:10px;
+		top: 0;
+		left: 0;
+		width: 200px;
+	}
+	.address_list {
+		position: relative;
+		height: 545px;
+	    overflow-y: auto;
+	    padding-left: 0;
+	}
+	
+    .address_list > li.address_item {  
+    	position: relative;
+    	padding: 10px 15px;
+    	margin: 10px 0;
+    	border: 1px solid #eee;
+    	border-left: none;
+    }
+    .address_list > li.area-item:before {
+	    content: '';
+	    display: block;
+	    width: 6px;
+	    height: 100%;
+	    left: 0;
+	    top: 0;
+	    position: absolute;
+    }
+    .address_list > li.area-item.area0:before {
+    	background-color: #1791fc;
+    }
+    .address_list > li.area-item.area1:before {
+    	background-color: #9a6a38;
+    }
+    .address_list > li.area-item.area2:before {
+    	background-color: #1ebd4f;
+    }
+    .address_list > li.area-item.area3:before {
+    	background-color: #fe4d3d;
+    }
+    .address_list > li.area-item.area4:before {  
+    	background-color: #4589ef;
+    }
+    .address_list > li > div:first-child {  
+    	display: flex;
+    	margin-top: -30px;  
+    	flex-direction: row;
+    	justify-content: space-between;
+    	align-items: center;
+    	font-size: 14px;   
+    }
+    .address_list > li div:first-child h5 {  
+    	height: 30px;
+	    line-height: 30px;
+	    font-size: 15px;
+	    font-weight: bold;
+    }
+    .address_list > li div:last-child {
+    	line-height: 30px;
+    	font-size: 12px;      
+    }
+    .new_address  {
+    	position: relative;
+	    padding: 10px 15px;
+	    margin: 10px 0;
+	    border: 1px solid #eee;
+	    border-left: none;    
+	    overflow-y: auto;     
+    }
+    .new_address > div:first-child {    
+    	display: flex;
+    	margin-top: -30px;  
+    	flex-direction: row;
+    	justify-content: space-between;
+    	align-items: center;
+    	font-size:0;
+
+    }
+    .new_address div:first-child h5 {
+    	height: 30px;
+	    line-height: 30px;
+	    font-size: 15px;
+	    font-weight: bold;
+    }
+    .new_address div:first-child span {
+		font-size: 14px;  
+    }
+    .new_address .new_price-container {
+    	display: flex;  
+    	flex-direction: column;
+    	justify-content: space-between; 
+    	align-items: flex-start;  
+    }
+	.new_address .new_price-container > div {
+		line-height: 30px;
+    	margin-bottom: 10px;
+	}
+	.new_address .new_price-container input{
+		width: 80px;
+	   /* border: 1px solid #ccc;*/
+	    border:none; 
+	    outline: 0;
+	    border-radius: 5px;
+	    margin: 0 10px;
+	    text-align: center;
+	    font-size: 14px; 
+	}
+	.new_address .edit { 
+		display: none;
+	}
+    .self_add {
+	    padding: 8px 12px;
+	    margin-top: 10px;
+	    text-align: center; 
+	   	background-color: #1ab394;
+	    border-color: #1ab394;
+	    color: #FFF;
+	    border-radius: 5px; 
+    }
+    .btn-delete {
+    	margin-top: 10px;  
+    	padding-top: 10px;
+    	border-top: 1px dashed #ccc;
+    	cursor: pointer;
+		text-align: center;  
+    }
+    .btn-delete .icon-delete {
+    	content: "\e6b4";
+    }
+    .price-container input[name="address_name"] {
+    	border:none;
+    	width: 80px;
+	    outline: 0;
+	    border-radius: 5px;
+	    margin: 0 10px;
+	    text-align: center;
+	    font-size: 14px;   
+    }
+    .edit {
+    	cursor: pointer; 
+    }
+    .cancel { 
+    	cursor: pointer;
+    	display: none;
+    }
+</style>
+<!--<span class="price" style="display:none;">0.01</span>-->
+<ul class="nav nav-tabs">
+<li {if $op == 'base'}class="active"{/if}><a href="{php echo web_url('store/print', array('op' => 'base'))}">基本设置</a></li>
+	{if checkstr($_W['user']['perms'],'print.list')}
+	<li {if $op == 'display'}class="active"{/if}><a href="{php echo web_url('store/print', array('op' => 'display'))}">管理打印机</a></li>
+	{/if}
+	{if checkstr($_W['user']['perms'],'print.add')}
+	<li {if $op == 'post'}class="active"{/if}><a href="{php echo web_url('store/print', array('op' => 'post'))}">添加打印机</a></li>
+	{/if}
+</ul>
+{if $op == 'base'}
+	
+	<div class="panel panel-default">
+	<div class="panel-body table-responsive" style="padding: 0px;">
+		<div class="main_bd">
+        <div class="plugins_wrp">
+            <dl>
+                <dd>
+                    <ul id="js_plugins">
+						<li class="item_wrp" style="width: 100%;">
+							<div class="plugin_item">
+								<!--<div class="plugin_icon"><img src="{TG_URL_WRES}images/function/cashprint.png" style="cursor:pointer;"></div>-->
+								<div  id="link-icon1" class="plugin_icon" >
+									<div id="link-icon" style="display:none;width:100%;height:100%;position:absolute;background-color:rgba(0,0,0,0.3);cursor:pointer;">
+										<img src="{TG_URL_WRES}images/3.svg"style="position:absolute;width:60%;left:20%;">
+									</div>
+									<img src="{TG_URL_WRES}images/function/cashprint.png" style="cursor:pointer;">
+								</div>
+								
+								<div class="plugin_content">
+									<h3 class="title">{$_W['page']['title']}</h3>
+									<p class="desc" style="    width: 100%;">
+									启用小票打印功能后，商品拼团成功或者单买支付成功后自动打印该商品至指定区域打印机！
+										小票打印需备专用wifi打印机，其他打印机均无法使用！如需开启请联系客服！
+										
+									</p>
+								</div>
+							</div>
+						</li>
+					</ul>
+                </dd>
+            </dl>
+        </div>
+    </div>
+	</div>
+</div>
+	{/if}
+{if $op == 'post'}
+	<form class="form-horizontal form form_store" id="form1" action="" method="post" enctype="multipart/form-data">
+		<input type="hidden" name="sid" value="{$sid}">
+		<div class="main">
+			<div class="panel panel-default">
+				<div class="panel-heading">添加打印机</div>
+				<div class="panel-body">
+					<div class="form-group">
+						<label class="col-xs-12 col-sm-3 col-md-2 control-label"><span class="require"> </span>是否启用云打印机</label>
+						<div class="col-sm-9 col-xs-12">
+							<label class="radio-inline">
+								<input type="radio" value="1" name="status" {if $item['status'] == 1}checked{/if}> 启用
+							</label>
+							<label class="radio-inline">
+								<input type="radio" value="0" name="status" {if $item['status'] == 0}checked{/if}> 不启用
+							</label>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-xs-12 col-sm-3 col-md-2 control-label"><span class="require"> </span>核销是否自动打印</label>
+						<div class="col-sm-9 col-xs-12">
+							<label class="radio-inline">
+								<input type="radio" value="1" name="hexiao_print" {if $item['hexiao_print'] == 1}checked{/if}> 启用
+							</label>
+							<label class="radio-inline">
+								<input type="radio" value="0" name="hexiao_print" {if $item['hexiao_print'] == 0}checked{/if}> 不启用
+							</label>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-xs-12 col-sm-3 col-md-2 control-label"><span class="require"> </span>自提是否自动打印</label>
+						<div class="col-sm-9 col-xs-12">
+							<label class="radio-inline">
+								<input type="radio" value="1" name="since_print" {if $item['since_print'] == 1}checked{/if}> 启用
+							</label>
+							<label class="radio-inline">
+								<input type="radio" value="0" name="since_print" {if $item['since_print'] == 0}checked{/if}> 不启用
+							</label>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-xs-12 col-sm-3 col-md-2 control-label"><span class="require">* </span>云打印机名称</label>
+						<div class="col-sm-9 col-xs-12">
+							<input type="text" class="form-control" name="name" value="{$item['name']}" placeholder="填写打印机名称">
+							<div class="help-block">如全国区域打印，请输入全国；如分区域打印，请输入XX市</div>
+						</div>
+					</div>
+					
+				<div class="form-group picmode" {if $item['mode']==2}style="display:block;"{else}style="display:none;"{/if}>
+					<label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label">商户代码</label>
+					<div class="col-xs-12 col-sm-8">
+						<input type="text" class="form-control" name="member_code" value="{$item['member_code']}" placeholder="填写商户代码">
+						<div class="help-block">在云打印机官网查看。</div>
+					</div>
+				</div>
+					<div class="form-group">
+						<label class="col-xs-12 col-sm-3 col-md-2 control-label"><span class="require">* </span>机器号</label>
+						<div class="col-sm-9 col-xs-12">
+							<input type="text" class="form-control" name="print_no" value="{$item['print_no']}" placeholder="填写机器号">
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-xs-12 col-sm-3 col-md-2 control-label"><span class="require">* </span>云打印机key（API 密钥）</label>
+						<div class="col-sm-9 col-xs-12">
+							<input type="text" class="form-control" name="key" value="{$item['key']}" placeholder="填写打印机key（API 密钥）">
+						</div>
+					</div>
+					 <div class="form-group">
+                        <label class="col-xs-12 col-sm-3 col-md-2 control-label"><span class="require">* </span>打印机所在门店位置</label>
+                        <div class="col-sm-9 col-xs-12">
+                            <div class="row row-fix">
+								<div class="col-xs-4 col-sm-4">
+									<input type="text" name="map[lng]" value="{$item['lbs']['lng']}" placeholder="地理经度" class="form-control">
+								</div>
+								<div class="col-xs-4 col-sm-4">
+									<input type="text" name="map[lat]" value="{$item['lbs']['lat']}" placeholder="地理纬度" class="form-control">
+								</div>
+<!-- 								<div class="col-xs-4 col-sm-4">
+									<button  data-toggle="modal" data-target="#myAddress"class="btn btn-default" type="button">选择坐标</button>
+								</div> -->
+							</div>    
+                        </div>
+                    </div> 
+					<div class="form-group print_nums" >
+						<label class="col-xs-12 col-sm-3 col-md-2 control-label">打印联数</label>
+						<div class="col-sm-9 col-xs-12">
+							<input type="text" class="form-control" name="print_nums" value="{$item['print_nums']}">
+							<div class="help-block">默认为1</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="form-group">
+				<div class="col-sm-9 col-xs-9 col-md-9">
+					<input type="hidden" name="token" value="{$_W['token']}">
+					<input name="submit" id="submit" type="submit" value="提交" class="btn btn-primary col-lg-1">
+				</div>	
+			</div>
+		</div>
+	</form>
+	<button class="btn btn-default" data-toggle="modal" data-target="#myModal" style="position: absolute;top:400px;right: 128px;">
+        选择配送区域   
+    </button>  
+	 <!-- 模态框（Modal） -->
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog" style="width: 80%;"> 
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button onclick="getMarker()" type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                        &times;
+                    </button>
+                    <h4 class="modal-title" id="myModalLabel">
+                        送货上门区间设置
+                    </h4>
+                </div>
+                <div class="modal-body" style="height: 600px;padding: 0 0 0 200px;position: relative;">
+                	<div class="address_wrapper">
+                		<h4>区域及配送范围</h4>
+	                	<ul class="address_list">
+	                		<!-- <li class="address_item area-item area1">
+								<div>
+									<h5>配送范围</h5>
+									<span>编辑</span>
+								</div>
+								<div class="price-container">
+									<span>区域1</span>
+								</div>
+								<input type="hidden" name="address" value=""/>  
+	                		</li> -->
+	                		<!-- <li class="new_address area-item area1">  
+	                			<div>
+									<h5>配送范围</h5>
+									<span>编辑</span>
+								</div>
+								<div class="new_price-container">
+									<div class="new_price_item">
+										<label><input type="text" name="start_price" value="区域2"></label>
+									</div>
+								</div>
+								<input type="hidden" name="address" value=""/>   
+	                		</li> -->
+	                		<li class="self_add" onclick="self_add()">
+	                			+新增配送区域
+	                		</li>      
+	                	</ul>
+                	</div>
+                    <div id="container" style="position: inherit;">
+                    </div>
+                    <div class="button-group">
+                        <!-- <input type="button" class="button" value="鼠标点击打印机的位置" id="point"/> -->
+                      <!--   <input type="button" class="button" value="鼠标绘制线" id="line"/> -->
+                       <!--  <input type="button" class="button" value="鼠标绘制面" id="polygon"/> -->  
+                        <input type="button" class="button" value="历史绘制" id="member"/>  
+                        <input type="button" class="button" value="重新编辑区域" id="edit"/>    
+                        <!-- <input type="button" class="button" value="结束编辑" id="edit_close"/>     -->     
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button onclick="getMarker()" type="button" class="btn btn-default" data-dismiss="modal">关闭
+                    </button>
+                    <button onclick="getMarker()" type="button" class="btn btn-primary" data-dismiss="modal" onclick="submap(this)"> 
+                        提交区域 
+                    </button>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal -->
+    </div>
+    <!-- 保存确认 -->
+    <div class="modal fade" id="save_check" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog" style="width: 80%;"> 
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                        &times;
+                    </button>
+                    <h4 class="modal-title" id="myModalLabel">
+                        提示
+                    </h4>
+                </div>
+                <div class="modal-body" style="height: 600px;padding: 0 0 0 200px;position: relative;">
+                	
+                </div>
+                <div class="modal-footer">
+	                <button type="button" class="btn btn-primary" data-dismiss="modal"> 
+	                       确定
+                    </button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">取消
+                    </button>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal -->
+    </div>
+	<script type="text/javascript">
+        $('.form_store').submit(function(){
+            console.log(this);
+            if($('input[name="name"]').val() == ''){
+                util.message('请输入云打印机名称!','','error');
+                return false;
+            }
+            if($('input[name="print_no"]').val() == ''){
+                util.message('请输入云打印机机器号!','','error');
+                return false;
+            }
+            if($('input[name="key"]').val() == ''){
+                util.message('请输入云打印机key!','','error');
+                return false;
+            }
+            if($('input[name="map[lng]"]').val() == '' || $('input[name="map[lat]"]').val() == '') {
+                util.message('请选择打印机所在门店位置','','error');
+                return false;
+            }
+            return true;
+        });
+		require(['util'], function(u){
+			$('#post-add').click(function(){
+				$('#tpl-container').append($('#tpl').html());
+			});
+		});
+		//历史绘制
+        {if !empty($result) && $result}
+        var polygonArr = {$result};
+        {else}
+        var polygonArr = [];
+        {/if}
+		               
+		//三维数组
+		var all_points = [];
+		var true_points = []; 
+		//获取经纬度
+        var select_points = [];
+        var select_point = [
+            // 0:120.583534,   //纬度
+            // 1:27.884109     //经度
+        ]
+        var map = new AMap.Map("container", {  //初始化地图
+            resizeEnable: true,
+            zoom:12  
+        });
+        // var pointMap = new AMap.Map("pointMap",{
+        // 	resizeEnable: true,
+        //     zoom:12  
+        // })
+        // var polygonArr ={$result};                
+        
+        //在地图中添加MouseTool插件
+        var mouseTool = new AMap.MouseTool(map);
+		// AMap.event.addDomListener(document.getElementById('point'), 'click', function() {  //绘制点
+  //         map.on('click',point_cb);
+  //       }, false);
+
+        // var point_cb = function (e) {  
+        //   	new AMap.Marker({
+	       //      map: map,
+	       //      position: [e.lnglat.getLng(), e.lnglat.getLat()]
+	       //  });
+        //   	var point_lng = e.lnglat.getLng();
+        // 	var point_lat = e.lnglat.getLat();
+        //   	$('input[name="map[lng]"]').val(point_lng);
+        // 	$('input[name="map[lat]"]').val(point_lat);
+        // 	util.message('成功设置门店坐标','','success');
+        // 	$('#point').hide();
+        // 	map.off('click',point_cb);
+        // }
+        var history_position = ["{$item['lbs']['lng']}","{$item['lbs']['lat']}"];	//历史绘制点
+     	var marker_position = "{$item['lbs']['lng']}" != "" ? history_position : map.getCenter();
+        var marker = new AMap.Marker({  		//设置点标记拖拽效果
+	        position: marker_position,
+	        draggable: true,
+	        cursor: 'move',
+	        raiseOnDrag: true
+	    });
+	    marker.setMap(map);
+	    marker.setLabel({//label默认蓝框白底左上角显示，样式className为：amap-marker-label
+	        offset: new AMap.Pixel(20, 20),//修改label相对于maker的位置
+	        content: "拖拽到门店位置"
+	    });
+	    function getMarker () {
+	    	var getPosition = marker.getPosition();
+	    	$('input[name="map[lng]"]').val(getPosition.lng);
+        	$('input[name="map[lat]"]').val(getPosition.lat);
+	    }
+        // AMap.event.addDomListener(document.getElementById('line'), 'click', function() {     //绘制线
+        //     mouseTool.polyline();
+        // }, false);
+        // AMap.event.addDomListener(document.getElementById('polygon'), 'click', function() {     //绘制面
+        //     mouseTool.polygon();
+        //     //获取
+        //     var clickEventListener = map.on('click', function(e) {
+        //         select_point = []; 
+        //         select_point[0] = e.lnglat.getLng();   
+        //         select_point[1] = e.lnglat.getLat();
+        //         select_points.push(select_point);           
+        //     });
+           
+        // }, false);   
+
+        AMap.event.addDomListener(document.getElementById('member'), 'click', function() {     //记录上次绘制
+            //记录上次绘制面
+            if(polygonArr) {
+            console.log(polygonArr);   
+                var  polygon = new AMap.Polygon({  
+                path: polygonArr,//设置多边形边界路径
+                strokeColor: "#FF33FF", //线颜色
+                strokeOpacity: 0.2, //线透明度
+                strokeWeight: 3,    //线宽
+                fillColor: "#1791fc", //填充色
+                fillOpacity: 0.35//填充透明度
+            }); 
+            polygon.setMap(map);
+            } 
+        }, false);  
+
+        AMap.event.addDomListener(document.getElementById('edit'), 'click', function() {     //重新编辑区域
+            map.clearMap(); 
+            polygonArr = [];
+            all_points = [];
+            var li = '<li class="self_add" onclick="self_add()">'+ 
+	                			'+新增配送区域'  
+	                		'</li>';
+	        $('.address_list').html(li);         
+        }, false);     
+         
+        // AMap.event.addDomListener(document.getElementById('edit_close'), 'click', function() {     //结束重新编辑区域
+        //     editor._polygonEditor.close();           
+        // }, false);
+        // var auto = new AMap.Autocomplete({
+        //     input: "tipinput"
+        // });
+        //提交后台
+        function submap(self) {
+        	console.log(all_points);
+        	var spot_array = [];
+        	var face_array = [];
+			// if(polygonArr.length != 0){   						//历史绘制不为空时,加入当前绘制  
+			// 	polygonArr.forEach(function (item) {  
+			// 		for(var x = 0; x < item.length; x++) { 
+			// 			spot_array = [];  						//数组清空
+			// 			spot_array[0] = item[x].lng;
+			// 			spot_array[1] = item[x].lat;
+			// 			face_array.push(spot_array);
+			// 			console.log(spot_array);  
+			// 		}
+			// 		all_points.push(face_array);        
+			// 	}) 
+			// }else{
+				polygonArr.forEach(function (item) {
+					for(var x = 0; x < item.length; x++) { 
+						spot_array = [];  						//数组清空
+						spot_array[0] = item[x].lng;
+						spot_array[1] = item[x].lat;
+						face_array.push(spot_array);
+						console.log(spot_array);  
+					}
+					true_points.push(face_array);  
+					face_array = [];    
+				})
+			// }        
+            if(true_points.length <= 0) {
+                util.message('你还没有绘制区域','','error');
+                return false;   
+            } 
+            var _id = window.GetQueryString('id');
+            all_points = JSON.stringify(all_points);       
+            $.post("{php echo web_url('store/selflogistics',array('op'=>'map'))}",{'all_points':true_points,id:_id},function(res) {     
+               console.log(res);     
+            })    
+        }
+        $(function(){
+        	if(polygonArr.length > 0) {
+        		window.init_map(polygonArr);
+        	}    
+	    })    
+	    function init_map(face_list) {
+	       	var colors = face_list.length;
+	       	for(var i = 0; i< colors; i++) {             
+	        // if(polygonArr) {
+	        switch (i)       				
+				{							//用颜色区分区域
+				case 0:
+				  x="#1791fc";
+				  break;
+				case 1:
+				  x="#9a6a38";     
+				  break;
+				case 2:
+				  x="#1ebd4f";      
+				  break;
+				case 3:
+				  x="#fe4d3d";
+				  break;
+				case 4:
+				  x="#4589ef";
+				  break;
+				}       
+                var  polygon = new AMap.Polygon({        
+	                path: face_list[i],//设置多边形边界路径
+	                strokeColor: x, //线颜色
+	                strokeOpacity: 0.2, //线透明度
+	                strokeWeight: 3,    //线宽
+	                fillColor: x, //填充色   
+	                fillOpacity: 0.35//填充透明度
+	            });         
+	            polygon.setMap(map);        
+	        // }
+	        }  
+	        window.init_addresslist(face_list);  
+	    }
+	   function self_add () { 
+	   		var i = $('.address_list li').length -1;
+	   		if(i >= 5) { 
+	   			alert('最多添加5条记录')
+	   			return false;  
+	   		}
+	   		i++
+	   		$('.self_add').remove();    
+	   		var html = '<li class="new_address area-item area1">'+  
+	                			'<div>'+  
+									'<h5>配送范围</h5>'+
+									// '<span class="cancel" onclick="cancel(this)" style="display:inline">取消/</span>'+ 
+									'<span class="save" onclick="save(this)">保存</span>'+  
+									'<span class="edit" onclick="edit(this)">编辑</span>'+ 
+								'</div>'+
+								'<div class="new_price-container">'+
+									'<div class="new_price_item">'+
+										'<label>'+
+											'<input type="text" name="start_price" readonly value="区域'+i+'">'+
+										'</label>'+  
+									'</div>'+
+								'</div>'+
+								'<input type="hidden" name="address" value=""/>'+           
+	                		'</li>';
+	        var li = '<li class="self_add" onclick="self_add()">'+ 
+	                			'+新增配送区域'  
+	                		'</li>';
+
+	        $('.address_list').append(html); 
+	        $('.address_list').append(li);   
+	        window.draw();  
+	   }
+	   var clickListener; 
+	   // var clickEventListener;
+	   function draw(e) {     //绘制面   
+	        mouseTool.polygon();
+	        window.bind(); 
+	    }
+
+	     var bind = function() {
+	        remove();//防止重复绑定
+	        clickListener = AMap.event.addListener(map, "click", _onClick);//绑定地图事件
+	    }
+	    var _onClick = function (e) {										//获取多边形的坐标数组
+	    	select_point = []; 
+            select_point[0] = e.lnglat.getLng();   
+            select_point[1] = e.lnglat.getLat();
+       		console.log(Array.from(new Set(select_point)));          
+            select_points.push(Array.from(new Set(select_point))); 
+	    }
+	    var remove = function() {
+	        if (clickListener) {
+	            AMap.event.removeListener(clickListener);//移除地图事件，以绑定时返回的对象作为参数
+	        }
+	    }
+	    //保存区域
+	    function save (self) {  
+	    	console.log(select_points);
+	    	polygonArr.push(select_points); 
+	    	select_points = [];   
+	    	var parent = $(self).parent();
+	    	parent.find('.cancel').hide();
+	    	parent.find('.save').hide();
+	    	parent.find('.edit').show();    
+	    	// $(self).parent().parent().find('input[name="start_price"]').css({  
+	    	// 	'border':'none' 
+	    	// });
+	    	window.remove();       					 	//每次保存,移除map点击事件.                   
+	    	map.clearMap();   
+	    	window.init_map(polygonArr);   
+	    }
+	    //编辑
+	    function edit (that) {
+	    	$(that).hide();
+	    	$(that).parent().find('.cancel').show();
+	    	var delete_html = '<div class="btn-delete" onclick="delete_address(this)">'+       
+	    						'<span class="glyphicon glyphicon-trash"></span>删除该区域'   
+	    						'</div>';
+	    	var parent = $(that).parent().parent();
+
+	    	parent.append(delete_html);
+	    	// parent.find("input[name='address_name']").removeAttr('readonly').css({   
+	    	// 	'border':'1px solid #ccc',
+	    	// 	'padding': '5px 0'  
+	    	// });      
+	    }
+	    //初始化区域列表
+	    function init_addresslist (list) { 
+	    	var i = 0;
+	    	var length = list.length;
+	    	var html = '';
+	    	for(;i < length; i++) { 
+	    		html += '<li class="address_item area-item area'+i+'" address_id='+i+'>'+
+								'<div>'+
+									'<h5>配送范围</h5>'+
+									'<span class="cancel" onclick="cancel(this)">取消/</span>'+ 
+									'<span class="edit" onclick="edit(this)">编辑</span>'+
+								'</div>'+
+								'<div class="price-container">'+
+									'<input type="text" name="address_name" value="区域'+i+'" readonly >'+ 
+								'</div>'+
+								'<input type="hidden" name="address" value=""/>'+
+	                		'</li>';
+	    	}
+	    	var li = '<li class="self_add" onclick="self_add()">'+ 
+	                			'+新增配送区域'  
+	                		'</li>';
+	    	$('.address_list').html(html+li); 
+	    	// $('.address_list').append(li);     
+	    }
+	    function delete_address (self) {
+	    	var index = $(self).parent().attr('address_id');  //拿到数组下标
+
+	    	polygonArr.splice(index,1);  					  //删除对应数组元素
+	    	// all_points.splice(index,1); 
+	    	map.clearMap();     							  //清空地图覆盖物,以便重新绘制
+	    	window.init_map(polygonArr);								  //初始地图,重新绘制
+	    }
+	    function cancel(that) {
+	    	$(that).hide();
+	    	$(that).parent().parent().find('.btn-delete').hide();
+	    	$(that).parent().find('.edit').show();  
+	    }
+
+     //获取url参数
+	function GetQueryString(name){
+	     var reg = new RegExp("(^|&)"+ name +"=([^&]*)(&|$)");
+	     var r = window.location.search.substr(1).match(reg);
+	     if(r!=null)return  unescape(r[2]); return null;
+	}
+	</script>
+{elseif $op == 'display'}
+	<div class="clearfix">
+		<form class="form-horizontal" action="" method="post">
+			<div class="panel panel-default">
+				<div class="panel-body table-responsive">
+					<table class="table table-hover">
+						<thead class="navbar-inner">
+							<tr>
+								<th>打印机名称</th>
+								<th>机器号</th>
+								<th>打印机key</th>
+								
+								<th>状态</th>
+								<th style="width:150px; text-align:right;">状态/修改/删除</th>
+							</tr>
+						</thead>
+						<tbody>
+							{loop $data $item}
+							<tr>
+								<td>{$item['name']}</td>
+								<td>{$item['print_no']}</td>
+								<td>{$item['key']}</td>
+								
+								<td>
+									{if $item['status'] == 1}
+										<span class="label label-success">启用</span>
+									{else}
+										<span class="label label-danger">停用</span>
+									{/if}
+								</td>
+								<td style="text-align:right;">
+									 <!--<a href="{php echo $this->createWebUrl('print', array('op' => 'print_log', 'id' => $item['id']))}" class="btn btn-default btn-sm" title="打印记录" data-toggle="tooltip" data-placement="top" ><i class="fa fa-print"> </i></a>-->
+									{if checkstr($_W['user']['perms'],'print.edit')}
+									<a href="{php echo web_url('store/print',array('op' => 'post', 'id' => $item['id']))}" class="btn btn-default btn-sm" title="编辑" data-toggle="tooltip" data-placement="top" ><i class="fa fa-edit"> </i></a>
+									{/if}
+									{if checkstr($_W['user']['perms'],'print.delete')}
+									<a href="{php echo web_url('store/print',array('op' => 'del', 'id' => $item['id']))}" class="btn btn-default btn-sm" title="删除" data-toggle="tooltip" data-placement="top" onclick="if(!confirm('删除后将不可恢复，确定删除吗?')) return false;"><i class="fa fa-times"> </i></a>
+									{/if}
+								</td>
+							</tr>
+							{/loop}
+						</tbody>
+					</table>
+				</div>
+			</div>
+			{if checkstr($_W['user']['perms'],'print.add')}
+			<div class="form-group">
+				<div class="col-sm-12">
+					<a class="btn btn-success col-lg-2" href="{php echo web_url('store/print',array('op' => 'post'))}"/><i class="fa fa-plus-circle"> </i>  添加打印机</a>
+				</div>
+			</div>
+			{/if}
+		</form>
+	</div>
+{elseif $op == 'print_log'} 
+	<div class="clearfix">
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				<span class="text-danger">{$item['name']}</span>
+			</div>
+			<div class="panel-body">
+				<form class="form-horizontal form"
+					<div class="form-group">
+						<label class="col-xs-12 col-sm-3 col-md-2 control-label">打印机状态：</label>
+						<div class="col-sm-9 col-xs-12">
+							<p class="form-control-static text-danger">{$status}</p>
+						</div>
+					</div>
+				</form>
+			</div>
+		</div>
+		<div class="panel panel-info">
+			<div class="panel-heading">筛选</div>
+			<div class="panel-body">
+				<form action="./index.php" method="get" class="form-horizontal" role="form">
+					<input type="hidden" name="c" value="site">
+					<input type="hidden" name="a" value="entry">
+					<input type="hidden" name="m" value="str_takeout">
+					<input type="hidden" name="do" value="manage">
+					<input type="hidden" name="op" value="print_log">
+					<input type="hidden" name="id" value="{$id}">
+					<div class="form-group">
+						<label class="col-xs-12 col-sm-3 col-md-2 control-label">订单id</label>
+						<div class="col-sm-4 col-xs-4 col-md-4">
+							<input type="text" value="{$oid}" class="form-control" name="oid">
+						</div>
+						<div class="col-xs-12 col-sm-3 col-md-2 col-lg-1">
+							<button class="btn btn-default"><i class="fa fa-search"></i> 搜索</button>
+						</div>
+					</div>
+				</form>
+			</div>
+		</div>
+		<div class="btn btn-success" style="margin-bottom:10px;" onclick="location.reload();"><i class="fa fa-refresh"></i> 刷新</div>
+		<div class="panel panel-default">
+			<div class="panel-body">
+				<table class="table">
+					<thead>
+						<tr>
+							<th>订单id</th>
+							<th>预定人</th>
+							<th>手机号</th>
+							<th>打印状态</th>
+							<th>打印时间</th>
+							<th>删除</th>
+						</tr>
+					</thead>
+					<tbody>
+						{loop $data $da}
+							<tr>
+								<!-- <td><a title="查看订单" href="{php echo $this->createWebUrl('pnt', array('op' => 'orderdetail', 'id' => $da['oid']));}">{$da['oid']}</a></td> -->
+								<td>{$da['username']}</td>
+								<td>{$da['mobile']}</td>
+								<td>
+									{if $da['status'] == 1}
+										<span class="label label-success">已打印</span>
+									{else}
+										<span class="label label-success">未打印</span>
+									{/if}
+								</td>
+								<td>{php echo date('Y-m-d H:i:s', $da['addtime']);}</td>
+								<td>
+									<a href="{php echo $this->createWebUrl('manage', array('op' => 'log_del', 'id' => $da['id']));}" class="btn btn-default btn-sm" onclick="if(!confirm('确定删除吗')) return false;" title="编辑" data-toggle="tooltip" data-placement="top" ><i class="fa fa-times"></i></a>
+								</td>
+							</tr>
+						{/loop}
+					</tbody>
+				</table>
+			</div>
+		</div>
+		{$pager}
+	</div>
+{/if}
+<script type="text/javascript">
+	var linkicon=document.getElementById("link-icon");
+		var linkicon2=document.getElementById("link-icon1");
+		
+		linkicon2.onmouseleave = function () {
+			linkicon.style.setProperty( 'display', 'none' );
+		}
+		
+		linkicon2.onmouseover = function () {
+			linkicon.style.setProperty( 'display', 'block' );
+		}
+		
+		linkicon.onclick=function (ev) {
+			document.getElementById('detailimg').src='{TG_URL_WRES}images/function/xpdy.jpg';
+			document.getElementById("detailname").innerHTML = "小票打印";
+			document.getElementById("detailshow").style.setProperty("display","block");
+		}
+	require(['util'], function(u){
+		$('.btn').hover(function(){
+			$(this).tooltip('show');
+		},function(){
+			$(this).tooltip('hide');
+		});
+	});
+</script>
+
+{php include wl_template('common/footer');}

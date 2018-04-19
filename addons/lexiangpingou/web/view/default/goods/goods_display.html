@@ -1,0 +1,1044 @@
+{php include wl_template('common/header');}
+<ul class="nav nav-tabs">
+	<?php
+	    $shop = pdo_fetch("select is_merchant from " .tablename('account_wechats') ." where uniacid = :uniacid" , array(':uniacid' => $_W['uniacid']));
+	?>
+	{if checkstr($_W['user']['perms'],'goods.ddd')&&$_W['user']['merchant_id']==0&&$_GPC['ac']=='goods'}<li {if intval($_GPC['status']) == 0}class="active"{/if}><a href="{php echo web_url('goods/'.$_GPC['ac'].'/display/', array('status' => '0'))}">基本设置</a></li>{/if}
+	<li {if intval($_GPC['status']) == 1}class="active"{/if}><a href="{php echo web_url('goods/'.$_GPC['ac'].'/display/',array('status' => '1'));}">出售中商品</a></li>
+	<li {if intval($_GPC['status']) == 3}class="active"{/if}><a href="{php echo web_url('goods/'.$_GPC['ac'].'/display/',array('status' => '3'));}">已售罄商品</a></li>
+	<li {if intval($_GPC['status']) == 2}class="active"{/if}><a href="{php echo web_url('goods/'.$_GPC['ac'].'/display/',array('status' => '2'));}">下架的商品</a></li>
+	<li {if intval($_GPC['status']) == 4}class="active"{/if}><a href="{php echo web_url('goods/'.$_GPC['ac'].'/display/',array('status' => '4'));}">商品回收站</a></li>
+	{if $_GPC['ac']=='goods'}
+	<li><a href="{php echo web_url('goods/goods/post/',array('selltype' => '100'));}">发布商品</a></li>
+	{/if}
+</ul>
+{if intval($_GPC['status']) == 0}
+<style>
+	.all{
+		display:inline-block;
+		width:300px;
+		height:200px;
+		border:1px solid #66ade9;
+		position:relative;
+		overflow: hidden;
+		margin:20px 37px 10px 37px;
+		vertical-align: top;
+	}
+	.productpic{
+		width:300px;
+		height:150px;
+	}
+	.name{
+		position:absolute;
+		left:20px;
+		top:100px;
+		font-size:20px;
+		color:white;
+		font-weight:bolder;
+	}
+	.describe{
+		margin-left:10px;
+		margin-top:5px;
+		line-height:20px;
+		width:200px;
+		font-size:16px;
+		color:gray;
+	}
+	.biaoqian{
+		position:absolute;
+		left:0px;
+		top:0px;
+		width:150px;
+		height:106px;
+		color:white;
+		font-size:20px;
+		background-color:#66ade9;
+		text-align:center;
+		line-height: 180px;
+		transform-origin: 0 106px;
+		transform:rotate(-45deg);
+
+	}
+	.setting{
+		width:40px;
+		height:40px;
+		border-radius:50%;
+		background-color:#66ade9;
+		color:white;
+		font-size:20px;
+		font-weight:bold;
+		position:absolute;
+		right:20px;
+		top:130px;
+		text-align:center;
+		line-height:50px;
+		cursor:pointer;
+	}
+	.bottom{
+		height:50px;
+		width:35%;
+		position:absolute;
+		top:200px;
+		left:0px;
+		cursor: pointer;
+	}
+	.cord{
+		padding-left:20px;
+		height:26px;
+		width:26px;
+		margin-top:10px
+
+	}
+	.yulan{
+		font-size:16px;
+		color:gray;
+		line-height:40px;
+		height:30px;
+		position:absolute;
+		margin-left:10px;
+	}
+	.cordMain{
+		position:absolute;
+		left:10px;
+		bottom:45px;
+		height:125px;
+		width:125px;
+	}
+	.beijing{
+		position:absolute;
+		left:0px;
+		top:0px;
+		height:150px;
+		width:100%;
+		background-color:rgba(0,0,0,0.3);
+	}
+	.imgset{
+		margin-top:-18px;
+	}
+	.lookover{
+		position: absolute;
+		margin:auto;
+		left:0px;
+		right:0px;
+		bottom:0px;
+		top:0px;
+
+	}
+	.nactive{
+		display:none;
+	}
+	.price,.nprice,.npaycord,.paycord,.tmpname,.ntmpname{
+		display:none;
+	}
+	.datedesc{
+		display: block;
+		line-height:30px;
+		padding-left:3px;
+		cursor:pointer;
+	}
+	#selectDate{
+		position:absolute;
+		width:90px;
+		height:150px;
+		top:130px;
+		left:100px;
+		border:1px solid black;
+		background-color: white;
+	}
+	.selectDateadd{
+		display:none;
+	}
+	#Main{
+		width:100%;
+		height:auto;
+		background-color: white;
+	}
+	p{
+		margin-top:0.8em;
+		margin-bottom:0.8em;
+	}
+	.use{
+		font-size:14px;
+		line-height:46px;
+		background-color:#66ade9;
+
+	}
+	.buy{
+		font-size:14px;
+		line-height:40px;
+		background-color:#ff5466;
+	}
+	.active {
+		background-color: #44b549;
+		border-color: #44b549;
+	}
+</style>
+<div class="panel panel-default">
+	<div class="panel-body table-responsive" style="padding: 0px;">
+		<div class="main_bd" style="padding-bottom:20px;">
+			{loop $functionlist $list}
+			<div class="all" >
+				<img class="productpic" src="{TG_URL_WRES}{$list['img']}" alt="" title="yangping">
+				<div class="beijing" style="display:none;"><img src="{TG_URL_WRES}images/3.svg" width="90px" height="90px" class="lookover"></div>
+
+				{if $list['status']==1}
+				<div class="biaoqian">已购买</div>
+				{/if}
+				{if $list['status']==2}
+				<div class="biaoqian">使用中</div>
+				{/if}
+
+				<p style="display:none;" class="name">{$list['name']}</p>
+				<p class="describe">{$list['name']}</p>
+							<span id="{$list['id']}" class="setting {if $list['status']==1}use{/if}{if $list['status']==0}buy{/if} {if $list['status']==2}use set{/if}">
+							{if $list['status']==1}
+							启用
+							{/if}
+							{if $list['status']==2}
+							<img class="imgset" src="{TG_URL_WRES}images/11.svg" width="25" height="25">
+							{/if}
+							{if $list['status']==0}
+							购买
+							{/if}
+							
+							</span>
+				<!--<div class="bottom">
+                    <img class="cord" width="50px" height="50px" alt="erweimabiao" src="{TG_URL_WRES}images/2.svg">
+                    <span class="yulan">手机预览</span>
+                </div>-->
+				<img class="cordMain" style="display:none;" src="{TG_URL_WRES}images/paylogo.png" alt="erweimatupian">
+				<span {if $list['status']==0}class="price"{else}class="nprice"{/if}>{$list['price']}</span>
+				<img src="{TG_URL_WRES}images/paylogo.png" {if $list['status']==0}class="paycord"{else}class="npaycord"{/if}>
+				<span {if $list['status']==0}class="tmpname"{else}class="ntmpname"{/if}>{$list['name']}</span>
+				{if $list['status']!=0}<span style="position:absolute;right:10em;bottom:5px;font-size:12px;color:gray;">有效期至:</span>
+				<span style="position:absolute;right:25px;bottom:5px;font-size:12px;color:gray;">{php echo date('Y-m-d', $list['endtime'])}<span class="renewal" style="background-color:#fd6730;color:white;cursor:pointer;margin-left:2px;border-radius:2px;font-size:12px;padding-left:3px;padding-right:3px;padding-bottom:1px;padding-top:1px;">续费</span></span>{/if}
+				<img style="display:none;" class="picforyuelan" src="{TG_URL_WRES}{$list['yimg']}"/>
+			</div>
+			{/loop}
+
+		</div>
+	</div>
+</div>
+<div id="yuelan" style="display:none;position:fixed;top:20px;left:0px;right:0px;margin-left:auto;margin-right:auto;width:500px;height:800px;border:1px solid black;background-color:white;">
+	<div style="background-color:#f3f3f3;position:relative;text-align:center;width:100%;height:60px;line-height:60px;font-size:15px;">
+		功能阅览
+		<img id="closed" onclick="click()" style="position:absolute;right:40px;top:0px;bottom:0px;margin-top:auto;margin-bottom:auto;cursor:pointer;" src="{TG_URL_WRES}images/4.svg" width="20px" height="20px">
+	</div>
+	<div style="width:100%;height:740px;position:relative;overflow: scroll;text-align:center;">
+		<img id="yuelanimg" src="{TG_URL_WRES}images/pic.jpg" style="position:absolute;left:0px;right:0px;top:20px;margin:auto;width:80%;;" >
+	</div>
+</div>
+<div class="openDIV nactive" style="background-color:rgba(0,0,0,0.3);width:100%;height:100%;position:fixed;left:0px;top:0px;z-index:9999;">
+	<div style="border-right:2px solid gray;border-bottom:2px solid gray;border-left:1px solid gray;border-top:1px solid gray;position:fixed;z-index:2;top:20px;left:0px;right:0px;margin-left:auto;margin-right:auto;width:400px;height:300px;background-color: white;overflow: hidden;">
+		<div style="height:60px;width:100%;position:relative;font-size:28px;padding-left:20px;line-height:60px;background-color:#f9f9f9;">购买商场模板<img id="close" style="position:absolute;right:40px;top:0px;bottom:0px;margin-top:auto;margin-bottom:auto;cursor:pointer;" src="{TG_URL_WRES}images/4.svg" width="20px" height="20px"></div>
+		<span style="padding-left:15px;color:orange;font-size:1.0em;"  >请选择使用时长，即可扫码购买自动开通功能</span>
+		<p style="padding-left:20px;color:gray;margin-top:18px;">模板名称：<span id="template" style="padding-left:5px;color:#3c3c3c;">小清新1号</span></p>
+		<p style="padding-left:20px;color:gray;">使用时长：<span style="padding-left:5px;color:#3c3c3c;cursor:pointer;" id="valueDate">3个月</span></p>
+		<p style="padding-left:20px;color:gray;">优惠时长：<span style="padding-left:5px;color:#3c3c3c;" id="freeDate">3个月</span></p>
+		<p style="padding-left:20px;color:gray;">支付方式：<img style="position:absolute;padding-top:2px;" width="18px" height="18px" src="{TG_URL_WRES}images/05.svg"><span style="position:absolute;padding-left:23px;color:#3c3c3c;"> 微信支付</span></p>
+		<p  style="padding-left:20px;color:gray;">单月价格：<span style="padding-left:5px;color:orange;font-size:1.2em;"  id="valuePay">99.00</span>元</p>
+		<p  style="padding-left:20px;color:gray;">总价格：<span style="padding-left:22px;color:orange;font-size:1.2em;"  id="totalPay">99.00</span>元</p>
+
+		<img style="position:absolute;right:30px;bottom:50px;" src="{php echo web_url('store/setting/qr', array('raw' => base64_encode($url)));}" width="150px" height="150px" id="cordvalue">
+		<p id="saomaid" style="margin-left:245px;margin-top:-28px;" >扫码完成支付<p/>
+		<div id="selectDate" class="selectDateadd">
+			<span class="datedesc" style="display: none">1个月</span>
+			<span class="datedesc">3个月</span>
+			<span class="datedesc">6个月</span>
+			<span class="datedesc">12个月</span>
+			<span class="datedesc">24个月</span>
+		</div>
+	</div>
+</div>
+{else}
+<div class="warp">
+	<div class="text-center">
+		<h4>缺货？上极限单品！供货？上极限单品！</h4>
+	</div>
+	<div class="swiper-container swiper-container-rr">
+		<div class="swiper-wrapper">
+			{loop $supply_goods $item}
+				<div class="swiper-slide">
+					<a href="{php echo web_url('platform/goods_list/supply_goods_detail', array('id' => $item['id']))}">
+						<div class="back-img" style="background-image: url('{php echo !is_null($item['advert_img']) ? tomedia($item[advert_img]) : tomedia($item[gimg])}');"></div>
+						<div class="bottom-title">【{$item['name']}】，¥{$item['oprice']} ，{php echo $item['ctype'] == '0' ? '一件代发' : '整件批发'}</div>
+					</a>
+				</div>
+			{/loop}
+		</div>
+		<div class="swiper-button-next swiper-button-white"></div>
+		<div class="swiper-button-prev swiper-button-white"></div>
+	</div>
+	<div class="page">
+		<div class="swiper-pagination"></div>
+	</div>
+</div>
+<br>
+<div class="panel panel-info">
+	<div class="panel-heading">筛选</div>
+	<div class="panel-body">
+		<form action="./index.php" method="get" class="form-horizontal" role="form">
+			<input type="hidden" name="c" value="site" />
+			<input type="hidden" name="a" value="entry" />
+			<input type="hidden" name="m" value="lexiangpingou" />
+			<input type="hidden" name="do" value="goods" />
+			<input type="hidden" name="ac" value="goods" />
+			<input type="hidden" name="op" value="display" />
+			<input type="hidden" name="status" value="{$_GPC['status']}">
+			{if $_W['user']['merchant_id'] == 0}
+			<div class="form-group">
+				<label class="col-md-1 control-label">商品分类</label>
+				<div class="col-md-8">
+					<select name="category[parentid]" onchange="categoryIC(this)" class="categoryI form-control tpl-category-parent" style="margin-right:20px;display: inline-block;width: 48%;">
+
+					</select>
+
+					<select name="category[childid]" class="categoryII form-control tpl-category-parent" style="display: inline-block;width: 48%;">
+						<option value="">请选择二级分类</option>
+					</select>
+				</div>
+
+			</div>
+			{/if}
+			<div class="form-group">
+
+				<label class="col-xs-12 col-sm-2 col-md-2 col-lg-1 control-label">商品名称</label>
+				<div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
+					<input class="form-control" name="keyword" id="" type="text" value="{$_GPC['keyword']}" placeholder="可模糊查询商品名称">
+				</div>
+				<div class="col-md-2" style="float: right">
+					<button class="btn btn-default min-width"><i class="fa fa-search"></i> 搜索</button>
+				</div>
+			</div>
+
+
+		</form>
+	</div>
+</div>
+<div class="panel panel-default">
+	<div class="table-responsive">
+		<table class="table table-hover" >
+			<thead>
+			<tr>
+				<th style="width:40px;">
+					<input type="checkbox" name="checkall" value="" id="checkall" onclick="var ck = this.checked; $(':checkbox').each(function(){this.checked = ck});"/>
+				</th>
+				<th class="text-center" style="width:70px;"><a href='{php echo web_url('goods/goods/display/', array('status'=>$_GPC['status'],'keyword'=>$_GPC['keyword'],'transid'=>$transid,'member'=>$member,'pay_type'=>$pay_type,'starttime'=>$starttime,'endtime'=>$endtime,'time'=>$time,'goodsid'=>$_GPC['goodsid'],'goodsid2'=>$_GPC['goodsid2'],'saler'=>$_GPC['saler'],'merchantid'=>$_GPC['merchantid'],'dispatchtype'=>$dispatchtype,'sortname'=>'displayorder','sortasc'=>$sortasc))}'>排序</a></th>
+				<th style="width:80px;">商品图</th>
+				<th style="width:180px;"><a href='{php echo web_url('goods/goods/display/', array('status'=>$_GPC['status'],'keyword'=>$_GPC['keyword'],'transid'=>$transid,'member'=>$member,'pay_type'=>$pay_type,'starttime'=>$starttime,'endtime'=>$endtime,'time'=>$time,'goodsid'=>$_GPC['goodsid'],'goodsid2'=>$_GPC['goodsid2'],'saler'=>$_GPC['saler'],'merchantid'=>$_GPC['merchantid'],'dispatchtype'=>$dispatchtype,'sortname'=>'gname','sortasc'=>$sortasc))}'>商品名</a></th>
+				<th class="text-center" style="width:140px;">方式/分类</th>
+				<th class="text-center" style="width:140px;">团购条件</th>
+				<th class="text-center" style="width:140px;"><a href='{php echo web_url('goods/goods/display/', array('status'=>$_GPC['status'],'keyword'=>$_GPC['keyword'],'transid'=>$transid,'member'=>$member,'pay_type'=>$pay_type,'starttime'=>$starttime,'endtime'=>$endtime,'time'=>$time,'goodsid'=>$_GPC['goodsid'],'goodsid2'=>$_GPC['goodsid2'],'saler'=>$_GPC['saler'],'merchantid'=>$_GPC['merchantid'],'dispatchtype'=>$dispatchtype,'sortname'=>'gprice','sortasc'=>$sortasc))}'>拼团价</a>
+					/<a href='{php echo web_url('goods/goods/display/', array('status'=>$_GPC['status'],'keyword'=>$_GPC['keyword'],'transid'=>$transid,'member'=>$member,'pay_type'=>$pay_type,'starttime'=>$starttime,'endtime'=>$endtime,'time'=>$time,'goodsid'=>$_GPC['goodsid'],'goodsid2'=>$_GPC['goodsid2'],'saler'=>$_GPC['saler'],'merchantid'=>$_GPC['merchantid'],'dispatchtype'=>$dispatchtype,'sortname'=>'oprice','sortasc'=>$sortasc))}'>单买价</a></th>
+				<th class="text-center" style="width:140px;"><a href='{php echo web_url('goods/goods/display/', array('status'=>$_GPC['status'],'keyword'=>$_GPC['keyword'],'transid'=>$transid,'member'=>$member,'pay_type'=>$pay_type,'starttime'=>$starttime,'endtime'=>$endtime,'time'=>$time,'goodsid'=>$_GPC['goodsid'],'goodsid2'=>$_GPC['goodsid2'],'saler'=>$_GPC['saler'],'merchantid'=>$_GPC['merchantid'],'dispatchtype'=>$dispatchtype,'sortname'=>'gnum','sortasc'=>$sortasc))}'>库存</a>
+					/<a href='{php echo web_url('goods/goods/display/', array('status'=>$_GPC['status'],'keyword'=>$_GPC['keyword'],'transid'=>$transid,'member'=>$member,'pay_type'=>$pay_type,'starttime'=>$starttime,'endtime'=>$endtime,'time'=>$time,'goodsid'=>$_GPC['goodsid'],'goodsid2'=>$_GPC['goodsid2'],'saler'=>$_GPC['saler'],'merchantid'=>$_GPC['merchantid'],'dispatchtype'=>$dispatchtype,'sortname'=>'salenum','sortasc'=>$sortasc))}'>销量</a></th>
+
+				<th class="text-center" style="width:160px;">操作</th>
+			</tr>
+			</thead>
+			<tbody>
+			{php $i=0;}
+			{loop $goodses $goods}
+
+			<tr data-toggle="popover" data-trigger="hover" data-placement="left" class="js-goods-img" >
+				<td><input type="checkbox" id="gid"  name="items[{php echo $i}]" value="{$goods['id']}" class="items" /></td>
+				<td class="text-center"><input {if $_W['user']['merchant_id'] > 0}readonly{/if} id="gorder" onchange="showUser(this.value,{$goods['id']})" type="text" class="form-control js-displayorder" value="{php echo $goods['displayorder'];}" data-id="{$goods['id']}"/> </td>
+				<td><img class="scrollLoading" src="{IMAGE_PIXEL}" data-url="{php echo tomedia($goods['gimg'])}" onerror="this.src='{IMAGE_NOPIC_SMALL}'" height="50" width="70"/></td>
+				<td class="line-feed" style="word-wrap:break-word;">
+					<span class="label label-info">{$goods['gname']}</span><br>
+					<span class="label label-success" style="display: none">状态：{if $goods['shenhe']==1}待审核{elseif $goods['shenhe']==2}
+						<a onclick="alert('{$goods['reason']}');"  class="label label-danger">强制下架</a>
+						<!--<a href="#"></a>-->
+						{elseif $goods['shenhe']==0}审核通过{/if}</span>
+					<!--<br />
+					<label data='{$goods['isnew']}' class='label label-default {if $goods['isnew']==1}label-info{else}{/if}' onclick="setProperty(this,{$goods['id']},'new')">{if $this->module['config']['tag1']}{php echo $this->module['config']['tag1'];}{else}上新{/if}</label>
+					<label data='{$goods['ishot']}' class='label label-default {if $goods['ishot']==1}label-info{/if}' onclick="setProperty(this,{$goods['id']},'hot')">{if $this->module['config']['tag2']}{php echo $this->module['config']['tag2'];}{else}疯抢{/if}</label>
+					<label data='{$goods['isrecommand']}' class='label label-default {if $goods['isrecommand']==1}label-info{/if}' onclick="setProperty(this,{$goods['id']},'recommand')">{if $this->module['config']['tag3']}{php echo $this->module['config']['tag3'];}{else}推荐{/if}</label>
+					<label data='{$goods['isdiscount']}' class='label label-default {if $goods['isdiscount']==1}label-info{/if}' onclick="setProperty(this,{$goods['id']},'discount')">{if $this->module['config']['tag4']}{php echo $this->module['config']['tag4'];}{else}优惠{/if}</label>-->
+				</td>
+				<td class="text-left" style="line-height:25px;">
+					<span class="label label-warning">方式：{if $goods['selltype']==0}单买{else if $goods['selltype']==1}随意团{else if $goods['selltype']==2}邻购团{else if $goods['selltype']==3}自选团{else if $goods['selltype']==4}阶梯团{else if $goods['selltype']==5}抽奖团{else if $goods['selltype']==6}新专团{else if $goods['selltype']==7}订金团{/if}</span><br>
+					<span class="label label-info">分类：{php echo cutstr($goods['typename'], 30, true);}</span>
+
+				</td>
+				<td class="text-left" style="line-height:25px;">
+
+					<span class="label label-warning" style="{if $goods['selltype']==7}display:none{/if};">起团人数：{$goods['groupnum']}人</span><br>
+					<span class="label label-info">团购时限：{$goods['endtime']}小时</span>
+
+				</td>
+				<td class="text-left" style="line-height:25px;">
+					{if $goods['selltype']==7}
+					<span class="label label-warning">定金价：￥{php echo number_format($goods['preprice'], 2)}</span><br>
+					{else}
+					<span class="label label-warning">拼团价：￥{php echo number_format($goods['gprice'], 2)}</span><br>
+					{/if}
+					<span class="label label-info">单买价：￥{php echo number_format($goods['oprice'], 2)}</span>
+				</td>
+				<td class="text-left" style="line-height:25px;">
+					<span class="label label-warning">库存：{$goods['gnum']}</span><br>
+					<span class="label label-info">销量：{$goods['salenum']}</span>
+
+				</td>
+
+				<td class="text-center" style="position:relative;">
+					{if $shop_vip['vip'] > 0}
+						<a href="javascript:;" data-id="{$goods['id']}"  data-url="{php echo web_app_url('goods/detail',array('id'=>$goods['id']))}" id="js-qrcode{$goods['id']}" class="js-qrcode">二维码</a><br>
+					{/if}
+
+                    <a href="javascript:;" data-id="{$goods['id']}"  data-url="{php echo web_app_url('goods/detail',array('id'=>$goods['id']))}" id="js-copy{$goods['id']}" class="js-copy">复制链接</a><br>
+					{if $_GPC['ac']=='goods'}
+					<!--<a href="javascript:;" class="js-goods-copy1" goods-id="{$goods['id']}" >设置砍价</a>-->
+					<a href="javascript:;" class="js-goods-copy" goods-id="{$goods['id']}" >复制商品</a><br>
+					{/if}
+					<a href="{php echo web_url('goods/goods', array('op' => 'post','id' => $goods['id'], 'page' => $_GPC['page']))}" class="">编辑</a>
+
+					{if intval($_GPC['status']) == 1}
+					-<a href="javascript:;" class="js-sellout-goods" goods-id="{$goods['id']}">售罄</a>
+					- <a href="javascript:;" class="js-off-shelves-goods" goods-id="{$goods['id']}">下架</a>
+					{/if}
+					{if intval($_GPC['status']) == 2}
+					- <a href="javascript:;" class="js-on-shelves-goods" goods-id="{$goods['id']}">上架</a>
+					- <a href="javascript:;" class="js-delete-goods" goods-id="{$goods['id']}">删除</a>
+					{/if}
+					{if intval($_GPC['status']) == 4}
+					- <a href="javascript:;" class="js-on-shelves-goods" goods-id="{$goods['id']}">上架</a>
+					- <a href="javascript:;" class="js-remove-goods" goods-id="{$goods['id']}">彻底删除</a>
+					{/if}
+					<br>
+
+					<a href="{php echo web_url('goods/goods', array('op' => 'sendnotice','id' => $goods['id'],'type'=>1))}" class="upjia" {if $goods['isupjia']==0} style="display:none" {/if}>上架通知</a>
+					<a href="{php echo web_url('goods/goods', array('op' => 'sendnotice','id' => $goods['id'],'type'=>2))}" class="downjia"{if $goods['isdownjia']==0} style="display:none" {/if}>降价通知</a>
+				</td>
+			</tr>
+
+			{php $i++;}
+			{/loop}
+			<tr>
+				<td><input type="checkbox" name="checkall" value="" id="checkall" onclick="var ck = this.checked; $(':checkbox').each(function(){this.checked = ck});" /></td>
+				<td colspan="8">
+					{if intval($_GPC['status']) != 2}
+					<a href="javascript:;" class="btn btn-success min-width js-batch js-off-shelves">下架</a>
+					{/if}
+					{if intval($_GPC['status']) != 1}
+					<a href="javascript:;" class="btn btn-primary min-width js-batch js-on-shelves">上架</a>
+					{/if}
+					{if intval($_GPC['status']) != 4}
+					<a href="javascript:;" class="btn btn-danger min-width js-batch js-delete">删除</a>
+					{/if}
+					{if intval($_GPC['status']) == 4}
+					<a href="javascript:;" class="btn btn-danger min-width js-batch js-remove">彻底删除</a>
+					{/if}
+				</td>
+			</tr>
+			</tbody>
+		</table>
+	</div>
+</div>
+
+{$pager}
+<script>
+var mySwiper = new Swiper('.swiper-container-rr', {
+	slidesPerView: 3,
+	spaceBetween: 30,
+	slidesPerGroup: 3,
+	loop: true,
+	loopFillGroupWithBlank: true,
+	pagination: {
+	  el: '.swiper-pagination',
+	  clickable: true,
+	},
+	navigation: {
+	  nextEl: '.swiper-button-next',
+	  prevEl: '.swiper-button-prev',
+	},
+	autoplay: {
+	    delay: 5000,
+	    stopOnLastSlide: false,
+	    disableOnInteraction: true,
+    },
+})
+</script>
+<script>
+
+    function showUser(str,gid)
+    {
+        var paixv = str;
+        var orid = gid;
+        $.post("{php echo web_url('goods/goods/numx')}",{oridd:orid,paixvv:paixv}
+            ,function(data){
+                util.tips('新的排序已保存！', 2000);
+
+            },'json'
+        );
+    }
+    function onshow_dialog (message) {
+        console.log(message);
+        alert(message);
+    }
+</script>
+<script type="text/javascript">
+	require(['jquery', 'util'], function($, util){
+		$('.js-copy').each(function(){
+			var id=$(this).attr('data-id');
+			util.clip($("#js-copy"+id), $(this).attr('data-url'));
+		});
+	});
+    $('.js-qrcode').click(function(){
+        var id=$(this).attr('data-id');
+        var url = $(this).attr('data-url');
+        $.ajax({
+            type: "POST",
+            url: "{php echo web_url('goods/goods', array('op' =>'qrcode'))}",
+            data:{
+                "goodsid":id,
+                "url":url,
+            },
+            dataType: "json",
+            success: function(data){
+                var rs = $.parseJSON(data);
+                if(rs.errcode == 0){
+                    util.tips(rs.msg);
+				}else{
+                    $('#myModal').modal();
+                    $('#gimg').attr('src',rs.msg);
+				}
+
+            }
+        });
+
+    });
+
+
+
+
+    $(".js-goods-copy").click(function (e) {
+
+        e.stopPropagation();
+        var html = "复制本商品,将保存在【商品列表】【下架的商品】中！";
+        var id = $(this).attr('goods-id');
+        util.nailConfirm(this, function (state) {
+            if (!state) return;
+            $.post("{php echo web_url('goods/goods/copy',array('copy'=>1));}", {id: id}, function (data) {
+                if (!data.errno) {
+                    util.tips("复制成功");
+                    location.href = "{php echo web_url('goods/goods/display',array('status'=>2));}";
+                }
+                ;
+            }, 'json');
+        }, {html: html});
+    });
+</script>
+<script>
+
+
+	//加载一级分类
+	$.get("{php echo web_url('goods/goods/parent')}",{},function(res){
+
+		var html="<option value=''>请选择一级分类</option>";
+		var category=JSON.parse(res).category;
+		for(var ij=0;ij<category.length;ij++){
+			html+='<option value="'+category[ij].id+'">'+category[ij].name+'</option>';
+		}
+		$('.categoryI').html(html);
+	});
+	function categoryIC(e){
+		if(!$('.categoryI option:selected').val()){
+			$('.categoryII').html("<option value=''>请选择二级分类</option>");
+			return false;
+		}
+		console.log($(e).find('option:selected').val());
+		$.get("{php echo web_url('goods/goods/child')}",{id:$(e).find('option:selected').val()},function(res){
+			var html="<option value=''>请选择二级分类</option>";
+			var category=JSON.parse(res).child;
+			for(var ij=0;ij<category.length;ij++){
+				html+='<option value="'+category[ij].id+'">'+category[ij].name+'</option>';
+			}
+
+			$('.categoryII').html(html);
+		});
+	}
+
+	if("{$_GPC['category']['parentid']}") {
+		setTimeout(function () {
+			var parentV = "{$_GPC['category']['parentid']}";
+			var childV = "{$_GPC['category']['childid']}";
+			$('option[value="' + parentV + '"]').attr('selected', 'selected');
+			$('option[value="' + childV + '"]').attr('selected', 'selected');
+		}, 700);
+	}
+
+
+	if (document.getElementsByClassName("upjia").length > 0) {
+		var upjias = document.getElementsByClassName("upjia");
+		var downjias = document.getElementsByClassName("downjia");
+		var len = upjias.length;
+		for (var i = 0; i < len; i++) {
+			upjias[i].onclick = function(ev) {
+				ev.preventDefault();
+				if (confirm("是否发送上架通知")){
+					location.href = ev.target.href;
+				}
+			}
+			downjias[i].onclick = function(ev) {
+				ev.preventDefault();
+				if (confirm("是否发送降价通知")){
+					location.href = ev.target.href;
+				}
+			}
+		}
+	}
+	function setProperty(obj,id,type){
+		$(obj).html($(obj).html() + "...");
+		$.post("{php echo web_url('goods/goods/setgoodsproperty')}"
+				,{id:id,type:type, data: obj.getAttribute("data")}
+				,function(d){
+
+					$(obj).html($(obj).html().replace("...",""));
+					if(type=='isshow'){
+						$(obj).html( d.data=='1'?'上架':'下架');
+					}
+					$(obj).attr("data",d.data);
+					if(d.result==1){
+						$(obj).toggleClass("label-info");
+					}
+				}
+				,"json"
+		);
+	}
+	$(function(){
+		$(".scrollLoading").scrollLoading();
+		$(".js-displayorder").blur(function(e){
+			e.stopPropagation();
+			var $this = $(this);
+			var good_id = $this.data("id");
+			var displayorder = parseInt($this.val());
+			if (isNaN(displayorder)) {
+				$this.parent().addClass('has-error');
+				util.tips('必须为数字', 2000);
+				return false;
+			};
+			$.post("{php echo url('goods/goods/display/displayorder');}", {good_id : good_id, displayorder : displayorder}, function(data){
+				$this.parent().removeClass('has-error');
+				util.tips(data.message, 2000);
+			},'json');
+		});
+
+		$('.js-batch').click(function(e){
+			e.stopPropagation();
+			var goods_ids = [];
+			var $checkboxes = $('.items:checkbox:checked');
+			$checkboxes.each(function() {
+				if (this.checked) {
+					goods_ids.push(this.value);
+				};
+			});
+
+			if (goods_ids.length == 0) {
+				util.tips('请选择要操作的商品!', 2000);
+				return false;
+			}
+			var op = '';
+			var html = '';
+			if ($(this).hasClass('js-on-shelves')) {
+				op = 'on_shelves';
+				html = '确认上架?';
+			} else if ($(this).hasClass('js-off-shelves')) {
+				op = 'off_shelves';
+				html = '确认下架?';
+			} else if ($(this).hasClass('js-delete')) {
+				op = 'delete';
+				html = '确认删除?';
+			} else if ($(this).hasClass('js-remove')) {
+				op = 'remove';
+				html = '确认选中彻底删除?';
+			}
+			else if ($(this).hasClass('js-shenhe')) {
+				op = 'shenhe';
+				html = '确认审核选中商品?';
+			}
+			var $this = $(this);
+			util.nailConfirm(this, function(state) {
+				if(!state) return;
+				$.post("{php echo web_url('goods/goods/batch');}", {funcop : op, goods_ids : goods_ids}, function(data){
+					if(!data.errno){
+						$checkboxes.each(function() {
+							$(this).parent().parent().remove();
+						});
+					};
+					util.tips(data.message, 2000);
+				}, 'json');
+			}, {html: html});
+		});
+
+		$('.js-delete-goods, .js-off-shelves-goods, .js-on-shelves-goods, .js-remove-goods,.js-sellout-goods').click(function(e) {
+			e.stopPropagation();
+			var id = $(this).attr('goods-id');
+			var _this = $(this).parent().parent();
+			if ($(this).hasClass('js-on-shelves-goods')) {
+				op = 'on_shelves';
+				html = '确认上架?';
+			} else if ($(this).hasClass('js-off-shelves-goods')) {
+				op = 'off_shelves';
+				html = '确认下架?';
+			} else if ($(this).hasClass('js-delete-goods')) {
+				op = 'delete';
+				html = '确认删除?';
+			} else if ($(this).hasClass('js-remove-goods')) {
+				op = 'remove';
+				html = '确认选中彻底删除?';
+			} else if ($(this).hasClass('js-sellout-goods')) {
+				op = 'sellout';
+				html = '确认设置售罄?';
+			}
+			util.nailConfirm(this, function(state) {
+				if(!state) return;
+				$.post("{php echo web_url('goods/goods/single_op')}", {funcop : op, id : id}, function(data){
+					if(!data.errno){
+						_this.remove();
+					};
+					util.tips(data.message, 2000);
+				}, 'json');
+			}, {html: html});
+		});
+		var $pop = null;
+		$('.scrollLoading').hover(function(){
+			var img = $(this).attr('src');
+			var obj = this;
+			var $pop = util.popover(obj, function($popover, obj){
+				obj.$popover = $popover;
+			}, '<div><img src="'+img+'" style="max-width:200px; max-height:200px;"></div>');
+		}, function(){
+			this.$popover.remove();
+		});
+	});
+</script>
+{/if}
+
+
+<script>
+	//var a=document.querySelector('.list-group-item[href="{php echo web_url('goods/goods/display/', array('status' => '0'))}"]');
+	//a.classList.add("active");
+	window.onload=function(){
+		if ( document.getElementById('closed') ) {
+			document.getElementById('closed').onclick=function(){
+				document.getElementById('yuelan').style.setProperty("display","none");
+			}
+		}
+		var bottoms=document.querySelectorAll(".bottom");
+		var cordMains=document.querySelectorAll('.cordMain');
+		for (var i=0;i<bottoms.length;i++){
+			bottoms[i].onmouseover=function(ev){
+				for (var j=0;j<bottoms.length;j++){
+					if (ev.target==bottoms[j]){
+						cordMains[j].style.display="block";
+					}
+				}
+			}
+			bottoms[i].onmouseleave=function(ev){
+				for (var j=0;j<bottoms.length;j++){
+					if (ev.target==bottoms[j]){
+						cordMains[j].style.display="none";
+					}
+				}
+			}
+		}
+		var nprices=[],
+				nimgs=[];
+		var nprice=document.querySelectorAll('.nprice');
+		var nimg=document.querySelectorAll('.npaycord');
+		for (var i=0;i<nprice.length;i++){
+			nprices.push(nprice[i].innerHTML);
+			nimgs.push(nimg[i].src);
+		}
+		var renewal=document.getElementsByClassName("renewal");
+		for (var i=0;i<renewal.length;i++){
+			renewal[i].onclick=function(ev){
+				document.getElementById("cordvalue").src=decodeURI(nimgs[0]);
+				var ntmpnames=document.querySelectorAll(".ntmpname");
+				if (openDIV.classList.contains("nactive")){
+					for (var j=0;j<renewal.length;j++){
+						if (ev.target==renewal[j]){
+							var cordvalue=document.getElementById("cordvalue");
+							valuePay.innerHTML=nprices[j];
+							document.getElementById("saomaid").style.setProperty("display","none");
+							valueDate.innerHTML="请选择时长";
+							totalPay.innerHTML="0.00";
+							document.getElementById("freeDate").innerHTML=0+"个月";
+							document.getElementById("template").innerHTML=ntmpnames[j].innerHTML;
+							temId=renewal[j].parentNode.parentNode.querySelector(".setting").id;
+						}
+					}
+
+					openDIV.classList.remove("nactive");
+				}
+			}
+		}
+		var openyuelans=document.querySelectorAll('.lookover');
+		var productpics=document.querySelectorAll('.productpic');
+		var beijings=document.querySelectorAll('.beijing');
+		var pictures=[];
+		var picforyuelan=document.querySelectorAll('.picforyuelan');
+		for (var i=0;i<productpics.length;i++){
+			var picSrc=picforyuelan[i].src;
+			pictures.push(decodeURI(picSrc));
+			productpics[i].onmouseover=function(ev){
+
+				for (var j=0;j<productpics.length;j++){
+					if (ev.target==productpics[j]){
+						beijings[j].style.display="block";
+					}
+				}
+			}
+			beijings[i].onmouseover=function(ev){
+				for (var j=0;j<productpics.length;j++){
+					if (ev.target==beijings[j]){
+						beijings[j].style.display="block";
+					}
+				}
+			}
+			openyuelans[i].onclick=function(ev){
+				for (var j=0;j<productpics.length;j++){
+					if (ev.target==openyuelans[j]) {
+						var yuelan=document.getElementById('yuelan');
+						document.getElementById("yuelanimg").src=pictures[j];
+						yuelan.style.setProperty("display","block");
+					}
+				}
+			}
+			beijings[i].onclick=function(ev){
+				for (var j=0;j<productpics.length;j++){
+					if (ev.target==beijings[j]) {
+						var yuelan=document.getElementById('yuelan');
+						document.getElementById("yuelanimg").src=pictures[j];
+						yuelan.style.setProperty("display","block");
+					}
+				}
+			}
+			beijings[i].onmouseleave=function(ev){
+				for (var j=0;j<productpics.length;j++){
+					if (ev.target==beijings[j]){
+						beijings[j].style.display="none";
+					}
+				}
+			}
+		}
+		var alls=document.getElementsByClassName('all');
+		/* for (var i=0;i<alls.length;i++){
+		 alls[i].addEventListener('mouseenter',function(ev){
+		 for (var j=0;j<alls.length;j++){
+		 if (ev.target==alls[j]){
+		 alls[j].style.marginBottom="0px";
+		 }else{
+		 alls[j].style.marginBottom="55px";
+		 }
+		 }
+		 },false);
+		 } */
+		var prices=[];
+		var imgs=[];
+		var price=document.querySelectorAll('.price');
+		var img=document.querySelectorAll('.paycord');
+		for (var i=0;i<img.length;i++){
+			prices.push(price[i].innerHTML);
+			imgs.push(img[i].src);
+		}
+		var temId;
+		if ( document.getElementById('closed') ) {
+			var close=document.getElementById("close"),
+					openDIV=document.querySelector(".openDIV");
+			close.addEventListener('click',function(){
+				openDIV.classList.toggle("nactive");
+				window.clearInterval(intervalEvent);
+			},false);
+		}
+		var intervalEvent;
+		var valuePay=document.getElementById("valuePay");
+		var buyes=document.querySelectorAll(".buy");
+		var tmpnames=document.querySelectorAll(".tmpname");
+		for (var i=0;i<buyes.length;i++){
+			buyes[i].addEventListener("click",function(ev){
+				document.getElementById("saomaid").style.setProperty("display","none");
+				//alert(document.getElementById("freeDate").innerHTML);
+				if (openDIV.classList.contains("nactive")){
+					for (var j=0;j<buyes.length;j++){
+						if (ev.target==buyes[j]){
+							var cordvalue=document.getElementById("cordvalue");
+							valuePay.innerHTML=prices[j];
+							cordvalue.src=decodeURI(imgs[j]);
+							valueDate.innerHTML="请选择时长";
+							totalPay.innerHTML="0.00";
+							document.getElementById("freeDate").innerHTML=0+"个月";
+							document.getElementById("template").innerHTML=tmpnames[j].innerHTML;
+							temId=buyes[j].id;
+						}
+					}
+
+					openDIV.classList.remove("nactive");
+				}
+			},false);
+		}
+		if ( document.getElementById("valueDate") ) {
+			var valueDate=document.getElementById("valueDate"),
+					selectDate=document.getElementById("selectDate");
+			valueDate.onclick=function(){
+				selectDate.classList.toggle("selectDateadd");
+			}
+		}
+		var orderno;
+		var datedesc=document.querySelectorAll(".datedesc");
+		var uniacid=33;//火蝶官方公众号ID
+		for (var i=0;i<datedesc.length;i++){
+			datedesc[i].onclick=function(ev){
+				var n,m;
+				for (var j=0;j<datedesc.length;j++){
+					if (ev.target==datedesc[j]){
+						switch (j){
+							case 0:
+								n=1;
+								m=0;
+								break;
+							case 1:
+								n=3;
+								m=0;
+								break;
+							case 2:
+								n=6;
+								m=1;
+								break;
+							case 3:
+								n=12;
+								m=2;
+								break;
+							case 4:
+								n=24;
+								m=5;
+								break;
+						}
+						var str=n+"个月";
+						valueDate.innerHTML=str;
+						document.getElementById("freeDate").innerHTML=m+"个月";
+						document.getElementById("totalPay").innerHTML=((n-m)*Number(valuePay.innerHTML)).toFixed(2);
+						var root='{$_W['siteroot']}';
+						var buyuniacid='{$_W['uniacid']}';
+						orderno=RandomS();
+						var surl=root+"app/index.php?i="+uniacid+"&c=entry&m=lexiangpingou&do=pay&ac=payfunction&id="+temId+"&num="+n+"&buyuniacid="+buyuniacid;
+						var  baseurl;
+						var data=new FormData();
+						data.append('id',temId);
+						data.append('num',n);
+						data.append('orderno',orderno);
+						data.append('uniacid',uniacid);
+						var url="{php echo web_url('store/setting/qr');}";
+						var xhr=new XMLHttpRequest();
+						xhr.onreadystatechange=function(){
+							if (xhr.readyState==4){
+								if ((xhr.status>=200 && xhr.status<300)|| xhr.status==304){
+
+									document.getElementById("cordvalue").src="{TG_URL}"+"data/qrcode/"+uniacid+"/"+orderno+".png";
+
+								}
+							}
+						}
+						xhr.open("post",url,true);
+						xhr.send(data);
+
+
+					}
+				}
+				document.getElementById("saomaid").style.setProperty("display","block");
+				selectDate.classList.toggle("selectDateadd");
+				var buyFormdata=new FormData();
+				/*验证是否购买*/var buyUrl="{php echo web_url('service/order_service',array('op'=>'check'))}";
+				if (intervalEvent){
+					window.clearInterval(intervalEvent);
+				}
+				intervalEvent=window.setInterval(function(){
+
+					var requestXhr=new XMLHttpRequest();
+					requestXhr.onreadystatechange=function(){
+						if (requestXhr.readyState==4){
+							if ((requestXhr.status>=200 && requestXhr.status<300)||requestXhr.status==304){
+								if (JSON.parse(requestXhr.responseText).errno==0){
+									util.tips(JSON.parse(requestXhr.responseText).message);
+									openDIV.classList.add("nactive");
+									window.clearInterval(intervalEvent);
+									location.reload();
+								}
+							}else{
+								util.tips(requestXhr.status.toString());
+							}
+						}
+					}
+					requestXhr.open('post',buyUrl,true);
+					buyFormdata.append("orderno",orderno);
+					requestXhr.send(buyFormdata);
+				},1000);
+			}
+		}
+		function RandomS(){
+			var now=new Date();
+			var year=now.getFullYear();
+			var month=now.getMonth()+1<10?0+""+(now.getMonth()+1):now.getMonth()+1;
+			var date=now.getDate()<10?0+""+now.getDate():now.getDate();
+			var time=now.getHours()<10?0+""+now.getHours():now.getHours();
+			var minutes=now.getMinutes()<10?0+""+now.getMinutes():now.getMinutes();
+			var seconds=now.getSeconds()<10?0+""+now.getSeconds():now.getSeconds();
+			var randoms=parseInt(Math.random()*9+1)+""+parseInt(Math.random()*9)+""+parseInt(Math.random()*9)+""+parseInt(Math.random()*9)+""+parseInt(Math.random()*9);
+			return month+""+date+""+time+""+minutes+""+seconds+""+randoms;
+		}
+		var uses=document.getElementsByClassName("use");
+		var names=document.getElementsByClassName("name");
+		var biaoqians=document.getElementsByClassName("biaoqian");
+		/*	for (var i=0;i<uses.length;i++){
+		 uses[i].onclick=function(ev){
+		 for (var j=0;j<uses.length;j++){
+		 if (ev.target==uses[j]){
+		 if (!ev.target.classList.contains("set")){
+		 ev.target.innerHTML="\<img class=\"imgset\" src=\"{TG_URL_WRES}images/1.svg\" width=\"37.5\" height=\"37.5\"\>";
+		 document.querySelector(".set").innerHTML="启用";
+		 document.querySelector(".set").style.cssText="font-size:21px;line-height:60px;background-color:#66ade9";
+		 document.querySelector(".set").parentNode.querySelector('.biaoqian').innerHTML="已购买";
+		 document.querySelector(".set").classList.remove('set');
+		 ev.target.classList.add('set');
+		 ev.target.style.cssText="";
+		 biaoqians[j].innerHTML="使用中";
+		 var data=new FormData();
+		 var name=names[j].innerHTML;
+		 var id=uses[j].id;
+		 data.append('id',id);
+		 data.append('name',name);
+		 var url="{php echo web_url('store/setting/ajax');}";
+		 var xhr=new XMLHttpRequest();
+		 xhr.onreadystatechange=function(){
+		 if (xhr.readyState==4){
+		 if ((xhr.status>=200 && xhr.status<300)|| xhr.status==304){
+		 util.tips(JSON.parse(xhr.responseText).message);
+		 }
+		 }
+		 }
+		 xhr.open("post",url,true);
+		 xhr.send(data);
+		 }
+		 }
+		 }
+		 }
+		 }*/
+	}
+
+</script>
+<!--二维码模态框-->
+<div class="modal fade" tabindex="-1" role="dialog" id="myModal">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content" style="width: 424px !important;">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				<h4 class="modal-title" style="margin-left: 15px">商品二维码</h4>
+			</div>
+			<div class="modal-body">
+				<img src="" alt="" id="gimg" style="width: 100%">
+			</div>
+		</div><!-- /.modal-content -->
+	</div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+{php include wl_template('common/footer');}

@@ -1,0 +1,347 @@
+{php include wl_template('common/header');}
+<link rel="stylesheet" href="{TG_URL_ARES}css/kj.css">
+<body class="paihangbang">
+<style type="text/css">
+    body {
+        padding-bottom: 80px;
+    }
+    .bottombtn {
+        text-shadow: 1px 1px 0 rgba(150,33,139,.3),1px 1px 5px rgba(150,33,139,.5);
+        color: #f7f7f7;
+        font-weight: bold;
+        display: block;
+        text-align: center;
+        padding: 13px 0;
+        font-size: 20px;
+        background-color: #D23B3E;
+        border-radius: 6px;
+    }
+    h3 a {
+        color: #FFF
+    }
+    .gyStyle2 h3{
+        background: url({TG_URL_ARES}images/kj/rank_banner.png) no-repeat center center;
+        background-size: 88%;
+    }
+    .clearfix.shwoWP{
+        position: relative;
+    }
+    .kj_result,.kjshare{
+        position: fixed;
+        top:0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 600;
+        background: rgba(0,0,0,0.5);
+        display: none;
+    }
+    .kj_result>div{
+        text-align: center;
+        position: absolute;
+        top: 20%;
+        width: 80%;
+        margin: 0 10%;
+        background: #fff;
+        border-radius: 8px;
+        border: 3px solid #F14F47;
+        color: #333;
+        box-sizing: border-box;
+        -webkit-box-sizing: border-box;
+    }
+    #nife{
+        position: absolute;
+        top:10%;
+        right: 0;
+        width: 50%;
+        transform: rotate(-30deg);
+        -ms-transform: rotate(-30deg);		/* IE 9 */
+        -webkit-transform: rotate(-30deg);	/* Safari and Chrome */
+        -o-transform: rotate(-30deg);		/* Opera */
+        -moz-transform: rotate(-30deg);
+        animation: myfirst 1s;
+        -moz-animation: myfirst 1s;	/* Firefox */
+        -webkit-animation: myfirst 1s;	/* Safari 和 Chrome */
+        -o-animation: myfirst 1s;	/* Opera */
+        animation-iteration-count:5;
+        -webkit-animation-iteration-count:5; /* Safari 和 Chrome */
+    }
+    @keyframes myfirst
+    {
+        from {transform: rotate(0deg);}
+        to {transform: rotate(-30deg);}
+    }
+
+    @-moz-keyframes myfirst /* Firefox */
+    {
+        from {transform: rotate(0deg);}
+        to {transform: rotate(-30deg);}
+    }
+
+    @-webkit-keyframes myfirst /* Safari 和 Chrome */
+    {
+        from {transform: rotate(0deg);}
+        to {transform: rotate(-30deg);}
+    }
+
+    @-o-keyframes myfirst /* Opera */
+    {
+        from {transform: rotate(0deg);}
+        to {transform: rotate(-30deg);}
+    }
+    .gyStyle2 .daanniou{
+        border-radius: 0;
+    }
+    .gyStyle2 .daanniou .jiagek{
+        font-size: 12px;
+    }
+    .gyStyle2 .daanniou .jiagek .yuanjia em{
+        text-shadow: none;
+    }
+    .gyStyle2 .daanniou .jiagek .xianjia strong{
+        color: inherit;
+    }
+    .gyStyle2 .daanniou .jiagek{
+        background-color: transparent;
+        border-radius: inherit;
+    }
+    .gyStyle2 .daanniou .jiagek .xianjia strong em{
+        font-size: 15px;
+    }
+    .gyStyle2 .daanniou .jiagek{
+        text-shadow: none;
+        color: inherit;
+    }
+    .gyStyle2 .daanniou{
+        background-color: #fff;
+    }
+    .gyStyle2 .daanniou .jiagek{
+        width: 40%;
+    }
+    .kd_btn{
+        text-align: center;
+        width: 86%;
+        background-color: #F14F47;
+        color: #fff;
+        margin: 8px 7%;
+        height: 34px;
+        line-height: 34px;
+        border: 0;
+        border-radius: 5px;
+        font-size: 14px;
+        font-weight: bold;
+        text-align: center;
+        border-top: 2px solid #F14F47;
+    }
+    .kj_result h2{
+        width: 100%;
+        height: 35px;
+        padding-bottom: 5px;
+        background: #F14F47;
+        text-align: center;
+        font: 16px/35px "Microsoft Yahei";
+        color: #fff;
+        font-weight: bold;
+    }
+</style>
+<div class="gerenhuodong gyStyle2">
+    <span id="wo" style="display:none">我</span>
+    <!--{if empty($fopenid)}-->
+    <!--<h3><a href="{php echo $this->createMobileUrl('index',array('openid'=>$user['openid'],'kid'=>$wkj['id']),true)}">活动首页</a></h3>-->
+    <!--{else}-->
+    <!--<h3><a href="{php echo $this->createMobileUrl('Kj',array('openid'=>$fopenid,'uid'=>$user['id'],'kid'=>$wkj['id']),true)}">活动首页</a></h3>-->
+    <!--{/if}-->
+    <h3>砍价排行榜</h3>
+    <div style="padding: 0 20px;margin-bottom: 10px">
+        <ul class="wupinList" style="color:rgb(140, 109, 109)">
+            <li class="clearfix shwoWP">
+                <div class="leftk"><img src="{$goods['share_image']}" alt="图片"/></div>
+                <div class="rightk">
+                    <h4 style="color:#3d4145;">{$goods['gname']}</h4>
+                    {if !empty($title)}
+                    <p style="font-size: 12px">规格: {$title}</p>
+                    {/if}
+                    <!--<div style="margin-top: 20px;position: absolute;bottom: 0">-->
+                    <!--{if $_W['openid'] == $kj_res['openid']}-->
+                    <!--<a style="background:#e4393c;color:#fff;" onclick="$.toast('点击右上角分享')" href="javascript:;" class="button button-light">邀请好友砍一刀</a>-->
+                    <!--{else}-->
+                    <!--<a onclick="kjHelp()" style="background:#e4393c;color:#fff;" href="javascript:;" class="button button-light">帮TA砍一刀</a>-->
+                    <!--{/if}-->
+                    <!--</div>-->
+                </div>
+            </li>
+            <a href="{php echo app_url('goods/detail',array('op'=>'display','id'=>$kj_res['goodsid']));}" class="spbiaoti"><strong>商品详情<span>（剩余{$goods['gnum']}件，查看商品详情）</span></strong></a>
+        </ul>
+    </div>
+    <p class="shomingk">亲爱的<span>{$_W['fans']['nickname']}</span>：<br/>已有<span>{php echo count($kj_log);}</span>位朋友帮{if $_W['openid'] == $kj_res['openid']}你{else}TA{/if}砍价！{$rank_tip}</p>
+    <div class="kanjialist">
+        <div class="listMain">
+            <div class="topbiaoti clearfix"><a href="javascript:;">亲友团</a><a class="kandiaojine1" href="javascript:;">砍掉金额</a><a
+                    href="javascript:;">砍后价格</a></div>
+            <div class="bordery">
+                <div class="listx">
+                    <ul class="ul1">
+                        {loop $kj_log $firend}
+                        <li class="clearfix">
+                            <div class="lefttext"><img src="{$firend['headimg']}" alt="图片"/><span>{$firend['name']}</span></div>
+                            <div class="kanhoujia"><span>￥{$firend['kj_price']}</span></div>
+                            <div class="szimgSize"><span>￥{$firend['price']}</span></div>
+                        </li>
+                        {/loop}
+                    </ul>
+                </div>
+                <!--<div class="zhanji clearfix">-->
+                <!--<div class="lefttext">砍价战绩</div>-->
+                <!--<div class="kanhoujia">￥{$wkj['p_y_price']}</div>-->
+                <!--<div class="zongjia">￥<span>{$user['price']}</span></div>-->
+                <!--</div>-->
+            </div>
+            <!--<img class="wenluk" src="{MON_WKJ_RES}images/wenlu.png" alt="图片"/>-->
+        </div>
+    </div>
+    <div class="kj_result">
+        <div>
+            <h2>帮砍一刀</h2>
+            <img style="display:block;width: 100%;margin: 0 auto;" src="{TG_URL_ARES}images/kj/kj.gif" alt="">
+            <!--<img style="" id="nife" src="{TG_URL_ARES}images/kj/2.png" alt="">-->
+            <h7 style="display: none">成功帮小伙伴砍掉 <span style="color: red;" id="kjPrice"></span>元</h7>
+            <div><button class="kd_btn" onclick="location.reload()">我知道了</button></div>
+        </div>
+    </div>
+    <div class="kjshare" onclick="$(this).fadeOut()">
+        <img src="{TG_URL_ARES}images/guide1.png" alt="">
+    </div>
+    <div class="shangpink">
+        <div class="goumaian" style="padding: 0;">
+            <div class="daanniou" style="display: flex;align-items: center;display: -webkit-flex;-webkit-align-items: center">
+                <a class="jiagek" href="javascript:;">
+                    <span class="yuanjia">原价：<em>￥{$goods['oprice']}</em></span><span class="xianjia">现价：<strong>￥<em>{$kj_res['price']}</em></strong></span>
+                </a>
+                {if $kj_res["is_on"] ==0 ||$kj_res["status"] ==0}
+                {if $_W['openid'] != $kj_res['openid']}
+                <a style="background: #aaa;border-radius: 0;height: 56px;line-height: 56px;width: 60%;text-align: center;color:#fff;border-color: transparent" href="javascript:;" class="button button-light">已结束</a>
+                {else}
+                <a style="background: #6fbfd8;border-radius: 0;height: 56px;line-height: 56px;width: 60%;text-align: center;color:#fff;" href="{php echo app_url('order/kj_orderconfirm',array('id'=>$goods['id'],'groupnum'=>1,'selltype'=>10,'kid'=>$_GPC['id']));}">立即购买</a>
+                {/if}
+                {elseif $kj_res["is_on"] ==2 &&$kj_res["status"] ==2}
+                {if $_W['openid'] == $kj_res['openid']}
+                <a style="background: #f97b87;border-radius: 0;height: 56px;line-height: 56px;width: 60%;text-align: center;color:#fff;border-color: transparent" href="{php echo app_url('order/order');}" class="button button-light">已下单</a>
+                {else}
+                <a style="background: #aaa;border-radius: 0;height: 56px;line-height: 56px;width: 60%;text-align: center;color:#fff;border-color: transparent" class="button button-light">好友已下单</a>
+                {/if}
+                {else}
+                {if $_W['openid'] == $kj_res['openid']}
+                <a style="background: #f97b87;border-radius: 0;height: 56px;line-height: 56px;width: 35%;text-align: center;color:#fff;border-color: transparent" onclick="$('.kjshare').fadeIn()" href="javascript:;" class="button button-light">邀请好友砍</a>
+                {else}
+                <a onclick="kjHelp()"  style="background: #f97b87;border-radius: 0;height: 56px;line-height: 56px;width: 35%;text-align: center;color:#fff;border-color: transparent" href="javascript:;" class="button button-light">帮TA砍一刀</a>
+                {/if}
+
+                {if $_W['openid'] == $kj_res['openid']}
+                <a onclick="limit_buy()" style="background: #6fbfd8;border-radius: 0;height: 56px;line-height: 56px;width: 25%;text-align: center;color:#fff;" href="javascript:;">立即购买</a>
+                {else}
+                <a style="background: #6fbfd8;border-radius: 0;height: 56px;line-height: 56px;width: 25%;text-align: center;color:#fff;" href="{php echo app_url('goods/detail',array('op'=>'display','id'=>$kj_res['goodsid']));}">我也要砍</a>
+                {/if}
+                {/if}
+            </div>
+
+            <div id="tanchuk" class="tanchuk">
+                <div class="tanchukMain"><p>朋友，你这一刀已经砍到底了，商品数量有限，快让你朋友斩获吧！</p>
+
+                    <div class="anniouk clearfix"><a class="baisea quxiaok" href="javescript:;">取消</a>
+                        <a class="hongsea" href="javascript:;" id="passgoumai">确认</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="zhegaik" class="zhegaik"></div>
+
+        <!--<div class="jizanimg">-->
+        <!--<div class="jiantou"></div>-->
+        <!--<p>分享到朋友圈就有机会获赠能量。</p>-->
+        <!--</div>-->
+        <!--<script type="text/javascript">-->
+
+
+
+        <!--var hid=1;-->
+        <!--/*活动表 活动id*/-->
+        <!--var kid = {$wkj['id']};-->
+        <!--/*商品表 商品ID*/-->
+        <!--var gid = "1";-->
+        <!--/*活动参与记录表 参与 ID */-->
+        <!--var jid = "492";-->
+        <!--/* 是否 参与 过此次活动 true false */-->
+        <!--var join = "1";-->
+        <!--/* 是否 为 这个活动 砍过价 true false */-->
+        <!--var bargain = "1";-->
+        <!--/* 活动状态  已购买 已结束  */-->
+        <!--var joinstatus = "{$statusText}";-->
+
+
+        <!--/* 活动结束时间 */-->
+        <!--var joinendtime = "1432355143";-->
+
+        <!--//1432355143 1429241661-->
+        <!--var endTimeJieshu = {$wkj['endtime']};-->
+
+        <!--var startTimeKaishi = {TIMESTAMP};-->
+
+
+        <!--/*结束时间 年*/-->
+        <!--var year = {$year};-->
+        <!--/*结束时间 月*/-->
+        <!--var yue = {$month};-->
+        <!--/*结束时间 日*/-->
+        <!--var date = {$day};-->
+        <!--/*结束时间 时*/-->
+        <!--var shi = {$hours};-->
+        <!--/*结束时间 分*/-->
+        <!--var fen = {$minutes};-->
+
+        <!--var kj_status = "";-->
+
+        <!--</script>-->
+
+    </div>
+</div>
+<script type="text/javascript">
+    function kjHelp(){
+        $.get(
+                '{php echo app_url("goods/kanjia",array("op"=>"kjajax"));}',
+                {
+                    'id':{$_GPC['id']}
+                },
+                function(res){
+                    console.log(res)
+                    var data=JSON.parse(res);
+                    if(data.status=='error'){
+                        $.toast(data.data);
+                    }else{
+                        $('#kjPrice').html(data.data);
+                        $('.kj_result').fadeIn();
+                        setTimeout(function () {
+                            $('.kj_result h7').css('display','block')
+                        },1500);
+                        setTimeout(function () {
+                            $('.kj_result').fadeOut();
+                            location.reload();
+                        },2500);
+                    }
+                }
+        )
+    }
+
+    function limit_buy () {
+        $.post("{php echo app_url('goods/kanjia', array('op' => 'limit_buy'))}", {'id': '{$kj_res['goodsid']}', 'openid': '{$_W['openid']}', 'uniacid': '{$_W['uniacid']}'}, function (res) {
+            res = JSON.parse(res);
+            if(res.status == '1') {
+                location.href = "{php echo app_url('order/kj_orderconfirm',array('id'=>$goods['id'],'groupnum'=>1,'selltype'=>10,'kid'=>$_GPC['id']));}";
+            } else {
+                $.toast(res.message);
+            }
+        })
+    }
+
+</script>
+{php include wl_template('common/footer');}

@@ -1,0 +1,147 @@
+{php include wl_template('common/header');}
+<link rel="stylesheet" href="//cdn.bootcss.com/weui/1.1.1/style/weui.min.css">
+<link rel="stylesheet" href="//cdn.bootcss.com/jquery-weui/1.0.1/css/jquery-weui.min.css">
+<style>
+    body{
+        background: #fff;
+        overflow: inherit;
+    }
+    /*总分类*/
+    .fenLei{
+        min-height:100% ;
+    }
+    .fenlei_title{
+        background: #fafafa;
+        text-align: center;
+        padding: 10px;
+        position: fixed;
+        width: 100%;
+        font-size: 20px;
+        border-bottom: 1px solid #ddd;
+    }
+    .fenlei_title a{
+        position: absolute;
+        right: 20px;
+        top: 10px;
+        font-size: 25px;
+    }
+    .fenleiDetail{
+        display: none;
+    }
+    .bottombarr .fenlei i{
+        background-position: -46px 0!important;
+    }
+    .bottombarr a:nth-child(2) span{
+        color: #e02e23;
+        opacity: 0.9;
+    }
+    .fenlei_content{
+        width: 35%;
+        /*float: left;*/
+        position: fixed;
+        left: 0;
+        top:53px;
+        overflow-y: auto;
+        height: 80%;
+        background: #fafafa;
+        font-size: 14px;
+    }
+    .fenlei_content a.active{
+        color: #e02e23;
+        background: #fff;
+    }
+    .fenlei_content .active .weui-cell_access .weui-cell__ft:after{
+        border-color:#e02e23 ;
+    }
+    .fenlei_text{
+        width: 60%;
+        /*float: left;*/
+        position: fixed;
+        left: 40%;
+        top:53px;
+        overflow-y: auto;
+        height: 80%;
+        z-index: 5;
+        background-color: #fff;
+    }
+    .weui-grid{
+        padding: 10px 5px;
+    }
+    .weui-grid:after,.weui-grid:before,.weui-grids:before,.weui-grids:after,.weui-cell:before{
+        border: inherit;
+    }
+    .weui-grid:before{
+        border: inherit;
+    } 
+    .weui-grid__label{
+        font-size: 12px;
+    }
+    .weui-cell{
+        padding: 10px;
+    }
+    .weui-grid__label{
+        color: #666;
+    }
+</style>
+<div class="fenLei">
+    <div class="fenlei_title">
+        <p>所有分类</p>
+        <a class="iconal-sousuo" href="{php echo app_url('goods/search')}"></a>
+    </div>
+    <div class="fenlei_content">
+        {loop $category $itme}
+        <a class="weui-cell weui-cell_access" data-id="{$itme['id']}">
+            <div class="weui-cell__bd weui-cell_primary">
+                <p class="fenlei_name">{$itme['name']}<img style="width: 25px;float: right;" src="{$itme['thumb']}" alt=""/></p>
+            </div>
+            <span class="weui-cell__ft"></span>
+        </a>
+        {/loop}
+    </div>
+    <div></div>
+    <div class="fenlei_text">
+        <div class="weui-grids">
+
+            <!--<a href="##" class="weui-grid js_grid" data-id="{$itme['id']}">-->
+                <!--<div class="weui-grid__icon">-->
+                    <!--<img src="{php echo tomedia($itme['thumb']);}" alt="">-->
+                <!--</div>-->
+                <!--<p class="weui-grid__label">{$itme['name']}</p>-->
+            <!--</a>-->
+        </div>
+    </div>
+</div>
+<script>
+    $('.fenlei_content>a:first-child').addClass('active');
+    $('.fenlei_content').on('click','a',function(){
+        if($(this).hasClass('active'))return false;
+        $('.fenlei_content a').removeClass('active');
+        $(this).addClass('active');
+        ajaxEJFL($(this).attr('data-id'));
+    });
+    //默认加载首页的二级分类
+    ajaxEJFL($('.fenlei_content>a:first-child').attr('data-id'));
+    //加载二级分类
+    function ajaxEJFL(id) {
+        $.get(
+            "{php echo app_url('goods/list/fenleiTwo')}",
+            {id: id},
+            function (res) {
+                var data = JSON.parse(res);
+                var html = '';
+                for (var i = 0; i < data.length; i++) {
+                    var url = data[i].url || "{php echo app_url('goods/list/fenlei_detail')}gid=" + data[i].parentid + '&ejid=' + data[i].id;
+                    html += '<a href='+url+' class="weui-grid js_grid"><div class="weui-grid__icon">' +
+                    '<img src='+data[i].thumb+' alt=""></div><p class="weui-grid__label">'+data[i].name+'</p></a>';
+                }
+                $('.fenlei_text>div').html(html);
+        })
+    }
+</script>
+{php include wl_template('common/footerbar');}
+{php include wl_template('common/footer');}
+
+
+
+
+

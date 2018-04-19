@@ -1,0 +1,887 @@
+{php include wl_template('common/header');}
+
+<style>
+    .table {
+        font-size: 14px;
+    }
+
+    .modal-dialog {
+        font-size: 14px;
+        text-align: left;
+        padding: 30px;
+    }
+
+    .closeBtn {
+        position: absolute;
+        top: 40px;
+        right: 40px;
+        z-index: 9999999;
+    }
+
+    .text-center {
+        text-align: center;
+    }
+    @media (min-width: 768px){
+        .modal-dialog {
+            width: 800px;
+        }
+    }
+</style>
+<ul class="nav nav-tabs">
+    <li><a href="{php echo web_url('agent/agent_users_admin', array('op' => 'display', 'status' =>'0'))}">待沟通 </a></li>
+    <li><a href="{php echo web_url('agent/agent_users_admin', array('op' => 'display', 'status' =>'1'))}">沟通中</a></li>
+    <li><a href="{php echo web_url('agent/agent_users_admin', array('op' => 'display', 'status' =>'2'))}">重点跟进</a></li>
+    <li><a href="{php echo web_url('agent/agent_users_admin', array('op' => 'display', 'status' =>'6'))}">活动套餐</a></li>
+    <li><a href="{php echo web_url('agent/agent_users_admin', array('op' => 'display', 'status' =>'3'))}">订单套餐</a></li>
+    <li><a href="{php echo web_url('agent/agent_users_admin', array('op' => 'display', 'status' =>'4'))}">VIP套餐</a></li>
+    <li><a href="{php echo web_url('agent/agent_users_admin', array('op' => 'display', 'status' =>'-3'))}">淘汰库</a></li>
+    <li><a href="{php echo web_url('agent/agent_users_admin', array('op' => 'display', 'status' =>'-2'))}">作废</a></li>
+    <li {if $status=='-1'} class="active" {/if} style="position: relative;">
+    <a href="{php echo web_url('agent/agent_users_admin', array('op' => 'display', 'status' =>'-1' , 'lx' => 1))}">110</a>
+    {if $boom == 1}<span style="display:inline-block;position: absolute;top:3px;right: 5px;border-radius: 50%;width: 8px;height: 8px;background-color: red;"></span>{/if}
+    </li>
+    <li {if $status=='5'} class="active" {/if}>
+    <a href="{php echo web_url('agent/agent_users_admin', array('op' => 'display', 'status' =>'5'))}">开通VIP</a>
+    </li>
+    <li class="active">
+        <a href="{php echo web_url('agent/agent_users_admin', array('op' => 'agents'))}">代理商管理</a>
+    </li>
+</ul>
+<div class="main">
+    <div class="panel panel-default">
+        <div class="panel-body table-responsive">
+            <ul id="" class="nav nav-tabs">
+                <li {if $op == 'agents'} class="active" {/if}>
+                  <a href="{php echo web_url('agent/agent_users_admin', array('op'=>'agents'))}" class="active">代理商开通记录</a>
+                </li>
+                <li {if $op == 'add_agent_record'} class="active" {/if}>
+                  <a href="{php echo web_url('agent/agent_users_admin', array('op'=>'add_agent_record'))}">代理商购买记录</a>
+                </li>
+                <li {if $op == 'vip_record'} class="active" {/if}>
+                    <a href="{php echo web_url('agent/agent_users_admin', array('op'=>'vip_record'))}">VIP开通记录</a>
+                </li>
+                <li>
+                    <a onclick="showCreate()" class="btn" href="javascript:;">新增代理</a>
+                </li>
+            </ul>
+            <div class="panel panel-info">
+                <div class="panel-body">
+                    <form action="" method="get" class="form-horizontal" role="form" id="form1">
+                        <input type="hidden" name="c" value="site"/>
+                        <input type="hidden" name="a" value="entry"/>
+                        <input type="hidden" name="m" value="lexiangpingou"/>
+                        <input type="hidden" name="do" value="agent"/>
+                        <input type="hidden" name="ac" value="agent_users_admin"/>
+                        <input type="hidden" name="op" value="{$_GPC['op']}"/>
+                        <div class="form-group col-sm-3">
+                            <label class="col-md-4 col-lg-4 control-label">时间:</label>
+                            <div class="col-xs-6 col-md-6">
+                                <label class="radio radio-inline">
+                                    <input type="radio" name="type" value="0" {if intval($_GPC['type']) != 1}checked="checked"{/if} onclick="$('#wechat').show();$('#bank').hide()">关
+                                </label>
+                                <label class="radio radio-inline">
+                                    <input type="radio" name="type" value="1" {if intval($_GPC['type']) == 1}checked="checked"{/if} onclick="$('#bank').show();$('#wechat').hide()">开
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="form-group col-sm-4">
+                            <div class="col-md-3">
+                                {php echo tpl_form_field_daterange('time', array('starttime'=>date('Y-m-d H:i:s', $starttime),'endtime'=>date('Y-m-d H:i:s', $endtime)),true);}
+                            </div>
+                        </div>
+
+                        <div class="form-group col-sm-4">
+                            <label class="col-sm-4 control-label">名称:</label>
+                            <div class="col-sm-8">
+                                <input class="form-control" name="keyword" type="text" value="{$_GPC['keyword']}" placeholder="可查询公众号/申请人名称">
+                            </div>
+                        </div>
+
+                        <div class="col-md-2 col-sm-2 col-lg-2" style="float:right;text-align: right;">
+                            <button class="btn btn-default min-width"><i class="fa fa-search"></i> 搜索</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            {if $op == 'agents'}
+            <table class="table table-hover">
+                <thead class="navbar-inner">
+                <tr>
+                    <th>公众号名称</th>
+                    <th style="width: 6%;" >申请人</th>
+                    <th>服务号购买／剩余套数</th>
+                    <th>小程序购买／剩余套数</th>
+                    <th style="display: none;">多商户购买／剩余套数</th>
+                    <th>app购买／剩余套数</th>
+                    <th style="display:none;">美工包购买／剩余套数</th>
+                    <th style="display:none;">erp购买／剩余套数</th>
+                    <th style="display:none;">线下收银购买／剩余套数</th>
+                    <th>火蝶联系人</th>
+                    <th>火蝶联系电话</th>
+                    <th>地区</th>
+                    <th>推荐码</th>
+                    <th class="text-center">操作</th>
+                </tr>
+                </thead>
+                <tbody>
+                {loop $list $agent}
+                <td>
+                    {$agent['name']}
+                </td>
+                <td>
+                    {$agent['open_name']}
+                </td>
+                <td>
+                    {$agent['public_num']}／{php echo intval($agent['public_num']) - intval($agent['public_used_num'])}
+                </td>
+                <td>
+                    {$agent['applet_num']}／{php echo intval($agent['applet_num']) - intval($agent['applet_used_num'])}
+                </td>
+                <td style="display: none;">
+                    {$agent['merchant_num']}／{php echo intval($agent['merchant_num']) - intval($agent['merchant_used_num'])}
+                </td>
+                <td>
+                    {$agent['app_num']}／{php echo intval($agent['app_num']) - intval($agent['app_used_num'])}
+                </td>
+                <td style="display:none;">
+                    {$agent['art_num']}／{php echo intval($agent['art_num']) - intval($agent['art_used_num'])}
+                </td>
+                <td style="display:none;">
+                    {$agent['erp_num']}／{php echo intval($agent['erp_num']) - intval($agent['erp_used_num'])}
+                </td>
+                <td style="display:none;">
+                    {$agent['offline_num']}／{php echo intval($agent['offline_num']) - intval($agent['offline_used_num'])}
+                </td>
+                <td>{$agent['linkman']}</td>
+                <td>{$agent['phone']}</td>
+                <td>
+                    {$agent['province']}<br>
+                    {$agent['city']}<br>
+                    {$agent['county']}
+                </td>
+                <td>
+                    {$agent['referral']}
+                </td>
+                <td class="text-center">
+                    <a class="label label-warning" style="display: block;" onclick="addAgent({$agent['id']})">
+                        <span>新增套数</span>
+                    </a>
+                    <a class="label label-info" style="display: block;margin-top:5px;" onclick="editAgent({$agent['id']})">
+                        <span>编辑</span>
+                    </a>
+                    <a class="label label-danger" style="display: none;margin-top:5px;" onclick="deleteAgent({$agent['id']}, this)">
+                        <span>删除</span>
+                    </a>
+                </td>
+                </tr>
+                {/loop}
+                </tbody>
+            </table>
+            {$pager}
+            {/if}
+            {if $op == 'add_agent_record'}
+            <table class="table table-hover">
+                <thead class="navbar-inner">
+                <tr>
+                    <th class="col-md-2">公众号名称</th>
+                    <th class="col-md-1" >申请人</th>
+                    <th class="col-md-2">服务号购买套数</th>
+                    <th class="col-md-2">小程序购买套数</th>
+                    <th class="col-md-2" style="display: none;">多商户购买套数</th>
+                    <th class="col-md-2">app购买套数</th>
+                    <th style="display:none;">美工包购买套数</th>
+                    <th style="display:none;">erp购买套数</th>
+                    <th style="display:none;">线下收银购买套数</th>
+                    <th class="col-md-3">购买时间</th>
+                </tr>
+                </thead>
+                <tbody>
+                {loop $list $agent}
+                <td>
+                    {$agent['name']}
+                </td>
+                <td>
+                    {$agent['open_name']}
+                </td>
+                <td>
+                    {$agent['public_num']}
+                </td>
+                <td>
+                    {$agent['applet_num']}
+                </td>
+                <td style="display: none;">
+                    {$agent['merchant_num']}
+                </td>
+                <td>
+                    {$agent['app_num']}
+                </td>
+                <td style="display:none;">
+                    {$agent['art_num']}
+                </td>
+                <td style="display:none;">
+                    {$agent['erp_num']}
+                </td>
+                <td style="display:none;">
+                    {$agent['offline_num']}
+                </td>
+                <td>
+                    {$agent['createtime']}
+                </td>
+                </tr>
+                {/loop}
+                </tbody>
+            </table>
+            {$pager}
+            {/if}
+            {if $op == 'vip_record'}
+            <table class="table table-hover">
+                <thead class="navbar-inner">
+                <tr>
+                    <th class="col-md-3">开通时间</th>
+                    <th class="col-md-2">公众号名称</th>
+                    <th class="col-md-2">开通公众号名称</th>
+                    <th class="col-md-2">服务号</th>
+                    <th class="col-md-2">小程序</th>
+                    <th class="col-md-2" style="display: none;">多商户</th>
+                    <th class="col-md-2">app</th>
+                    <th style="display:none;">美工包</th>
+                    <th style="display:none;">erp</th>
+                    <th style="display:none;">线下收银</th>
+                </tr>
+                </thead>
+                <tbody>
+                {loop $list $agent}
+                <td>
+                    {$agent['createtime']}
+                </td>
+                <td>
+                    {$agent['name']}
+                </td>
+                <td>
+                    {$agent['open_name']}
+                </td>
+                <td>
+                    {php echo intval($agent['public'])}
+                </td>
+                <td>
+                    {php echo intval($agent['applet'])}
+                </td>
+                <td style="display: none;">
+                    {php echo intval($agent['merchant'])}
+                </td>
+                <td>
+                    {php echo intval($agent['app'])}
+                </td>
+                <td style="display:none;">
+                    {php echo intval($agent['art'])}
+                </td>
+                <td style="display:none;">
+                    {php echo intval($agent['erp'])}
+                </td>
+                <td style="display:none;">
+                    {php echo intval($agent['offline'])}
+                </td>
+                </tr>
+                {/loop}
+                </tbody>
+            </table>
+            {$pager}
+            {/if}
+        </div>
+    </div>
+</div>
+<div id="agents-dialog" class="modal fade sc" tabindex="-1">
+    <div class="modal-dialog">
+        <a id="closebtn" class="closeBtn" data-dismiss="modal"><font color="ff0000">x</font></a>
+        <div class="modal-content" style="padding: 30px;">
+            <form action="" method="post" id="froms">
+                <div>
+                    <div class="form-group js-group-first">
+                        <div class="input-group">
+                            <div class="input-group-addon">公众号</div>
+                            <input class="form-control wechat-name" type="text" name="wechat_name" placeholder="输入公众号名称">
+                            <div class="input-group-addon" onclick="searchWechat(this)">搜索</div>
+                        </div>
+                        <div class="js-radio"></div>
+                    </div>
+                    <div class="form-group">
+                        <div class="form-group">
+                            <label>申请人</label>
+                        <input class="form-control" type="text" name="open_name" placeholder="申请人">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="form-group">
+                            <label>购买服务号VIP套数</label>
+                        <input class="form-control" type="number" name="public_num" value="0" placeholder="购买套数">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="form-group">
+                            <label>购买小程序套数</label>
+                            <input class="form-control" type="number" name="applet_num" value="0" placeholder="购买套数">
+                        </div>
+                    </div>
+                    <div class="form-group" style="display: none;">
+                        <div class="form-group">
+                            <label>购买多商户套数</label>
+                            <input class="form-control" type="number" name="merchant_num" value="0" placeholder="购买套数">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="form-group">
+                            <label>购买app套数</label>
+                            <input class="form-control" type="number" name="app_num" value="0" placeholder="购买套数">
+                        </div>
+                    </div>
+                    <div class="form-group" style="display:none;">
+                        <div class="form-group">
+                            <label>购买美工包套数</label>
+                            <input class="form-control" type="number" name="art_num" value="0" placeholder="购买套数">
+                        </div>
+                    </div>
+                    <div class="form-group" style="display:none;">
+                        <div class="form-group">
+                            <label>购买erp套数</label>
+                            <input class="form-control" type="number" name="erp_num" value="0" placeholder="购买套数">
+                        </div>
+                    </div>
+                    <div class="form-group" style="display:none;">
+                        <div class="form-group">
+                            <label>购买线下收银套数</label>
+                            <input class="form-control" type="number" name="offline_num" value="0" placeholder="购买套数">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="form-group">
+                            <label>火蝶联系人</label>
+                            <input class="form-control" type="text" name="linkman" placeholder="联系人">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="form-group">
+                            <label>火蝶联系电话号码</label>
+                            <input class="form-control" type="text" name="phone" maxlength="11" placeholder="电话号码">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>地区</label>
+                        <div  class="bs-chinese-region flat dropdown" data-submit-type="id" data-min-level="1" data-max-level="3">
+                            <select onchange="ajaxCity(this)" name="province" class="categoryI form-control tpl-category-parent" style="width:30%;margin-right:3%;display: inline-block;">
+                                <option value="">省</option>
+                                {loop $province $item}
+                                <option value="{$item['id']}">{$item['areaname']}</option>
+                                {/loop}
+                            </select>
+                            <select onchange="ajaxCounty(this)" name="city" class="categoryI form-control tpl-category-parent" style="width:30%;margin-right:3%;display: inline-block;">
+                                <option value="{$item['id']}">市</option>
+                            </select>
+                            <select name="county" class="categoryI form-control tpl-category-parent" style="width:30%;display: inline-block;">
+                                <option value="{$item['id']}">区</option>
+                            </select>
+                        </div>
+                        <!--<input style="margin-top: 15px;" type="text" class="form-control addDetail"  placeholder="请填写详细地址" value="">-->
+                    </div>
+                    <p style="text-align: center; margin-top: 20px;">
+                        <button type="submit" class="btn btn-primary" id="submit">提交</button>
+                        <button type="button" class="btn btn-primary" data-dismiss="modal">取消</button>
+                    </p>
+
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<div id="agents-dialog1" class="modal fade sc" tabindex="-1">
+    <div class="modal-dialog">
+        <a id="closebtn1" class="closeBtn" data-dismiss="modal"><font color="ff0000">x</font></a>
+        <div class="modal-content" style="padding: 30px;">
+            <form action="" method="post" id="froms1">
+                <div>
+                    <div class="form-group">
+                        <div class="form-group">
+                            <label>公众号名称</label>
+                            <input class="form-control" type="text" name="name" readonly placeholder="公众号名称">
+                            <input class="form-control" type="hidden" name="id" readonly value="">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="form-group">
+                            <label>火蝶联系人</label>
+                            <input class="form-control" type="text" name="linkman" placeholder="联系人">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="form-group">
+                            <label>火蝶联系电话号码</label>
+                            <input class="form-control" type="text" name="phone" maxlength="11" placeholder="电话号码">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>地区</label>
+                        <div onclick="event.stopPropagation();$('.dropdown-menu').toggle();" class="bs-chinese-region flat dropdown" data-submit-type="id" data-min-level="1" data-max-level="3">
+                            <select onchange="ajaxCity(this)" name="province" class="categoryI form-control tpl-category-parent" style="width:30%;margin-right:3%;display: inline-block;">
+                                <option value="">省</option>
+                                {loop $province $item}
+                                <option value="{$item['id']}">{$item['areaname']}</option>
+                                {/loop}
+                            </select>
+                            <select onchange="ajaxCounty(this)" name="city" class="categoryI form-control tpl-category-parent" style="width:30%;margin-right:3%;display: inline-block;">
+                                <option value="{$item['id']}">市</option>
+                            </select>
+                            <select name="county" class="categoryI form-control tpl-category-parent" style="width:30%;display: inline-block;">
+                                <option value="{$item['id']}">区</option>
+                            </select>
+                        </div>
+                        <!--<input style="margin-top: 15px;" type="text" class="form-control addDetail"  placeholder="请填写详细地址" value="">-->
+                    </div>
+                    <p style="text-align: center; margin-top: 20px;">
+                        <button type="submit" class="btn btn-primary" id="submit1">提交</button>
+                        <button type="button" class="btn btn-primary" data-dismiss="modal">取消</button>
+                    </p>
+
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<div id="agents-dialog2" class="modal fade sc" tabindex="-1">
+    <div class="modal-dialog">
+        <a id="closebtn" class="closeBtn" data-dismiss="modal"><font color="ff0000">x</font></a>
+        <div class="modal-content" style="padding: 30px;">
+            <form action="" method="post" class="add_agent_froms">
+                <div>
+                    <div class="form-group js-group-first">
+                        <div class="input-group">
+                            <div class="input-group-addon">公众号</div>
+                            <input class="form-control wechat-name" type="text" readonly="readonly">
+                        </div>
+                        <div class="js-radio"></div>
+                    </div>
+                    <div class="form-group">
+                        <div class="form-group">
+                            <label>申请人</label>
+                        <input class="form-control" type="text" name="open_name" placeholder="申请人">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="form-group">
+                            <label>购买服务号VIP套数</label>
+                        <input class="form-control" type="number" name="public_num" value="0" placeholder="购买套数">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="form-group">
+                            <label>购买小程序套数</label>
+                            <input class="form-control" type="number" name="applet_num" value="0" placeholder="购买套数">
+                        </div>
+                    </div>
+                    <div class="form-group" style="display: none;">
+                        <div class="form-group">
+                            <label>购买多商户套数</label>
+                            <input class="form-control" type="number" name="merchant_num" value="0" placeholder="购买套数">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="form-group">
+                            <label>购买app套数</label>
+                            <input class="form-control" type="number" name="app_num" value="0" placeholder="购买套数">
+                        </div>
+                    </div>
+                    <div class="form-group" style="display:none;">
+                        <div class="form-group">
+                            <label>购买美工包套数</label>
+                            <input class="form-control" type="number" name="art_num" value="0" placeholder="购买套数">
+                        </div>
+                    </div>
+                    <div class="form-group" style="display:none;">
+                        <div class="form-group">
+                            <label>购买erp套数</label>
+                            <input class="form-control" type="number" name="erp_num" value="0" placeholder="购买套数">
+                        </div>
+                    </div>
+                    <div class="form-group" style="display:none;">
+                        <div class="form-group">
+                            <label>购买线下收银套数</label>
+                            <input class="form-control" type="number" name="offline_num" value="0" placeholder="购买套数">
+                        </div>
+                    </div>
+                    <p style="text-align: center; margin-top: 20px;">
+                        <button type="submit" class="btn btn-primary" id="submit">提交</button>
+                        <button type="button" class="btn btn-primary" data-dismiss="modal">取消</button>
+                    </p>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<script>
+    $('#froms').submit(function (e) {
+        e.preventDefault();
+        var wechat = $(this).find('input[name="wechat_name"]').val();
+        var uniacid = $(this).find('input[name="uniacid"]:checked').val();
+        var name = $(this).find('input[name="uniacid"]:checked').attr('data-name');
+        var open_name = $(this).find('input[name="open_name"]').val();
+        var public_num = $(this).find('input[name="public_num"]').val();
+        var applet_num = $(this).find('input[name="applet_num"]').val();
+        var app_num = $(this).find('input[name="app_num"]').val();
+        var art_num = $(this).find('input[name="art_num"]').val();
+        var erp_num = $(this).find('input[name="erp_num"]').val();
+        var offline_num = $(this).find('input[name="offline_num"]').val();
+        var merchant_num = $(this).find('input[name="merchant_num"]').val();
+        var linkman = $(this).find('input[name="linkman"]').val();
+        var phone = $(this).find('input[name="phone"]').val();
+        var province = $(this).find('select[name="province"] option:selected').html();
+        var city = $(this).find('select[name="city"] option:selected').html();
+        var county = $(this).find('select[name="county"] option:selected').html();
+
+        if (wechat == '') {
+            util.tips('请先搜索公众号', 2000);
+            return false;
+        }
+        if (typeof uniacid == 'undefined') {
+            util.tips('请选择公众号', 2000);
+            return false;
+        }
+        if (open_name == '') {
+            util.tips('请填写申请人', 2000);
+            return false;
+        }
+        if (linkman == '') {
+            util.tips('请填写该公众号火蝶联系人', 2000);
+            return false;
+        }
+        if (phone == '') {
+            util.tips('请填写该公众号火蝶联系电话号码', 2000);
+            return false;
+        }
+        if ($(this).find('select[name="province"]').val() == '') {
+            util.tips('请选择该公众号所属省份', 2000);
+            return false;
+        }
+        if ($(this).find('select[name="city"]').val() == '') {
+            util.tips('请选择该公众号所属城市', 2000);
+            return false;
+        }
+        if ($(this).find('select[name="county"]').val() == '') {
+            util.tips('请选择该公众号所属区域', 2000);
+            return false;
+        }
+
+        var data = {
+            uniacid : uniacid,
+            name : name,
+            open_name : open_name,
+            public_num : public_num,
+            applet_num : applet_num,
+            app_num : app_num,
+            art_num : art_num,
+            erp_num : erp_num,
+            offline_num : offline_num,
+            merchant_num : merchant_num,
+            linkman : linkman,
+            phone : phone,
+            province : province,
+            city : city,
+            county : county,
+        }
+        var d = {data:data};
+        $.post(
+            "{php echo web_url('agent/agent_users_admin/add_agent');}",
+            d,
+            function (res) {
+                var dat = JSON.parse(res);
+                util.tips(dat.message, 2000);
+                if (dat.status == '1') {
+                    setTimeout(function () {
+                        location.href = location.href;
+                    },2000);
+                }
+            }
+        )
+
+    })
+
+    $('.add_agent_froms').submit(function(e) {
+        e.preventDefault();
+        var name = $(this).find('.wechat-name').val();
+        var uniacid = $(this).find('.wechat-name').attr('uniacid')
+        var open_name = $(this).find('input[name="open_name"]').val();
+        var public_num = $(this).find('input[name="public_num"]').val();
+        var applet_num = $(this).find('input[name="applet_num"]').val();
+        var app_num = $(this).find('input[name="app_num"]').val();
+        var art_num = $(this).find('input[name="art_num"]').val();
+        var erp_num = $(this).find('input[name="erp_num"]').val();
+        var offline_num = $(this).find('input[name="offline_num"]').val();
+        var merchant_num = $(this).find('input[name="merchant_num"]').val();
+        var data = {
+            name: name,
+            uniacid : uniacid,
+            open_name : open_name,
+            public_num : public_num,
+            applet_num : applet_num,
+            app_num : app_num,
+            art_num : art_num,
+            erp_num : erp_num,
+            offline_num : offline_num,
+            merchant_num : merchant_num,
+        }
+        var d = {data:data};
+        console.log(data);
+        $.post(
+            "{php echo web_url('agent/agent_users_admin/add_agent');}",
+            d,
+            function (res) {
+                var dat = JSON.parse(res);
+                util.tips(dat.message, 2000);
+                if (dat.status == '1') {
+                    setTimeout(function () {
+                        location.href = location.href;
+                    },2000);
+                }
+            }
+        )
+
+    })
+
+    $('#froms1').submit(function (e) {
+        e.preventDefault();
+        var id = $(this).find('input[name="id"]').val();
+        var linkman = $(this).find('input[name="linkman"]').val();
+        var phone = $(this).find('input[name="phone"]').val();
+        var province = $(this).find('select[name="province"] option:selected').html();
+        var city = $(this).find('select[name="city"] option:selected').html();
+        var county = $(this).find('select[name="county"] option:selected').html();
+
+        if (id == '') {
+            util.tips('数据错误！', 2000);
+            return false;
+        }
+        if (linkman == '') {
+            util.tips('请填写该公众号火蝶联系人', 2000);
+            return false;
+        }
+        if (phone == '') {
+            util.tips('请填写该公众号火蝶联系电话号码', 2000);
+            return false;
+        }
+        if ($(this).find('select[name="province"]').val() == '') {
+            util.tips('请选择该公众号所属省份', 2000);
+            return false;
+        }
+        if ($(this).find('select[name="city"]').val() == '') {
+            util.tips('请选择该公众号所属城市', 2000);
+            return false;
+        }
+        if ($(this).find('select[name="county"]').val() == '') {
+            util.tips('请选择该公众号所属区域', 2000);
+            return false;
+        }
+
+        var data = {
+            linkman : linkman,
+            phone : phone,
+            province : province,
+            city : city,
+            county : county,
+        }
+        var d = {id : id,data:data};
+        $.post(
+            "{php echo web_url('agent/agent_users_admin/edit_agent');}",
+            d,
+            function (res) {
+                var dat = JSON.parse(res);
+                util.tips(dat.message, 2000);
+                if (dat.status == '1') {
+                    setTimeout(function () {
+                        location.href = location.href;
+                    },2000);
+                }
+            }
+        )
+
+    })
+
+    $('#closebtn').click(function (e) {
+        $('.radio').remove();
+    })
+</script>
+<script>
+    /**
+     * 新建代理商
+     */
+    // 新建代理商弹出页面
+    function showCreate() {
+        $('#agents-dialog').modal();
+    }
+
+    // 查询是否有该公众号
+    function searchWechat(e) {
+        var wechat = $(e).prev().val();
+        if (wechat == '') {
+            util.tips('请填写搜索条件', 2000);
+            return false;
+        }
+
+        $.ajax({
+            type: "GET",
+            url: "{php echo web_url('agent/agent_users_admin/ajax');}",
+            data: {'name': wechat},
+            dataType: "json",
+            success: function (data) {
+                var html = '';
+                if (data.status == '1') {
+                    var list = data.data;
+                    for (var i = list.length - 1; i >= 0; i--) {
+                        var div = '<div class="radio">'
+                            + '<label>'
+                            + '<input type="radio" name="uniacid" data-name="' + list[i].name + '" value="' + list[i].uniacid + '">' + list[i].name + '('+list[i].uniacid+')'
+                            + '</label>'
+                            + '</div>';
+                        html = html + div;
+                    }
+                } else {
+                    util.tips(data.message, 3000);
+                }
+                $('#agents-dialog').find('.js-radio').html(html);
+            }
+        });
+    }
+
+    // 地区选择
+    function ajaxCity(that) {
+        // var id = $(that).find('select[name="province"] option:selected').val();
+        var id = $(that).val();
+        $.get(
+            "{php echo web_url('store/bdelete/county')}",
+            {
+                "opp": 'city',
+                "sid": id
+            },
+            function (res) {
+                var data = JSON.parse(res).data;
+                console.log(data);
+                var html = '<option value="">市</option>';
+                for (var key in data) {
+                    html += "<option value='" + data[key].id + "'>" + data[key].areaname + "</option>";
+                }
+                $('select[name="city"]').html(html);
+                $('select[name="county"]').html('<option value="">区</option>');
+            }
+        )
+    }
+
+    function ajaxCounty(that) {
+        // var id = $(that).find('select[name="city"] option:selected').val();
+        var id = $(that).val();
+        $.get(
+            "{php echo web_url('store/bdelete/county')}",
+            {
+                "opp": 'county',
+                "cid": id
+            },
+            function (res) {
+                var data = JSON.parse(res).data;
+                console.log(data);
+                var html = '<option value="">区</option>';
+                for (var key in data) {
+                    html += "<option value='" + data[key].id + "'>" + data[key].areaname + "</option>";
+                }
+                $('select[name="county"]').html(html);
+            }
+        )
+    }
+
+</script>
+<script>
+    // 编辑代理商
+    function editAgent(id) {
+        $('#agents-dialog1').modal();
+        $.get("{php echo web_url('agent/agent_users_admin',array('op' => 'list_agent'))}&id=" + id, function (res) {
+            var data = res;
+            if (data.status == '1') {
+                console.log(data);
+                $('#agents-dialog1').modal();
+                $('#agents-dialog1').find('input[name="id"]').val(data.data.id);
+                $('#agents-dialog1').find('input[name="name"]').val(data.data.name);
+                $('#agents-dialog1').find('input[name="linkman"]').val(data.data.linkman);
+                $('#agents-dialog1').find('input[name="phone"]').val(data.data.phone);
+                $('#agents-dialog1').find('select[name="province"] option:selected').html(data.data.province);
+                $('#agents-dialog1').find('select[name="province"] option:selected').val(data.data.province);
+                $('#agents-dialog1').find('select[name="city"] option:selected').html(data.data.city);
+                $('#agents-dialog1').find('select[name="city"] option:selected').val(data.data.city);
+                $('#agents-dialog1').find('select[name="county"] option:selected').html(data.data.county);
+                $('#agents-dialog1').find('select[name="county"] option:selected').val(data.data.county);
+            } else {
+                util.tips(data.message, 2000);
+                return false;
+            }
+
+        }, "json");
+    }
+
+    // 删除代理商
+    function deleteAgent(id, e) {
+        if (confirm('确认删除该代理商吗？')) {
+            var agent = $(e);
+            $.get("{php echo web_url('agent/agent_users_admin',array('op' => 'del_agent'))}&id=" + id, function (res) {
+                var data = JSON.parse(res);
+                util.tips(data.message, 2000);
+                if (data.status == '1') {
+                    setTimeout(function () {
+                        agent.parents('tr').remove();
+                    },1000);
+                }
+            });
+        }
+    }
+
+    //新增套数
+    function addAgent(id) {
+        $.get("{php echo web_url('agent/agent_users_admin',array('op' => 'list_agent'))}&id=" + id, function (res) {
+            var data = res;
+            if (data.status == '1') {
+                console.log(data);
+                $('#agents-dialog2').modal();
+                $('#agents-dialog2').find('.wechat-name').val(data.data.name).attr('uniacid',data.data.uniacid);
+            } else {
+                util.tips(data.message, 2000);
+                return false;
+            }
+
+        }, "json");
+    }
+
+    // 调用方法
+    //（检查是否填公众号）
+    // function checkWechat() {
+    //     var wechat = $('#agents-dialog').find('.wechat-name').val();
+    //     if (wechat == '') {
+    //         util.tips('请输入微信公众号名', 2000);
+    //         return false;
+    //     }
+    // }
+
+    // (修改弹框数据)
+    function editModel(data) {
+        $('#agents-dialog').find('input[name="fun"]').val(data['fun']);
+        if (data['fun'] == 'edit') {
+            $('.js-group-first').hide();
+            $('#agents-dialog').find('.wechat-name').val(data['id']);
+        } else {
+            $('.js-group-first').show();
+            $('#agents-dialog').find('.wechat-name').val("");
+        }
+        $('#agents-dialog').find('input[name="bought_num"]').val((data['bought_num'] == undefined) ? "" : data['bought_num']);
+        $('#agents-dialog').find('input[name="used_num"]').val((data['used_num'] == undefined) ? "" : data['used_num']);
+        $('#agents-dialog').find('input[name="remained_num"]').val((data['remained_num'] == undefined) ? "" : data['remained_num']);
+        $('#agents-dialog').find('input[name="linkman"]').val((data['linkman'] == undefined) ? "" : data['linkman']);
+        $('#agents-dialog').find('input[name="phone_num"]').val((data['phone_num'] == undefined) ? "" : data['phone_num']);
+        $('#agents-dialog').find('input[name="province"]').val((data['province'] == undefined) ? "" : data['province']);
+        $('#agents-dialog').find('input[name="city"]').val((data['city'] == undefined) ? "" : data['city']);
+        $('#agents-dialog').find('input[name="district"]').val((data['district'] == undefined) ? "" : data['district']);
+        $('#agents-dialog').find('input[name="address"]').val((data['address'] == undefined) ? "" : data['address']);
+    }
+</script>
+{php include wl_template('common/footer');}

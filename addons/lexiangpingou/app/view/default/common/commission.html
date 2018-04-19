@@ -1,0 +1,14 @@
+{if $goods['show_com']==1&&$goods['com_type']==2}
+<div style="background: #fff;padding: 0 10px">
+    <i class="iconal-jifen"></i>
+    团长外快:
+    <span style="color: #e4393c">
+        {$goods['commission']}
+        {if $goods['commissiontype']==1}%
+        {elseif $goods['commissiontype']==2}元
+        {/if}
+        +
+    </span>
+
+</div>
+{/if}

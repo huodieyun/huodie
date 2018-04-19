@@ -1,0 +1,99 @@
+{php include wl_template('common/header');}
+<ul class="nav nav-tabs">
+    <li {if $operation == 'display'}class="active"{/if}><a href="#">聊天管理</a></li>
+    <!--{php echo $this->createWebUrl('chatlist', array('op' => 'display'))}-->
+</ul>
+{if $operation == 'display'}
+<div class="main">
+
+    <ul class="nav nav-tabs" role="tablist">
+        {loop $cservicelist $row}
+        <li role="presentation" {if $row['num'] == 0}class="active"{/if}><a href="#tabmessi{$row['num']}" aria-controls="tabmessi{$row['num']}" role="tab" data-toggle="tab">{$row['name']}</a></li>
+        {/loop}
+    </ul>
+
+    <!-- Tab panes -->
+    <div class="tab-content">
+        {loop $cservicelist $row}
+        <div role="tabpanel" {if $row['num'] == 0}class="tab-pane active"{else}class="tab-pane"{/if} id="tabmessi{$row['num']}" style="background:#fff;">
+        <table class="table table-hover table-striped table-condensed">
+            <thead>
+            <tr>
+                <th style="width:15%;">客户</th>
+                <th style="width:55%;">最新消息</th>
+                <th style="text-align:right;">操作</th>
+            </tr>
+            </thead>
+            <tbody>
+            {loop $row['lastest'] $rowrow}
+            <tr>
+                <td><img src="{$rowrow['avatar']}" width="50" height="50" style="border-radius:50px;" /> {$rowrow['nickname']}</td>
+                <td>
+                    <span class="label label-success">{if $rowrow['lastchat']['type'] == 3 || $rowrow['lastchat']['type'] == 4}[图片消息]{elseif $rowrow['lastchat']['type'] == 5 || $rowrow['lastchat']['type'] == 6}[语音消息]{else}{$rowrow['lastchat']['content']}{/if}</span>
+                    <span class="label label-info">{php echo date("Y-m-d H:i:s",$rowrow['time'])}</span>
+                </td>
+                <td style="text-align:right;">
+                    {if checkstr($_W['user']['perms'],'online_chat.list')}<button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-target="#formModal{$rowrow['id']}">聊天记录</button>&nbsp;&nbsp;{/if}
+                    {if checkstr($_W['user']['perms'],'online_chat.delete')}<a href="{php echo $this->createWebUrl('chatlist', array('op' => 'delete', 'openid' => $rowrow['openid'],'toopenid'=>$rowrow['toopenid']))}" onclick="return confirm('确认要删除聊天记录吗？');return false;" class="btn btn-default btn-sm" title="删除"><i class="fa fa-times"></i></a>{/if}
+                </td>
+            </tr>
+            {/loop}
+            </tbody>
+        </table>
+    </div>
+    {/loop}
+
+    {loop $cservicelist $row}
+    {loop $row['lastest'] $rowrow}
+    <div class="modal fade" id="formModal{$rowrow['id']}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    <h4 class="modal-title">聊天记录</h4>
+                </div>
+                <div class="modal-body table-responsive">
+                    <table class="table table-hover table-striped table-condensed">
+                        <tbody>
+                        {loop $rowrow['chatlist'] $rowchat}
+                        <tr>
+                            <td>
+                                {if $rowchat['openid'] == $rowrow['openid']}
+                                <span class="label label-success">{$rowchat['nickname']}</span>
+                                {else}
+                                <span class="label label-info">{$rowchat['nickname']}</span>
+                                {/if}
+                            </td>
+                            <td>
+                                {if $rowchat['openid'] == $rowrow['openid']}
+                                {if $rowchat['type'] == 3 || $rowchat['type'] == 4}
+                                <img src="{$rowchat['content']}" style="max-width:100px;" />
+                                {elseif $rowchat['type'] == 5 || $rowchat['type'] == 6}
+                                <span class="label label-success">[语音消息]</span>
+                                {else}
+                                <span class="label label-success">{$rowchat['content']}</span>
+                                {/if}
+                                {else}
+                                {if $rowchat['type'] == 3 || $rowchat['type'] == 4}
+                                <img src="{$rowchat['content']}" style="max-width:100px;" />
+                                {elseif $rowchat['type'] == 5 || $rowchat['type'] == 6}
+                                <span class="label label-success">[语音消息]</span>
+                                {else}
+                                <span class="label label-info">{$rowchat['content']}</span>
+                                {/if}
+                                {/if}
+                            </td>
+                        </tr>
+                        {/loop}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    {/loop}
+    {/loop}
+</div>
+</div>
+{/if}
+{php include wl_template('common/footer');}

@@ -1,0 +1,100 @@
+{php include wl_template('common/header');}
+
+<ul class="nav nav-tabs">
+    <li {if $op=='base'}class="active"{/if}>
+        <a href="{php echo web_url('member/score', array('op' => 'base'))}">基本设置</a>
+    </li>
+
+    <li {if $op == 'records'}class="active"{/if}>
+        <a href="{php echo web_url('member/score', array('op' => 'records'))}">全部记录</a>
+    </li>
+</ul>
+<div class="panel panel-default">
+    <div class="panel-body table-responsive" style="padding: 0px;">
+        <div class="main_bd">
+            <div class="plugins_wrp">
+                <dl>
+                    <dd>
+                        <ul id="js_plugins1">
+                            <li class="item_wrp" style="width: 100%;">
+                                <div class="plugin_item">
+                                    <div class="plugin_icon"><img src="{TG_URL_WRES}images/function/fans/hexiao.png"></div>
+                                    <div class="plugin_status">
+                                        <i class="access"></i>
+                                        <span class="status_txt">
+                                            <input class="flag1" type="checkbox" name="score_apply" value="{$setting['score_apply']}" {if $setting['score_apply'] == 1}checked{/if} />
+                                        </span>
+                                    </div>
+                                    <div class="plugin_content">
+                                        <h3 class="title">积分商城</h3>
+                                        <p class="desc" style="width: 100%;">
+                                            开启积分商城后，粉丝可在手机端兑换积分。
+                                        </p>
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
+                    </dd>
+                </dl>
+            </div>
+        </div>
+        <div class="main_bd">
+            <div class="plugins_wrp">
+                <dl>
+                    <dd>
+                        <ul id="js_plugins2">
+                            <li class="item_wrp" style="width: 100%;">
+                                <div class="plugin_item">
+                                    <div class="plugin_icon"><img src="{TG_URL_WRES}images/function/fans/hexiao.png"></div>
+                                    <div class="plugin_status">
+                                        <i class="access"></i>
+                                        <span class="status_txt">
+                                            <input class="flag2" type="checkbox" name="member_score_apply" value="{$setting['member_score_apply']}" {if $setting['member_score_apply'] == 1}checked{/if} />
+                                        </span>
+                                    </div>
+                                    <div class="plugin_content">
+                                        <h3 class="title">会员积分</h3>
+                                        <p class="desc" style="width: 100%;">
+                                            开启该功能，只有申请过会员卡的粉丝能获取积分；关闭该功能，所有粉丝都能获取积分
+                                        </p>
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
+                    </dd>
+                </dl>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    $(function () {
+        require(['bootstrap.switch'], function ($) {
+            $('.flag1:checkbox').bootstrapSwitch({onText: '启用', offText: '禁用'});
+            $('#js_plugins1 .bootstrap-switch-wrapper').click(function (e) {
+                e.stopPropagation();
+                $.post("{php echo web_url('member/score/ajax' , array('score_apply' => 1))}", function (d) {
+                    if (!d.errno) {
+                        util.tips(d.message);
+                        setTimeout(function(){location.href = "{php echo web_url('member/score');}";},1000);
+                    }
+                }, "json");
+            });
+        });
+    });
+    $(function () {
+        require(['bootstrap.switch'], function ($) {
+            $('.flag2:checkbox').bootstrapSwitch({onText: '启用', offText: '禁用'});
+            $('#js_plugins2 .bootstrap-switch-wrapper').click(function (e) {
+                e.stopPropagation();
+                $.post("{php echo web_url('member/score/ajax' , array('member_score_apply' => 1))}", function (d) {
+                    if (!d.errno) {
+                        util.tips(d.message);
+                        setTimeout(function(){location.href = "{php echo web_url('member/score');}";},1000);
+                    }
+                }, "json");
+            });
+        });
+    });
+</script>
+{php include wl_template('common/footer');}

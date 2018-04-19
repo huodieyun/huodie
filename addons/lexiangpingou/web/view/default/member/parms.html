@@ -1,0 +1,384 @@
+{php include wl_template('common/header');}
+{if $op == 'setting'}
+<style>
+    input[name='img']{
+        width: 50px;
+    }
+    .addfenzu,.editBJ{
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        z-index: 9999;
+        background: rgba(0,0,0,0.7);
+        height: 100%;
+        display: none;
+    }
+    .editBJ>form{
+        width: 50%;
+        left: 25%;
+        position: absolute;
+        top: 15%;
+    }
+    .form-addfenzu{
+        margin-top: 60px;
+        width: 50%;
+        left: 30%;
+        position: absolute;
+        top: 10%;
+        background: #fff;
+        border-radius: 10px;
+
+    }
+</style>
+<form action="{php echo web_url('member/parms',array('op'=>'check_on'))}" method="post">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            是否打开会员权益
+        </div>
+        <div class="panel-body">
+            <div class="form-group">
+                <div class="col-xs-12 col-sm-8">
+                    <div class="input-group" style="margin-top: 15px;">
+                        <label class="radio radio-inline" style="margin: 0">
+                            <input type="radio" value="1" name="status" {if $check_on['status'] == 1} checked {/if}>开
+                        </label>
+                        <label class="radio radio-inline">
+                            <input type="radio" value="0" name="status" {if $check_on['status'] == 0}checked {/if}>关
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <input style="float: right" class="btn btn-primary col-lg-1" type="submit" name="submit" value="提交">
+        </div>
+</form>
+
+<!--显示所有会员等级-->
+<div class="panel panel-default">
+    <div class="table-responsive">
+        <table class="table table-hover">
+            <thead class="navbar-inner">
+            <tr>
+                <th style="width:110px;">会员等级</th>
+                <th style="width:100px;">购物折扣</th>
+                <th style="width:100px;">升级条件</th>
+                <th style="width:100px;">会员图片</th>
+                <!--<th style="width:100px;">积分</th>-->
+                <th style="width:120px;" class="text-center">操作</th>
+            </tr>
+            </thead>
+            <tbody>
+            {loop $res $li}
+            <tr id="{$li['id']}" class="uid">
+                <td>{$li['name']}</td>
+                <!--<td>{$li['name']}</td>-->
+                <td>{$li['rights']}折</td>
+                <!--</center>-->
+                <!--<td>{$li['rights']}折</td>-->
+                <td>¥{$li['money']}</td>
+                <td><img style="width: 50px" src="{$li['img']}" alt=""/></td>
+                <!--<td>¥{$li['money']}</td>-->
+                <td>
+                    <a href="javascript:void(0)" data-uid="{$li['uniacid']}" class="js-recharge compile" title="编辑" onclick="complie(event)">编辑</a>
+                    <a href="javascript:void(0)" data-uid="{$li['uniacid']}" class="js-recharge remove" title="删除">删除</a>
+                </td>
+            </tr>
+            {/loop}
+            <tr id="position">
+                <td colspan="5"><a href="javascript:;" id="addgroup"><i class="fa fa-plus-circle"></i> 添加新分组</a></td>
+            </tr>
+            </tbody>
+
+        </table>
+    </div>
+    <div class="editBJ">
+        <form action="" method="post" class="form-horizontal form" onsubmit='return formcheck()' style="display: none">
+        <input class="inputid" type="hidden" name="id" value="{$blacklist['id']}" />
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                编辑
+                <span style="float:right;" onclick="$('.editBJ').css('display','none')">关闭</span>
+            </div>
+            <div class="panel-body edit">
+                <div class="form-group">
+                    <label class="col-xs-12 col-sm-3 col-md-2 control-label">会员等级</label>
+                    <div class="col-sm-9 col-xs-12">
+                        <input type="text" name="uniacid" class="form-control" value="" placeholder="会员等级名称 例如:黄金会员"/>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-xs-12 col-sm-3 col-md-2 control-label">购物折扣</label>
+                    <div class="col-sm-9 col-xs-12">
+                        <input type="text" id="oid" name="openid" class="form-control" value="" placeholder="购物折扣  输入8 就是购物八折 请勿输入汉字"/>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-xs-12 col-sm-3 col-md-2 control-label">升级条件</label>
+                    <div class="col-sm-9 col-xs-12">
+                        <input type="text" name="nickname" class="form-control" value="" placeholder="升级到这个等级需要消耗的金额 例:500 客户消费满500 即可升级到这个会员等级"/>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label">会员图片</label>
+                    <div class="col-md-6 img">
+                        {php echo tpl_form_field_image('img', '');}
+                        <span class="help-block">图片建议为640X300</span>
+                    </div>
+                </div>
+                <div class="form-group col-sm-12">
+                    <input type="button" name="submit" value="提交" class="btn btn-primary col-lg-1" onclick="update2()" style="float: right"/>
+                    <!--<input type="hidden" name="token" value="{$_W['token']}" />-->
+                </div>
+            </div>
+
+        </div>
+
+    </form>
+    </div>
+    <div class="addfenzu">
+    <form action="" method="post" class="form-addfenzu form" onsubmit='return formcheck()' style="margin-top: 60px;">
+        <input type="hidden" name="id" value="{$blacklist['id']}" />
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                新增分组编辑
+                <span style="float:right;" onclick="$('.addfenzu').css('display','none')">关闭</span>
+            </div>
+            <div class="panel-addfenzu">
+                <div class="form-group"style="margin-top: 20px;height:40px;">
+                    <label class="col-xs-12 col-sm-3 col-md-2 control-label">会员等级</label>
+                    <div class="col-sm-9 col-xs-12">
+                        <input type="text" name="uniacid" class="form-control" value="" placeholder="会员等级名称 例如:黄金会员"/>
+                    </div>
+                </div>
+                <div class="form-group" style="height: 40px">
+                    <label class="col-xs-12 col-sm-3 col-md-2 control-label">购物折扣</label>
+                    <div class="col-sm-9 col-xs-12">
+                        <input type="text" id="" name="openid" class="form-control" value="" placeholder="购物折扣  输入8 就是购物八折 请勿输入汉字"/>
+                    </div>
+                </div>
+                <div class="form-group"style="height: 40px;">
+                    <label class="col-xs-12 col-sm-3 col-md-2 control-label">升级条件</label>
+                    <div class="col-sm-9 col-xs-12">
+                        <input type="text" name="nickname" class="form-control" value="" placeholder="升级到这个等级需要消耗的金额 例:500 客户消费满500 即可升级到这个会员等级"/>
+                    </div>
+                </div>
+                <div class="form-group" style="height: 150px">
+                    <label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label">会员图片</label>
+                    <div class="col-md-6 imgadd">
+                        {php echo tpl_form_field_image('img', '');}
+                        <span class="help-block">图片建议为640X300</span>
+                    </div>
+                </div>
+                <div class="form-group col-sm-12">
+                    <input type="button" name="submit" value="提交" class="btn btn-primary col-lg-1" onclick="addfenzu()" style="float: right;"/>
+                    <!--<input type="hidden" name="token" value="{$_W['token']}" />-->
+                </div>
+            </div>
+
+        </div>
+
+    </form>
+    </div>
+</div>
+<form action="{php echo web_url('member/parms',array('op'=>'leave_textarea'))}" method="post">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            会员等级说明
+        </div>
+        <div class="panel-body">
+            <div class="form-group">
+                <div class="col-sm-12 col-xs-12">
+                    {php echo tpl_ueditor('member_level', $member_leave['member_leave']);}
+                </div>
+            </div>
+            <div style="margin-top: 20px" class="form-group col-sm-12">
+                <input type="submit" name="submit" value="提交" class="btn btn-primary col-lg-1" style="float: right"/>
+
+            </div>
+        </div>
+    </div>
+</form>
+<script>
+    $(function () {
+        var id = '';
+        var vip = '';
+        var off = '';
+        var upgrade = '';
+    })
+    function complie(event){
+        $('.editBJ').css('display','block');
+        var parent = $(event.target).parent().parent();
+         id = parent.attr('id');
+        $('.inputid').val(id);
+         vip = parent.children().eq(0).html();
+         off = parent.children().eq(1).html().slice(0,-1);
+         upgrade = parent.children().eq(2).html().slice(1);
+        var img=parent.children().eq(3).children('img').attr('src');
+        $('.panel-body.edit').children().eq(0).find('input').val(vip);
+        $('.panel-body.edit').children().eq(1).find('input').val(off);
+        $('.panel-body.edit').children().eq(2).find('input').val(upgrade);
+        $('.panel-body.edit').children().eq(3).find('input').attr('url',img);
+        $('.panel-body.edit').children().eq(3).find('input').val(img);
+        $('.panel-body.edit').children().eq(3).find('img').attr('src',img);
+        var html = '<a href="" data-uid="" class="js-recharge save" title=""></a>'
+//        $(event.target).parent().html(html);
+        $('.form-horizontal').show();
+
+//        var test = $(this).parent('uid').find('.test').val(); //动态渲染，获取不到DOM结构
+    }
+    $(".remove").on('click',function(){ //动态渲染，获取不到DOM结构
+        var id=$(this).parent().parent('tr').attr('id');
+        $.ajax({
+            url:location.origin+"/minapi.php",
+            type:"post",
+            dataType:"json",
+            data:{
+                "op":"del_leave",
+                'id':id
+            },
+            success:function (res){
+                if(res.status='1'){
+                    util.message('删除成功');
+                    setTimeout(function(){
+                        location.reload();
+                    },800);
+                }
+            },
+            error:function (res) {
+                console.log(res);
+            }
+        });
+    });
+    $('#addgroup').click(function(){
+//        var html = '<tr class="uid">'+
+//            '<td><input type="text" name="name"></td>'+
+//            '<td><input type="number" name="">折</td>'+
+//        '<td>¥<input type="number"></td>'+
+//            '<td onclick="del()"><i class="fa fa-times-circle">删除</i></td>'+
+//            '</tr>';
+//        $('#position').before(html);
+        $('.addfenzu').show();
+    });
+   function del () {
+       $(this).parent('.uid').html('');
+    }
+    function update2() {
+            var _vip = $('.panel-body.edit').children().eq(0).find('input').val();
+            var _off = $('.panel-body.edit').children().eq(1).find('input').val();
+            var _upgrade = $('.panel-body.edit').children().eq(2).find('input').val();
+        $.ajax({
+            url:location.origin+"/minapi.php",
+            type:"post",
+            dataType:"json",
+            data:{
+                "uniacid":"{$_W['uniacid']}",
+                "op":"up_leave",
+               '_id': $('.inputid').val(),
+               '_vip':_vip,
+               '_off':_off,
+               '_upgrade':_upgrade,
+                '_img':$('.img input').attr('url')
+            },
+            success:function (res){
+                if(res.status='1'){
+                    util.message('修改成功');
+                    setTimeout(function(){
+                        location.reload();
+                    },800);
+                }
+            },
+            error:function (res) {
+                console.log(res);
+            }
+        });
+    }
+
+    function addfenzu () {
+        var _vip = $('.panel-addfenzu').children().eq(0).find('input').val();
+        var _off = $('.panel-addfenzu').children().eq(1).find('input').val();
+        var _upgrade = $('.panel-addfenzu').children().eq(2).find('input').val();
+        if(!_vip){
+            util.message('会员等级不能为空');
+            return false;
+        }
+        if(!_off){
+            util.message('折扣不能为空');
+            return false;
+        }
+        if(!_upgrade){
+            util.message('升级条件不能为空');
+            return false;
+        }
+        console.log(_vip,_off,_upgrade);
+        $.ajax({
+            url:location.origin+"/minapi.php",
+            type:"post",
+            dataType:"json",
+            data:{
+                "uniacid":"{$_W['uniacid']}",
+                "op":"insert_leave",
+//                '_id':id,
+                '_vip':_vip,
+                '_off':_off,
+                '_upgrade':_upgrade,
+                '_img':$('.imgadd input').attr('url')
+            },
+            success:function (res){
+                if(res.status='1'){
+                    util.message('添加成功');
+                    setTimeout(function(){
+                        location.reload();
+                    },800);
+                }
+            },
+            error:function (res) {
+                console.log(res);
+            }
+        });
+    }
+//    提交  这个TMD不能用的  记住  用上面那个
+    function submit () {
+        var _vip = $('.panel-body').children().eq(0).find('input').val();
+        var _off = $('.panel-body').children().eq(1).find('input').val();
+        var _upgrade = $('.panel-body').children().eq(2).find('input').val();
+        console.log(_vip,_off,_upgrade);
+        $.ajax({
+            url:location.origin+"/minapi.php",
+            type:"post",
+            dataType:"json",
+            data:{
+                "uniacid":"{$_W['uniacid']}",
+                "op":"up_leave",
+                '_vip':vip,
+                '_off':off,
+                '_upgrade':upgrade
+            },
+            success:function (res){
+                console.log(res);
+            },
+            error:function (res) {
+                console.log(res);
+            }
+        });
+    }
+    function member_submit(){
+        $.ajax({
+            url:location.origin+"/minapi.php",
+            type:"post",
+            dataType:"json",
+            data:{
+                "op":"leave_textarea",
+                "uniacid":"{$_W['uniacid']}",
+                'textarea':$('textarea').val()
+            },
+            success:function (res){
+               location.reload();
+            },
+            error:function (res) {
+                console.log(res);
+            }
+        });
+    }
+</script>
+{/if}
+{php include wl_template('common/footer');}

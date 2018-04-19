@@ -1,0 +1,156 @@
+{php include wl_template('common/header');}
+<style>
+    body{
+        position: inherit;
+        background: #fff;
+    }
+    .fixRT{
+        display: none!important;
+    }
+    .titlea{
+        padding:35px 10px;
+        text-align: center;
+        background: #0bb20c;
+        color: #fff;
+        position: relative;
+    }
+    .titlea>p{
+        position: absolute;
+        background: #fff;
+        color: #0bb20c;
+        right: 0;
+        border-bottom-left-radius: 5px;
+        border-top-left-radius: 5px;
+        padding: 0 5px;
+        top: 10%;
+    }
+    .titlea h4{
+        font-size: 24px;
+        font-weight: 400;
+    }
+    .titlea h1{
+        font-size: 35px;
+        margin-top: 10px;
+    }
+    .titlea h1 span{
+        font-weight: 700;
+    }
+    .list{
+        background: #eee;
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+        display: -webkit-flex;
+        -webkit-align-items: center;
+        -webkit-flex-wrap: wrap;
+        text-align: center;
+    }
+    .list>div{
+        width: 33.3%;
+        padding:20px 10px;
+        font-size: 14px;
+        border-bottom: 1px solid #ddd;
+        border-right: 1px solid #ddd;
+    }
+    .list>div>p:first-child{
+        font-size: 18px;
+        font-weight: 700;
+    }
+    .chargelist{
+        position: fixed;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        overflow-y: auto;
+        left: 0;
+        background: #fff;
+        display: none;
+    }
+    .list-block {
+         margin:0;
+        border-bottom: 1px solid #ddd;
+    }
+    .item-after{
+        font-size: 12px;
+    }
+</style>
+<div class="titlea">
+    <h4>余额</h4>
+    <h1><span>{$member['member_balance']}</span>元</h1>
+    <p onclick="$('.chargelist').slideDown()">充值记录</p>
+</div>
+<div class="list">
+    {loop $list $item}
+    <div data-id="{$item['id']}" onclick="pay(this)">
+        <p>{$item['member_amount']}元</p>
+        <p>售价:{$item['member_selling']}元</p>
+    </div>
+    {/loop}
+</div>
+<div class="chargelist">
+    <header class="bar bar-nav">
+        <button onclick="$('.chargelist').slideUp()" class="button button-link button-nav pull-left">
+            <span class="icon icon-left"></span>
+            返回
+        </button>
+        <h1 class="title">充值记录</h1>
+    </header>
+    <div style="margin-top: 2.2rem">
+        {if !empty($record_list)}
+            {loop $record_list $item}
+            <div class="list-block">
+                <li class="item-content">
+                    <div class="item-inner">
+                        <div class="item-title">
+                            <p>面值:{$item['member_amount']}</p>
+                            <p>售价:{$item['member_selling']}</p>
+                        </div>
+                        <div class="item-after">{$item['createtime']}</div>
+                    </div>
+                </li>
+            </div>
+            {/loop}
+        {else}
+            <div style="text-align: center;padding: 10px;">
+                暂无充值记录
+            </div>
+        {/if}
+    </div>
+</div>
+<script>
+    function pay(self) {
+        var id=$(self).attr('data-id');
+        $.post("{php echo app_url('pay/member_cash')}",{'id':id,paytype:'wechat'},function(m){
+            $.hideIndicator();
+            if(!m.errno){
+                m.data.timeStamp = String(m.data.timeStamp);
+                WeixinJSBridge.invoke('getBrandWCPayRequest', {
+                    'appId': m.data.appid ? m.data.appid : m.data.appId,
+                    'timeStamp': m.data.timeStamp,
+                    'nonceStr': m.data.nonceStr,
+                    'package': m.data.package,
+                    'signType': m.data.signType,
+                    'paySign': m.data.paySign
+                }, function(res) {
+                    if(res.err_msg == 'get_brand_wcpay_request:ok') {
+                        $.post("{php echo app_url('pay/member_paytype')}",{"id":m.id,"orderno":m.orderno,op:"ajax"},function(res1){
+//                            alert(JSON.stringify(res1));
+                            $.toast(res1.message);
+                            setTimeout(function(){
+                                location.reload();
+                            },2000);
+
+                        },"json");
+                    } else {
+                        $.toast("已取消支付");
+                    }
+                });
+            }else{
+                $.confirm(m.message, function () {
+                    history.go(-1);
+                })
+            }
+        },"json");
+    }
+</script>
+{php include wl_template('common/footer');}

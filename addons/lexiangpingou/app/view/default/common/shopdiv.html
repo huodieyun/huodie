@@ -1,0 +1,17 @@
+<!--//进店逛逛 多商户-->
+{if $uniacid_tpl['tpl']==8200||$uniacid_tpl['tpl']==8206}
+<a href="javascript:;">
+    <div class="mall_goods">
+
+        <img src="{if $merchant==0}{php echo tomedia($config['tginfo']['slogo'])}{else}{php echo tomedia($merchant['thumb'])}{/if}">
+        <div class="mall_sub" style="width: 51%;margin-left: 0">
+            <span>{if $merchant==0}{$config['tginfo']['sname']}{else}{$merchant['name']}{/if}</span>
+            <div class="sales" style="margin-top: 5px">商品数量:{$counta['total']} <i style="width: 3px;display: inline-block"></i> 已团{$goods['salenum']}/{$goods['unit']}</div>
+        </div>
+        <a href="{php echo app_url('goods/list/goods_store', array('merchant' => $goods['merchantid']));}" class="enter_button" style="width: 31%">
+            <img src="http://pinduoduo.b0.upaiyun.com/mall/mall_icon_small.png">
+            <span style="margin: 0">进店逛逛</span>
+        </a>
+    </div>
+</a>
+{/if}

@@ -1,0 +1,1499 @@
+{php include wl_template('common/header');}
+<style>
+    td>div{
+        text-align: left;
+    }
+    .panel-body{padding: 0}
+    .form-horizontal .checkbox-inline{
+        margin-left: 10px;
+    }
+    td>div{
+        white-space: initial;
+        background: ''!important;
+    }
+    /*./resource/images/bg_repno.gif*/
+</style>
+<div class="clearfix">
+    <form method="post" action="" onsubmit="return chkfrm();" name="frm" class="form-horizontal">
+        <style>
+            .select-role tr:first-child td:first-child{border-top:none;}
+            label{font-weight:normal;}
+        </style>
+        <div class="panel panel-default select-role">
+            <div class="panel-heading">
+                <label class="col-xs-12 col-sm-2 col-md-2 col-lg-1 control-label">用户名</label>
+                <div class="col-xs-12 col-sm-3">
+                    <input type="hidden" class="form-control uid" value="{$_GPC['uid']">
+                    <input type="text" class="form-control name" value="">
+                </div>
+                <label class="col-xs-12 col-sm-2 col-md-2 col-lg-1 control-label">密码</label>
+                <div class="col-xs-12 col-sm-3">
+                    <input type="text"  class="form-control pwd" value="">
+                </div>
+                <label class="col-xs-12 col-sm-2 col-md-2 col-lg-1 control-label">手机号</label>
+                <div class="col-xs-12 col-sm-3">
+                    <input type="text" placeholder="可用于找回密码"  class="form-control mobile" value="">
+                </div>
+                <br/>
+                <br/>
+                <!--<br/>-->
+                <!--<label style="margin: 10px 35px;" class="checkbox-inline"><input class="js-check-all" type="checkbox" value="" name="" />勾选拥有的权限</label>-->
+            </div>
+            <div class="panel-body table-responsive">
+                <div class="panel-body table-responsive">
+                    <table class="table table-hover">
+                        <tbody>
+                        <tr>
+                            <td class="text-left">
+                                <div>
+                                    <div class="checkbox">
+                                        <label><input type="checkbox" name="gzhset_all" value="2490100" gid="24801" fid="24901" class="js-father js-gid-24801 js-fid-24901">公众号设置</label>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="text-left line-feed">
+                                <div style="padding-left:50px; background:url('') no-repeat -245px -545px;">
+                                    <div class="checkbox-inline">
+                                        <label><input type="checkbox" name="gzhset.platform" value="2500101" gid="24801" fid="24901" cid="2500101" class="js-child js-gid-24801 js-fid-24901">公众号概况</label>
+                                    </div>
+                                    <div class="checkbox-inline">
+                                        <label><input type="checkbox" name="gzhset.special" value="2500102" gid="24801" fid="24901" cid="2500102" class="js-child js-gid-24801 js-fid-24901">系统回复</label>
+                                    </div>
+                                    <div class="checkbox-inline">
+                                        <label><input type="checkbox" name="gzhset.basic" value="2500103" gid="24801" fid="24901" cid="2500103" class="js-child js-gid-24801 js-fid-24901">文字回复</label>
+                                    </div>
+                                    <div class="checkbox-inline">
+                                        <label><input type="checkbox" name="gzhset.news" value="2500104" gid="24801" fid="24901" cid="2500104" class="js-child js-gid-24801 js-fid-24901">图文回复</label>
+                                    </div>
+                                    <div class="checkbox-inline">
+                                        <label><input type="checkbox" name="gzhset.images" value="2500105" gid="24801" fid="24901" cid="2500105" class="js-child js-gid-24801 js-fid-24901">图片回复</label>
+                                    </div>
+                                    <div class="checkbox-inline">
+                                        <label><input type="checkbox" name="gzhset.custom" value="2500106" gid="24801" fid="24901" cid="2500106" class="js-child js-gid-24801 js-fid-24901">多客户接入</label>
+                                    </div>
+                                    <div class="checkbox-inline">
+                                        <label><input type="checkbox" name="gzhset.userapi" value="2500107" gid="24801" fid="24901" cid="2500107" class="js-child js-gid-24801 js-fid-24901">自定义接口回复</label>
+                                    </div>
+                                    <div class="checkbox-inline">
+                                        <label><input type="checkbox" name="gzhset.menu" value="2500108" gid="24801" fid="24901" cid="2500108" class="js-child js-gid-24801 js-fid-24901">自定义菜单设置</label>
+                                    </div>
+                                    <div class="checkbox-inline">
+                                        <label><input type="checkbox" name="gzhset.url2qr" value="2500109" gid="24801" fid="24901" cid="2500109" class="js-child js-gid-24801 js-fid-24901">长链转短链</label>
+                                    </div>
+                                    <div class="checkbox-inline">
+                                        <label><input type="checkbox" name="gzhset.oauth" value="2500110" gid="24801" fid="24901" cid="2500110" class="js-child js-gid-24801 js-fid-24901">oAuth设置</label>
+                                    </div>
+                                    <div class="checkbox-inline">
+                                        <label><input type="checkbox" name="gzhset.jsauth" value="2500111" gid="24801" fid="24901" cid="2500111" class="js-child js-gid-24801 js-fid-24901">JS分享设置</label>
+                                    </div>
+                                    <div class="checkbox-inline">
+                                        <label><input type="checkbox" name="gzhset.payment" value="2500112" gid="24801" fid="24901" cid="2500112" class="js-child js-gid-24801 js-fid-24901">支付参数</label>
+                                    </div>
+                                    <div class="checkbox-inline">
+                                        <label><input type="checkbox" name="gzhset.list" value="2500113" gid="24801" fid="24901" cid="2500113" class="js-child js-gid-24801 js-fid-24901">代付设值</label>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="panel-body table-responsive">
+                <div class="panel-body table-responsive">
+                    <table class="table table-hover">
+                        <tbody>
+                        <tr>
+                            <td class="text-left">
+                                <div>
+                                    <div class="checkbox">
+                                        <label><input type="checkbox" name="copyright_all" value="249" gid="248" fid="249" class="js-father js-gid-248 js-fid-249" >参数设置</label>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="text-left line-feed">
+                                <div style="padding-left:50px; background:url('') no-repeat -245px -545px;">
+                                    <div class="checkbox-inline">
+                                        <label><input type="checkbox" name="copyright.tab_param3" value="250" gid="248" fid="249" cid="250" class="js-child js-gid-248 js-fid-249" >模板设置</label>
+                                    </div>
+                                    <div class="checkbox-inline">
+                                        <label><input type="checkbox" name="copyright.tab_basic" value="251" gid="248" fid="249" cid="251" class="js-child js-gid-248 js-fid-249" >基本设置</label>
+                                    </div>
+                                    <div class="checkbox-inline">
+                                        <label><input type="checkbox" name="copyright.tab_share" value="252" gid="248" fid="249" cid="252" class="js-child js-gid-248 js-fid-249" >分享设置</label>
+                                    </div>
+                                    <div class="checkbox-inline">
+                                        <label><input type="checkbox" name="copyright.tab_param2" value="253" gid="248" fid="249" cid="253" class="js-child js-gid-248 js-fid-249" >商城设置</label>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="panel-body table-responsive">
+                <div class="panel-body table-responsive">
+                    <table class="table table-hover">
+                        <tbody>
+                        <tr>
+                            <td class="text-left">
+                                <div>
+                                    <div class="checkbox">
+                                        <label><input type="checkbox" name="notice_all" value="2490" gid="2480" fid="2490" class="js-father js-gid-2480 js-fid-2490" >模板消息</label>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="text-left line-feed">
+                                <div style="padding-left:50px; background:url('') no-repeat -245px -545px;">
+                                    <div class="checkbox-inline">
+                                        <label><input type="checkbox" name="notice.base" value="2500" gid="2480" fid="2490" cid="2500" class="js-child js-gid-2480 js-fid-2490" >基本设置</label>
+                                    </div>
+                                    <div class="checkbox-inline">
+                                        <label><input type="checkbox" name="notice.display" value="2510" gid="2480" fid="2490" cid="2510" class="js-child js-gid-2480 js-fid-2490" >模板消息</label>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="panel-body table-responsive">
+                <div class="panel-body table-responsive">
+                    <table class="table table-hover">
+                        <tbody>
+                        <tr> 
+                            <td class="text-left">
+                                <div>
+                                    <div class="checkbox">
+                                        <label><input type="checkbox" name="adv_all" value="2491" gid="2481" fid="2491" class="js-father js-gid-2481 js-fid-2491" >首页轮播</label>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="text-left line-feed">
+                                <div style="padding-left:50px; background:url('') no-repeat -245px -545px;">
+                                    <div class="checkbox-inline">
+                                        <label><input type="checkbox" name="adv.add" value="2501" gid="2481" fid="2491" cid="2501" class="js-child js-gid-2481 js-fid-2491" >添加幻灯片</label>
+                                    </div>
+                                    <div class="checkbox-inline">
+                                        <label><input type="checkbox" name="add.edit" value="2511" gid="2481" fid="2491" cid="2511" class="js-child js-gid-2481 js-fid-2491" >修改幻灯片</label>
+                                    </div>
+                                    <div class="checkbox-inline">
+                                        <label><input type="checkbox" name="adv.delete" value="2501" gid="2481" fid="2491" cid="2501" class="js-child js-gid-2481 js-fid-2491" >删除幻灯片</label>
+                                    </div>
+                                    <div class="checkbox-inline">
+                                        <label><input type="checkbox" name="adv.list" value="2501" gid="2481" fid="2491" cid="2501" class="js-child js-gid-2481 js-fid-2491" >查看幻灯片</label>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="panel-body table-responsive">
+                <div class="panel-body table-responsive">
+                    <table class="table table-hover">
+                        <tbody>
+                        <tr>
+                            <td class="text-left">
+                                <div>
+                                    <div class="checkbox">
+                                        <label><input type="checkbox" name="print_all" value="2492" gid="2482" fid="2492" class="js-father js-gid-2482 js-fid-2492">小票打印设置</label>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="text-left line-feed">
+                                <div style="padding-left:50px; background:url('') no-repeat -245px -545px;">
+                                    <div class="checkbox-inline">
+                                        <label><input type="checkbox" name="print.base" value="2502" gid="2482" fid="2492" cid="2502" class="js-child js-gid-2482 js-fid-2492" >基本设置</label>
+                                    </div>
+                                    <div class="checkbox-inline">
+                                        <label><input type="checkbox" name="print.add" value="2502" gid="2482" fid="2492" cid="2502" class="js-child js-gid-2482 js-fid-2492" >添加打印机</label>
+                                    </div>
+                                    <div class="checkbox-inline">
+                                        <label><input type="checkbox" name="print.edit" value="2512" gid="2482" fid="2492" cid="2512" class="js-child js-gid-2482 js-fid-2492" >修改打印机</label>
+                                    </div>
+                                    <div class="checkbox-inline">
+                                        <label><input type="checkbox" name="print.delete" value="2502" gid="2482" fid="2492" cid="2502" class="js-child js-gid-2482 js-fid-2492" >删除打印机</label>
+                                    </div>
+                                    <div class="checkbox-inline">
+                                        <label><input type="checkbox" name="print.list" value="2502" gid="2482" fid="2492" cid="2502" class="js-child js-gid-2482 js-fid-2492" >管理打印机</label>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="panel-body table-responsive">
+                <div class="panel-body table-responsive">
+                    <table class="table table-hover">
+                        <tbody>
+                        <tr>
+                            <td class="text-left">
+                                <div>
+                                    <div class="checkbox">
+                                        <label><input type="checkbox" name="autoaddress_all" value="2493" gid="2483" fid="2493" class="js-father js-gid-2483 js-fid-2493" >自定义区域</label>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="text-left line-feed">
+                                <div style="padding-left:50px; background:url('') no-repeat -245px -545px;">
+                                    <div class="checkbox-inline">
+                                        <label><input type="checkbox" name="autoaddress.base" value="2503" gid="2483" fid="2493" cid="2503" class="js-child js-gid-2483 js-fid-2493" >基本设置</label>
+                                    </div>
+                                    <div class="checkbox-inline">
+                                        <label><input type="checkbox" name="autoaddress.add" value="2503" gid="2483" fid="2493" cid="2503" class="js-child js-gid-2483 js-fid-2493" >添加区域</label>
+                                    </div>
+                                    <div class="checkbox-inline">
+                                        <label><input type="checkbox" name="autoaddress.edit" value="2513" gid="2483" fid="2493" cid="2513" class="js-child js-gid-2483 js-fid-2493" >修改区域</label>
+                                    </div>
+                                    <div class="checkbox-inline">
+                                        <label><input type="checkbox" name="autoaddress.delete" value="2503" gid="2483" fid="2493" cid="2503" class="js-child js-gid-2483 js-fid-2493" >删除区域</label>
+                                    </div>
+                                    <div class="checkbox-inline">
+                                        <label><input type="checkbox" name="autoaddress.list" value="2503" gid="2483" fid="2493" cid="2503" class="js-child js-gid-2483 js-fid-2493" >管理区域</label>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="panel-body table-responsive">
+                <div class="panel-body table-responsive">
+                    <table class="table table-hover">
+                        <tbody>
+                        <tr>
+                            <td class="text-left">
+                                <div>
+                                    <div class="checkbox">
+                                        <label><input type="checkbox" name="deliverylist_all" value="2494" gid="2484" fid="2494" class="js-father js-gid-2484 js-fid-2494" >运费模板</label>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="text-left line-feed">
+                                <div style="padding-left:50px; background:url('') no-repeat -245px -545px;">
+                                    <div class="checkbox-inline">
+                                        <label><input type="checkbox" name="deliverylist.base" value="2504" gid="2484" fid="2494" cid="2504" class="js-child js-gid-2484 js-fid-2494" >基本设置</label>
+                                    </div>
+                                    <div class="checkbox-inline">
+                                        <label><input type="checkbox" name="deliverylist.add" value="2504" gid="2484" fid="2494" cid="2504" class="js-child js-gid-2484 js-fid-2494" >添加运费模板</label>
+                                    </div>
+                                    <div class="checkbox-inline">
+                                        <label><input type="checkbox" name="deliverylist.edit" value="2514" gid="2484" fid="2494" cid="2504" class="js-child js-gid-2484 js-fid-2494" >修改运费模板</label>
+                                    </div>
+                                    <div class="checkbox-inline">
+                                        <label><input type="checkbox" name="deliverylist.delete" value="2504" gid="2484" fid="2494" cid="2504" class="js-child js-gid-2484 js-fid-2494" >删除运费模板</label>
+                                    </div>
+                                    <div class="checkbox-inline">
+                                        <label><input type="checkbox" name="deliverylist.list" value="2504" gid="2484" fid="2494" cid="2504" class="js-child js-gid-2484 js-fid-2494" >运费模板列表</label>
+                                    </div>
+                                    <div class="checkbox-inline">
+                                        <label><input type="checkbox" name="deliverylist.state" value="2504" gid="2484" fid="2494" cid="2504" class="js-child js-gid-2484 js-fid-2494" >状态开关</label>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="panel-body table-responsive">
+                <div class="panel-body table-responsive">
+                    <table class="table table-hover">
+                        <tbody>
+                        <tr>
+                            <td class="text-left">
+                                <div>
+                                    <div class="checkbox">
+                                        <label><input type="checkbox" name="bdelete_all" value="2495" gid="2485" fid="2495" class="js-father js-gid-2485 js-fid-2495" >自提设置</label>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="text-left line-feed">
+                                <div style="padding-left:50px; background:url('') no-repeat -245px -545px;">
+                                    <div class="checkbox-inline">
+                                        <label><input type="checkbox" name="bdelete.base" value="2505" gid="2485" fid="2495" cid="2505" class="js-child js-gid-2485 js-fid-2495" >基本设置</label>
+                                    </div>
+                                    <div class="checkbox-inline">
+                                        <label><input type="checkbox" name="store.add" value="2505" gid="2485" fid="2495" cid="2505" class="js-child js-gid-2485 js-fid-2495" >添加核销门店</label>
+                                    </div>
+                                    <div class="checkbox-inline">
+                                        <label><input type="checkbox" name="store.edit" value="2515" gid="2485" fid="2495" cid="2515" class="js-child js-gid-2485 js-fid-2495" >修改核销门店</label>
+                                    </div>
+                                    <div class="checkbox-inline">
+                                        <label><input type="checkbox" name="store.delete" value="2505" gid="2485" fid="2495" cid="2505" class="js-child js-gid-2485 js-fid-2495" >删除核销门店</label>
+                                    </div>
+                                    <div class="checkbox-inline">
+                                        <label><input type="checkbox" name="store.list" value="2505" gid="2485" fid="2495" cid="2505" class="js-child js-gid-2485 js-fid-2495" >核销门店管理</label>
+                                    </div>
+                                    <div class="checkbox-inline">
+                                        <label><input type="checkbox" name="saler.add" value="2505" gid="2485" fid="2495" cid="2505" class="js-child js-gid-2485 js-fid-2495" >添加核销员</label>
+                                    </div>
+                                    <div class="checkbox-inline">
+                                        <label><input type="checkbox" name="saler.edit" value="2515" gid="2485" fid="2495" cid="2515" class="js-child js-gid-2485 js-fid-2495" >修改核销员</label>
+                                    </div>
+                                    <div class="checkbox-inline">
+                                        <label><input type="checkbox" name="saler.delete" value="2505" gid="2485" fid="2495" cid="2505" class="js-child js-gid-2485 js-fid-2495" >删除核销员</label>
+                                    </div>
+                                    <div class="checkbox-inline">
+                                        <label><input type="checkbox" name="saler.list" value="2505" gid="2485" fid="2495" cid="2505" class="js-child js-gid-2485 js-fid-2495" >核销员管理</label>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="panel-body table-responsive">
+                <div class="panel-body table-responsive">
+                    <table class="table table-hover">
+                        <tbody>
+                        <tr>
+                            <td class="text-left">
+                                <div>
+                                    <div class="checkbox">
+                                        <label><input type="checkbox" name="selflogistics_all" value="2496" gid="2486" fid="2496" class="js-father js-gid-2486 js-fid-2496" >送货上门</label>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="text-left line-feed">
+                                <div style="padding-left:50px; background:url('') no-repeat -245px -545px;">
+                                    <div class="checkbox-inline">
+                                        <label><input type="checkbox" name="selflogistics.base" value="2506" gid="2486" fid="2496" cid="2506" class="js-child js-gid-2486 js-fid-2496" >基本设置</label>
+                                    </div>
+                                    <div class="checkbox-inline">
+                                        <label><input type="checkbox" name="selflogistics.add" value="2506" gid="2486" fid="2496" cid="2506" class="js-child js-gid-2486 js-fid-2496" >添加送货上门</label>
+                                    </div>
+                                    <div class="checkbox-inline">
+                                        <label><input type="checkbox" name="selflogistics.edit" value="2516" gid="2486" fid="2496" cid="2516" class="js-child js-gid-2486 js-fid-2496" >修改送货上门</label>
+                                    </div>
+                                    <div class="checkbox-inline">
+                                        <label><input type="checkbox" name="selflogistics.delete" value="2506" gid="2486" fid="2496" cid="2506" class="js-child js-gid-2486 js-fid-2496" >删除送货上门</label>
+                                    </div>
+                                    <div class="checkbox-inline">
+                                        <label><input type="checkbox" name="selflogistics.list" value="2506" gid="2486" fid="2496" cid="2506" class="js-child js-gid-2486 js-fid-2496" >送货上门管理</label>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="panel-body table-responsive">
+                <div class="panel-body table-responsive">
+                    <table class="table table-hover">
+                        <tbody>
+                        <tr>
+                            <td class="text-left">
+                                <div>
+                                    <div class="checkbox">
+                                        <label><input type="checkbox" name="sendtime_all" value="2497" gid="2487" fid="2497" class="js-father js-gid-2487 js-fid-2497" >送货时间</label>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="text-left line-feed">
+                                <div style="padding-left:50px; background:url('') no-repeat -245px -545px;">
+                                    <div class="checkbox-inline">
+                                        <label><input type="checkbox" name="sendtime.base" value="2507" gid="2487" fid="2497" cid="2507" class="js-child js-gid-2487 js-fid-2497" >基本设置</label>
+                                    </div>
+                                    <div class="checkbox-inline">
+                                        <label><input type="checkbox" name="sendtime.add" value="2507" gid="2487" fid="2497" cid="2507" class="js-child js-gid-2487 js-fid-2497" >添加送货时间</label>
+                                    </div>
+                                    <div class="checkbox-inline">
+                                        <label><input type="checkbox" name="sendtime.edit" value="2517" gid="2487" fid="2497" cid="2517" class="js-child js-gid-2487 js-fid-2497" >修改送货时间</label>
+                                    </div>
+                                    <div class="checkbox-inline">
+                                        <label><input type="checkbox" name="sendtime.delete" value="2507" gid="2487" fid="2497" cid="2507" class="js-child js-gid-2487 js-fid-2497" >删除送货时间</label>
+                                    </div>
+                                    <div class="checkbox-inline">
+                                        <label><input type="checkbox" name="sendtime.list" value="2507" gid="2487" fid="2497" cid="2507" class="js-child js-gid-2487 js-fid-2497" >管理送货时间</label>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="panel-body table-responsive">
+                <div class="panel-body table-responsive">
+                    <table class="table table-hover">
+                        <tbody>
+                        <tr>
+                            <td class="text-left">
+                                <div>
+                                    <div class="checkbox">
+                                        <label><input type="checkbox" name="copyrights_all" value="2498" gid="2488" fid="2498" class="js-father js-gid-2488 js-fid-2498" >去版权</label>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="text-left line-feed">
+                                <div style="padding-left:50px; background:url('') no-repeat -245px -545px;">
+                                    <div class="checkbox-inline">
+                                        <label><input type="checkbox" name="copyrights.copyright" value="2508" gid="2488" fid="2498" cid="2508" class="js-child js-gid-2488 js-fid-2498" >去版权</label>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="panel-body table-responsive">
+                <div class="panel-body table-responsive">
+                    <table class="table table-hover">
+                        <tbody>
+                        <tr>
+                            <td class="text-left">
+                                <div>
+                                    <div class="checkbox">
+                                        <label><input type="checkbox" name="user_all" value="2499" gid="2489" fid="2499" class="js-father js-gid-2489 js-fid-2499" >商家编辑</label>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="text-left line-feed">
+                                <div style="padding-left:50px; background:url('') no-repeat -245px -545px;">
+                                    <div class="checkbox-inline">
+                                        <label><input type="checkbox" name="user.base" value="2509" gid="2489" fid="2499" cid="2509" class="js-child js-gid-2489 js-fid-2499" >多商户基本设置</label>
+                                    </div>
+                                    <div class="checkbox-inline">
+                                        <label><input type="checkbox" name="user.add" value="2509" gid="2489" fid="2499" cid="2509" class="js-child js-gid-2489 js-fid-2499" >添加商家</label>
+                                    </div>
+                                    <div class="checkbox-inline">
+                                        <label><input type="checkbox" name="user.edit" value="2519" gid="2489" fid="2497" cid="2519" class="js-child js-gid-2489 js-fid-2499" >修改商家</label>
+                                    </div>
+                                    <div class="checkbox-inline">
+                                        <label><input type="checkbox" name="user.delete" value="2509" gid="2489" fid="2499" cid="2509" class="js-child js-gid-2489 js-fid-2499" >删除商家</label>
+                                    </div>
+                                    <div class="checkbox-inline">
+                                        <label><input type="checkbox" name="user.list" value="2509" gid="2489" fid="2499" cid="2509" class="js-child js-gid-2489 js-fid-2499" >商家列表</label>
+                                    </div>
+                                    <div class="checkbox-inline">
+                                        <label><input type="checkbox" name="user.accountList" value="2509" gid="2489" fid="2499" cid="2509" class="js-child js-gid-2489 js-fid-2499" >添加操作员</label>
+                                    </div>
+                                    <div class="checkbox-inline">
+                                        <label><input type="checkbox" name="user.accountALLList" value="2509" gid="2489" fid="2499" cid="2509" class="js-child js-gid-2489 js-fid-2499" >操作员列表</label>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="panel-body table-responsive">
+                <div class="panel-body table-responsive">
+                    <table class="table table-hover">
+                        <tbody>
+                        <tr>
+                            <td class="text-left">
+                                <div>
+                                    <div class="checkbox">
+                                        <label><input type="checkbox" name="online_set_all" value="24921" gid="24861" fid="24961" class="js-father js-gid-24861 js-fid-24961" >客服设置</label>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="text-left line-feed">
+                                <div style="padding-left:50px; background:url('') no-repeat -245px -545px;">
+                                    <div class="checkbox-inline">
+                                        <label><input type="checkbox" name="online_set.basic" value="25022" gid="24861" fid="24961" cid="25061" class="js-child js-gid-24861 js-fid-24961" >基本设置</label>
+                                    </div>
+                                    <div class="checkbox-inline">
+                                        <label><input type="checkbox" name="online_set.share" value="25021" gid="24861" fid="24961" cid="25061" class="js-child js-gid-24861 js-fid-24961" >分享设置</label>
+                                    </div>
+                                    <div class="checkbox-inline">
+                                        <label><input type="checkbox" name="online_set.tplmsg" value="25021" gid="24861" fid="24961" cid="25061" class="js-child js-gid-24861 js-fid-24961" >模板消息设置</label>
+                                    </div>
+                                    <div class="checkbox-inline">
+                                        <label><input type="checkbox" name="online_set.quick" value="25021" gid="24861" fid="24961" cid="25061" class="js-child js-gid-24861 js-fid-24961" >快捷消息设置</label>
+                                    </div>
+                                    <div class="checkbox-inline">
+                                        <label><input type="checkbox" name="online_set.allshare" value="25021" gid="24861" fid="24961" cid="25061" class="js-child js-gid-24861 js-fid-24961" >共享设置</label>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="panel-body table-responsive">
+                <div class="panel-body table-responsive">
+                    <table class="table table-hover">
+                        <tbody>
+                        <tr>
+                            <td class="text-left">
+                                <div>
+                                    <div class="checkbox">
+                                        <label><input type="checkbox" name="online_tpl_all" value="24921" gid="24862" fid="24962" class="js-father js-gid-24862 js-fid-24962" >客服消息模板管理</label>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="text-left line-feed">
+                                <div style="padding-left:50px; background:url('') no-repeat -245px -545px;">
+                                    <div class="checkbox-inline">
+                                        <label><input type="checkbox" name="online_tpl.basic" value="25022" gid="24862" fid="24962" cid="25062" class="js-child js-gid-24862 js-fid-24962" >模板列表</label>
+                                    </div>
+                                    <div class="checkbox-inline">
+                                        <label><input type="checkbox" name="online_tpl.send" value="25021" gid="24862" fid="24962" cid="25062" class="js-child js-gid-24862 js-fid-24962" >发送消息</label>
+                                    </div>
+                                    <div class="checkbox-inline">
+                                        <label><input type="checkbox" name="online_tpl.sent" value="25021" gid="24862" fid="24962" cid="25062" class="js-child js-gid-24862 js-fid-24962" >发送记录</label>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="panel-body table-responsive">
+                <div class="panel-body table-responsive">
+                    <table class="table table-hover">
+                        <tbody>
+                        <tr>
+                            <td class="text-left">
+                                <div>
+                                    <div class="checkbox">
+                                        <label><input type="checkbox" name="online_dis_all" value="24921" gid="24863" fid="24963" class="js-father js-gid-24863 js-fid-24963" >客服组管理</label>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="text-left line-feed">
+                                <div style="padding-left:50px; background:url('') no-repeat -245px -545px;">
+                                    <div class="checkbox-inline">
+                                        <label><input type="checkbox" name="online_dis.list" value="25022" gid="24863" fid="24963" cid="25063" class="js-child js-gid-24863 js-fid-24963" >客服组列表</label>
+                                    </div>
+                                    <div class="checkbox-inline">
+                                        <label><input type="checkbox" name="online_dis.add" value="25021" gid="24863" fid="24963" cid="25063" class="js-child js-gid-24863 js-fid-24963" >添加客服组</label>
+                                    </div>
+                                    <div class="checkbox-inline">
+                                        <label><input type="checkbox" name="online_dis.edit" value="25021" gid="24863" fid="24963" cid="25063" class="js-child js-gid-24863 js-fid-24963" >编辑客服组</label>
+                                    </div>
+                                    <div class="checkbox-inline">
+                                        <label><input type="checkbox" name="online_dis.delete" value="25021" gid="24863" fid="24963" cid="25063" class="js-child js-gid-24863 js-fid-24963" >删除客服组</label>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="panel-body table-responsive">
+                <div class="panel-body table-responsive">
+                    <table class="table table-hover">
+                        <tbody>
+                        <tr>
+                            <td class="text-left">
+                                <div>
+                                    <div class="checkbox">
+                                        <label><input type="checkbox" name="online_kf_all" value="24921" gid="24864" fid="24964" class="js-father js-gid-24864 js-fid-24964" >客服管理</label>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="text-left line-feed">
+                                <div style="padding-left:50px; background:url('') no-repeat -245px -545px;">
+                                    <div class="checkbox-inline">
+                                        <label><input type="checkbox" name="online_kf.list" value="25022" gid="24864" fid="24964" cid="25064" class="js-child js-gid-24864 js-fid-24964" >客服中心</label>
+                                    </div>
+                                    <div class="checkbox-inline">
+                                        <label><input type="checkbox" name="online_kf.embed" value="25022" gid="24864" fid="24964" cid="25064" class="js-child js-gid-24864 js-fid-24964" >嵌入代码</label>
+                                    </div>
+                                    <div class="checkbox-inline">
+                                        <label><input type="checkbox" name="online_kf.add" value="25021" gid="24864" fid="24964" cid="25064" class="js-child js-gid-24864 js-fid-24964" >添加客服</label>
+                                    </div>
+                                    <div class="checkbox-inline">
+                                        <label><input type="checkbox" name="online_kf.edit" value="25021" gid="24864" fid="24964" cid="25064" class="js-child js-gid-24864 js-fid-24964" >编辑客服</label>
+                                    </div>
+                                    <div class="checkbox-inline">
+                                        <label><input type="checkbox" name="online_kf.delete" value="25021" gid="24864" fid="24964" cid="25064" class="js-child js-gid-24864 js-fid-24964" >删除客服</label>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="panel-body table-responsive">
+                <div class="panel-body table-responsive">
+                    <table class="table table-hover">
+                        <tbody>
+                        <tr>
+                            <td class="text-left">
+                                <div>
+                                    <div class="checkbox">
+                                        <label><input type="checkbox" name="online_chat_all" value="24921" gid="24865" fid="24965" class="js-father js-gid-24865 js-fid-24965" >聊天记录</label>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="text-left line-feed">
+                                <div style="padding-left:50px; background:url('') no-repeat -245px -545px;">
+                                    <div class="checkbox-inline">
+                                        <label><input type="checkbox" name="online_chat.list" value="25022" gid="24865" fid="24965" cid="25065" class="js-child js-gid-24865 js-fid-24965" >聊天记录列表</label>
+                                    </div>
+                                    <div class="checkbox-inline">
+                                        <label><input type="checkbox" name="online_chat.delete" value="25021" gid="24865" fid="24965" cid="25065" class="js-child js-gid-24865 js-fid-24965" >删除记录</label>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="panel-body table-responsive">
+                <div class="panel-body table-responsive">
+                    <table class="table table-hover">
+                        <tbody>
+                        <tr>
+                            <td class="text-left">
+                                <div>
+                                    <div class="checkbox">
+                                        <label><input type="checkbox" name="category_all" value="24911" gid="24811" fid="24911" class="js-father js-gid-24811 js-fid-24911">商品分类</label>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="text-left line-feed">
+                                <div style="padding-left:50px; background:url('') no-repeat -245px -545px;">
+                                    <div class="checkbox-inline">
+                                        <label><input type="checkbox" name="category.add" value="25011" gid="24811" fid="24911" cid="25011" class="js-child js-gid-24811 js-fid-24911">添加商品分类</label>
+                                    </div>
+                                    <div class="checkbox-inline">
+                                        <label><input type="checkbox" name="category.edit" value="25111" gid="24811" fid="24911" cid="25011" class="js-child js-gid-24811 js-fid-24911">修改商品分类</label>
+                                    </div>
+                                    <div class="checkbox-inline">
+                                        <label><input type="checkbox" name="category.delete" value="25011" gid="24811" fid="24911" cid="25011" class="js-child js-gid-24811 js-fid-24911">删除商品分类</label>
+                                    </div>
+                                    <div class="checkbox-inline">
+                                        <label><input type="checkbox" name="category.list" value="25011" gid="24811" fid="24911" cid="25011" class="js-child js-gid-24811 js-fid-24911">商品分类列表</label>
+                                    </div>
+                                    <div class="checkbox-inline">
+                                        <label><input type="checkbox" name="category.state" value="25011" gid="24811" fid="24911" cid="25011" class="js-child js-gid-24811 js-fid-24911">状态开关</label>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="panel-body table-responsive">
+                <div class="panel-body table-responsive">
+                    <table class="table table-hover">
+                        <tbody>
+                        <tr>
+                            <td class="text-left">
+                                <div>
+                                    <div class="checkbox">
+                                        <label><input type="checkbox" name="item_all" value="24912" gid="24812" fid="24912" class="js-father js-gid-24812 js-fid-24912" >商品列表</label>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="text-left line-feed">
+                                <div style="padding-left:50px; background:url('') no-repeat -245px -545px;">
+                                    <div class="checkbox-inline">
+                                        <label><input type="checkbox" name="item.add" value="25012" gid="24812" fid="24912" cid="25012" class="js-child js-gid-24812 js-fid-24912" >发布商品</label>
+                                    </div>
+                                    <div class="checkbox-inline">
+                                        <label><input type="checkbox" name="item.edit" value="25112" gid="24812" fid="24912" cid="25012" class="js-child js-gid-24812 js-fid-24912" >修改商品</label>
+                                    </div>
+                                    <div class="checkbox-inline">
+                                        <label><input type="checkbox" name="item.delete" value="25012" gid="24812" fid="24912" cid="25012" class="js-child js-gid-24812 js-fid-24912" >删除商品</label>
+                                    </div>
+                                    <div class="checkbox-inline">
+                                        <label><input type="checkbox" name="item.deleted" value="25012" gid="24812" fid="24912" cid="25012" class="js-child js-gid-24812 js-fid-24912" >彻底删除商品</label>
+                                    </div>
+                                    <div class="checkbox-inline">
+                                        <label><input type="checkbox" name="item.list" value="25012" gid="24812" fid="24912" cid="25012" class="js-child js-gid-24812 js-fid-24912" >商品列表</label>
+                                    </div>
+                                    <div class="checkbox-inline">
+                                        <label><input type="checkbox" name="item.sold" value="25012" gid="24812" fid="24912" cid="25012" class="js-child js-gid-24812 js-fid-24912" >售罄</label>
+                                    </div>
+                                    <div class="checkbox-inline">
+                                        <label><input type="checkbox" name="item.shelveon" value="25012" gid="24812" fid="24912" cid="25012" class="js-child js-gid-24812 js-fid-24912" >上架</label>
+                                    </div>
+                                    <div class="checkbox-inline">
+                                        <label><input type="checkbox" name="item.shelvedown" value="25012" gid="24812" fid="24912" cid="25012" class="js-child js-gid-24812 js-fid-24912" >下架</label>
+                                    </div>
+                                    <div class="checkbox-inline">
+                                        <label><input type="checkbox" name="item.shelving" value="25012" gid="24812" fid="24912" cid="25012" class="js-child js-gid-24812 js-fid-24912" >上架通知</label>
+                                    </div>
+                                    <div class="checkbox-inline">
+                                        <label><input type="checkbox" name="item.reduction" value="25012" gid="24812" fid="24912" cid="25012" class="js-child js-gid-24812 js-fid-24912" >降价通知</label>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="panel-body table-responsive">
+                <div class="panel-body table-responsive">
+                    <table class="table table-hover">
+                        <tbody>
+                        <tr>
+                            <td class="text-left">
+                                <div>
+                                    <div class="checkbox">
+                                        <label><input type="checkbox" name="received_all" value="24913" gid="24813" fid="24913" class="js-father js-gid-24813 js-fid-24913" >订单管理</label>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="text-left line-feed">
+                                <div style="padding-left:50px; background:url('') no-repeat -245px -545px;">
+                                    <div class="checkbox-inline">
+                                        <label><input type="checkbox" name="received.detail" value="25013" gid="24813" fid="24913" cid="25013" class="js-child js-gid-24813 js-fid-24913" >查看详情</label>
+                                    </div>
+                                    <div class="checkbox-inline">
+                                        <label><input type="checkbox" name="received.dayin" value="25013" gid="24813" fid="24913" cid="25013" class="js-child js-gid-24813 js-fid-24913" >小票打印</label>
+                                    </div>
+                                    <div class="checkbox-inline">
+                                        <label><input type="checkbox" name="received.remarks" value="25013" gid="24813" fid="24913" cid="25013" class="js-child js-gid-24813 js-fid-24913" >备注</label>
+                                    </div>
+                                    <div class="checkbox-inline">
+                                        <label><input type="checkbox" name="received.group_detail" value="25013" gid="24813" fid="24913" cid="25013" class="js-child js-gid-24813 js-fid-24913" >订单类型</label>
+                                    </div>
+                                    <div class="checkbox-inline">
+                                        <label><input type="checkbox" name="received.writeoff" value="25013" gid="24813" fid="24913" cid="25013" class="js-child js-gid-24813 js-fid-24913" >核销二维码</label>
+                                    </div>
+                                    <div class="checkbox-inline">
+                                        <label><input type="checkbox" name="received.output" value="25013" gid="24813" fid="24913" cid="25013" class="js-child js-gid-24813 js-fid-24913" >导出订单</label>
+                                    </div>
+                                    <div class="checkbox-inline">
+                                        <label><input type="checkbox" name="received.input" value="25013" gid="24813" fid="24913" cid="25013" class="js-child js-gid-24813 js-fid-24913" >导入订单</label>
+                                    </div>
+                                    <div class="checkbox-inline">
+                                        <label><input type="checkbox" name="received.updaterefund" value="25013" gid="24813" fid="24913" cid="25013" class="js-child js-gid-24813 js-fid-24913" >强制转换待退款</label>
+                                    </div>
+                                    <div class="checkbox-inline">
+                                        <label><input type="checkbox" name="received.evaluation" value="25013" gid="24813" fid="24913" cid="25013" class="js-child js-gid-24813 js-fid-24913" >评价管理</label>
+                                    </div>
+                                    <div class="checkbox-inline">
+                                        <label><input type="checkbox" name="received.after_sale" value="25013" gid="24813" fid="24913" cid="25013" class="js-child js-gid-24813 js-fid-24913" >售后详情</label>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="panel-body table-responsive">
+                <div class="panel-body table-responsive">
+                    <table class="table table-hover">
+                        <tbody>
+                        <tr>
+                            <td class="text-left">
+                                <div>
+                                    <div class="checkbox">
+                                        <label><input type="checkbox" name="group_all" value="24914" gid="24814" fid="24914" class="js-father js-gid-24814 js-fid-24914" >团购管理</label>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="text-left line-feed">
+                                <div style="padding-left:50px; background:url('') no-repeat -245px -545px;">
+                                    <div class="checkbox-inline">
+                                        <label><input type="checkbox" name="group.group_detail" value="25014" gid="24814" fid="24914" cid="25014" class="js-child js-gid-24814 js-fid-24914" >查看详情</label>
+                                    </div>
+                                    <div class="checkbox-inline">
+                                        <label><input type="checkbox" name="group.print" value="25014" gid="24814" fid="24914" cid="25014" class="js-child js-gid-24814 js-fid-24914" >小票打印</label>
+                                    </div>
+                                    <div class="checkbox-inline">
+                                        <label><input type="checkbox" name="group.remarks" value="25014" gid="24814" fid="24914" cid="25014" class="js-child js-gid-24814 js-fid-24914" >导出组团记录</label>
+                                    </div>
+                                    <div class="checkbox-inline">
+                                        <label><input type="checkbox" name="group.detail" value="25014" gid="24814" fid="24914" cid="25014" class="js-child js-gid-24814 js-fid-24914" >查看订单</label>
+                                    </div>
+                                    <div class="checkbox-inline">
+                                        <label><input type="checkbox" name="group.ship" value="25014" gid="24814" fid="24914" cid="25014" class="js-child js-gid-24814 js-fid-24914" >确认发货</label>
+                                    </div>
+                                    <div class="checkbox-inline">
+                                        <label><input type="checkbox" name="group.refunds" value="25014" gid="24814" fid="24914" cid="25014" class="js-child js-gid-24814 js-fid-24914" >退款</label>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="panel-body table-responsive">
+                <div class="panel-body table-responsive">
+                    <table class="table table-hover">
+                        <tbody>
+                        <tr>
+                            <td class="text-left">
+                                <div>
+                                    <div class="checkbox">
+                                        <label><input type="checkbox" name="judgment_admin_all" value="24910" gid="24810" fid="24910" class="js-father js-gid-24810 js-fid-24910" >评价管理</label>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="text-left line-feed">
+                                <div style="padding-left:50px; background:url('') no-repeat -245px -545px;">
+                                    <div class="checkbox-inline">
+                                        <label><input type="checkbox" name="judgment_admin.reply" value="25014" gid="24810" fid="24910" cid="25010" class="js-child js-gid-24810 js-fid-24910" >回复</label>
+                                    </div>
+                                    <div class="checkbox-inline">
+                                        <label><input type="checkbox" name="judgment_admin.delete" value="25014" gid="24810" fid="24910" cid="25010" class="js-child js-gid-24810 js-fid-24910" >删除</label>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="panel-body table-responsive">
+                <div class="panel-body table-responsive">
+                    <table class="table table-hover">
+                        <tbody>
+                        <tr>
+                            <td class="text-left">
+                                <div>
+                                    <div class="checkbox">
+                                        <label><input type="checkbox" name="import_all" value="24915" gid="24815" fid="24915" class="js-father js-gid-24815 js-fid-24915" >发货管理</label>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="text-left line-feed">
+                                <div style="padding-left:50px; background:url('') no-repeat -245px -545px;">
+                                    <div class="checkbox-inline">
+                                        <label><input type="checkbox" name="import.update" value="25015" gid="24815" fid="24915" cid="25015" class="js-child js-gid-24815 js-fid-24915" >修改价格</label>
+                                    </div>
+                                    <div class="checkbox-inline">
+                                        <label><input type="checkbox" name="import.detail" value="25015" gid="24815" fid="24915" cid="25015" class="js-child js-gid-24815 js-fid-24915" >查看详情</label>
+                                    </div>
+                                    <div class="checkbox-inline">
+                                        <label><input type="checkbox" name="import.dayin" value="25015" gid="24815" fid="24915" cid="25015" class="js-child js-gid-24815 js-fid-24915" >小票打印</label>
+                                    </div>
+                                    <div class="checkbox-inline">
+                                        <label><input type="checkbox" name="import.remarks" value="25015" gid="24815" fid="24915" cid="25015" class="js-child js-gid-24815 js-fid-24915" >备注</label>
+                                    </div>
+                                    <div class="checkbox-inline">
+                                        <label><input type="checkbox" name="import.group_detail" value="25015" gid="24815" fid="24915" cid="25015" class="js-child js-gid-24815 js-fid-24915" >订单类型</label>
+                                    </div>
+                                    <div class="checkbox-inline">
+                                        <label><input type="checkbox" name="import.output" value="25015" gid="24815" fid="24915" cid="25015" class="js-child js-gid-24815 js-fid-24915" >导出订单</label>
+                                    </div>
+                                    <div class="checkbox-inline">
+                                        <label><input type="checkbox" name="import.input" value="25015" gid="24815" fid="24915" cid="25015" class="js-child js-gid-24815 js-fid-24915" >导入订单</label>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="panel-body table-responsive">
+                <div class="panel-body table-responsive">
+                    <table class="table table-hover">
+                        <tbody>
+                        <tr>
+                            <td class="text-left">
+                                <div>
+                                    <div class="checkbox">
+                                        <label><input type="checkbox" name="tchorder" value="211" gid="24866" fid="24966" class="js-father js-gid-24866 js-fid-24966" >电子面单</label>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="text-left line-feed">
+                                <div style="padding-left:50px; background:url('') no-repeat -245px -545px;">
+                                    <div class="checkbox-inline">
+                                        <label><input type="checkbox" name="tchorder" value="211" gid="24866" fid="24966" cid="25066" class="js-child js-gid-24866 js-fid-24966" >电子面单</label>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="panel-body table-responsive">
+                <div class="panel-body table-responsive">
+                    <table class="table table-hover">
+                        <tbody>
+                        <tr>
+                            <td class="text-left">
+                                <div>
+                                    <div class="checkbox">
+                                        <label><input type="checkbox" name="refund_all" value="24916" gid="24816" fid="24916" class="js-father js-gid-24816 js-fid-24916" >批量退款</label>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="text-left line-feed">
+                                <div style="padding-left:50px; background:url('') no-repeat -245px -545px;">
+                                    <div class="checkbox-inline">
+                                        <label><input type="checkbox" name="refund.mass" value="25016" gid="24816" fid="24916" cid="25016" class="js-child js-gid-24816 js-fid-24916" >退款所有订单</label>
+                                    </div>
+                                    <div class="checkbox-inline">
+                                        <label><input type="checkbox" name="refund.log" value="25016" gid="24816" fid="24916" cid="25016" class="js-child js-gid-24816 js-fid-24916" >退款日志</label>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="panel-body table-responsive">
+                <div class="panel-body table-responsive">
+                    <table class="table table-hover">
+                        <tbody>
+                        <tr>
+                            <td class="text-left">
+                                <div>
+                                    <div class="checkbox">
+                                        <label><input type="checkbox" name="fangroup_all" value="24921" gid="24821" fid="24921" class="js-father js-gid-24821 js-fid-24921" >粉丝分组</label>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="text-left line-feed">
+                                <div style="padding-left:50px; background:url('') no-repeat -245px -545px;">
+                                    <div class="checkbox-inline">
+                                        <label><input type="checkbox" name="fangroup.add" value="25021" gid="24821" fid="24921" cid="25021" class="js-child js-gid-24821 js-fid-24921" >添加分组</label>
+                                    </div>
+                                    <div class="checkbox-inline">
+                                        <label><input type="checkbox" name="fangroup.edit" value="25021" gid="24821" fid="24921" cid="25021" class="js-child js-gid-24821 js-fid-24921" >修改分组</label>
+                                    </div>
+                                    <div class="checkbox-inline">
+                                        <label><input type="checkbox" name="fangroup.delete" value="25021" gid="24821" fid="24921" cid="25021" class="js-child js-gid-24821 js-fid-24921" >删除分组</label>
+                                    </div>
+                                    <div class="checkbox-inline">
+                                        <label><input type="checkbox" name="fangroup.list" value="25021" gid="24821" fid="24921" cid="25021" class="js-child js-gid-24821 js-fid-24921" >粉丝分组列表</label>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="panel-body table-responsive">
+                <div class="panel-body table-responsive">
+                    <table class="table table-hover">
+                        <tbody>
+                        <tr>
+                            <td class="text-left">
+                                <div>
+                                    <div class="checkbox">
+                                        <label><input type="checkbox" name="fans_all" value="24922" gid="24822" fid="24922" class="js-father js-gid-24822 js-fid-24922" >粉丝</label>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="text-left line-feed">
+                                <div style="padding-left:50px; background:url('') no-repeat -245px -545px;">
+                                    <div class="checkbox-inline">
+                                        <label><input type="checkbox" name="fans.group" value="25021" gid="24822" fid="24922" cid="25022" class="js-child js-gid-24822 js-fid-24922" >粉丝分组</label>
+                                    </div>
+                                    <div class="checkbox-inline">
+                                        <label><input type="checkbox" name="fans.update" value="25021" gid="24822" fid="24922" cid="25022" class="js-child js-gid-24822 js-fid-24922" >同步粉丝信息</label>
+                                    </div>
+                                    <div class="checkbox-inline">
+                                        <label><input type="checkbox" name="fans.delete" value="25021" gid="24822" fid="24922" cid="25022" class="js-child js-gid-24822 js-fid-24922" >删除粉丝</label>
+                                    </div>
+                                    <div class="checkbox-inline">
+                                        <label><input type="checkbox" name="fans.list" value="25021" gid="24822" fid="24922" cid="25022" class="js-child js-gid-24822 js-fid-24922" >粉丝详情</label>
+                                    </div>
+                                    <div class="checkbox-inline">
+                                        <label><input type="checkbox" name="fans.lists" value="25021" gid="24822" fid="24922" cid="25022" class="js-child js-gid-24822 js-fid-24922" >下载所有粉丝</label>
+                                    </div>
+                                    <div class="checkbox-inline">
+                                        <label><input type="checkbox" name="fans.client" value="25021" gid="24822" fid="24922" cid="25022" class="js-child js-gid-24822 js-fid-24922" >客户群发</label>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="panel-body table-responsive">
+                <div class="panel-body table-responsive">
+                    <table class="table table-hover">
+                        <tbody>
+                        <tr>
+                            <td class="text-left">
+                                <div>
+                                    <div class="checkbox">
+                                        <label><input type="checkbox" name="member_all" value="24923" gid="24823" fid="24923" class="js-father js-gid-24823 js-fid-24923" >会员管理</label>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="text-left line-feed">
+                                <div style="padding-left:50px; background:url('') no-repeat -245px -545px;">
+                                    <div class="checkbox-inline">
+                                        <label><input type="checkbox" name="member.edit" value="25023" gid="24823" fid="24923" cid="25023" class="js-child js-gid-24823 js-fid-24923" >更改上级</label>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="panel-body table-responsive">
+                <div class="panel-body table-responsive">
+                    <table class="table table-hover">
+                        <tbody>
+                        <tr>
+                            <td class="text-left">
+                                <div>
+                                    <div class="checkbox">
+                                        <label><input type="checkbox" name="partjob_all" value="24924" gid="24824" fid="24924" class="js-father js-gid-24824 js-fid-24924" >兼职管理</label>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="text-left line-feed">
+                                <div style="padding-left:50px; background:url('') no-repeat -245px -545px;">
+                                    <div class="checkbox-inline">
+                                        <label><input type="checkbox" name="partjob.upd" value="25021" gid="24824" fid="24924" cid="25024" class="js-child js-gid-24824 js-fid-24924" >店铺设置</label>
+                                    </div>
+                                    <div class="checkbox-inline">
+                                        <label><input type="checkbox" name="partjob.member_detail" value="25021" gid="24824" fid="24924" cid="25024" class="js-child js-gid-24824 js-fid-24924" >我的下级</label>
+                                    </div>
+                                    <div class="checkbox-inline">
+                                        <label><input type="checkbox" name="partjob.group_detail" value="25021" gid="24824" fid="24924" cid="25024" class="js-child js-gid-24824 js-fid-24924" >佣金明细</label>
+                                    </div>
+                                    <div class="checkbox-inline">
+                                        <label><input type="checkbox" name="partjob.unchecked" value="25021" gid="24824" fid="24924" cid="25024" class="js-child js-gid-24824 js-fid-24924" >取消兼职</label>
+                                    </div>
+                                    <div class="checkbox-inline">
+                                        <label><input type="checkbox" name="partjob.checked" value="25021" gid="24824" fid="24924" cid="25024" class="js-child js-gid-24824 js-fid-24924" >审核通过</label>
+                                    </div>
+                                    <div class="checkbox-inline">
+                                        <label><input type="checkbox" name="partjob.cash" value="25021" gid="24824" fid="24924" cid="25024" class="js-child js-gid-24824 js-fid-24924" >提现管理</label>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="panel-body table-responsive">
+                <div class="panel-body table-responsive">
+                    <table class="table table-hover">
+                        <tbody>
+                        <tr>
+                            <td class="text-left">
+                                <div>
+                                    <div class="checkbox">
+                                        <label><input type="checkbox" name="leader_all" value="24927" gid="24827" fid="24927" class="js-father js-gid-24827 js-fid-24927" >分组管理</label>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="text-left line-feed">
+                                <div style="padding-left:50px; background:url('') no-repeat -245px -545px;">
+                                    <div class="checkbox-inline">
+                                        <label><input type="checkbox" name="leader.add" value="25021" gid="24827" fid="24927" cid="25027" class="js-child js-gid-24827 js-fid-24927" >添加分组</label>
+                                    </div>
+                                    <div class="checkbox-inline">
+                                        <label><input type="checkbox" name="leader.leader" value="25021" gid="24827" fid="24927" cid="25027" class="js-child js-gid-24827 js-fid-24927" >组长删除</label>
+                                    </div>
+                                    <div class="checkbox-inline">
+                                        <label><input type="checkbox" name="leader.delete" value="25021" gid="24827" fid="24927" cid="25027" class="js-child js-gid-24827 js-fid-24927" >组员删除</label>
+                                    </div>
+                                    <div class="checkbox-inline">
+                                        <label><input type="checkbox" name="leader.check" value="25021" gid="24827" fid="24927" cid="25027" class="js-child js-gid-24827 js-fid-24927" >审核提成</label>
+                                    </div>
+                                    <div class="checkbox-inline">
+                                        <label><input type="checkbox" name="leader.play" value="25021" gid="24827" fid="24927" cid="25027" class="js-child js-gid-24827 js-fid-24927" >打款</label>
+                                    </div>
+                                    <div class="checkbox-inline">
+                                        <label><input type="checkbox" name="leader.list" value="25021" gid="24827" fid="24927" cid="25027" class="js-child js-gid-24827 js-fid-24927" >提成详情</label>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="panel-body table-responsive">
+                <div class="panel-body table-responsive">
+                    <table class="table table-hover">
+                        <tbody>
+                        <tr>
+                            <td class="text-left">
+                                <div>
+                                    <div class="checkbox">
+                                        <label><input type="checkbox" name="activity_all" value="24925" gid="24825" fid="24925" class="js-father js-gid-24825 js-fid-24925" >优惠券</label>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="text-left line-feed">
+                                <div style="padding-left:50px; background:url('') no-repeat -245px -545px;">
+                                    <div class="checkbox-inline">
+                                        <label><input type="checkbox" name="activity.edit" value="25021" gid="24825" fid="24925" cid="25025" class="js-child js-gid-24825 js-fid-24925" >编辑</label>
+                                    </div>
+                                    <div class="checkbox-inline">
+                                        <label><input type="checkbox" name="activity.fail" value="25021" gid="24825" fid="24925" cid="25025" class="js-child js-gid-24825 js-fid-24925" >使失效</label>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="panel-body table-responsive">
+                <div class="panel-body table-responsive">
+                    <table class="table table-hover">
+                        <tbody>
+                        <tr>
+                            <td class="text-left">
+                                <div>
+                                    <div class="checkbox">
+                                        <label><input type="checkbox" name="smsbuy_all" value="24926" gid="24826" fid="24926" class="js-father js-gid-24826 js-fid-24926" >短信管理</label>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="text-left line-feed">
+                                <div style="padding-left:50px; background:url('') no-repeat -245px -545px;">
+                                    <div class="checkbox-inline">
+                                        <label><input type="checkbox" name="smsbuy.ajax" value="25015" gid="24826" fid="24926" cid="25026" class="js-child js-gid-24826 js-fid-24926" >参数设置</label>
+                                    </div>
+                                    <div class="checkbox-inline">
+                                        <label><input type="checkbox" name="smsbuy.buy" value="25015" gid="24826" fid="24926" cid="25026" class="js-child js-gid-24826 js-fid-24926" >购买记录</label>
+                                    </div>
+                                    <div class="checkbox-inline">
+                                        <label><input type="checkbox" name="smsbuy.use" value="25015" gid="24826" fid="24926" cid="25026" class="js-child js-gid-24826 js-fid-24926" >使用记录</label>
+                                    </div>
+                                    <div class="checkbox-inline">
+                                        <label><input type="checkbox" name="smsbuy.ready" value="25015" gid="24826" fid="24926" cid="25026" class="js-child js-gid-24826 js-fid-24926" >待发送记录</label>
+                                    </div>
+                                    <div class="checkbox-inline">
+                                        <label><input type="checkbox" name="smsbuy.send" value="25015" gid="24826" fid="24926" cid="25026" class="js-child js-gid-24826 js-fid-24926" >短信关怀</label>
+                                    </div>
+                                    <div class="checkbox-inline">
+                                        <label><input type="checkbox" name="smsbuy.output" value="25015" gid="24826" fid="24926" cid="25026" class="js-child js-gid-24826 js-fid-24926" >导出Excel模板</label>
+                                    </div>
+                                    <div class="checkbox-inline">
+                                        <label><input type="checkbox" name="smsbuy.input" value="25015" gid="24826" fid="24926" cid="25026" class="js-child js-gid-24826 js-fid-24926" >导入手机号</label>
+                                    </div>
+                                    <div class="checkbox-inline">
+                                        <label><input type="checkbox" name="smsbuy.delete" value="25015" gid="24826" fid="24926" cid="25026" class="js-child js-gid-24826 js-fid-24926" >删除所有待发送短信</label>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="panel-body table-responsive">
+                <div class="panel-body table-responsive">
+                    <table class="table table-hover">
+                        <tbody>
+                        <tr>
+                            <td class="text-left">
+                                <div>
+                                    <div class="checkbox">
+                                        <label><input type="checkbox" name="data_all" value="2490130" gid="24831" fid="24931" class="js-father js-gid-24831 js-fid-24931" >大数据</label>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="text-left line-feed">
+                                <div style="padding-left:50px; background:url('') no-repeat -245px -545px;">
+                                    <div class="checkbox-inline">
+                                        <label><input type="checkbox" name="data.sjgk_data" value="2500101" gid="24801" fid="24931" cid="2500131" class="js-child js-gid-24831 js-fid-24931" >数据概况</label>
+                                    </div>
+                                    <div class="checkbox-inline">
+                                        <label><input type="checkbox" name="data.scgk_data" value="2500102" gid="24801" fid="24931" cid="2500132" class="js-child js-gid-24831 js-fid-24931" >商城访问趋势</label>
+                                    </div>
+                                    <div class="checkbox-inline">
+                                        <label><input type="checkbox" name="data.sczhl_count_data" value="2500103" gid="24801" fid="24931" cid="2500133" class="js-child js-gid-24831 js-fid-24931" >商城转化率统计</label>
+                                    </div>
+                                    <div class="checkbox-inline">
+                                        <label><input type="checkbox" name="data.order_count_data" value="2500104" gid="24801" fid="24931" cid="2500134" class="js-child js-gid-24831 js-fid-24931" >商城指标趋势</label>
+                                    </div>
+                                    <div class="checkbox-inline">
+                                        <label><input type="checkbox" name="data.order_area_data" value="2500105" gid="24801" fid="24931" cid="2500135" class="js-child js-gid-24831 js-fid-24931" >用户区域分布</label>
+                                    </div>
+                                    <div class="checkbox-inline">
+                                        <label><input type="checkbox" name="data.buy_model_data" value="2500106" gid="24801" fid="24931" cid="2500136" class="js-child js-gid-24831 js-fid-24931" >购买模式实时对比图</label>
+                                    </div>
+                                    <div class="checkbox-inline">
+                                        <label><input type="checkbox" name="data.group_num_data" value="2500107" gid="24801" fid="24931" cid="2500137" class="js-child js-gid-24831 js-fid-24931" >成团人数实时对比图</label>
+                                    </div>
+                                    <div class="checkbox-inline">
+                                        <label><input type="checkbox" name="data.store_check_data" value="2500108" gid="24801" fid="24931" cid="2500138" class="js-child js-gid-24831 js-fid-24931" >门店核销实时对比图</label>
+                                    </div>
+                                    <div class="checkbox-inline">
+                                        <label><input type="checkbox" name="data.dispatch_data" value="2500109" gid="24801" fid="24931" cid="2500139" class="js-child js-gid-24831 js-fid-24931" >配送方式实时对比图</label>
+                                    </div>
+                                    <div class="checkbox-inline">
+                                        <label><input type="checkbox" name="data.store_real_data" value="2500110" gid="24801" fid="24931" cid="2500130" class="js-child js-gid-24831 js-fid-24931" >下单门店准确率</label>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="panel-body table-responsive">
+                <div class="panel-body table-responsive">
+                    <table class="table table-hover">
+                        <tbody>
+                        <tr>
+                            <td class="text-left">
+                                <div>
+                                    <div class="checkbox">
+                                        <label><input type="checkbox" name="workform_all" value="2490130" gid="24841" fid="24941" class="js-father js-gid-24841 js-fid-24941" >服务</label>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="text-left line-feed">
+                                <div style="padding-left:50px; background:url('') no-repeat -245px -545px;">
+                                    <div class="checkbox-inline">
+                                        <label><input type="checkbox" name="workform.add" value="2500101" gid="24841" fid="24941" cid="25041" class="js-child js-gid-24841 js-fid-24941" >工单提交</label>
+                                    </div>
+                                    <div class="checkbox-inline">
+                                        <label><input type="checkbox" name="workform.list" value="2500102" gid="24841" fid="24941" cid="25042" class="js-child js-gid-24841 js-fid-24941" >工单列表</label>
+                                    </div>
+                                    <div class="checkbox-inline">
+                                        <label><input type="checkbox" name="workform.schedule" value="2500103" gid="24841" fid="24941" cid="25043" class="js-child js-gid-24841 js-fid-24941" >开发进度</label>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+        <div class="col-md-offset-1 col-md-10">
+            <!--<input type="hidden" name="id" value="{$id}">-->
+            <input onclick="submitTJ()"  value="保存" class="btn btn-primary min-width">
+            <!--<input type="hidden" name="token" value="{$_W['token']}" />-->
+        </div>
+    </form>
+</div>
+
+<script type="text/javascript">
+    $('.js-check-all').click(function() {
+        var checked = this.checked;
+
+        $(this).parent().parent().parent().parent().find('input:checkbox').each(function() {
+            this.checked = checked;
+        });
+    });
+    $('.js-grandfather').click(function() {
+        var checked = this.checked;
+        var gid = $(this).attr('gid');
+        $('.js-gid-'+gid).each(function(){
+            this.checked = checked;
+        });
+    });
+
+    $('.js-father').click(function() {
+        var checked = this.checked;
+        var gid = $(this).attr('gid');
+        var fid = $(this).attr('fid');
+
+        $('.js-child.js-fid-'+fid).each(function(){
+            this.checked = checked;
+        });
+
+        checked = $('.js-father.js-fid-'+fid+':checked, .js-child.js-gid-'+gid+':checked').length > 0;
+        $('.js-grandfather.js-gid-'+gid).each(function(){
+            this.checked = checked;
+        });
+    });
+
+    $('.js-child').click(function() {
+        var fid = $(this).attr('fid');
+        var gid = $(this).attr('gid');
+
+        var fatherchecked = $('.js-child.js-fid-'+fid+':checked').length > 0;
+        $('.js-father.js-fid-'+fid).each(function(){
+            this.checked = fatherchecked;
+        });
+
+        var grandfatherchecked = $('.js-father.js-gid-'+gid+':checked, .js-child.js-gid-'+gid+':checked').length > 0;
+        $('.js-grandfather.js-gid-'+gid).each(function(){
+            this.checked = grandfatherchecked;
+        });
+    });
+    function getQueryString(name) {
+        var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
+        var r = window.location.search.substr(1).match(reg);
+        if (r != null) return decodeURI(r[2]); return null;
+    }
+    function submitTJ(){
+        if($('.name').val()==''){
+            util.message('用户名不能为空！');
+            $('.name').focus();
+            return false;
+        }
+
+        var uid = '{$_GPC['uid']}';
+
+        if(uid == ''){
+            if($('.pwd').val()==''){
+                util.message('密码不能为空！');
+                $('.pwd').focus();
+                return false;
+            }
+            if($('.mobile').val()==''){
+                util.message('手机号不能为空！');
+                $('.mobile').focus();
+                return false;
+            }
+        }
+
+        var str='';
+        $('.panel-body input').each(function(key,item){
+            if(item.checked) {
+                str += '|' + item.name;
+            }
+            console.log(str);
+        });
+
+        $.post("{php echo $_W['siteroot']}shop_api.php?op=user_add",
+                {
+                    uniacid:{$_W['uniacid']},
+                    name:$('.name').val(),
+                    pwd:$('.pwd').val(),
+                    mobile:$('.mobile').val(),
+                    str:str,
+                    uid:uid,
+//                    base:$('input[name="user.base"]')[0].checked,
+//                    add:$('input[name="user.add"]')[0].checked,
+//                    edit:$('input[name="user.edit"]')[0].checked,
+//                    del:$('input[name="user.delete"]')[0].checked,
+//                    list:$('input[name="user.list"]')[0].checked,
+//                    accountList:$('input[name="user.accountList"]')[0].checked,
+//                    accountALLList:$('input[name="user.accountALLList"]')[0].checked
+                },
+                function(data){
+            if(JSON.parse(data).status==1){
+                util.message('保存成功');
+                setTimeout(function(){location.href="{php echo web_url('store/user_accountALLList')}"},1000)
+            }else{
+                util.message(JSON.parse(data).message);
+            }
+        })
+    }
+    if(getQueryString('uniacid')){
+        $.get(
+            "{php echo $_W['siteroot']}shop_api.php?op=user_edit",
+            {uniacid:getQueryString('uniacid'),uid:getQueryString('uid')},
+            function(res){
+                var data=JSON.parse(res).user;
+//                console.log(data);
+                if(data.perms){
+                    var permsArr = data.perms.split('|');
+                    permsArr = permsArr.toString();
+//                console.log(permsArr);
+//                console.log('-----------------------------');
+
+                    var _nameArr = $('input[name]');
+
+                    for(var i = 0; i< _nameArr.length;i++){
+                        var _name = $(_nameArr[i]).attr('name');
+                        if(new RegExp(_name).test(permsArr)){
+//                        console.log(_name);
+                            $(_nameArr[i]).attr('checked',true);
+                        }
+                    }
+                }
+
+                $('.name').val(data.username);
+               // $('.pwd').val(data.password);
+            })
+    }
+</script>
+{php include wl_template('common/footer');}

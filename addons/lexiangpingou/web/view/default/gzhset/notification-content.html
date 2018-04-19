@@ -1,0 +1,19 @@
+{php include wl_template('common/header');}
+<div class="clearfix">
+	<div class="panel panel-default" >
+		{loop $list $item}
+			<div class="panel-heading" style="text-align: center; padding-bottom: 0px;">
+				<span style="font-size: 20px;">{$item['title']}</span><br>
+				<span style="font-size: 12px; color: #666666;">发布时间：{$item['stime']}</span>
+			</div>
+			<div class="panel-body" style="padding-left: 15px;padding-right: 15px;">
+				{if $item['content'] == ""}{$item['summary']}{else}
+				<?php 
+					$b = htmlspecialchars_decode($item['content']); 
+				?>{$b}{/if}
+			</div>
+		{/loop}
+	</div>
+	
+</div>
+{php include wl_template('common/footer');}

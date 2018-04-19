@@ -1,0 +1,283 @@
+{php include wl_template('common/header');}
+<ul class="nav nav-tabs">
+	
+	<li class="active"><a href="javascript:;"><i class="icon-group"></i> 客服群发</a></li>
+</ul>
+<style>
+	.infol{margin-left:15px;padding:5px;max-width:60%;}
+	.infor{margin-right:15px;padding:5px;max-width:60%;}
+	.pull-left,.pull-right{position:relative;}
+	.alert{margin-bottom:5px;padding:5px}
+	.more{cursor:pointer;}
+</style><div class="panel panel-default">			        <div class="plugins_wrp">            <dl>                <dd>                    <ul id="js_plugins">						<li class="item_wrp" style="width: 100%;">							<div class="plugin_item">								<div  id="link-icon1" class="plugin_icon" >									<div id="link-icon" style="display:none;width:100%;height:100%;position:absolute;background-color:rgba(0,0,0,0.3);cursor:pointer;">										<img src="{TG_URL_WRES}images/3.svg"style="position:absolute;width:60%;left:20%;">									</div>									<img src="{TG_URL_WRES}images/function/qunfa.png" style="cursor:pointer;">								</div>																<div class="plugin_status">									<i class="access"></i>									<span class="status_txt">										{if $checkfunction['status']}																			<div id="renewal" style="font-size:20px;margin-top:-30px;width: 60px;height:60px;border-radius:50%;font-weight:900;background-color:#ff5466;color:white;margin-right: -25px;text-align:center;line-height:60px;cursor:pointer;">续费</div>																												<span style="display:block;margin-left:-70px;color:#888;font-size:14px;">截止日期：{php echo date('Y-m-d', $checkfunction['endtime'])}</span>																				{else}																				<div id="buyDaifu" style="font-size:20px;margin-top:-20px;width: 60px;height:60px;border-radius:50%;font-weight:900;background-color:#ff5466;color:white;margin-right: -25px;text-align:center;line-height:60px;cursor:pointer;">购买</div>										{/if}									</span>								</div>								<div class="plugin_content">									<h3 class="title">{$checkfunction['name']}</h3>									<p class="desc" style="    width: 100%;">										{$checkfunction['des']}																			</p>								</div>							</div>						</li>					</ul>                </dd>            </dl>        </div>   	</div><style>.inner__content {background: #eee none repeat scroll 0 0;border-top: 1px solid #dcdcdc;box-sizing: border-box;color: #666;margin-top: 10px;margin-bottom:10px;min-width: 100%;padding: 10px 5px;width: auto;text-align:center;}</style><script>$(function(){	require(['bootstrap.switch'],function($){		$('.flag:checkbox').bootstrapSwitch({onText: '启用', offText: '禁用'});		$('.bootstrap-switch-wrapper').click(function(e){			e.stopPropagation();			$.post("{php echo web_url('application/helpbuy/ajax')}",function(d){				if(!d.errno){					util.tips(d.message);				}			},"json");		});	});	// 新建		$('.js-create').click(function(e) {			$('#order-remark-container').show();			$('.panel').css("opacity","0.2");$('.nav').css("opacity","0.2");		});		$('.js-cancel,.close').click(function(e) {			$('#order-remark-container').hide();			$('.panel').css("opacity","1");$('.nav').css("opacity","1");		});		$('.js-order-remark-post').click(function() {			var order_id = $(this).attr('order-id');			var remark = $('#remark').val();			$.post("{php echo web_url('application/helpbuy/create')}",{id:order_id,remark:remark},function(d){				if(!d.errno){					if(order_id){						$('#name'+order_id).html(remark);					}else{						var data = '<tr data-toggle="popover" data-trigger="hover" data-placement="left" class="js-goods-img">'									+'<td class="line-feed text-left">'+remark									+'</td>'									+'<td class="text-left">'										+'<a href="javascript:;" class="js-edit" order-id="'+d.id+'">编辑</a> - '										+'<a href="javascript:;" class="js-delete" order-id="'+d.id+'">删除</a>'									+'</td>'								+'</tr>';												$('#add').append(data);					}									}			},"json");			$('#order-remark-container').hide();			$('.panel').css("opacity","1");$('.nav').css("opacity","1");		});		$('.js-edit').click(function(e) {			var order_id = $(this).attr('order-id');			var order_name = $(this).attr('order-name');			$('#remark').val(order_name);			$('.js-order-remark-post').attr("order-id",order_id);			$('#order-remark-container').show();			$('.panel').css("opacity","0.2");			$('.nav').css("opacity","0.2");		});		$('.js-delete').click(function(e) {			e.stopPropagation();			var order_id = $(this).attr('order-id');			var _this = $(this);			util.nailConfirm(this, function(state) {				if(!state) return;				_this.parent().parent().remove();/*url*/				$.post("{php echo web_url('application/helpbuy/delete');}", { id : order_id }, function(data){						util.tips(data.message);				}, 'json');			}, {html: "确定删除！"});					});	$(".scrollLoading").scrollLoading();	var $pop = null;	$('.scrollLoading').hover(function(){		var img = $(this).attr('src');		var obj = this;		var $pop = util.popover(obj, function($popover, obj){			obj.$popover = $popover;		}, '<div><img src="'+img+'" style="max-width:200px; max-height:200px;"></div>');	}, function(){		this.$popover.remove();	});});var linkicon=document.getElementById("link-icon");		var linkicon2=document.getElementById("link-icon1");				linkicon2.onmouseleave = function () {			linkicon.style.setProperty( 'display', 'none' );		}				linkicon2.onmouseover = function () {			linkicon.style.setProperty( 'display', 'block' );		}				linkicon.onclick=function (ev) {			document.getElementById('detailimg').src='';			document.getElementById("detailname").innerHTML = "";			document.getElementById("detailshow").style.setProperty("display","none");		}</script>{if $checkfunction['status']}
+<div class="clearfix"><!--
+	<div class="panel panel-default">
+		<div class="panel-heading">
+			和 <span class="text-danger"> {$nickname} </span> 的聊天记录
+		</div>
+		<div class="panel-body" id="log" style="max-height:300px;overflow-y:scroll">
+			<div id="more" data-id="{$maxid}" class="text-center more text-info"><i class="fa fa-clock-o"></i> 查看更多消息</div>
+			<div id="prev" data-id="{$maxid}">
+				<div id="position"></div>
+			</div>
+			<div id="last" data-id="{$maxid}" style="margin-bottom:30px;"></div>
+		</div>
+	</div>-->
+	<div class="panel panel-default">
+		<div class="panel-heading">
+			当前可发送人员 <span class="text-danger"> {$num} </span> 人(<span class="text-danger">为保证客户体验感，建议每月群发次数不超过4次,发送次数过多导致用户投诉举报所产生的后果本平台概不负责！</span>)
+		</div>
+		<div class="panel-body">
+			<form action=""  class="form-horizontal" role="form" id="form0">
+				<div class="form-group">
+					<label class="col-xs-12 col-sm-3 col-md-2 control-label">消息类型</label>
+					<div class="col-sm-10">
+						<label class="radio-inline"><input type="radio" value="7" name="msgtype" checked>文本</label>
+						<label class="radio-inline"><input type="radio" value="2" name="msgtype">图片</label>
+					<!--	<label class="radio-inline"><input type="radio" value="3" name="msgtype">语音</label>
+						<label class="radio-inline"><input type="radio" value="4" name="msgtype">视频</label>
+						<label class="radio-inline"><input type="radio" value="5" name="msgtype">音乐</label>-->
+						<label class="radio-inline"><input type="radio" value="6" name="msgtype">图文</label>
+					</div>
+				</div>
+			</form>
+			<form action="{php echo url('mc/notice/post')}" method="post" class="form-horizontal reply" role="form" id="form7">
+				<input type="hidden" name="msgtype" value="text">
+				<input type="hidden" name="acid" value="{$fans['acid']}">
+				<input type="hidden" name="openid" value="{$fans['openid']}">
+				<div class="form-group">
+					<label class="col-xs-12 col-sm-3 col-md-2 control-label">消息内容</label>
+					<div class="col-sm-10">
+						<textarea name="content" id="contentinput" class="form-control" cols="30" rows="2" placeholder="添加要回复的内容"></textarea>
+						<div class="help-block">设置用户添加公众帐号好友时，发送的欢迎信息。<a href="javascript:;" id="content"><i class="fa fa-github-alt"></i> 表情</a></div>
+					</div>
+				</div>
+			</form>
+			<form action="{php echo url('mc/notice/post')}" method="post" class="form-horizontal reply" role="form" id="form2" style="display:none;">
+				<input type="hidden" name="msgtype" value="image">
+				<input type="hidden" name="acid" value="{$fans['acid']}">
+				<input type="hidden" name="openid" value="{$fans['openid']}">
+				<div class="form-group">
+					<label class="col-xs-12 col-sm-3 col-md-2 control-label">上传图片</label>
+					<div class="col-sm-9 col-xs-12">
+						{php echo tpl_form_field_wechat_image('media_id', '', '');}
+						<span class="help-block">请上传所要回复的图片</span>
+					</div>
+				</div>
+			</form>
+			<form action="{php echo url('mc/notice/post')}" method="post" class="form-horizontal reply" role="form" id="form6" style="display:none">
+				<input type="hidden" name="msgtype" value="news">
+				<input type="hidden" name="acid" value="{$fans['acid']}">
+				<input type="hidden" name="openid" value="{$fans['openid']}">
+				<div class="form-group">
+					<label class="col-xs-12 col-sm-3 col-md-2 control-label">关联关键字:</label>
+					<div class="col-sm-9 col-xs-12" style="position:relative">
+						<div class="input-group">
+							<input type="hidden" name="ruleid" class="form-control" id="ruleid" value="" />
+							<input type="text" name="keyword" class="form-control" id="keywordinput" value="" placeholder="可根据关键字直接关联指定的回复规则" autocomplete="off" />
+							<div class="input-group-btn">
+								<span class="btn btn-primary" id="keyword_search"><i class="fa fa-search"></i> 搜索</span>
+							</div>
+						</div>
+						<div id="keyword_menu" style="width:100%;position:absolute;top:35px;left:16px;display:none;z-index:10000">
+							<ul class="dropdown-menu" style="display:block;width:91%;height:400px;overflow-y:scroll;"></ul>
+						</div>
+						<div class="help-block">请选择"图文消息"关联关键字。</div>
+						<div class="help-block">发送图文消息仅支持关联已添加的图文关键字</div>
+					</div>
+				</div>
+			</form>
+
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-3 col-md-2 control-label"></label>
+				<div class="col-sm-10">
+					<input type="submit" class="btn btn-primary" name="submit" value="立即群发" id="submit"/>
+					<input type="hidden" name="token" value="{$_W['token']}" />
+					
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<script>			var datalist1={$fanslist};		var url="{php echo web_url('member/notice')}";		datalist = datalist1.map(function (item) {return item.openid;})		console.log(datalist[0]);		var datalen = datalist.length;		var dataNumber = 1;		var dolist = {list:[]};			var complete = datalen / dataNumber;		function checkValue() {			var radios = document.querySelectorAll("label input[name='msgtype']");			var len = radios.length;			for (var i = 0; i < len; i++) {				if (radios[i].checked) {					break;				}			}			return radios[i].value;		}		function checksendvalue() {			if (checkValue() == '7') {				return document.getElementById("contentinput").value;			}			else if (checkValue() == '2') {				return document.querySelector('input[name="media_id"]').value			}			else if (checkValue() == '6') {				return document.querySelector("#keywordinput").value;			}		}		function checkclick() {			if (checkValue() == '7' && document.getElementById("contentinput").value == "") {				util.tips("请填写回复内容" );				return false;			}			else if (checkValue() == '2' && document.querySelector('input[name="media_id"]').value == '') {				util.tips("请填写回复内容" );				return false;			}			else if (checkValue() == '6' && document.querySelector("#keywordinput").value == '') {				util.tips("请填写回复内容" );				return false;			}			return true;		}			function ajaxSend() {		  if (checkclick()){			dolist.list = [];			  if (datalist.length > dataNumber) {				for (var i = 0; i < dataNumber; i++) {					dolist.list.push(datalist.shift());				}			  }			  else {				var datalennum = datalist.length;				for (var i = 0; i < datalennum; i++) {					dolist.list.push(datalist.shift());				}			  }				var xhr = new XMLHttpRequest();				var formdata = new FormData();				formdata.append("op", "send");				//console.log(checkValue());				formdata.append("msgtype", checkValue());							formdata.append("ruleid", $('#ruleid').val());				//console.log(document.querySelector("#contentinput").value)				//console.log($('#ruleid').val())				formdata.append("txt", checksendvalue());				formdata.append("openid", dolist.list.join(","));				//console.log(dolist.list.join(","));				//console.log(formdata);				xhr.open("post", url, true);				xhr.send(formdata);				xhr.onreadystatechange = function () {					if (xhr.readyState == 4) {						if ((xhr.status >= 200 && xhr.status < 300) || xhr.status == 304) {							console.log(xhr.responseText);							if (complete > 1) {															complete--;								util.tips("还剩下" + ((complete>0?complete:0) * dataNumber * 100 /datalen).toFixed(2)+"%数据未处理" );								ajaxSend();							}							else {								util.tips("完成" );							}						}						else {							//console('' + xhr.status);						}					}					else {						//util.tips('3' + xhr.readyState);					}				}		    }			  		}		window.onload = function () {			//ajaxSend(dolist);		}		//ajaxSend(dolist);		
+		function ajax_chats_log() {
+			var id = $('#last').attr('data-id');
+			var fanid = "{$fanid}";
+			$.post("{php echo url('mc/notice/log')}", {'id' : id, 'fanid' : fanid, 'type' : 'asc'}, function(data) {
+				data = $.parseJSON(data);
+				if(data.code == 1) {
+					$('#last').attr('data-id', data.id);
+					$('#last').append(data.str);
+					$('#log').scrollTop(100000000000);
+				}
+				setTimeout(ajax_chats_log, 3000);
+			});
+		}
+		ajax_chats_log();
+
+		$('#more').click(function(){
+			var oldhtml = $(this).html();
+			$(this).html('<i class="fa fa-spinner"></i> 加载中');
+			var id = $('#prev').attr('data-id');
+			var fanid = "{$fanid}";
+			$.post("{php echo url('mc/notice/log')}", {'id' : id, 'fanid' : fanid, 'type' : 'desc'}, function(data) {
+				data = $.parseJSON(data);
+				if(data.code == 1) {
+					$('#more').html(oldhtml);
+					$('#prev').attr('data-id', data.id);
+					$('#position').after(data.str);
+					$('#log').scrollTop(-100);
+				} else {
+					$('#more').html('<i class="fa fa-info-circle"></i> 已加载全部');
+				}
+			});
+		});
+
+		util.emotion($("#content"), $("#contentinput")[0]);
+		function select_keyword(clickid, menuid, inputid, ruleid){
+			$(clickid).click(function(){
+				var search_value = $(inputid).val();
+				$('body').append('<div class="layer_bg"></div>');
+				$('.layer_bg').height($(document).height());
+				$('.layer_bg').css({width : '100%', position : 'absolute', top : '0', left : '0', 'z-index' : '0'});
+				$.post("{php echo url('mc/notice/keyword')}", {'key_word' : search_value}, function(data){
+					var data = $.parseJSON(data);
+					var total = data.length;
+					var html = '';
+					if(total > 0) {
+						for(var i = 0; i < total; i++) {
+							html += '<li><a href="javascript:;" id="'+ data[i]['rid'] +'">' + data[i]['content'] + '</a></li>';
+						}
+					} else {
+						html += '<li><a href="javascript:;" class="no-result">没有匹配到您输入的关键字</a></li>';
+					}
+					$(menuid + ' ul').html(html);
+					$(menuid + ' ul li a[class!="no-result"]').click(function(){
+						$('.layer_bg').remove();
+						$(inputid).val($(this).html());
+						$(ruleid).val($(this).attr('id'));
+						$(menuid).hide();
+					});
+					$(menuid).show();
+				});
+				$('.layer_bg').click(function(){
+					$(menuid).hide();
+					$(this).remove();
+				});
+
+			});
+			$(inputid).keydown(function(event){
+				if(event.keyCode == 13){
+					$(clickid).click();
+					return false;
+				}
+			});
+		}
+		select_keyword('#keyword_search', '#keyword_menu', '#keywordinput', '#ruleid');
+
+		$('#form0 :radio').click(function(){
+			$('.reply').hide();
+			var msgtype =  $('#form0 :radio:checked').val();
+			$('#form' + msgtype).show();
+		});
+		$('#submit').click(function(ev){			ev.preventDefault();			ajaxSend(dolist);
+			var openid = $(':hidden[name="openid"]').val();/*
+			if(!openid) {
+				util.message('粉丝openid丢失', '', 'error');
+				return;
+			}
+			var params = {
+				'openid' : openid
+			};
+			var msgtype = $('#form0 :radio:checked').val();
+			if(msgtype == '7') {
+				var content = $('#form7 textarea[name="content"]').val();
+				if(!content) {
+					util.message('请完善消息内容', '', 'error');
+					return;
+				}
+				params.content = content;
+				params.msgtype = 'text';
+			} else if (msgtype == '2') {
+				var media_id = $('#form2 :text[name="media_id"]').val();
+				if(!media_id) {
+					util.message('请上传图片', '', 'error');
+					return;
+				}
+				params.media_id = media_id;
+				params.msgtype = 'image';
+			} else if (msgtype == '3') {
+				var media_id = $('#form3 :text[name="media_id"]').val();
+				if(!media_id) {
+					util.message('请上传语音消息', '', 'error');
+					return;
+				}
+				params.media_id = media_id;
+				params.msgtype = 'voice';
+			} else if (msgtype == '4') {
+				var media_id = $('#form4 :text[name="media_id"]').val();
+				var thumb_media_id = $('#form4 :text[name="thumb_media_id"]').val();
+				if(!thumb_media_id) {
+					util.message('请上传媒体缩略图', '', 'error');
+					return;
+				}
+				if(!media_id) {
+					util.message('请上传视频消息', '', 'error');
+					return;
+				}
+				params.msgtype = 'video';
+				params.media_id = media_id;
+				params.thumb_media_id = thumb_media_id;
+				params.title = $('#form4 :text[name="title"]').val();
+				params.description = $('#form1 textarea[name="description"]').val();
+			} else if (msgtype == '5') {
+				var thumb_media_id = $('#form5 :text[name="thumb_media_id"]').val();
+				var musicurl = $('#form5 :text[name="musicurl"]').val();
+				var hqmusicurl = $('#form5 :text[name="hqmusicurl"]').val();
+				if(!thumb_media_id) {
+					util.message('请上传媒体缩略图', '', 'error');
+					return;
+				}
+				if(!musicurl) {
+					util.message('请上传音频文件或填写音频链接', '', 'error');
+					return;
+				}
+				params.msgtype = 'music';
+				params.thumb_media_id = thumb_media_id;
+				params.musicurl = musicurl;
+				params.hqmusicurl = hqmusicurl;
+				params.title = $('#form4 :text[name="title"]').val();
+				params.description = $('#form1 textarea[name="description"]').val();
+			} else if (msgtype == '6') {
+				var ruleid = $('#ruleid').val();
+				var keyword = $('#keywordinput').val();
+				if(!ruleid || !keyword) {
+					util.message('选择图文消息关联的关键字', '', 'error');
+					return;
+				}
+				params.msgtype = 'news';
+				params.keyword = keyword;
+				params.ruleid = ruleid;
+			}
+			var url = "{php echo url('mc/notice/post')}";
+			$.post(url, params, function(data){
+				try{data = $.parseJSON(data);}catch (e) {eval(data);}
+				if(data.type) {
+					util.message(data.message, '', 'error');
+					return;
+				}
+				if(data.status == 'error') {
+					util.message(data.message, '', 'error');
+					return;
+				} else if(data.status == 'success') {
+					$("input:text").val('');
+					$("textarea").val('');
+					$('.input-group img').attr('src', './resource/images/nopic.jpg');
+					//util.message(data.message, '', 'success');
+					return;
+				}
+			});
+			return;*/
+		});
+</script>{/if}
+{php include wl_template('common/footer');}

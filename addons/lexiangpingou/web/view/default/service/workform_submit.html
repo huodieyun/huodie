@@ -1,0 +1,90 @@
+{php include wl_template('common/header');}
+<script>
+function submitAction(){ 
+		var list= $('input:radio[name="type"]:checked').val();
+		var vip = '{$acct['vip']}';
+		if($('#title').val() == ''){
+				util.message('请简要描述您遇到的情况或者需求。');
+				return false;
+		}
+		else if($('#content').val() == ''){
+				util.message('请尽量详细描述相关问题或者需求，便于我们的沟通。');
+				return false;
+		}
+		else if(list == '2' && vip == '0' ){
+
+			alert('新功能开发申请目前只对vip用户开放。');
+			//util.message('新功能开发申请工单将显示成工单结束状态，乐享拼购将根据订单提交时间安排开发优先度。');
+			
+		}
+		return ture;
+		
+		
+	} 
+
+
+</script>
+<ul class="nav nav-tabs">
+	<li class="active"><a>提交工单</a></li>
+</ul>
+<div class="clearfix">
+	<form class="form form-horizontal" action="./index.php" method="post" role="form" id="form1">
+		<input type="hidden" name="c" value="site" />
+            <input type="hidden" name="a" value="entry" />
+            <input type="hidden" name="m" value="lexiangpingou" />
+            <input type="hidden" name="do" value="service" />
+            <input type="hidden" name="ac" value="workform_submit" />
+            <input type="hidden" name="op" value="insert" />
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				填写工单
+			</div>
+			<div class="panel-body">
+					<div class="form-group">
+						<label class="col-xs-12 col-sm-3 col-md-2 control-label"><span style='color:red'>*</span>工单类型:</label>
+						<div class="col-sm-9 col-xs-12">
+							<label class="radio-inline">
+								<input checked type="radio" name="type" id="inlineRadio12" value="1"> 异常处理
+							</label>
+							<label class="radio-inline">
+								<input type="radio" name="type" id="inlineRadio22" value="2"> 功能开发
+							</label>
+							<label class="radio-inline">
+								<input type="radio" name="type" id="inlineRadio12" value="3"> 模板定制
+							</label>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-md-2 control-label"><span style='color:red'>*</span>工单主题:</label>
+						<div class="col-md-9" style="position:relative">
+							<div  style="position:relative; padding-left: 0px;">
+								<input autofocus="autofocus" required oninvalid="setCustomValidity('请简要描述您遇到的情况或者需求。')" oninput="setCustomValidity('')" type="text" name="title" class="form-control" maxlength="40" id="title" placeholder="主题将在列表页作为概要显示，最多填写40个字。" value="" autocomplete="off" />
+							</div>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-md-2 control-label"><span style='color:red'>*</span>详细描述:</label>
+						<div class="col-md-9" style="position:relative">
+							<div  style="position:relative; padding-left: 0px;">
+								<textarea class="form-control" required oninvalid="setCustomValidity('请尽量详细描述相关问题或者需求，便于我们的沟通。')" oninput="setCustomValidity('')" required="required" name="content" id="content" rows="10"  placeholder="请尽量详细描述相关问题或者需求，便于我们的沟通，可以通过右下角拖拽来使输入框边长。" ></textarea>
+							</div>
+						</div>
+					</div>
+					<div class="form-group">
+				        <label class="col-xs-12 col-sm-3 col-md-2 control-label">相关图片</label>
+				        <div class="col-sm-6">
+				           {php echo tpl_form_field_multi_image('img',$piclist);}
+				            <span class="help-block">附上图片说明</span>
+				        </div>
+				    </div>
+			</div>
+		</div>
+		<div class="form-group">
+			<div class="col-sm-12">
+				<input onclick="submitAction(); return false;" type="submit" name="submit" value="提交" class="btn btn-primary col-lg-1" />
+			</div>
+		</div>
+	</form>
+</div>
+
+{php include wl_template('common/footer');}

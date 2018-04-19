@@ -1,0 +1,87 @@
+{php include wl_template('common/header');}
+<div class="panel panel-info">
+    <div class="panel-heading">erp年度套餐</div>
+    <div class="panel-body table-responsive" style="padding: 0px;">
+        <div class="main_bd">
+            <div class="plugins_wrp">
+                <dl>
+                    <dd>
+                        <ul id="js_plugins1">
+                            <li class="item_wrp" style="width: 100%;">
+                                <div class="plugin_item">
+                                    <div class="plugin_icon"><img src="{TG_URL_WRES}images/function/sendtime.png"></div>
+                                    <div class="plugin_status">
+                                        <i class="access"></i>
+                                        <span class="status_txt">
+                                    </span>
+                                    </div>
+                                    <div class="plugin_content">
+                                        <h3 class="title">erp年度套餐到期时间</h3>
+                                        <p class="desc" style="width: 100%;">
+                                            {if $wechat['erp_time'] != 0}
+                                            {php echo date('Y-m-d', $wechat['erp_time'])}
+                                            {else}
+                                            暂未开通
+                                            {/if}
+                                        </p>
+                                        <h3 class="title" style="float: left; width: inherit;">剩余天数:</h3>
+                                        <p class="time_left" style="line-height: 15px;">
+                                            
+                                        </p>
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
+                    </dd>
+                </dl>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    var endtime = Number({$wechat['erp_time']}+'000')
+    var Endtime = new Date(endtime).toISOString();
+    function getDateData(endtime) {
+        let diff = (Date.parse(new Date(endtime)) - Date.parse(new Date)) / 1000;
+        if (diff <= 0) {
+            return false;
+        }
+        var timeLeft = {
+            years: 0,
+            months: 0,
+            days: 0,
+            hours: 0,
+            min: 0,
+            sec: 0,
+            millisec: 0,
+        };
+        if (diff >= (365.25 * 86400)) {
+            timeLeft.years = Math.floor(diff / (365.25 * 86400));
+            diff -= timeLeft.years * 365.25 * 86400;
+        }
+        if (diff >= (30 * 86400)) {
+            timeLeft.months = Math.floor(diff / (30 * 86400));
+            diff -= timeLeft.months * 30 * 86400;
+        }
+        if (diff >= 86400) {
+            timeLeft.days = Math.floor(diff / 86400);
+            diff -= timeLeft.days * 86400;
+        }
+        if (diff >= 3600) {
+            timeLeft.hours = Math.floor(diff / 3600);
+            diff -= timeLeft.hours * 3600;
+        }
+        if (diff >= 60) {
+            timeLeft.min = Math.floor(diff / 60);
+            diff -= timeLeft.min * 60;
+        }
+        timeLeft.sec = diff;
+        return timeLeft;
+    }
+
+    var dd = getDateData(Endtime);
+    var html= dd ? dd.years+'年'+dd.months+'月'+dd.days+'天'+dd.hours+'小时'+dd.min+'分钟' : '暂未有剩余时间';
+    $('.time_left').html(html);
+</script>
+{php include wl_template('common/footer');}
+

@@ -1,0 +1,148 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<avalon ms-skip="" class="avalonHide">
+<style id="avalonStyle">
+.avalonHide{ display: none!important }
+</style>
+</avalon>
+   <title>{if empty($_Session['btitle'])}{$pagetitle}{else}{$_Session['btitle']}{/if}</title>
+    {php echo register_jssdk();}
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
+    <meta name="format-detection" content="telephone=no">
+    <meta http-equiv="Pragma" content="no-cache">   
+    <meta http-equiv="Cache-Control" content="no-store">
+    <meta http-equiv="Expires" content="0">
+    <LINK  href="../addons/feng_fightgroups/template/css/style_366c9ef.css" rel="stylesheet">    
+    <LINK  href="../addons/feng_fightgroups/template/css/font-awesome-4.3.0/css/font-awesome.min.css" rel="stylesheet">
+</head>
+<body avalonctrl="root">
+    <div class="container">
+        <section class="main-view">
+            
+            <div> 
+                <div class="nav">
+                    <ul class="nav_list">
+                        <li class="nav_item nav_order">
+                            <a  href="{php echo app_url('order/my_cash')}">
+                                <div class="nav_item_hd">我要提现</div>
+                            </a>
+                            <div class="nav_item_bd">
+                                <a style="width:33%"  href="{php echo app_url('order/my_cash')}"><span class="nav_item_txt">未提现<br>￥<?php echo number_format($mem['wallet'],2)?></span></a>
+                                <a  style="width:33%" href="{php echo app_url('order/my_cash',array('op' => '1'))}">
+                                    <span class="nav_item_txt">审批中<br>￥<?php echo number_format($pr,2)?></span>
+                                </a>                               
+								<a style="width:33%" href="{php echo app_url('order/my_cash',array('op' => '2'))}">
+                                    <span class="nav_item_txt">已提现<br>￥<?php echo number_format($mem['cash'],2)?></span>
+                                </a>
+                            </div>
+                        </li>
+						
+                      
+						
+                    </ul>
+                </div>
+            </div>
+			{if $op=='display'}
+			<form name='form' method="post" onsubmit="return toVaild()">
+		 <div class="wx_wrap" style="font-size:16px;margin-top:20px;margin-left:20px;">	   
+      <p style="margin:40px 0;">
+        <LABEL for="name"><SPAN class="tit">提现金额</SPAN>                         
+        <INPUT name="name" id="name" type="text" placeholder="请输入大于1元的金额" value="" style="height:35px;border:none;margin-left:10px;padding-left:5px;line-height:35px;">              
+        
+        </LABEL>                 
+      </p>
+      
+	  </div>
+	 
+	  
+ <p class="action">
+ 
+     <button type="submit" name="submit" value="yes" id= 'submit' class="pay2_btn" style="margin-bottom:20px;background-color:#6fbfd8;font-color:1.5em;">申请提现</button>
+      <input type="hidden" name="token" value="{$_W['token']}" 
+      </p>
+	 
+</form>
+	 {/if}
+{if $op>=0}	
+{loop $orders $order}
+					
+					<div class="order" ms-repeat-order="orders">
+					 <div class="order_hd">
+					 
+               申请日期: {php echo date('Y-m-d H:i:s', $order['addtime']);}    提现金额：￥{$order['price']},状态：<b>{if $order['type']==0}审批中{/if}{if $order['type']==1}已发放{/if}
+					</div>
+					
+					</div>
+					
+					{/loop}
+{/if}
+ 
+        </section>
+        {if $this->module['config']['mode'] == 1}
+        <footer class="footer">
+            <nav>
+                <ul>
+                    <li><a href="{php echo $this->createMobileUrl('index')}" class="nav-controller"><i class="fa fa-home"></i>首页</a></li>
+                     <li><a href="{php echo $this->createMobileUrl('mygroup',array('op'=>0));}" class="nav-controller"><i class="fa fa-group"></i>我的团</a></li>
+                    <li><a href="{php echo $this->createMobileUrl('myorder')}" class="nav-controller"><i class="fa fa-list"></i>我的订单</a></li>
+                    <li><a href="{php echo $this->createMobileUrl('person')}" class="nav-controller active"><i class="fa fa-user"></i>个人中心</a></li>
+                </ul>
+            </nav>
+        </footer>
+        {else}
+        {if $this->module['config']['menu_type'] == 1}
+{template 'footerbar'}
+{else if $this->module['config']['menu_type'] == 2}
+{template 'footerbar1'}
+{else if $this->module['config']['menu_type'] == 3}
+{template 'footerbar3'}
+{/if}
+        {/if}
+    </div>
+</body>
+<script>
+	wx.ready(function (){
+	var shareData = {
+		title: "{$share_data['share_title']}",
+		desc: "{$share_data['share_desc']}",
+		link: "{$to_url}",
+		imgUrl: "{$_W['attachurl']}{$share_data['share_image']}",
+	};
+//分享朋友
+	wx.onMenuShareAppMessage({
+	    title: shareData.title,
+	  	desc: shareData.desc,
+	  	link: shareData.link,
+	  	imgUrl:shareData.imgUrl,
+	  	trigger: function (res) {
+	  	},
+	  	success: function (res) {
+	    	window.location.href =adurl;
+	  	},
+	  	cancel: function (res) {
+	  	},
+	  	fail: function (res) {
+	    	alert(JSON.stringify(res));
+	  	}
+	});
+//朋友圈
+	wx.onMenuShareTimeline({
+	  	title: shareData.title,
+	  	link: shareData.link,
+	  	imgUrl:shareData.imgUrl,
+	  	trigger: function (res) {
+	  	},
+	  	success: function (res) {
+	    	window.location.href =adurl;
+	  	},
+	  	cancel: function (res) {
+	  	},
+	  	fail: function (res) {
+	    	alert(JSON.stringify(res));
+	  	}
+	});
+});
+</script>
+</html>

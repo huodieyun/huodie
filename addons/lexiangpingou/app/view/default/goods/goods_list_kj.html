@@ -1,0 +1,101 @@
+{php include wl_template('common/header');}
+</head>
+<style>
+    .fixRT{
+        display: none!important;
+    }
+    .list-block{margin: 0}
+    .item-title p{
+        font-size: 12px;
+        color:#aaa;
+    }
+    .item-title h3{
+        white-space: initial;
+        height: 41px;
+        overflow: hidden;
+        font-size: 14px;
+    }
+    .item-media img{
+        width: 70px;
+        border: 1px solid #ccc;
+    }
+    .item-after{
+    color: {$_W['system_color']};
+    }
+    .item-inner>a{
+        font-size: 14px;
+
+    }
+    .list-block .item-inner{
+        padding-top: 0;
+        padding-bottom: 0;
+    }
+</style>
+<body>
+{if $res}
+<div class="list-block">
+    <ul>
+        {loop $res $item}
+        <li class="item-content">
+            <div class="item-media">
+                <img src="{php echo tomedia($item['goods_detail']['gimg']);}" alt="">
+            </div>
+            <div class="item-inner">
+                <div class="item-title">
+                    <h3>{$item['goods_detail']['gname']}</h3>
+                    {if !empty($item["option"])}
+                    <p>规格: {$item["option"]}</p>
+                    {/if}
+                    <p>最低价格 ￥{php echo floatval($item['last_price'])}</p>
+                </div>
+                <div class="item-after">￥{$item['price']}</div>
+            </div>
+        </li>
+        <li class="item-content">
+            <div class="item-inner">
+                <div class="item-title">
+                    {if $item['goods_detail']['spikeT']}
+                    <p>开始时间{php echo date('Y-m-d H:i' , $item['goods_detail']['spike_start'])}</p>
+                    <p>结束时间{php echo date('Y-m-d H:i' , $item['goods_detail']['spike_end'])}</p>
+                    {/if}
+                </div>
+                <div class="item-after" style="font-size: 14px">
+                    {if $item["is_on"] == 1}进行中{elseif $item["is_on"] == 0}已结束{elseif $item["is_on"] == 2}已下单{/if}
+                </div>
+            </div>
+        </li>
+        <li class="item-content">
+            <div class="item-inner" style="justify-content: flex-end;-webkit-justify-content: flex-end;">
+                {if $item["is_on"] == 1&&$item["status"] == 1}
+                <a style="margin-right: 5px" href="javascript:;" class="button button-light" onclick="cancel({$item['id']})">取消</a>
+                <a style="margin-right: 5px" href="{php echo app_url("order/kj_orderconfirm",array("id"=>$item['goods_detail']['id'],"groupnum"=>1,"selltype"=>10,"kid"=>$item['id']));}" class="button button-light">立即支付</a>
+                {/if}
+                <!--<a href="#" class="button button-light">形成订单</a>-->
+                <a href="{php echo app_url('goods/kanjia',array('op'=>'detail_kj','id'=>$item['id']))}" class="button button-light">查看详情</a>
+            </div>
+        </li>
+        {/loop}
+    </ul>
+</div>
+{else}
+<div>
+    <div style="position: absolute;top: 10%;left: 44%">暂无数据~~</div>
+</div>
+{/if}
+<script>
+    function cancel(id) {
+        $.get(
+                "{php echo app_url('goods/kanjia',array('op'=>'cancel'))}&id="+id,
+                function(res){
+                    var data=JSON.parse(res);
+                    $.toast(data.message);
+                    if(data.status>0){
+                        setTimeout(function(){
+                            location.reload();
+                        },1500)
+                    }
+                }
+        )
+    }
+</script>
+{php include wl_template('common/footer');}

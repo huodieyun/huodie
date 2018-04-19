@@ -1,0 +1,148 @@
+
+{if $config['base']['meiqia']>0}
+<script type='text/javascript'>
+    (function(m, ei, q, i, a, j, s) {
+        m[a] = m[a] || function() {
+            (m[a].a = m[a].a || []).push(arguments)
+        };
+        j = ei.createElement(q),
+            s = ei.getElementsByTagName(q)[0];
+        j.async = true;
+        j.charset = 'UTF-8';
+        j.src = i + '?v=' + new Date().getUTCDate();
+        s.parentNode.insertBefore(j, s);
+    })(window, document, 'script', '//static.meiqia.com/dist/meiqia.js', '_MEIQIA');
+    _MEIQIA('entId', {$config['base']['meiqia']});
+	</script>
+	{/if}
+<div class="good_choose_layer" style="display: none;"></div>
+<div class="good_choose" style="display: none;">
+    <div class="info">
+         <div class="left">
+             <img id="chooser_img" src="{php echo tomedia($goods['gimg']);}">
+         </div>
+         <div class="right">
+               	<div class="price">￥<span id="option_price">{if empty($marketprice)}{$goods['p']}{else}{$marketprice}{/if}</span></div>
+        		<span id='stockcontainer' class="stock" style="float:left;margin-left:5px;"></span>
+         </div>
+        <div class="close" onclick="closechoose()"><i class="fa fa-remove-o"></i></div>
+    </div>
+    <div class="other">
+        <div class="spec" style='float:left;display:block;height:30px;line-height:30px;overflow:hidden;text-overflow:ellipsis;margin-left:10px;padding:0;{if !empty($_GPC['tuan_id'])}display: none;{/if}'>请选择组团人数：</div>
+
+        <span style="float:left;margin-left:8px;{if !empty($_GPC['tuan_id'])}display: none{/if}" class='spec_items options'>
+        {loop $param_level $item}
+        <span class="property option" specid='{$item['groupnum']}' oid="{$item['groupprice']}" sel='false'>{$item['groupnum']}人团</span>
+        {/loop}
+        </span>
+        {if $goods['one_limit']>1}
+        <span style="float:left;margin-left:8px;display: none;" class='spec_items options' id="inn">
+        	<input type="hidden" name="gn" id="gn" value="" />
+            <span ><font color="#000000" size="2">选择数量</font></span>
+			<div class="w-number" id="pro-view-7" style="float: right;">
+				<input class="w-number-input" type="tel" id="num2" name="num2" value="1">
+				<a class="w-number-btn w-number-btn-plus" id="up2">
+					+
+				</a>
+				<a class="w-number-btn w-number-btn-minus" id="down2">
+					-
+				</a>
+			</div>
+        </span>
+        {/if}
+    </div>
+    <div class="close" onclick="closechoose()"><i class="fa fa-times-circle-o"></i></div>
+    <div class="sub " onclick="buy()" id="nowbuy">确认</div>
+</div>
+<script>
+	function choose(){
+	    if($('.good_choose_layer').css('display')=='none'){
+            $('.bottombutton').unbind('click')
+        }else{
+            $('.bottombutton').bind('click',buy())
+        }
+		$('.footer').hide();
+		$('.good_choose_layer').fadeIn(200);
+		$('.good_choose').fadeIn(200);
+	}
+	
+    $(function () {
+        {if !empty($_GPC['tuan_id'])}
+            $("#inn").show();
+            var oid = $(".td_mprice b").html();
+            $('#option_price').html(oid);
+            $("#gn").val(oid);
+        {/if}
+        $('.other-detail .detail-group:last').css("border-bottom", "0");
+        $(".option,.optionimg").click(function () {
+            var specid = $(this).attr("specid");
+            var oid = $(this).attr("oid");
+            
+            $("#buytype").val(specid);
+            $(".spec_items span").removeClass("current").attr("sel", "false");
+            $(this).addClass("current").attr("sel", "true");
+            var buytype = $("#buytype").val();
+			$("#inn").show();
+            $("#num2").val(1);
+            $("#option_price").html(oid);
+             $("#gn").val(oid);
+        });
+    });
+
+    function buy() {
+        var groupnum = $("#buytype").val();
+        {if empty($_GPC['tuan_id'])}
+        if (!groupnum) {
+            $.toast('请选择组团人数!');
+			return false;
+        }
+        {/if}
+        {if $goods['one_limit']>=1}
+        var inputnum = $("#num2").val();
+        {else}
+        var inputnum = 1;
+        {/if}
+        var num = "{php echo $goods['gnum']}";
+        var many_limit = $("#many_limit").val();
+        var one_limit = $("#one_limit").val();
+        var times = $("#times").val();
+        inputnum = parseInt(inputnum);
+        num = parseInt(num);
+        many_limit = parseInt(many_limit);
+        one_limit = parseInt(one_limit);
+        times = parseInt(times);
+        
+	    {if $goods['one_limit']>1}
+	        if(isNaN(inputnum)){
+	        	$.toast('数量错误!');
+				return false;
+	        }else{
+	        	if(inputnum<0){
+	        		$.toast('数量错误!');
+					return false;
+	        	}
+	        	if(inputnum > num){
+	        		$.toast('库存不足!');
+					return false;
+	        	}
+	        	if(one_limit>=1){
+	        		if(inputnum > one_limit){
+		        		$.toast('单次购买上限为：'+one_limit);
+						return false;
+		        	}
+	        	}
+	        	if(many_limit>=1){
+	        		if(inputnum+times > many_limit){
+		        		$.toast('单人购买上限为：'+many_limit);
+						return false;
+		        	}
+	        	}
+	        }
+	    {/if}
+            {if empty($_GPC['tuan_id'])}
+        location.href = "{php echo app_url('order/orderconfirm')}" + "&groupnum=" + groupnum+"&num=" + inputnum+"&newtuan=newtuan&id={$goods['id']}";
+                {else}
+                location.href = "{php echo app_url('order/orderconfirm')}" + "&groupnum=" + groupnum+"&num=" + inputnum+"&tuan_id={$_GPC['tuan_id']}&id={$goods['id']}";
+                {/if}
+    }
+</script>

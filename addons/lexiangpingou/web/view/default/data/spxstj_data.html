@@ -1,0 +1,204 @@
+{php include wl_template('common/header');}
+<style>
+    .container{
+        background:#fff;
+        padding: 10px;
+    }
+
+    .order-overview .order-info .info-group{width:220px; text-align:center; float:left;}
+    .order-overview .order-info .info-group+.info-group{border-left:1px dotted #ccc; }
+    .order-overview .h4{font-size:22px; display:block;}
+    .order-overview .order-widget .info-group{width:220px; text-align:center; float:left; }
+    .order-overview .order-widget .info-group+.info-group{border-left:1px solid #ddd;}
+    .order-overview .coordinate{margin-top:20px;}
+    .table>tbody>tr>td{line-height:3;}
+    th,table thead tr th:last-child, table tbody tr td:last-child{text-align:center;}
+    table>tr:first-child{height:42px;}
+
+    .shangpinXS{
+        margin: 10px 0;
+        float: right;
+    }
+    .SPXStitle{
+        text-align: center;
+        font-size: 16px;
+        font-weight: 900;
+        padding: 10px 0;
+    }
+    .SPXSdetail img{
+        width: 50px;
+        height: 50px;
+        margin:0 10px;
+    }
+    .SPXSdetail th:first-child{
+        width: 100px;
+    }
+    .SPXSdetail th:nth-child(2){
+        width: 300px;
+    }
+    .SPXSdetail tr td:nth-child(2){
+        text-align: left;
+    }
+    .colorNuma,.colorNumb,.colorNumc{
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        background-color: #C45897;
+        color: #fff;
+        display: block;
+        line-height: 30px;
+        margin: 0 auto;
+    }
+    .colorNumb{
+        background-color: #D176A0;
+    }
+    .colorNumc{
+        background-color: #CB9893;
+    }
+    .btn-default:focus{
+        background-color: #5cb85c;
+        color: #fff0cc;
+    }
+
+
+</style>
+<div class="container">
+    <div class="SPXStitle">商品销售统计表</div>
+    <!--<span>排名方式</span>-->
+    <div class="btn-group shangpinXS" role="group">
+        <button type="button" class="btn btn-default">按成交量</button>
+        <button type="button" class="btn btn-default">按商品页面浏览次数</button>
+        <button type="button" class="btn btn-default">按商品页面浏览次数</button>
+        <button type="button" class="btn btn-default">按销售额</button>
+    </div>
+    <div class="SPXSdetail">
+        <table class="table table-hover table-bordered">
+            <tr>
+                <th>排名</th>
+                <th>商品</th>
+                <th>成交量</th>
+                <th>商品浏览次数</th>
+                <th>商品浏览人数</th>
+                <th>销售额</th>
+            </tr>
+            <tr>
+                <td><span class="colorNuma">1</span></td>
+                <td>
+                    <img src="http://w9.huodiesoft.com/addons/lexiangpingou/web/resource/images/pintuan_logo.png" />
+                    <span>测试</span>
+                </td>
+                <td>1</td>
+                <td>1</td>
+                <td>1</td>
+                <td>1</td>
+            </tr>
+            <tr>
+                <td><span class="colorNumb">2</span></td>
+                <td>
+                    <img src="http://w9.huodiesoft.com/addons/lexiangpingou/web/resource/images/pintuan_logo.png" />
+                    <span>测试测试测试测试测试测试测试测试测试测试</span>
+                </td>
+                <td>1</td>
+                <td>1</td>
+                <td>1</td>
+                <td>1</td>
+            </tr>
+            <tr>
+                <td><span class="colorNumc">3</span></td>
+                <td>
+                    <img src="http://w9.huodiesoft.com/addons/lexiangpingou/web/resource/images/pintuan_logo.png" />
+                    <span>测试</span>
+                </td>
+                <td>1</td>
+                <td>1</td>
+                <td>1</td>
+                <td>1</td>
+            </tr>
+            <tr>
+                <td><span>4</span></td>
+                <td>
+                    <img src="http://w9.huodiesoft.com/addons/lexiangpingou/web/resource/images/pintuan_logo.png" />
+                    <span>测试</span>
+                </td>
+                <td>1</td>
+                <td>1</td>
+                <td>1</td>
+                <td>1</td>
+            </tr>
+            <tr>
+                <td><span>5</span></td>
+                <td>
+                    <img src="http://w9.huodiesoft.com/addons/lexiangpingou/web/resource/images/pintuan_logo.png" />
+                    <span>测试</span>
+                </td>
+                <td>1</td>
+                <td>1</td>
+                <td>1</td>
+                <td>1</td>
+            </tr>
+            <tr>
+                <td><span>6</span></td>
+                <td>
+                    <img src="http://w9.huodiesoft.com/addons/lexiangpingou/web/resource/images/pintuan_logo.png" />
+                    <span>测试</span>
+                </td>
+                <td>1</td>
+                <td>1</td>
+                <td>1</td>
+                <td>1</td>
+            </tr>
+            <tr>
+                <td><span>7</span></td>
+                <td>
+                    <img src="http://w9.huodiesoft.com/addons/lexiangpingou/web/resource/images/pintuan_logo.png" />
+                    <span>测试</span>
+                </td>
+                <td>1</td>
+                <td>1</td>
+                <td>1</td>
+                <td>1</td>
+            </tr>
+            <tr>
+                <td><span>8</span></td>
+                <td>
+                    <img src="http://w9.huodiesoft.com/addons/lexiangpingou/web/resource/images/pintuan_logo.png" />
+                    <span>测试</span>
+                </td>
+                <td>1</td>
+                <td>1</td>
+                <td>1</td>
+                <td>1</td>
+            </tr>
+            <tr>
+                <td><span>9</span></td>
+                <td>
+                    <img src="http://w9.huodiesoft.com/addons/lexiangpingou/web/resource/images/pintuan_logo.png" />
+                    <span>测试</span>
+                </td>
+                <td>1</td>
+                <td>1</td>
+                <td>1</td>
+                <td>1</td>
+            </tr>
+            <tr>
+                <td><span>10</span></td>
+                <td>
+                    <img src="http://w9.huodiesoft.com/addons/lexiangpingou/web/resource/images/pintuan_logo.png" />
+                    <span>测试</span>
+                </td>
+                <td>1</td>
+                <td>1</td>
+                <td>1</td>
+                <td>1</td>
+            </tr>
+        </table>
+    </div>
+</div>
+
+<script>
+
+</script>
+
+
+
+{php include wl_template('common/footer');}

@@ -1,0 +1,704 @@
+{php include wl_template('common/header');}
+
+{if $_GPC['op']=='display' || $_GPC['op']==''}
+<div class="main">
+    <form action="" method="post" class="form-horizontal form" id="form">
+        <div class="panel panel-default">
+            <div class="panel-heading">商家</div>
+            <div class="panel-body">
+                <div class="form-group" style="display: none">
+                    <label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label">是否分配后台权限</label>
+                    <div class="col-xs-12 col-sm-8">
+                        <label class="radio radio-inline">
+                            <input type="radio" name="merchant[open]" value="1" {if intval($merchant['open']) !=2}checked="checked"{/if} onclick="$('#level').show();"> 是
+                        </label>
+                        <label class="radio radio-inline">
+                            <input type="radio" name="merchant[open]" value="2" {if intval($merchant['open']) ==2}checked="checked"{/if} onclick="$('#level').hide();"> 否
+                        </label>
+                    </div>
+                </div>
+                <div id="level" {if $merchant['open']==2}style="display: none;"{/if}>
+                <div class="form-group" >
+                    <label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label">用户名</label>
+                    <div class="col-xs-12 col-sm-8">
+                        {if !empty($merchant)}
+                        <span class="uneditable-input form-control">{$merchant['uname']}</span>
+                        {else}
+                        <input type="text" name="merchant[uname]" class="form-control" value="{$merchant['uname']}" />
+                        {/if}
+
+                    </div>
+                </div>
+                {if !empty($merchant)}
+                <!--<div class="form-group" >
+                    <label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label">原密码</label>
+                    <div class="col-xs-12 col-sm-8">
+                        <input type="password" name="opwd" class="form-control" value="" />
+                    </div>
+                </div>-->
+                <div class="form-group" >
+                    <label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label">新密码</label>
+                    <div class="col-xs-12 col-sm-8">
+                        <input type="password" name="npwd" class="form-control" value="" />
+                    </div>
+                </div>
+                <div class="form-group" >
+                    <label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label">再次输入</label>
+                    <div class="col-xs-12 col-sm-8">
+                        <input type="password" name="tpwd" class="form-control" value="" />
+                    </div>
+                </div>
+                {else}
+                <div class="form-group" >
+                    <label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label">密码</label>
+                    <div class="col-xs-12 col-sm-8">
+                        <input type="password" name="merchant[password]" class="form-control" value="{$merchant['password']}" />
+                    </div>
+                </div>
+                <div class="form-group" >
+                    <label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label">再次输入</label>
+                    <div class="col-xs-12 col-sm-8">
+                        <input type="password" name="tpwd" class="form-control" value="" />
+                    </div>
+                </div>
+                {/if}
+            </div>
+            <div class="form-group">
+                <label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label">佣金百分比</label>
+                <div class="col-xs-12 col-sm-8">
+                    <div class="input-group">
+                        <input type="text" name="merchant[percent]" class="form-control" value="{$merchant['percent']}" />
+                        <span class="input-group-addon">%</span>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label">商家名称</label>
+                <div class="col-xs-12 col-sm-8">
+                    <input type="text" name="merchant[name]" class="form-control" value="{$merchant['name']}" />
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label">商家logo</label>
+                <div class="col-xs-12 col-sm-8">
+                    {php echo tpl_form_field_image('merchant[thumb]', $merchant['thumb']);}
+                    <span class="help-block">图片建议为200*150</span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label">上传商品数量上限</label>
+                <div class="col-xs-12 col-sm-8">
+                    <input type="text" name="merchant[goodsnum]" class="form-control" value="{$merchant['goodsnum']}">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label">虚拟销量</label>
+                <div class="col-xs-12 col-sm-8">
+                    <input type="text" name="merchant[falsenum]" class="form-control" value="{$merchant['falsenum']}">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label">实际销量</label>
+                <div class="col-xs-12 col-sm-8">
+                    <input type="text" name="merchant[salenum]" class="form-control" value="{$merchant['salenum']}" readonly="readonly">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label">商家地址</label>
+                <div class="col-xs-12 col-sm-8">
+                    <input type="text" name="merchant[address]" class="form-control" value="{$merchant['address']}">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-xs-12 col-sm-3 col-md-2 control-label">地理位置</label>
+                <div class="col-sm-8 col-xs-12">
+                    {php echo tpl_form_field_coordinate('map',array('lng'=>$merchant['lng'],'lat'=>$merchant['lat']))}
+                </div>
+            </div>
+
+            <div class="panel-body">
+                <div class="form-group">
+                    <label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label">提现方式：</label>
+                    <div class="col-xs-12 col-sm-8">
+                        <label class="radio radio-inline">
+                            <input type="radio" name="merchant[bank]" value="1" {if intval($merchant['bank']) != 2}checked="checked"{/if} onclick="$('#wechat').show();$('#bank').hide()">提现到微信
+                        </label>
+                        <label class="radio radio-inline">
+                            <input type="radio" name="merchant[bank]" value="2" {if intval($merchant['bank']) == 2}checked="checked"{/if} onclick="$('#bank').show();$('#wechat').hide()">提现到银行卡
+                        </label>
+                    </div>
+                </div>
+                <div id="wechat" {if $merchant['bank'] == 1} style="display: none;"{/if}>
+                    <div class="form-group">
+                    <label class="col-xs-12 col-sm-3 col-md-2 control-label"><span style='color:red'>*</span>
+                        选择提现到微信号</label>
+                    <div class="col-sm-8 col-xs-12">
+                        <input type='hidden' id='openid' name='openid' value="{$saler['openid']}"/>
+                        <div class='input-group'>
+                            <input type="text" name="saler" maxlength="30"
+                                   value="{if !empty($saler)}{$saler['nickname']}{/if}" id="saler" class="form-control"
+                                   readonly/>
+                            <div class='input-group-btn'>
+                                <button class="btn btn-default" type="button"
+                                        onclick="popwin = $('#modal-module-menus').modal();">选择提现到微信号
+                                </button>
+                            </div>
+                        </div>
+                        {if !empty($saler)}
+                        <span class='help-block'><img style="width:100px;height:100px;border:1px solid #ccc;padding:1px"
+                                                      src="{$saler['avatar']}" id="avatar"/></span>
+                        {/if}
+                        <div id="modal-module-menus" class="modal fade" tabindex="-1">
+                            <div class="modal-dialog" style='width: 920px;'>
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <button aria-hidden="true" data-dismiss="modal" class="close one" type="button">×</button>
+                                        <h3>选择提现到微信号</h3></div>
+                                    <div class="modal-body">
+                                        <div class="row">
+                                            <div class="input-group">
+                                                <input type="text" class="form-control" name="keyword" value=""
+                                                       id="search-kwd" placeholder="请输入粉丝昵称"/>
+                                                <span class='input-group-btn'><button type="button"
+                                                                                      class="btn btn-default"
+                                                                                      onclick="search_members('saler','search-kwd');">搜索</button></span>
+                                            </div>
+                                        </div>
+                                        <div id="module-menus" style="padding-top:5px;"></div>
+                                    </div>
+                                    <div class="modal-footer"><a href="#" class="btn btn-default" data-dismiss="modal"
+                                                                 aria-hidden="true" id="c1">关闭</a></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                </div>
+                <div id="bank" style="display: none;">
+                    <div class="form-group">
+                        <label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label"><span style='color:red'>*</span>银行卡类型</label>
+                        <div class="col-xs-12 col-sm-8">
+                            <input type="text" name="merchant[back_type]" class="form-control"
+                                   value="{$merchant['back_type']}"/>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label"><span style='color:red'>*</span>银行卡账号</label>
+                        <div class="col-xs-12 col-sm-8">
+                            <input type="text" name="merchant[back_account]" class="form-control"
+                                   value="{$merchant['back_account']}"/>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label"><span style='color:red'>*</span>银行卡绑定的用户名</label>
+                        <div class="col-xs-12 col-sm-8">
+                            <input type="text" name="merchant[back_name]" class="form-control"
+                                   value="{$merchant['back_name']}"/>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label"><span style='color:red'>*</span>银行卡绑定的手机号</label>
+                        <div class="col-xs-12 col-sm-8">
+                            <input type="text" name="merchant[back_phone]" class="form-control"
+                                   value="{$merchant['back_phone']}"/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="form-group">
+                <label class="col-xs-12 col-sm-3 col-md-2 control-label"><span style='color:red'>*</span> 选择通知管理员</label>
+                <div class="col-sm-8 col-xs-12">
+                    <input type='hidden' id='messageopenid' name='messageopenid' value="{$messagesaler['openid']}" />
+                    <div class='input-group'>
+                        <input type="text" name="messagesaler" maxlength="30" value="{if !empty($messagesaler)}{$messagesaler['nickname']}{/if}" id="messagesaler" class="form-control" readonly />
+                        <div class='input-group-btn'>
+                            <button class="btn btn-default" type="button" onclick="popwin = $('#modal-module-menus2').modal();">选择通知管理员</button>
+                        </div>
+                    </div>
+                    {if !empty($messagesaler)}
+                    <span class='help-block'><img style="width:100px;height:100px;border:1px solid #ccc;padding:1px" src="{$messagesaler['avatar']}" id="messageavatar" /></span>
+                    {/if}
+                    <div id="modal-module-menus2"  class="modal fade" tabindex="-1">
+                        <div class="modal-dialog" style='width: 920px;'>
+                            <div class="modal-content">
+                                <div class="modal-header"><button aria-hidden="true" data-dismiss="modal" class="close two" type="button">×</button><h3>选择通知管理员</h3></div>
+                                <div class="modal-body" >
+                                    <div class="row">
+                                        <div class="input-group">
+                                            <input type="text" class="form-control" name="keyword" value="" id="search-kwd2" placeholder="请输入粉丝昵称/uid/openid" />
+                                            <span class='input-group-btn'><button type="button" class="btn btn-default" onclick="search_members('messagesaler','search-kwd2');">搜索</button></span>
+                                        </div>
+                                    </div>
+                                    <div id="module-menus2" style="padding-top:5px;"></div>
+                                </div>
+                                <div class="modal-footer"><a href="#" class="btn btn-default" data-dismiss="modal" aria-hidden="true" id="c2">关闭</a></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label">联系人</label>
+                <div class="col-xs-12 col-sm-8">
+                    <input type="text" name="merchant[linkman_name]" class="form-control" value="{$merchant['linkman_name']}" >
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label"><span style='color:red'>*</span>联系电话</label>
+                <div class="col-xs-12 col-sm-8">
+                    <input type="text" id="mobile" name="merchant[linkman_mobile]" placeholder="可用于找回密码" class="form-control" value="{$merchant['linkman_mobile']}" >
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label">商家详情</label>
+                <div class="col-xs-12 col-sm-8">
+                    <textarea style="height:200px;" name="merchant[detail]" class="form-control richtext" cols="60">{$merchant['detail']}</textarea>
+                </div>
+            </div>
+
+            {if !empty($id)}
+            <!--<div class="form-group">-->
+                <!--<label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label">添加日期</label>-->
+                <!--<div class="col-xs-12 col-sm-8">-->
+                    <!--<p class="form-control-static">{php echo date('Y-m-d', $merchant['createtime']);}</p>-->
+                <!--</div>-->
+            <!--</div>-->
+            {/if}
+            <div class="form-group">
+                <div class="col-xs-12 col-sm-9 col-md-10 col-lg-10 col-sm-offset-3 col-md-offset-2 col-lg-offset-2">
+                    <input type="hidden" name="id" value="{$merchant['id']}" />
+                    <input name="submit" type="submit" value="提交" class="btn btn-primary" />
+                    <input type="hidden" name="token" value="{$_W['token']}" />
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+{$pager}
+{elseif $_GPC['op']=='edit'}
+<div class="main">
+    <form action="" method="post" class="form-horizontal form" id="form">
+        <div class="panel panel-default">
+            <div class="panel-heading">商家</div>
+            <input type="hidden" name="merchant[id]" class="form-control" value="{$merchant['id']}" />
+            <div class="panel-body">
+                <div class="form-group" style="display: none;">
+                    <label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label">是否分配后台权限</label>
+                    <div class="col-xs-12 col-sm-8">
+                        <label class="radio radio-inline">
+                            <input type="radio" name="merchant[open]" value="1" {if intval($merchant['open']) !=2}checked="checked"{/if} onclick="$('#level').show();"> 是
+                        </label>
+                        <label class="radio radio-inline">
+                            <input type="radio" name="merchant[open]" value="2" {if intval($merchant['open']) ==2}checked="checked"{/if} onclick="$('#level').hide();"> 否
+                        </label>
+                    </div>
+                </div>
+                <div id="level" {if $merchant['open']==2}style="display: none;"{/if}>
+                <div class="form-group" >
+                    <label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label">用户名</label>
+                    <div class="col-xs-12 col-sm-8">
+                        {if !empty($merchant)}
+                        <span class="uneditable-input form-control">{$merchant['uname']}</span>
+                        {else}
+                        <input type="text" name="merchant[uname]" class="form-control" value="{$merchant['uname']}" />
+                        {/if}
+
+                    </div>
+                </div>
+                <!--{if !empty($merchant)}-->
+                <!--<div class="form-group" >-->
+                    <!--<label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label">原密码</label>-->
+                    <!--<div class="col-xs-12 col-sm-8">-->
+                        <!--<input type="password" name="opwd" class="form-control" value="" />-->
+                    <!--</div>-->
+                <!--</div>-->
+                <!--<div class="form-group" >-->
+                    <!--<label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label">新密码</label>-->
+                    <!--<div class="col-xs-12 col-sm-8">-->
+                        <!--<input type="password" name="npwd" class="form-control" value="" />-->
+                    <!--</div>-->
+                <!--</div>-->
+                <!--<div class="form-group" >-->
+                    <!--<label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label">再次输入</label>-->
+                    <!--<div class="col-xs-12 col-sm-8">-->
+                        <!--<input type="password" name="tpwd" class="form-control" value="" />-->
+                    <!--</div>-->
+                <!--</div>-->
+                <!--{else}-->
+                <!--<div class="form-group" >-->
+                    <!--<label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label">密码</label>-->
+                    <!--<div class="col-xs-12 col-sm-8">-->
+                        <!--<input type="password" name="merchant[password]" class="form-control" value="{$merchant['password']}" />-->
+                    <!--</div>-->
+                <!--</div>-->
+                <!--<div class="form-group" >-->
+                    <!--<label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label">再次输入</label>-->
+                    <!--<div class="col-xs-12 col-sm-8">-->
+                        <!--<input type="password" name="tpwd" class="form-control" value="" />-->
+                    <!--</div>-->
+                <!--</div>-->
+                <!--{/if}-->
+            </div>
+            {if $_W['user']['merchant_id']==0}
+            <div class="form-group">
+                <label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label">佣金百分比</label>
+                <div class="col-xs-12 col-sm-8">
+                    <div class="input-group">
+                        <input type="text" name="merchant[percent]" class="form-control" value="{$merchant['percent']}" />
+                        <span class="input-group-addon">%</span>
+                    </div>
+                </div>
+            </div>
+            {/if}
+            <div class="form-group">
+                <label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label">商家名称</label>
+                <div class="col-xs-12 col-sm-8">
+                    {if $_W['user']['merchant_id'] != $merchant['id']}
+                    <span class="uneditable-input form-control">{$merchant['name']}</span>
+                    {else}
+                    <input type="text" name="merchant[name]" class="form-control" value="{$merchant['name']}" />
+                    {/if}
+                </div>
+            </div>
+            {if $_W['user']['merchant_id'] == $merchant['id']}
+            <div class="form-group">
+                <label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label">商家logo</label>
+                <div class="col-xs-12 col-sm-8">
+                    {php echo tpl_form_field_image('merchant[thumb]', $merchant['thumb']);}
+                    <span class="help-block">图片建议为200*150</span>
+                </div>
+            </div>
+            {else}
+            <div class="form-group">
+                <label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label">商家logo</label>
+                <div class="col-xs-12 col-sm-8">
+                    <img width="150px" src="{php echo tomedia($merchant['thumb'])}" />
+                </div>
+            </div>
+            {/if}
+            {if $_W['user']['merchant_id']==0}
+            <div class="form-group">
+                <label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label">上传商品数量上限</label>
+                <div class="col-xs-12 col-sm-8">
+                    <input type="text" name="merchant[goodsnum]" class="form-control" value="{$merchant['goodsnum']}">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label">淘宝商品采集</label>
+                <div class="col-xs-12 col-sm-8">
+                    <label class="control-label" style="font-weight:500">
+                    <input type="radio" name="merchant[taobao]" value="1" {if intval($merchant['taobao']) == 1}checked{/if}>允许
+                    <input type="radio" name="merchant[taobao]" value="0" {if intval($merchant['taobao']) == 0}checked{/if}>不允许
+                    </label>
+                </div>
+            </div>
+            {/if}
+            <div class="form-group">
+                <label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label">总销量</label>
+                <div class="col-xs-12 col-sm-8">
+                    <input type="text" name="merchant[salenum]" class="form-control" value="{$merchant['salenum']}">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label">商家行业</label>
+                <div class="col-xs-12 col-sm-8">
+                    {if $_W['user']['merchant_id'] != $merchant['id']}
+                    <span class="uneditable-input form-control">{$merchant['industry']}</span>
+                    {else}
+                    <input type="text" name="merchant[industry]" class="form-control" value="{$merchant['industry']}">
+                    {/if}
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label">商家地址</label>
+                <div class="col-xs-12 col-sm-8">
+                    {if $_W['user']['merchant_id'] != $merchant['id']}
+                    <span class="uneditable-input form-control">{$merchant['address']}</span>
+                    {else}
+                    <input type="text" name="merchant[address]" class="form-control" value="{$merchant['address']}">
+                    {/if}
+                </div>
+            </div>
+
+            <div class="panel-body">
+                <div class="form-group">
+                    <label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label">提现方式：</label>
+                    <div class="col-xs-12 col-sm-8">
+                        <label class="radio radio-inline">
+                            <input type="radio" name="merchant[bank]" {if $_W['user']['merchant_id'] != $merchant['id']}disabled{/if} value="1" {if intval($merchant['bank']) != 2}checked="checked"{/if} onclick="$('#wechat').show();$('#bank').hide()">提现到微信
+                        </label>
+                        <label class="radio radio-inline">
+                            <input type="radio" name="merchant[bank]" {if $_W['user']['merchant_id'] != $merchant['id']}disabled{/if} value="2" {if intval($merchant['bank']) == 2}checked="checked"{/if} onclick="$('#bank').show();$('#wechat').hide()">提现到银行卡
+                        </label>
+                    </div>
+                </div>
+                <div id="wechat" {if $merchant['bank'] == 2} style="display: none;"{/if}>
+                    <div class="form-group">
+                        <label class="col-xs-12 col-sm-3 col-md-2 control-label"><span style='color:red'>*</span>
+                            选择提现到微信号</label>
+                        <div class="col-sm-8 col-xs-12">
+                            <input type='hidden' id='openid' name='openid' value="{$saler['openid']}"/>
+                            <div class='input-group'>
+                                <input type="text" name="saler" maxlength="30"
+                                       value="{if !empty($saler)}{$saler['nickname']}{/if}" id="saler" class="form-control"
+                                       readonly/>
+                                <div class='input-group-btn'>
+                                    <button class="btn btn-default" type="button"
+                                            {if $_W['user']['merchant_id'] == $merchant['id']}onclick="popwin = $('#modal-module-menus').modal();"{/if}>选择提现到微信号
+                                    </button>
+                                </div>
+                            </div>
+                            {if !empty($saler)}
+                            <span class='help-block'><img style="width:100px;height:100px;border:1px solid #ccc;padding:1px"
+                                                          src="{$saler['avatar']}" id="avatar"/></span>
+                            {/if}
+                            <div id="modal-module-menus" {if $_W['user']['merchant_id'] != $merchant['id']}disabled{/if} class="modal fade" tabindex="-1">
+                                <div class="modal-dialog" style='width: 920px;'>
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <button aria-hidden="true" data-dismiss="modal" class="close one" type="button">×</button>
+                                            <h3>选择提现到微信号</h3></div>
+                                        <div class="modal-body">
+                                            <div class="row">
+                                                <div class="input-group">
+                                                    <input type="text" class="form-control" name="keyword" value=""
+                                                           id="search-kwd" placeholder="请输入粉丝昵称"/>
+                                                    <span class='input-group-btn'><button type="button"
+                                                                                          class="btn btn-default"
+                                                                                          onclick="search_members('saler','search-kwd');">搜索</button></span>
+                                                </div>
+                                            </div>
+                                            <div id="module-menus" {if $_W['user']['merchant_id'] != $merchant['id']}disabled{/if} style="padding-top:5px;"></div>
+                                        </div>
+                                        <div class="modal-footer"><a href="#" class="btn btn-default" data-dismiss="modal"
+                                                                     aria-hidden="true" id="c1">关闭</a></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="bank" {if $merchant['bank'] != 2} style="display: none;"{/if}>
+                    <div class="form-group">
+                        <label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label"><span style='color:red'>*</span>银行卡类型</label>
+                        <div class="col-xs-12 col-sm-8">
+                            <input type="text" name="merchant[back_type]" class="form-control"
+                                   value="{$merchant['back_type']}"/>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label"><span style='color:red'>*</span>银行卡账号</label>
+                        <div class="col-xs-12 col-sm-8">
+                            <input type="text" name="merchant[back_account]" class="form-control"
+                                   value="{$merchant['back_account']}"/>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label"><span style='color:red'>*</span>银行卡绑定的用户名</label>
+                        <div class="col-xs-12 col-sm-8">
+                            <input type="text" name="merchant[back_name]" class="form-control"
+                                   value="{$merchant['back_name']}"/>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label"><span style='color:red'>*</span>银行卡绑定的手机号</label>
+                        <div class="col-xs-12 col-sm-8">
+                            <input type="text" name="merchant[back_phone]" class="form-control"
+                                   value="{$merchant['back_phone']}"/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-xs-12 col-sm-3 col-md-2 control-label"><span style='color:red'>*</span> 选择通知管理员</label>
+                <div class="col-sm-8 col-xs-12">
+                    <input type='hidden' id='messageopenid' name='messageopenid' value="{$messagesaler['openid']}" />
+                    <div class='input-group'>
+                        <input type="text" name="messagesaler" maxlength="30" value="{if !empty($messagesaler)}{$messagesaler['nickname']}{/if}" id="messagesaler" class="form-control" readonly />
+                        <div class='input-group-btn'>
+                            <button class="btn btn-default" type="button" onclick="popwin = $('#modal-module-menus2').modal();">选择通知管理员</button>
+                        </div>
+                    </div>
+                    {if !empty($messagesaler)}
+                    <span class='help-block'><img style="width:100px;height:100px;border:1px solid #ccc;padding:1px" src="{$messagesaler['avatar']}" id="messageavatar" /></span>
+                    {/if}
+                    <div id="modal-module-menus2"  class="modal fade" tabindex="-1">
+                        <div class="modal-dialog" style='width: 920px;'>
+                            <div class="modal-content">
+                                <div class="modal-header"><button aria-hidden="true" data-dismiss="modal" class="close two" type="button">×</button><h3>选择通知管理员</h3></div>
+                                <div class="modal-body" >
+                                    <div class="row">
+                                        <div class="input-group">
+                                            <input type="text" class="form-control" name="keyword" value="" id="search-kwd2" placeholder="请输入粉丝昵称" />
+                                            <span class='input-group-btn'><button type="button" class="btn btn-default" onclick="search_members('messagesaler','search-kwd2');">搜索</button></span>
+                                        </div>
+                                    </div>
+                                    <div id="module-menus2" style="padding-top:5px;"></div>
+                                </div>
+                                <div class="modal-footer"><a href="#" class="btn btn-default" data-dismiss="modal" aria-hidden="true" id="c2">关闭</a></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label">联系人</label>
+                <div class="col-xs-12 col-sm-8">
+                    {if $_W['user']['merchant_id'] != $merchant['id']}
+                    <span class="uneditable-input form-control">{$merchant['linkman_name']}</span>
+                    {else}
+                    <input type="text" name="merchant[linkman_name]" class="form-control" value="{$merchant['linkman_name']}" >
+                    {/if}
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label"><span style='color:red'>*</span>联系电话</label>
+                <div class="col-xs-12 col-sm-8">
+                    {if $_W['user']['merchant_id'] != $merchant['id']}
+                    <span class="uneditable-input form-control">{$merchant['linkman_mobile']}</span>
+                    {else}
+                    <input type="text" id="mobile" name="merchant[linkman_mobile]" placeholder="可用于找回密码" class="form-control" value="{$merchant['linkman_mobile']}" >
+                    {/if}
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label">商家详情</label>
+                <div class="col-xs-12 col-sm-8">
+                    {if $_W['user']['merchant_id'] != $merchant['id']}
+                    <span class="uneditable-input form-control">{$merchant['detail']}</span>
+                    {else}
+                    <textarea style="height:200px;" name="merchant[detail]" class="form-control richtext" cols="60">{$merchant['detail']}</textarea>
+                    {/if}
+                </div>
+            </div>
+            {if !empty($id)}
+            <!--<div class="form-group">-->
+                <!--<label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label">添加日期</label>-->
+                <!--<div class="col-xs-12 col-sm-8">-->
+                    <!--<p class="form-control-static">{php echo date('Y-m-d', $merchant['createtime']);}</p>-->
+                <!--</div>-->
+            <!--</div>-->
+            {/if}
+            {if $_W['user']['merchant_id'] == 0 && $merchant['status'] == 0}
+            <div style="width: 83%;text-align: right;margin-top: 30px;">
+                <a href="javascript:;" class="btn btn-success btn-sm js-check-goods" goods-id="{$merchant['id']}" data-toggle="tooltip" data-placement="top" title="审核通过">审核通过</a>
+                <a href="javascript:;" goods-id="{$merchant['id']}" class="btn btn-danger btn-sm js-not-check-goods" data-toggle="tooltip" data-placement="top" title="拒绝入驻">拒绝入驻</a>
+            </div>
+            {else}
+            <div class="form-group">
+                <div class="col-xs-12 col-sm-9 col-md-10 col-lg-10 col-sm-offset-3 col-md-offset-2 col-lg-offset-2">
+                    <input type="hidden" name="id" value="{$merchant['id']}" />
+                    <input name="submit" type="submit" value="提交" class="btn btn-primary" />
+                    <input type="hidden" name="token" value="{$_W['token']}" />
+                </div>
+            </div>
+            {/if}
+        </div>
+        </div>
+    </form>
+</div>
+<script>
+    $('.js-check-goods , .js-not-check-goods').click(function(e) {
+        e.stopPropagation();
+        var id = $(this).attr('goods-id');
+        var _this = $(this).parent().parent();
+        if ($(this).hasClass('js-check-goods')) {
+            status = 1;
+            html = '确认通过审核?';
+        } else if ($(this).hasClass('js-not-check-goods')) {
+            status = 2;
+            html = '确认拒绝入驻?';
+        }
+        util.nailConfirm(this, function(state) {
+            if(!state) return;
+            $.post("{php echo web_url('store/user/check')}", {id : id , status : status}, function(data){
+                if(!(data.errno)){
+                    setTimeout(function () {
+                        window.location.href = "{php echo web_url('store/userList')}";
+                    },1000);
+                }else {
+                    setTimeout(function () {
+                        window.location.href = window.location.href;
+                    },1000);
+                }
+                util.tips(data.message, 2000);
+            }, 'json');
+        }, {html: html});
+
+    });
+</script>
+{elseif $_GPC['op']=='detail'}
+
+{/if}
+<script type="text/javascript">
+    function search_members(s,k) {
+        if(k=='search-kwd'){
+            if( $.trim($('#search-kwd').val())==''){
+                Tip.focus('#search-kwd','请输入关键词');
+                return;
+            }
+            $("#module-menus").html("正在搜索....")
+            $.get("{php echo web_url('application/merchant',array('op'=>'search'))}", {
+                keyword: $.trim($('#search-kwd').val()),t:s
+            }, function(dat){
+                $('#module-menus').html(dat);
+            });
+        }else{
+            if( $.trim($('#search-kwd2').val())==''){
+                Tip.focus('#search-kwd2','请输入关键词');
+                return;
+            }
+            $("#module-menus2").html("正在搜索....")
+            $.get("{php echo web_url('application/merchant',array('op'=>'search'))}", {
+                keyword: $.trim($('#search-kwd2').val()),type:s
+            }, function(dat){
+                $('#module-menus2').html(dat);
+            });
+        }
+
+    }
+    function select_member(o,type) {
+        if(type =='saler'){
+            $("#openid").val(o.openid);
+            $("#saler").val(o.nickname);
+            $("#avatar").attr('src', o.avatar);
+            $(".one").click();
+        }else{
+            $("#messageopenid").val(o.openid);
+            $("#messagesaler").val(o.nickname);
+            $("#messageavatar").attr('src', o.avatar);
+            $(".two").click();
+        }
+
+    }
+    $(document).on('click', '.data-item-delete', function () {
+        $(this).closest('.data-item').remove();
+    });
+
+    var kw = 1;
+    function addType() {
+        $(".btn-add-type").button("loading");
+        $.ajax({
+            url: "{php echo web_url('application/merchant/tag')}&kw="+kw,
+            cache: false
+        }).done(function (html) {
+            $(".btn-add-type").button("reset");
+            $("#datas").append(html);
+        });
+        kw++;
+    }
+
+    $(function(){
+        $('.statys').each(function(){
+            if ($(this).prev().children().is(':checked')) {
+                $(this).val(1);
+            }else{
+                $(this).val(2);
+            }
+        });
+    });
+</script>
+{php include wl_template('common/footer');}

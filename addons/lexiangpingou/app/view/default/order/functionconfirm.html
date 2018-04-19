@@ -1,0 +1,164 @@
+{php include wl_template('common/header');}
+<div class="page-group">
+    <div class="page page-current" id="page-order-confirm">
+		<div class="content" data-distance="10">
+			{php include wl_template('common/followed');}
+			<div id="ct">
+			    <div class="dt_order">
+			    	
+			        <div class="dt_commodity_info">
+			            <dl class="commodity_info">
+			            	<dt><img src="{php echo tomedia($functionlist['gimg'])}" width="85" height="85" alt=""></dt>
+			            	<dd>
+			            		<h3>{$functionlist['name']}</h3>
+			            		<div class="attr" id="ord_imes">
+			            			
+			            			<span>月数：{$num}</span>
+			            		</div>
+			            		<div class="price">¥{$functionlist['price']} x {$bnum},优惠{$discountnum}个月</div>
+			            	</dd>
+			            </dl>
+			           
+			        </div>
+			        
+			      
+			        
+			       
+			    </div>
+			</div>
+   		</div>
+   		<div class="footerr">
+	       
+	        <div class="order_mes">
+	        <span>实付款：</span>
+	        	<span class="order_price" id="dt_ord_t2">¥{$pay_price}</span>
+	        	<button class="btn_gopay" id="dt_goPay">提交订单</button>
+	        </div>
+	    </div>
+    </div>
+</div>
+<div class="popup popup-youhui">
+	<header class="bar bar-nav">
+    	<a class="button button-link button-nav pull-right close-popup">关闭</a>
+    	<h1 class="title">优惠券列表</h1>
+  	</header>
+  	<div class="content" id="youhuic">
+    	
+  	</div>
+</div>
+<script type="text/html" id="couponlist">
+{{# for(var i = 0, len = d.length; i < len; i++){ }}
+<div class="card" style="border-radius: .2rem;">
+  <div class="card-content" style="border-radius: .2rem .2rem 0 0;color: white;{{# if(i%3 == 0){ }}background-color: #4dd6b1;{{# }else if(i%3 == 1){ }}background-color: #6eb3e8;{{# }else{ }}background-color: #ffb600;{{# } }}">
+    <div class="list-block media-list">
+      <ul>
+        <li class="item-content">
+          <div class="item-media">
+            <img src="{php echo tomedia($config['tginfo']['slogo'])}" width="50" style="border-radius: 25px;">
+          </div>
+          <div class="item-inner">
+            <div class="item-title-row">
+              <div class="item-title">{{ d[i].name }}</div>
+            </div>
+            <div class="item-subtitle">￥ {{ d[i].cash }}</div>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </div>
+  <div class="card-footer">
+    <span>截止时间：{{ d[i].end_time }}</span>
+    <span style="display: flex;"><div class="weui_btn weui_btn_mini weui_btn_default external" onclick="usecoupon({{ d[i].id }},{{ d[i].cash }})">使用优惠券</div></span>
+  </div>
+</div>
+{{# } }}
+</script>
+<script type="text/javascript">
+	var num = "{php echo $goods['gnum']}";
+    var isshow = "{php echo $goods['isshow']}";
+    var addrid = "{php echo $addrid}";
+    var freight = "{php echo $freight}";
+    var pay_price = "{php echo $pay_price}";
+    var couponid = 0;
+    var typeid = $('.buttons-row .active').attr('typeid');
+    num = parseInt(num);
+	function usecoupon(id,cash){
+		$.closeModal();
+		$('#couponid').val(id);
+		couponid = id;
+		$('#dt_ord_yhjmes').html('使用优惠券： -￥'+cash);
+		if(typeid == 2 || typeid == 4){
+			$('#dt_ord_t2').html('￥' + (pay_price - freight - cash).toFixed(2));
+		}else{
+			$('#dt_ord_t2').html('￥' + (pay_price - cash).toFixed(2));
+		}
+	}
+	
+    $(function() {
+		'use strict';
+		$(document).on("pageInit", "#page-order-confirm", function(e, id, page) {
+			var gettpl = document.getElementById('couponlist').innerHTML;
+			var emphtml = '<div class="m-cart" id="s"><div class="empty" id="pro-view-6">暂无可用优惠券</div></div>';
+			laytpl(gettpl).render({php echo json_encode($coupon)}, function(html){
+				if(html.length < 10){
+					$("#youhuic").append(emphtml);
+				}else{
+					$("#youhuic").append(html);
+				}
+			});
+
+			$('#dt_goPay').on('click', function () {
+				var typeid = $('.buttons-row .active').attr('typeid');
+				var name = $('#cnee').val();
+		        var mobile = $('#mobile').val();
+		        var gettime = $('#gettime').val();
+		        var remark = $('.dt_ord_input').val();
+				if(num <= 0){$.toast('销量爆表，库存不足咯!');return false;}
+				if(isshow != 1){$.toast('商品已下架或售罄，无法购买!');return false;}
+				if(typeid == 2  || typeid == 4){
+					if(!name){
+						$.toast('请输入您的姓名');
+						return false;
+					}
+					if(!mobile){
+						$.toast('请输入您的手机号码');
+						return false;
+					}
+					if(!gettime){
+						$.toast('请选择您的核销时间');
+						return false;
+					}
+				}
+				$.post("{php echo app_url('order/functionconfirm')}",{typeid:typeid,name:name,mobile:mobile,gettime:gettime,remark:remark,addrid:addrid,couponid:couponid},function(d){
+					if(d.status == 1){
+					    location.href = "{php echo app_url('pay/paytype')}"+'orderno='+d.result.orderno;
+					}else{
+						$.toast(d.result);
+					}
+				},"json");
+			});  
+			
+			$('#dt_ord_youhui').on('click', function () {
+				$.popup('.popup-youhui');
+			});
+			
+			$('.u_address').on('click', function () {
+				location.href = "{php echo app_url('address/addmanage')}";
+			});
+			$('#express').on('click', function () {
+				couponid = 0;
+				$('#freight').html(freight);
+				$('#dt_ord_yhjmes').html('请选择或兑换优惠券');
+				$('#dt_ord_t2').html('￥'+pay_price);
+			});
+			$('#bdelete').on('click', function () {
+				couponid = 0;
+				$('#freight').html('0.00');
+				$('#dt_ord_yhjmes').html('请选择或兑换优惠券');
+				$('#dt_ord_t2').html('￥' + (pay_price - freight).toFixed(2));
+			});
+		});
+		$.init();
+	});
+</script>
+{php include wl_template('common/footer');}

@@ -1,0 +1,353 @@
+{php include wl_template('common/header');}
+<style>
+    .container{background:#fff;}
+    .table>tbody>tr>td{line-height:3;padding: 8px 2px;}
+    th,table thead tr th:last-child, table tbody tr td:last-child{text-align:center;}
+    table>tr:first-child{height:42px;}
+    .table>tbody>tr>th{line-height: 2.5}
+    #shangchengZHL{height:500px;}
+    table.SJ{
+        margin-bottom: 50px;
+    }
+    .title{
+        padding: 20px 0;
+        text-align: center;
+        font-size: 20px;
+        font-weight: 600;
+    }
+    .btn-default:focus,.btn-default.active{
+        background-color: #44b549;
+        color: #fff0cc;
+        border-color: #ccc;
+        box-shadow:none;
+    }
+    .storeids .input-group {
+        width: 200px;
+        float: left;
+        margin-right: 10px;
+    }
+    .modal-body .col-lg-6 {
+        margin-bottom: 10px;
+    }
+</style>
+<div class="container">
+    <div class="title">日报表</div>
+    <div class="btn-group tabs" role="group">
+        <button type="button" class="btn btn-default active">商品日报表</button>
+        <button type="button" class="btn btn-default">商场总日报表</button>
+        <a type="button" class="btn btn-primary active sysdata">刷新数据</a>
+    </div>
+    <div class="main">
+        <br>
+        <div class="panel panel-info">
+            <div class="panel-heading">筛选</div>
+            <div class="panel-body">
+                <div class="form-horizontal">
+                    <div class="form-group">
+                      <label class="col-sm-2 control-label">时间</label>
+                      <div id="times" class="col-sm-10">
+                        {php echo tpl_form_field_daterange('time', array('starttime'=>date('Y-m-d'),'endtime'=>date("Y-m-d",strtotime("+1 day"))));}
+                      </div>
+                    </div>
+                    <div class="form-group">
+                      <label for="inputPassword3" class="col-sm-2 control-label">自提点</label>
+                      <div class="col-sm-10">
+                        <div class="input-group">
+                            <input type="text" name="saler" class="form-control" readonly="">
+                            <div class="input-group-btn">
+                                <button class="btn btn-default" type="button" onclick="popwin = $('#modal-module-menus').modal();">选择门店</button>
+                            </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-2"></div>
+                        <div class="storeids col-sm-10">
+                        </div>
+                    </div>
+                    <div id="modal-module-menus" class="modal fade" tabindex="-1" style="display: none;" aria-hidden="true">
+                        <div class="modal-dialog" style="width: 920px;">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button aria-hidden="true" data-dismiss="modal" class="close" type="button">×</button>
+                                    <h3>选择自提点</h3></div>
+                                <div class="modal-body">
+                                    <div class="row">
+                                    {loop $since_store $item}
+                                      <div class="col-lg-6">
+                                        <div class="input-group">
+                                          <span class="input-group-addon">
+                                            <input type="checkbox" aria-label="...">
+                                          </span>
+                                          <div class="hidden" hidden>
+                                              <div class="input-group">
+                                                  <input type="hidden" value="{$item['id']}" name="storeids[]">
+                                                  <input type="text" value="{$item['storename']}" readonly="" class="form-control">
+                                                  <div class="input-group-btn">
+                                                      <button type="button" onclick="removeStore(this)" class="btn btn-default"><i class="fa fa-remove"></i></button>
+                                                  </div>
+                                              </div>
+                                          </div>
+                                          <input type="text" value="{$item['storename']}" readonly="" class="form-control">
+                                        </div>
+                                      </div>
+                                    {/loop}
+                                    </div>
+                                    <div class="clearfix"></div>
+                                </div>
+                                <div class="modal-footer">
+                                    <span class="btn pull-left"><label><input type="checkbox" onclick="allCheck(this)"> 全选</label></span>
+                                    <button type="button" class="btn btn-primary" onclick="sure()">确定</button>
+                                    <a href="#" class="btn btn-default" data-dismiss="modal" aria-hidden="true">关闭</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                      <div class="col-sm-offset-2 col-sm-10">
+                        <button class="btn btn-default" onclick="search()"><i class="fa fa-search"></i> 搜索</button>
+                      </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <table id="day" class="table">
+            <thead>
+                <tr>
+                    <th>自提点</th>
+                    <th>商品名称</th>
+                    <th>商品规格</th>
+                    <th>商品价格</th>
+                    <th>成团数量</th>
+                    <th>实际支付人数</th>
+                    <th>支付总金额</th>
+                </tr>
+            </thead>
+            <tbody class="text-center">
+
+            </tbody>
+        </table>
+        <table id="dayAll" class="table" hidden>
+            <thead>
+                <tr>
+                    <th>商品名称</th>
+                    <th>商品规格</th>
+                    <th>商品价格</th>
+                    <th>成团数量</th>
+                    <th>实际支付人数</th>
+                    <th>支付总金额</th>
+                </tr>
+            </thead>
+            <tbody class="text-center">
+            </tbody>
+        </table>
+    </div>
+</div>
+<script>
+    // 数据刷新
+    $('.sysdata').on('click',function () {
+        if(getCookie('sys_new_since_unable')){
+            util.tips('请五分钟后再尝试刷新数据');
+            return false;
+        }
+        //这是有设定过期时间的使用示例：
+        //s20是代表20秒
+        //h是指小时，如12小时则是：h12
+        //d是天数，30天则：d30
+        setCookie("sys_new_since_unable",1,"s300");
+        $.get(location.origin+'/minapi.php?op=run_new_since_data&uniacid={$_W["uniacid"]}',{},function (data) {
+            var rs = JSON.parse(data);
+            if(rs.errCode==1){
+                window.location.reload();
+            }else{
+                util.tips('刷新数据失败，请重试');
+            }
+
+        })
+
+    })
+    function setCookie(name,value,time)
+    {
+        var strsec = getsec(time);
+        var exp = new Date();
+        exp.setTime(exp.getTime() + strsec*1);
+        document.cookie = name + "="+ escape (value) + ";expires=" + exp.toGMTString();
+    }
+    function getsec(str)
+    {
+        var str1=str.substring(1,str.length)*1;
+        var str2=str.substring(0,1);
+        if (str2=="s")
+        {
+            return str1*1000;
+        }
+        else if (str2=="h")
+        {
+            return str1*60*60*1000;
+        }
+        else if (str2=="d")
+        {
+            return str1*24*60*60*1000;
+        }
+    }
+    function getCookie(name)
+    {
+        var arr,reg=new RegExp("(^| )"+name+"=([^;]*)(;|$)");
+        if(arr=document.cookie.match(reg))
+            return unescape(arr[2]);
+        else
+            return null;
+    }
+    function delCookie(name)
+    {
+        var exp = new Date();
+        exp.setTime(exp.getTime() - 1);
+        var cval=getCookie(name);
+        if(cval!=null)
+            document.cookie= name + "="+cval+";expires="+exp.toGMTString();
+    }
+
+
+
+
+
+
+
+require(['jquery', 'order'], function($, o){
+    $(function() {
+        ajaxSearch('{php echo date("Y-m-d")}', '{php echo date("Y-m-d",strtotime("+1 day"))}');
+
+        ajaxSearchALL('{php echo date("Y-m-d")}', '{php echo date("Y-m-d",strtotime("+1 day"))}');
+
+        // 按钮切换
+        $('.tabs button').on('click',function() {
+            if ($(this).text() == "商场总日报表") {
+                $('.table').hide();
+                $('#dayAll').show();
+            } else {
+                $('.table').hide();
+                $('#day').show();
+            }
+            $('.tabs button').removeClass('active');
+            $(this).addClass('active');
+            search();
+        });
+    });
+});
+// 自提日报表
+var ajaxSearch = function ajaxSearch(stime, etime, storeids) {
+    // util.loading();
+    $.get(location.origin + '/minapi.php?op=new_since_data&uniacid={$_W["uniacid"]}', {stime: stime, etime: etime, store_id: storeids}, function (data) {
+        res = JSON.parse(data);
+        if (res.status = 1) {
+            data = res.data;
+            $('#day').find('tbody').html('');
+            if (data.length > 0) {
+                for (var i = 0; i < data.length; i++) {
+                    $('#day').find('tbody').append('<tr><td sid='+ data[i].store_id +'>'+ data[i].store_name +'</td><td>'
+                        + data[i].g_name +'</td><td>'
+                        + data[i].g_spec +'</td><td>'
+                        + data[i].g_price +'</td><td>'
+                        + data[i].success_tuan+'</td><td>'
+                        + data[i].pay_num +'</td><td>'
+                        + data[i].pay_price +'</td></tr>');
+                }
+            } else {
+                $('#day').find('tbody').append('<tr><td colspan="7">无数据</td></tr>');
+            }
+            // 第一层
+            for (var s1 = 0; s1 < data.length; s1++) {
+                var spec1 = $('#day').find('tbody').find('td[sid='+ data[s1].store_id +']');
+                for (var s11 = 0; s11 < spec1.length; s11++) {
+                    if (s11 == 0) {
+                        $(spec1[s11]).attr('rowspan', spec1.length);
+                    } else {
+                        $(spec1[s11]).hide();
+                    }
+                }
+            }
+        } else if (res.status == 0) {
+            util.tips('数据超出限制，请缩小筛选范围');
+        } else {
+            util.tips('网络错误');
+        }
+        // util.loaded();
+    });
+}
+// 商场总日报表
+var ajaxSearchALL = function ajaxSearchALL(stime, etime, storeids) {
+    // util.loading();
+    $.get(location.origin + '/minapi.php?op=new_since_data_all&uniacid={$_W["uniacid"]}', {stime: stime, etime: etime, store_id: storeids}, function (data) {
+        res = JSON.parse(data);
+        if (res.status = 1) {
+            data = res.data;
+            $('#dayAll').find('tbody').html('');
+            if (data.length > 0) {
+                for (var i = 0; i < data.length; i++) {
+                    $('#dayAll').find('tbody').append('<tr><td>'
+                        + data[i].g_name +'</td><td>'
+                        + data[i].g_spec +'</td><td>'
+                        + data[i].g_price +'</td><td>'
+                        + data[i].success_tuan+'</td><td>'
+                        + data[i].all_pay_num +'</td><td>'
+                        + data[i].all_pay_price +'</td></tr>');
+                }
+            } else {
+                $('#dayAll').find('tbody').append('<tr><td colspan="6">无数据</td></tr>');
+            }
+        } else if (res.status == 0) {
+            util.tips('数据超出限制，请缩小筛选范围');
+        } else {
+            util.tips('网络错误');
+        }
+        // util.loaded();
+    });
+}
+// 查询
+function search() {
+    var stime = $('#times').find('input[type=hidden]')[0].value;
+    var etime = $('#times').find('input[type=hidden]')[1].value;
+    var data = $('.storeids').find('input[type=hidden]');
+    var storeids = '';
+    for (var i = 0; i < data.length; i++) {
+        if (i+1 != data.length) {
+            storeids = storeids + data[i].value + ",";
+        } else {
+            storeids = '(' + storeids + data[i].value + ')';
+        }
+    }
+    if ($('.tabs button.active').text() == "商场总日报表") {
+        ajaxSearchALL(stime, etime, storeids);
+    } else {
+        ajaxSearch(stime, etime, storeids);
+    }
+}
+/**
+ * 筛选
+ */
+// 自提点确定
+function sure() {
+    var checkbox = $('#modal-module-menus').find('input[type=checkbox]:checked');
+    if (checkbox.length > 0) {
+        console.log(checkbox);
+        for (var i = 0; i < checkbox.length; i++) {
+            $('.storeids').append($(checkbox[i]).parent('span').next().html());
+        }
+        $(checkbox).removeAttr("checked");
+        $('#modal-module-menus').modal('toggle');
+    } else {
+        util.tips('请选择自提点');
+        return false;
+    }
+}
+// 自提点移除门店
+var removeStore = function removeStore(e) {
+    $(e).parents('.input-group').remove();
+}
+// 全选
+var allCheck = function allCheck(e) {
+    $('#modal-module-menus').find('.modal-body input[type=checkbox]').prop("checked", e.checked);
+}
+
+</script>
+{php include wl_template('common/footer');}

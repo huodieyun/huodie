@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>{$cservicegroup['name']}</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	<meta name="apple-mobile-web-app-status-bar-style" content="black">
+	<meta name="format-detection" content="telephone=no" />
+	<!--标准mui.css-->
+	<link rel="stylesheet" href="{TG_URL_ARES}static/mui/css/mui.min.css">
+	<link rel="stylesheet" href="{TG_URL_ARES}static/iconfont/iconfont.css">
+	{php echo register_jssdk(false);}
+</head>
+<body>
+
+<body>
+<header class="mui-bar mui-bar-nav">
+	<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+	<h1 class="mui-title" id="info">{$cservicegroup['name']}</h1>
+	<a id="icon-icon-contact" href="{php echo app_url('chat/chat',array('op'=>'doMobileMychat','ops'=>'display'));}" class="mui-pull-right mui-icon-right-nav"><span class="mui-icon mui-icon-contact mui-icon-icon-contact-filled"></span></a>
+</header>
+<div class="mui-content">
+	<div class="mui-card">
+	<ul class="mui-table-view mui-table-view-chevron">
+	{loop $cservicelist $row}
+		<li class="mui-table-view-cell mui-media">
+			{if $row['ctype'] == 1}
+			<a class="mui-navigate-right" href="{php echo app_url('chat/chat',array('op'=>'doMobileChat','toopenid'=>$row['content']))}">
+			{/if}
+			{if $row['ctype'] == 2}
+			<a class="mui-navigate-right" href="http://wpa.qq.com/msgrd?v=3&uin={$row['content']}&site=qq&menu=yes">
+			{/if}
+			{if $row['ctype'] == 3}
+			<a class="mui-navigate-right" href="tel:{$row['content']}">
+			{/if}
+			{if $row['ctype'] == 4}
+			<a class="mui-navigate-right" href="tel:{$row['content']}">
+			{/if}
+				<img class="mui-media-object mui-pull-left" src="{php echo tomedia($row['thumb'])}">
+				<div class="mui-media-body">
+					{$row['name']} [{$cservicegroup['name']}]
+					<p class="mui-ellipsis">{if $row['ctype'] == 1}微信咨询{/if}{if $row['ctype'] == 2}QQ咨询{/if}{if $row['ctype'] == 3}手机咨询{/if}{if $row['ctype'] == 4}座机咨询{/if}</p>
+				</div>
+			</a>
+		</li>
+	{/loop}
+	</ul>
+	</div>
+</div>
+<script src="{TG_URL_ARES}static/mui/js/mui.min.js"></script>
+<script type="text/javascript">
+wx.ready(function () {
+	sharedata = {
+		title: '{$cservicegroup["name"]}',
+		desc: '{$setting["sharedes"]}',
+		link: '{$setting["shareurl"]}',
+		imgUrl: '{php echo tomedia($setting["sharethumb"]);}',
+		trigger: function (res) {
+			//alert('用户点击发送给朋友');
+		},
+		success: function (res) {
+			//alert('已分享');
+		},
+		cancel: function (res) {
+			//alert('已取消');
+		},
+		fail: function (res) {
+			alert("分享失败");
+		}
+	};
+	wx.onMenuShareAppMessage(sharedata);
+	wx.onMenuShareTimeline(sharedata);
+	wx.onMenuShareQQ(sharedata);
+	wx.onMenuShareWeibo(sharedata);
+});
+</script>
+</body>
+</html>

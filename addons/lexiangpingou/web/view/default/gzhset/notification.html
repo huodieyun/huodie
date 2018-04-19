@@ -1,0 +1,102 @@
+{php include wl_template('common/header');}
+<ul class="nav nav-tabs">
+	<li class="active"><a>发布系统通知 </a></li>
+</ul>
+<div class="clearfix">
+	<form class="form form-horizontal" action="" method="post" role="form" id="form1">
+		<input type="hidden" name="c" value="site" />
+            <input type="hidden" name="a" value="entry" />
+            <input type="hidden" name="m" value="lexiangpingou" />
+            <input type="hidden" name="do" value="gzhset" />
+            <input type="hidden" name="ac" value="notification" />
+            <input type="hidden" name="op" value="publish" />
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				发布通知
+			</div>
+			<div class="panel-body">
+					<div class="form-group">
+						<label class="col-xs-12 col-sm-3 col-md-2 control-label" style="display: none;">id:</label>
+						<div class="col-sm-6 col-xs-12" style="position:relative;display: none;">
+								<input type="text" name="sid" class="form-control" id="sid" value="{$lists['id']}"  autocomplete="off" />
+						</div>
+						<label class="col-xs-12 col-sm-3 col-md-2 control-label">标题:</label>
+						<div class="col-sm-6 col-xs-12" style="position:relative">
+								<input type="text" name="title" class="form-control" id="title" placeholder="此处输入通知的标题" value="{$lists['title']}" autocomplete="off" />
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-xs-12 col-sm-3 col-md-2 control-label">简介:</label>
+						<div class="col-sm-9 col-xs-12" style="position:relative">
+							<div class="col-sm-9 col-xs-12" style="position:relative; padding-left: 0px;">
+								<textarea class="form-control" name="summary" id="summary" rows="3"  placeholder="此处输入通知内容，可以通过右下角拖拽来使输入框边长。" >{$lists['summary']}</textarea>
+							</div>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-xs-12 col-sm-3 col-md-2 control-label">详细内容:</label>
+						<div class="col-sm-9 col-xs-12" style="position:relative">
+						{php echo tpl_ueditor('content', $lists['content']);}
+						</div>
+					</div>
+			</div>
+		</div>
+		<div class="form-group">
+			<div class="col-sm-12">
+				<input type="submit" name="submit" value="提交" class="btn btn-primary col-lg-1" />
+			</div>
+		</div>
+	</form>
+</div>
+<script>
+$(function(){
+		$('#form1').submit(function(){
+		if($('input[name="title"]').val() == ''){
+				util.message('请填写标题.');
+				return false;
+		}
+		if($('input[name="summary"]').val().length > 4){
+				util.message('请填写简介.');
+				return false;
+		}
+		if($('input[name="content"]').val() == ''){
+				util.message('请填写内容.');
+				return false;
+		}
+		});
+});
+
+//	$("#submit").click(function(){
+//		var sid=$("#sid");
+//		var title=$("#title");
+//		var summary=$("#summary");
+//		
+//	    if(title.val()==""){
+//	        util.tips('标题不能为空！', 4000);
+//	        return false;
+//	    }
+//	    if(summary.val()==""){
+//	    	util.tips('内容不能为空！', 4000);
+//	        return false;
+//	    }
+//	    //开始ajax
+//	    var sids=sid.val().toString();
+//      var titles=title.val().toString();
+//      var summarys=summary.val().toString();
+//	    $.ajax({
+//		    type: "GET",
+//		    url: "{php echo web_url('store/notification/publish');}",
+//		    data:{"title":titles,"sid":sids,"summary":summarys},
+//			dataType: "json",
+//		    success: function(data){
+//				if (data.statustype ==1){
+//					util.tips('发布成功！', 4000);
+//				}
+//				if (data.statustype ==2){
+//					util.tips('更新成功！', 4000);
+//				}		
+//			}
+//  	});
+// 	});
+</script>
+{php include wl_template('common/footer');}

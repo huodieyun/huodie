@@ -1,0 +1,215 @@
+{php include wl_template('common/header');}
+<style>
+    .container{background:#fff;}
+    .table>tbody>tr>td{line-height:3;padding: 8px 2px;}
+    th,table thead tr th:last-child, table tbody tr td:last-child{text-align:center;}
+    table>tr:first-child{height:42px;}
+    .table>tbody>tr>th{line-height: 2.5}
+    #shangchengZHL{height:500px;}
+    table.SJ{
+        margin-bottom: 50px;
+    }
+    .title{
+        padding: 20px 0;
+        text-align: center;
+        font-size: 20px;
+        font-weight: 600;
+    }
+    .btn-default:focus,.btn-default.active{
+        background-color: #44b549;
+        color: #fff0cc;
+        border-color: #ccc;
+        box-shadow:none;
+    }
+    .storeids .input-group {
+        width: 200px;
+        float: left;
+        margin-right: 10px;
+    }
+    .modal-body .col-lg-6 {
+        margin-bottom: 10px;
+    }
+</style>
+<div class="container">
+    <div class="title">团长佣金报表</div>
+
+    <div class="main">
+        <br>
+        <div class="panel panel-info">
+            <div class="panel-heading">筛选</div>
+            <div class="panel-body">
+                <div class="form-horizontal">
+                    <div class="form-group">
+
+                      <label class="col-sm-2 control-label">下单时间</label>
+                      <div id="times" class="col-sm-3">
+                        {php echo tpl_form_field_daterange('time', array('starttime'=>date('Y-m-d'),'endtime'=>date("Y-m-d",strtotime("+1 day"))));}
+                      </div>
+                        <label class="col-sm-2 control-label">团号</label>
+                        <div class="col-sm-3">
+                            <input class="form-control" name="tuan_id" type="text" value="{$_GPC['tuan_id']}" placeholder="团号">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                    <label class="col-sm-2 control-label">团长名称</label>
+                    <div class="col-sm-3">
+                        <input class="form-control" name="membername" type="text" value="{$_GPC['membername']}" placeholder="团长名称">
+                    </div>
+                    <label class="col-sm-2 control-label">商品名称</label>
+                    <div class="col-sm-3">
+                        <input class="form-control" name="gname" type="text" value="{$_GPC['gname']}" placeholder="商品名称">
+                    </div>
+                    </div>
+
+                    <div class="form-group">
+                      <div class="col-sm-offset-2 col-sm-10">
+                        <button class="btn btn-default" onclick="search()"><i class="fa fa-search"></i> 搜索</button>
+                          <a  class="btn btn-default checked_output" href='{php echo web_url('data/commander_data/output', array('comadd'=>$_GPC['comadd']))}'>
+                            <i class="fa fa-download"></i> 导出订单
+                          </a>
+                      </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <table id="day" class="table">
+            <thead>
+            <tr>
+
+                <th>下单时间</th>
+                <th>团号</th>
+                <th>团长姓名</th>
+                <th>商品名称</th>
+                <th>团人数</th>
+                <th>商品数量</th>
+                <th>销售总额</th>
+                <th>已签收人数</th>
+                <th>已结算佣金</th>
+            </tr>
+            </thead>
+            <tbody class="text-center">
+
+            </tbody>
+        </table>
+
+    </div>
+</div>
+<script>
+
+
+
+
+
+
+
+require(['jquery', 'order'], function($, o){
+    $(function() {
+        ajaxSearch('{php echo date("Y-m-d")}', '{php echo date("Y-m-d",strtotime("+1 day"))}');
+
+//        ajaxSearchALL('{php echo date("Y-m-d")}', '{php echo date("Y-m-d",strtotime("+1 day"))}');
+
+            // 按钮切换
+            $('.tabs button').on('click',function() {
+                if ($(this).text() == "商场总日报表") {
+                    $('.table').hide();
+                    $('#dayAll').show();
+                } else {
+                    $('.table').hide();
+                    $('#day').show();
+                }
+                $('.tabs button').removeClass('active');
+                $(this).addClass('active');
+                search();
+            });
+        });
+    });
+    // 自提日报表
+    var ajaxSearch = function ajaxSearch(stime, etime, storeids) {
+        // util.loading();
+        $.get(location.origin + '/minapi.php?op=commander_data&uniacid={$_W["uniacid"]}', {stime: stime, etime: etime,tuan_id: $('input[name=tuan_id]').val(),membername: $('input[name=membername]').val(),gname: $('input[name=gname]').val()}, function (data) {
+            res = JSON.parse(data);
+            if (res.status = 1) {
+                data = res.data;
+                $('#day').find('tbody').html('');
+                if (data.length > 0) {
+                    for (var i = 0; i < data.length; i++) {
+                        if(data[i].goods_num==null){
+                            data[i].goods_num=0
+                        }
+                        if(data[i].order_price==null){
+                            data[i].order_price=0
+                        }
+                        $('#day').find('tbody').append('<tr><td>'
+                            + data[i].createtime +'</td><td>'
+                            + data[i].tuan_id +'</td><td>'
+                            + data[i].name +'</td><td>'
+                            + data[i].gname+'</td><td>'
+                            + data[i].order_num +'</td><td>'
+                            + data[i].goods_num +'</td><td>'
+                            + data[i].order_price +'</td><td>'
+                            + data[i].success_num +'</td><td>'
+                            + data[i].withdraw +'</td></tr>');
+                    }
+                } else {
+                    $('#day').find('tbody').append('<tr><td colspan="7">无数据</td></tr>');
+                }
+
+            } else if (res.status == 0) {
+                util.tips('数据超出限制，请缩小筛选范围');
+            } else {
+                util.tips('网络错误');
+            }
+            // util.loaded();
+        });
+    }
+    // 查询
+    function search() {
+        var stime = $('#times').find('input[type=hidden]')[0].value;
+        var etime = $('#times').find('input[type=hidden]')[1].value;
+        var data = $('.storeids').find('input[type=hidden]');
+        var storeids = '';
+        for (var i = 0; i < data.length; i++) {
+            if (i+1 != data.length) {
+                storeids = storeids + data[i].value + ",";
+            } else {
+                storeids = '(' + storeids + data[i].value + ')';
+            }
+        }
+        if ($('.tabs button.active').text() == "商场总日报表") {
+            ajaxSearchALL(stime, etime, storeids);
+        } else {
+            ajaxSearch(stime, etime, storeids);
+        }
+    }
+$('.checked_output').click(function(e){
+    var title_text = $('.order_type li[class= "active"]').text();
+    var order_value = title_text.substring(title_text.indexOf('(')+1, title_text.indexOf(')'));
+    console.log(Number(order_value));
+    if(Number(order_value) >= 4000) {
+        e.preventDefault(e);
+        alert('订单导出数据过大，请调整订单导出数量')
+    }else if(location.host == 'w9.huodiesoft.com' && Number(order_value) >= 200) {
+        e.preventDefault(e);
+        alert('订单导出数据过大，请调整订单导出数量')
+    }else{
+        e.stopPropagation();
+        var html = "确认导出订单吗？";
+        util.nailConfirm(this, function (state) {
+            if (!state)return;
+            var tuan_id = $('input[name=tuan_id]').val();
+            var membername = $('input[name=membername]').val();
+            var gname = $('input[name=gname]').val();
+            var stime = $('#times').find('input')[0].value;
+            var etime = $('#times').find('input')[1].value;
+
+            location.href = '{php echo web_url('data/commander_data/output')}tuan_id=' + tuan_id + '&membername=' + membername + '&gname=' + gname +  '&stime=' + stime + '&etime=' + etime;
+        }, {html: html});
+        e.preventDefault(e);
+    }
+
+})
+
+
+</script>
+{php include wl_template('common/footer');}

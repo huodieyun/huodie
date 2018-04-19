@@ -1,0 +1,193 @@
+<div class="form-group" style="display: none">
+    <label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label">积分奖励</label>
+    <div class="col-md-6">
+        <div class="input-group">
+            <input type="text" name="goods[credits]" class="form-control" value="{$goods['credits']}"/>
+            <span class="input-group-addon">积分</span>
+        </div>
+        <span class="help-block">会员购买单个商品所获得的积分,如果不填或者填0，则默认为不奖励积分。</span>
+    </div>
+</div>
+{if $ispartjob['status']}
+
+
+<div class="form-group yjms">
+    <label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label">佣金模式</label>
+    <div class="col-md-6">
+
+        <label class="radio radio-inline">
+            <input type="radio" name="goods[com_type]" value="3" {if intval($goods['com_type']) == 3}checked="checked"{/if} onclick="comType();$('.yjjsfs,.yj').show()"> 核销佣金
+        </label>
+
+        <label class="radio radio-inline tzyj">
+            <input type="radio" name="goods[com_type]" value="2" {if intval($goods['com_type']) == 2}checked="checked"{/if} onclick="$('.comtype').show();$('.yjjsfs,.yj').show()"> 团长佣金
+        </label>
+        <label class="radio radio-inline">
+            <input type="radio" name="goods[com_type]" value="1" {if intval($goods['com_type']) == 1}checked="checked"{/if} onclick="comType();$('.yjjsfs,.yj').show()"> 全民兼职
+        </label>
+        <label class="radio radio-inline">
+            <input type="radio" name="goods[com_type]" value="0" {if intval($goods['com_type']) == 0}checked="checked"{/if} onclick="comType(1);$('.yjjsfs,.yj').hide();$('.yj input').val(0)"> 不启用
+        </label>
+        <!--<span class="help-block" style="color:red;">阶梯团和定金团请勿启用佣金，以免导致佣金计算错误，造成不必要的损失！！！</span>-->
+    </div>
+
+</div>
+<div class="form-group comtype" {if $goods['com_type'] != 2}style="display: none;"{/if}>
+<label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label">团长审核</label>
+<div class="col-md-6">
+    <label class="radio radio-inline">
+        <input type="radio" name="goods[commander_check]" value="1" {if intval($goods['commander_check']) == 1}checked="checked"{/if}>
+        开启
+    </label>
+    <label class="radio radio-inline">
+        <input type="radio" name="goods[commander_check]" value="0" {if intval($goods['commander_check']) == 0}checked="checked"{/if}>
+        关闭
+    </label>
+</div>
+</div>
+<div class="form-group comtype" {if $goods['com_type'] != 2}style="display: none;"{/if}>
+<label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label">佣金外快</label>
+<div class="col-md-6">
+    <label class="radio radio-inline">
+        <input type="radio" name="goods[show_com]" value="1" {if intval($goods['show_com']) == 1}checked="checked"{/if}>
+        显示
+    </label>
+    <label class="radio radio-inline">
+        <input type="radio" name="goods[show_com]" value="0" {if intval($goods['show_com']) == 0}checked="checked"{/if}>
+        不显示
+    </label>
+</div>
+</div>
+
+{if $goods['selltype'] != 2 }
+<div class="form-group comtype tzmd" {if $goods['com_type'] != 2}style="display: none;"{/if}>
+<label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label">团长免单</label>
+<div class="col-md-6">
+    <label class="radio radio-inline">
+        <input type="radio" name="goods[is_commander_fee]" value="1" {if intval($goods['is_commander_fee']) == 1}checked="checked"{/if}>
+        开启
+    </label>
+    <label class="radio radio-inline">
+        <input type="radio" name="goods[is_commander_fee]" value="0" {if intval($goods['is_commander_fee']) == 0}checked="checked"{/if}>
+        关闭
+    </label>
+</div>
+</div>
+{/if}
+
+
+<div class="form-group yjjsfs">
+
+    <label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label">佣金计算方式</label>
+    <div class="col-xs-12 col-sm-8">
+        <div class="input-group">
+
+            <label class="radio radio-inline">
+                <input type="radio" name="goods[commissiontype]" value="1" {if intval($goods['commissiontype']) == 1}checked="checked"{/if}> 百分比
+            </label>
+            <label class="radio radio-inline">
+                <input type="radio" name="goods[commissiontype]" value="2" {if intval($goods['commissiontype']) == 2}checked="checked"{/if}> 固定金额
+            </label>
+            <label class="radio radio-inline">
+                <input type="radio" name="goods[commissiontype]" value="0" {if intval($goods['commissiontype']) == 0}checked="checked"{/if}> 不启用
+            </label>
+        </div>
+    </div>
+</div>
+<div class="form-group yj">
+    <label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label">佣金</label>
+    <div class="col-xs-12 col-sm-8">
+        <div class="input-group">
+            <input type="text" name="goods[commission]" class="form-control" value="{$goods['commission']}"
+                   onkeyup="this.value=this.value.replace(/[^\d.]/g,'')"/>
+            <span class="input-group-addon">请填写数字 如50% 写50,固定金额 50元 就填 50 </span>
+        </div>
+    </div>
+</div>
+{/if}
+{if $isonesbuy['status']}
+<div class="form-group DMdanmai">
+    <label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label">单次购买数量上限</label>
+    <div class="col-md-6">
+        <div class="input-group">
+            <input type="number" name="goods[one_limit]" class="form-control" value="{$goods['one_limit']}"/>
+            <span class="input-group-addon">件</span>
+        </div>
+        <span class="help-block">每次购买该商品数量上限,如果不填或者填0，则默认为“单次只能购买1个”。</span>
+    </div>
+</div>
+{/if}
+{if $ismorebuy['status']}
+<div class="form-group">
+    <label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label">每人购买总数量上限</label>
+    <div class="col-md-6">
+        <div class="input-group">
+            <input type="number" name="goods[many_limit]" class="form-control" value="{$goods['many_limit']}"/>
+            <span class="input-group-addon">件</span>
+        </div>
+        <span class="help-block">每个客户购买该商品总量,如果不填或者填0，则默认为无上限。</span>
+    </div>
+</div>
+{/if}
+{if $iscost['status']}
+<div class="form-group DJdanmai">
+    <label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label">团长是否优惠</label>
+    <div class="col-md-6">
+        <label class="radio radio-inline">
+            <input type="radio" name="goods[is_discount]" value="1" {if intval($goods['is_discount']) == 1}checked="checked"{/if} onclick="$('.pic').show();"> 是
+        </label>
+        <label class="radio radio-inline">
+            <input type="radio" name="goods[is_discount]" value="2" {if intval($goods['is_discount']) == 2 || empty($goods['is_discount'])}checked="checked"{/if} onclick="$('.pic').hide();"> 否
+        </label>
+    </div>
+</div>
+<div class="form-group pic" {if $goods['is_discount']!=1}style="display: none;"{/if}>
+<label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label">团长优惠多少元</label>
+<div class="col-md-6">
+    <div class="input-group">
+        <input type="text" name="goods[firstdiscount]" class="form-control" value="{$goods['firstdiscount']}"/>
+        <span class="input-group-addon">元</span>
+    </div>
+    <span class="help-block">例子：原价100元，此处填5元，团长只需支付95元。支付价格最低需要0.01元。</span>
+</div>
+</div>
+
+{/if}
+{if $iscost['status']&&($_GPC['selltype']==0||$_GPC['selltype']==1)}
+<div class="form-group">
+    <label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label">是否跟随会员等级打折</label>
+    <div class="col-md-6">
+        <label class="radio radio-inline">
+            <input type="radio" name="goods[discount]" value="1" {if intval($goods[discount])==1 }checked="checked" {/if}>
+            是
+        </label>
+        <label class="radio radio-inline">
+            <input type="radio" name="goods[discount]" value="0" {if intval($goods[discount])==0 }checked="checked" {/if}>
+            否
+        </label>
+    </div>
+</div>
+{/if}
+<script>
+    function comType(s) {
+        if (s == 1) {
+            $('.comtype').hide();
+            $('input[name="goods[commissiontype]"],input[name="goods[show_com]"]').click();
+        } else {
+            $('.comtype').hide();
+            $('input[name="goods[show_com]"]').click();
+            $('input[name="goods[is_commander_fee]"]').click();
+        }
+    }
+</script>
+
+<div class="form-group">
+    <label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label">积分</label>
+    <div class="col-md-6">
+        <div class="input-group">
+            <!-- <input type="number" class="form-control" value="{$goods['score_num']}"/> -->
+            <input type="number" name="goods[score_num]" class="form-control" value="{$goods['score_num']}"/>
+            <span class="input-group-addon">请填写数字</span>
+        </div>
+    </div>
+</div>

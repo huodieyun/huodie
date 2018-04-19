@@ -1,0 +1,176 @@
+{php include wl_template('common/header');}
+
+<div class="panel panel-default">
+	<div class="panel-body table-responsive" style="padding: 0px;">
+		<div class="main_bd">
+        <div class="plugins_wrp">
+            <dl>
+                <dd>
+                    <ul id="js_plugins">
+						<li class="item_wrp" style="width: 100%;">
+							<div class="plugin_item">
+								<div class="plugin_icon"><img src="{TG_URL_WRES}images/function/helpbuy.png"></div>
+								<div class="plugin_status">
+									<i class="access"></i>
+									<span class="status_txt">
+										{if $checkfunction['status']}									
+										<input class="flag" type="checkbox" name="help"  value="{$setting['helpbuy']}" {if $setting['helpbuy'] == 1}checked{/if} />
+										<span style="display:block;margin-left:60px;margin-top:2px;color:#888;font-size:14px;">截止日期：{php echo date('Y-m-d', $checkfunction['endtime'])}<span id="renewal" style="background-color:#ea5919;color:white;cursor:pointer;margin-left:15px;border-radius:2px;font-size:12px;padding-left:3px;padding-right:3px;padding-bottom:1px;padding-top:1px;">续费</span></span>
+										
+										{else}
+										
+										<div id="buyDaifu" style="font-size:20px;margin-top:-20px;width: 60px;height:60px;border-radius:50%;font-weight:900;background-color:#ff5466;color:white;margin-right: -25px;text-align:center;line-height:60px;cursor:pointer;">购买</div>
+										{/if}
+									</span>
+								</div>
+								<div class="plugin_content">
+									<h3 class="title">找人代付</h3>
+									<p class="desc" style="    width: 100%;">
+										启用代付功能后，代付发起人（买家）下单后，可将订单分享给小伙伴（朋友圈、微信群、微信好友），请他帮忙付款。
+										注意：代送订单有效期15天，逾期后未完成，进入全额退款流程；若有超额支付，则超付部分进入退款流程；
+									</p>
+								</div>
+							</div>
+						</li>
+					</ul>
+                </dd>
+            </dl>
+        </div>
+    </div>
+	</div>
+</div>
+<div class="clearfix coupon-list-top">
+	<div><a href="javascript:;" class="btn btn-success js-create">新建</a></div>
+</div>
+<div class="panel panel-default">
+	<div class="table-responsive">
+		<table class="table table-hover">
+			<thead>
+			<tr>
+				<th class="text-left" style="width:90%">发起人的求助描述(如设置多条记录,描述将随机出现)   <i class="fa fa-question-circle"></i></th>
+				<th class="text-center" style="width:160px;">操作</th>
+			</tr>
+			</thead>
+			<tbody id="add">
+			{loop $list $item}
+			<tr data-toggle="popover" data-trigger="hover" data-placement="left" class="js-goods-img">
+				<td class="line-feed text-left" id="name{$item['id']}">{$item['name']}</td>
+				<td class="text-left">
+					<a href="javascript:;" class="js-edit" order-id="{$item['id']}" order-name="{$item['name']}">编辑</a> - 
+					<a href="javascript:;" class="js-delete" order-id="{$item['id']}">删除</a>
+				</td>
+			</tr>
+			{/loop}
+			</tbody>
+		</table>
+	</div>
+</div>
+{$pager}
+<div class="modal in" id="order-remark-container" style="display: none;">	
+<div class="modal-dialog">		
+<div class="modal-content">			
+<div class="modal-header">				
+	<button type="button" class="close"><span id="close">×</span></button>				
+	<h4 class="modal-title">添加</h4>			
+</div>			
+<div class="modal-body">				
+	<textarea id="remark" name="admin_remark" class="form-control" rows="5" oninput="$(this).parent().next().find('.js-count').text(255 - $(this).val().length);;" onpropertychange="$(this).parent().next().find('.js-count').text(255 - $(this).val().length);;" maxlength="255" placeholder="最多填写 255 字"></textarea>			
+</div>			
+<div class="modal-footer" style="padding: 5px 15px;">				
+	<span class="help-block pull-left">					
+		您还可以输入：<storng><span style="color:red; font-size:18px;" name="count" class="js-count">251</span></storng> 个字符				
+	</span>				
+	<a class="btn btn-default js-cancel">取消</a>				
+	<a class="btn btn-primary js-order-remark-post" order-id="">确定</a>			
+</div>		
+</div>	
+</div>
+</div>
+
+<style>
+.inner__content {background: #eee none repeat scroll 0 0;border-top: 1px solid #dcdcdc;box-sizing: border-box;color: #666;margin-top: 10px;margin-bottom:10px;min-width: 100%;padding: 10px 5px;width: auto;text-align:center;}
+</style>
+<script>
+
+$(function(){
+	require(['bootstrap.switch'],function($){
+		$('.flag:checkbox').bootstrapSwitch({onText: '启用', offText: '禁用'});
+		$('.bootstrap-switch-wrapper').click(function(e){
+			e.stopPropagation();
+			$.post("{php echo web_url('application/helpbuy/ajax')}",function(d){
+				if(!d.errno){
+					util.tips(d.message);
+				}
+			},"json");
+		});
+	});
+	// 新建
+		$('.js-create').click(function(e) {
+			$('#order-remark-container').show();
+			$('.panel').css("opacity","0.2");$('.nav').css("opacity","0.2");
+		});
+		$('.js-cancel,.close').click(function(e) {
+			$('#order-remark-container').hide();
+			$('.panel').css("opacity","1");$('.nav').css("opacity","1");
+		});
+		$('.js-order-remark-post').click(function() {
+			var order_id = $(this).attr('order-id');
+			var remark = $('#remark').val();
+			$.post("{php echo web_url('application/helpbuy/create')}",{id:order_id,remark:remark},function(d){
+				if(!d.errno){
+					if(order_id){
+						$('#name'+order_id).html(remark);
+					}else{
+						var data = '<tr data-toggle="popover" data-trigger="hover" data-placement="left" class="js-goods-img">'
+									+'<td class="line-feed text-left">'+remark
+									+'</td>'
+									+'<td class="text-left">'
+										+'<a href="javascript:;" class="js-edit" order-id="'+d.id+'">编辑</a> - '
+										+'<a href="javascript:;" class="js-delete" order-id="'+d.id+'">删除</a>'
+									+'</td>'
+								+'</tr>';
+						
+						$('#add').append(data);
+					}
+					
+				}
+			},"json");
+			$('#order-remark-container').hide();
+			$('.panel').css("opacity","1");$('.nav').css("opacity","1");
+		});
+		$('.js-edit').click(function(e) {
+			var order_id = $(this).attr('order-id');
+			var order_name = $(this).attr('order-name');
+			$('#remark').val(order_name);
+			$('.js-order-remark-post').attr("order-id",order_id);
+			$('#order-remark-container').show();
+			$('.panel').css("opacity","0.2");
+			$('.nav').css("opacity","0.2");
+		});
+		$('.js-delete').click(function(e) {
+			e.stopPropagation();
+			var order_id = $(this).attr('order-id');
+			var _this = $(this);
+			util.nailConfirm(this, function(state) {
+				if(!state) return;
+				_this.parent().parent().remove();
+/*url*/				$.post("{php echo web_url('application/helpbuy/delete');}", { id : order_id }, function(data){
+						util.tips(data.message);
+				}, 'json');
+			}, {html: "确定删除！"});
+			
+		});
+	$(".scrollLoading").scrollLoading();
+	var $pop = null;
+	$('.scrollLoading').hover(function(){
+		var img = $(this).attr('src');
+		var obj = this;
+		var $pop = util.popover(obj, function($popover, obj){
+			obj.$popover = $popover;
+		}, '<div><img src="'+img+'" style="max-width:200px; max-height:200px;"></div>');
+	}, function(){
+		this.$popover.remove();
+	});
+});
+</script>
+{php include wl_template('common/footer');}

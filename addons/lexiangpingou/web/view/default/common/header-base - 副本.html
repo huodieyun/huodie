@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>
+	乐享拼购
+	- 
+{if $_W['page']['title']}
+	{$_W['page']['title']}
+{/if}
+	</title>
+	<meta name="keywords" content="微信拼团，拼购" />
+	<meta name="description" content="微信拼团系统，拼好货" />
+	<link rel="stylesheet" href="{TG_URL_WRES}components/pace/themes/blue/pace-theme-minimal.css" /> 
+	<script>paceOptions = {elements: true};</script>
+	<script src="{TG_URL_WRES}components/pace/pace.min.js"></script>
+	<link href="//cdn.bootcss.com/bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet">
+	<link href="//cdn.bootcss.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
+	<link href="{TG_URL_WRES}css/common.css" rel="stylesheet">
+	<script src="//cdn.bootcss.com/jquery/1.11.1/jquery.js"></script>
+
+	<!--<script src="{TG_URL_WRES}js/app/util.min.js?v={php echo date('YmdH');}"></script>-->
+	<script src="{TG_URL_WRES}js/app/util.js?v={php echo date('YmdH');}"></script>
+	<script src="{TG_URL_WRES}js/jquery.scrollLoading.min.js"></script>
+	<script src="{TG_URL_WRES}js/require.js"></script>
+	<script src="{TG_URL_WRES}js/app/config.js?v={php echo date('YmdH');}"></script>
+	
+	<!--[if lt IE 9]>
+		<script src="{TG_URL_WRES}js/html5shiv.min.js"></script>
+		<script src="{TG_URL_WRES}js/respond.min.js"></script>
+	<![endif]-->
+	<style>
+.main_bd{padding-bottom:30px}
+.plugins_wrp{padding:20px 30px}
+.plugins_wrp .hd{margin-bottom:10px;padding-bottom:10px;border-bottom:1px solid #e7e7eb}
+.plugins_wrp ul{margin-right:-24px;overflow:hidden;padding-left: 0px;}
+.plugins_wrp .item_wrp{float:left;display:inline-block;*display:inline;*zoom:1;width:50%;position:relative;*width:49.9%}
+.plugins_wrp .plugin_desc{padding-bottom:16px;color:#8d8d8d;margin: 14px 0;}
+.table_wrp{padding:20px 30px}
+.table_wrp .table_cell{height:40px;padding-left:20px;padding-right:20px}
+.table_wrp .table_cell.plugin_name{width:450px}
+.table_wrp .table_cell .privilege{color:#8d8d8d}
+.table_wrp .table_cell .privilege .dot{font-style:normal;margin-right:5px}
+.table_wrp .tbody .table_cell{padding-top:15px;padding-bottom:15px;vertical-align:top}
+.table_wrp .plugin_logo{float:left;margin-right:10px}
+.table_wrp .plugin_logo img{display:block;max-width:80px}
+.table_wrp .plugin_info{overflow:hidden}
+.table_wrp .plugin_info h4{font-weight:normal}
+.table_wrp .plugin_info .desc{color:#8d8d8d}
+.plugin_item{display:block;overflow:hidden;margin-right:24px;margin-bottom:24px;color:#222;height:92px;padding-left:94px;border:1px solid #e7e7eb}
+.plugin_item:hover{text-decoration:none;background-color:#f4f5f9;border-color:#d9dadc}
+.plugin_item .plugin_icon{position:absolute;width:92px;height:92px;background-color:#ccc;top:0;left:0}
+.plugin_item .plugin_icon img {width: 92px;height: 92px;}
+.plugin_item .plugin_status{position:relative;float:right;text-align:right;padding:35px 45px 35px 0}
+.plugin_item .plugin_status .status_txt.warn{color:#e15f63}
+.plugin_item .plugin_status .access{width:16px;height:16px;vertical-align:middle;display:inline-block;position:absolute;right:10px;top:40px}
+.plugin_item .plugin_content{padding:10px 0 10px 20px;overflow:hidden}
+.plugin_item .plugin_content .title{margin-bottom:4px;width:216px;font-size:14px;font-weight:400;font-style:normal;margin-top: 0px;}
+.plugin_item .plugin_content .desc{color:#8d8d8d;font-size:12px;line-height:24px;width:238px;margin: 12px 0;}
+table thead tr th, table tbody tr td {text-align: center; width: 10%;}
+table thead tr th:last-child, table tbody tr td:last-child {text-align: right;}
+ .selectDateadd{display:none;}
+  .datedesc{display: block;line-height:30px;padding-left:3px;cursor:pointer;}
+  .nactive{display:none;}
+ #selectDate{position:absolute;width:90px;height:150px;top:130px;left:100px;border:1px solid black;background-color: white;}
+</style>
+	<script type="text/javascript">
+	if(navigator.appName == 'Microsoft Internet Explorer'){
+		if(navigator.userAgent.indexOf("MSIE 5.0")>0 || navigator.userAgent.indexOf("MSIE 6.0")>0 || navigator.userAgent.indexOf("MSIE 7.0")>0) {
+			alert('您使用的 IE 浏览器版本过低, 推荐使用 Chrome 浏览器或 IE8 及以上版本浏览器.');
+		}
+	}
+	
+	window.sysinfo = {
+{if !empty($_W['uniacid'])}
+		'uniacid': '{$_W['uniacid']}',
+{/if}
+{if !empty($_W['acid'])}
+		'acid': '{$_W['acid']}',
+{/if}
+{if !empty($_W['openid'])}
+		'openid': '{$_W['openid']}',
+{/if}
+{if !empty($_W['uid'])}
+		'uid': '{$_W['uid']}',
+{/if}
+		'siteroot': '{$_W['siteroot']}',
+		'siteurl': '{$_W['siteurl']}',
+		'attachurl': '{$_W['attachurl']}',
+		'attachurl_local': '{$_W['attachurl_local']}',
+		'attachurl_remote': '{$_W['attachurl_remote']}',
+{if defined('MODULE_URL')}
+		'MODULE_URL': '{MODULE_URL}',
+{/if}
+		'cookie' : {'pre': '{$_W['config']['cookie']['pre']}'}
+	};
+
+	</script>
+	
+</head>
+<body>
+<div id="popup" style="display:none;z-index:10086;position:fixed;top:0px;left:0px;right:0px;bottom:0px;margin:auto;text-align:center;height:40px;">
+	<span style="background-color:rgba(0,0,0,0.7);line-height:40px;border-radius:20px;font-size:20px;color:white;padding:10px 20px;">请设置微信公众号</span>
+</div>
+<script>
+var popuptip = function (str) {
+	var popup = document.getElementById( 'popup' );
+	popup.style.setProperty( 'display', 'block' );
+	popup.querySelector( 'span' ).innerHTML = str;
+	setTimeout( function () {
+	  popup.style.setProperty( 'display', 'none' );
+	}, 1000 )
+}
+</script>
+<div id="detailshow" style="display:none;width:100%;height:100%;background-color:rgba(0,0,0,0.2);position:absolute;left:0px;top:0px;bottom:0px;right:0px;margin:auto;z-index:10086;color:white;">
+<div style="width:500px;height:800px;background-color:white;position:absolute;left:0px;top:0px;bottom:0px;right:0px;margin:auto;color:#3c3c3c;">
+	<p id="detailname" style="text-align:center;margin-top:10px;margin-bottom:10px;padding-bottom:10px;border-bottom:1px solid gray;font-size:1.5em;font-weight:500;">消息通知</p>
+	<div id="detailshows" style="width:100%;margin:auto;height:670px;border-bottom:1px solid gray;overflow-y:scroll;overflow-x:hidden;text-align:center;">
+	  <img id="detailimg" src="" width="400px">
+	</div>
+	<div id="closeDetail" style="width:100px;height:40px;line-height:40px;background-color:#44b549;color:white;position:absolute;left:0px;right:0px;margin:auto;bottom:15px;cursor:pointer;text-align:center;border-radius:5px;">明白了</div>
+</div>
+</div>
+<script>
+	var detailshow = document.getElementById("detailshow");
+	var closeDetail=document.getElementById("closeDetail");
+	var detailshows = document.getElementById('detailshows');
+	closeDetail.onclick=function(ev) {
+		detailshow.style.setProperty("display","none");
+	}
+	detailshows.onscroll = function ( ev ) {
+	  ev.stopPropagation();
+	}
+</script>

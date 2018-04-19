@@ -1,0 +1,8 @@
+{if !empty($goods["index_video"])}
+<li>
+    <video data-id="{$video_id}" src="{$goods['index_video']}" onloadeddata="vload(this)" controls="controls" x5-playsinline="" playsinline="" webkit-playsinline="" width="100%" poster="{$goods['gimg']}" preload="auto" style="vertical-align: middle;">
+        您的浏览器不支持 video 标签。
+    </video>
+</li>
+
+{/if}  

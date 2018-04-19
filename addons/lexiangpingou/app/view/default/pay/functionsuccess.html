@@ -1,0 +1,58 @@
+{php include wl_template('common/header');}
+{if $op=='display'}
+<div class="page-group">
+    <div class="page page-current" id="page-member">
+		<header class="bar bar-nav">
+		    <h1 class="title">支付结果</h1>
+		</header>
+		<div class="content" style="background-color: #fff;">
+			<div class="payicons" style="margin-top:30px;">
+				<div class="bd spacing">
+				    <i class="weui_icon_msg weui_icon_success"></i>
+				</div>
+			</div>
+			
+			<div class="paysucces_price" style="margin-top:30px;">支付金额:{$order['price']}元</div>
+			<div  style="margin-top:10px;" class="paysucces_text">
+					购买成功,系统已自动为您办理服务。<br>
+					详情请登陆乐享拼购系统后台查看。
+				    
+			</div>
+			
+			<div style="position:fixed;bottom:0px;left:0%;width:100%;background-color:#fff;;z-index:9999999999;padding-bottom:20px;">
+				<img src="{TG_URL_ARES}images/aaa.png" width="60%" style="margin-left:20%;" />
+			</div>
+		    
+		</div>
+	</div>
+</div>
+{/if}
+{if $op=='error'}
+<div class="page-group">
+	<div class="page page-current" >
+		<header class="bar bar-nav">
+			<h1 class="title">活动详情</h1>
+		</header>
+		<div class="content" style="background-color: #fff;">
+			<div class="payicons" style="margin-top:30px;">
+				<div class="bd spacing">
+					<i class="weui_icon_msg weui_icon_success"></i>
+				</div>
+			</div>
+
+			<div class="paysucces_price" style="margin-top:30px;">本次活动已下架</div>
+			<div  style="margin-top:10px;" class="paysucces_text">
+				本次活动已下架，<br>
+				感谢您的参与。
+
+			</div>
+
+			<div style="position:fixed;bottom:0px;left:0%;width:100%;background-color:#fff;;z-index:9999999999;padding-bottom:20px;">
+				<img src="{TG_URL_ARES}images/aaa.png" width="60%" style="margin-left:20%;" />
+			</div>
+
+		</div>
+	</div>
+</div>
+{/if}
+{php include wl_template('common/footer');}

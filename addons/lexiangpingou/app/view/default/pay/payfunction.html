@@ -1,0 +1,176 @@
+{php include wl_template('common/header');}
+{if $op=='display'}
+<style>
+.message-container{width: 100%;position: relative;height: 154px;background-size: cover;background-position: center top;}
+.avatar{display:inline-block;width:70px;height:70px;margin:0 auto;position:relative}
+.avatar img{display:block;width:70px;height:70px;margin:0 auto;margin-top: 20px;}
+.avatar p{font-size:12px;margin-top:0;margin-bottom:-1px;margin-top: 20px;}
+.avatar p>span{padding:5px 15px;background-color:#809843;border-radius:13px;color:#fff;display: table;margin: 0 auto;}
+.avatar.avatar-peerpay{width:100%;height:120px}
+.bottom-arrow{position: absolute;bottom: 0;left: 0;z-index: 10;width: 100%;height: 7px;background: url("{TG_URL_ARES}images/block_gray.png") no-repeat center center;background-size: auto 7px;}
+.circular{border-radius: 50px;}
+.weui_extra_area {font-size: 14px;color: #888;}
+.weui_extra_area a {color: #61749B;}
+</style>
+<div class="page-group">
+    <div class="page page-current" id="page-pay">
+    	<!--<header class="bar bar-nav">
+		    <h1 class="title">支付订单</h1>
+		</header>-->
+		<div class="content" style="background-color: #F9F9F9;">
+			
+			<div class="list-block media-list" style="margin: 0;">
+		      <ul>
+		        <li class="item-content">
+		        	<div class="item-media"><img src="{TG_URL_WRES}{$functionlist['img']}" width="75" height="75"></div>
+		            <div class="item-inner">
+		              	<div class="item-subtitle">{$functionlist['name']}</div>
+		              	<div class="item-subtitle" style="color: #ccc;font-size: 12px;">{$functionlist['smalldes']}</div>
+		              	<div class="item-title-row">
+		                	<div class="item-title c-orange">￥{$functionlist['price']} x {$num}</div>
+		                	{if $discountnum>0}<div class="item-after">优惠{$discountnum}个月</div>{/if}
+		              	</div>
+						<div class="item-title-row">
+		                	<div class="item-title c-orange">总价：￥{$pay_price}</div>		                	
+		              	</div>
+		            </div>
+		        </li>
+		      </ul>
+		    </div>
+		   <div style="width:100%;height:40px;background-color:white;border-top:1px solid #e7e7e7;border-bottom:1px solid #e7e7e7;">
+				<div style="width:40%;height:100%;padding-left:20px;float:left;line-height:40px;color:gray;">收款方</div><div style="line-height:40px;width:90%;height:40px;text-align:right;font-weight:700;">火蝶科技</div>
+		   </div>
+		    <div class="weui_btn_area">
+	        	<div class="weui_btn weui_btn_primary" href="javascript:" id="wechatpay">立即支付</div>
+	    	</div>
+			<div style="position:fixed;bottom:0px;left:0%;width:100%;background-color:#f9f9f9;;z-index:9999999999;padding-bottom:20px;">
+				<img src="{TG_URL_ARES}images/aaa.png" width="60%" style="margin-left:20%;" />
+			</div>
+		</div>
+	</div>
+</div>
+<div id="cover"></div>
+		<div id="guide"><img src="{TG_URL_ARES}images/guide1.png"></div>
+<script type="text/javascript">
+    $(function() {
+		'use strict';
+		$(document).on("pageInit", "#page-pay", function(e, id, page) {
+			{if $res['errno']==1}
+			$.confirm('该订单优惠券已无法使用,已为您恢复原价.',
+		        function () {
+		        },
+		        function () {
+		        }
+		    );
+		    {/if}
+			var orderno = "{$orderno}";
+			
+			var paytype = "wechat";
+			$('#wechatpay').on('click', function () {
+				var remark = $('#remark').val()?$('#remark').val():'';
+				var othername = $('#othername').val()?$('#othername').val():'';
+				$.post("{php echo app_url('pay/payfunction')}",{orderno:orderno,remark:remark,othername:othername,op:"ajax",checkpay:"9"},function(m){
+				
+				 	if(m.errno==1){
+				 	 location.href = "{php echo app_url('pay/functionsuccess')}&orderno="+orderno;
+				 	}else{
+					
+						$.showIndicator();
+			            $.post("{php echo app_url('pay/cashfunction')}",{orderno:orderno,paytype:paytype},function(m){						
+			             	$.hideIndicator();
+			             	if(!m.errno){							
+		             			m.data.timeStamp = String(m.data.timeStamp);
+								WeixinJSBridge.invoke('getBrandWCPayRequest', {
+									'appId': m.data.appid ? m.data.appid : m.data.appId,
+	                                'timeStamp': m.data.timeStamp,
+	                                'nonceStr': m.data.nonceStr,
+	                                'package': m.data.package,
+	                                'signType': m.data.signType,
+	                                'paySign': m.data.paySign,
+								}, function(res) {
+									if(res.err_msg == 'get_brand_wcpay_request:ok') {										
+										$.post("{php echo app_url('pay/payfunctionajax',array('op'=>'ajax2','orderno'=>$orderno))}",function(m){
+										 location.href = "{php echo app_url('pay/functionsuccess')}&orderno="+orderno;
+										},"json");
+									} else {
+										$.post("{php echo app_url('pay/paytype')}",{orderno:orderno,remark:remark,othername:othername,op:"ajax",checkpay:"8"},function(m){
+										 	$.toast("已取消支付");
+										},"json");
+									}
+								});
+			             	}else{
+			             		$.confirm(m.message, function () {
+							        history.go(-1);
+							    })
+			             	}
+			            },"json");
+				 	}
+	            },"json");
+			});
+		});
+		$.init();
+	});
+	//{$functionlist['gimg']}
+</script>
+<script type="text/javascript">
+    var _system={
+    $:function(id){return document.getElementById(id);},
+   _client:function(){
+      return {w:document.documentElement.scrollWidth,h:document.documentElement.scrollHeight,bw:document.documentElement.clientWidth,bh:document.documentElement.clientHeight};
+   },
+   _scroll:function(){
+      return {x:document.documentElement.scrollLeft?document.documentElement.scrollLeft:document.body.scrollLeft,y:document.documentElement.scrollTop?document.documentElement.scrollTop:document.body.scrollTop};
+   },
+   _cover:function(show){
+      if(show){
+	     this.$("cover").style.display="block";
+	     this.$("cover").style.width=(this._client().bw>this._client().w?this._client().bw:this._client().w)+"px";
+	     this.$("cover").style.height=(this._client().bh>this._client().h?this._client().bh:this._client().h)+"px";
+	  }else{
+	     this.$("cover").style.display="none";
+	  }
+   },
+   _guide:function(click){
+      this._cover(true);
+      this.$("guide").style.display="block";
+      this.$("guide").style.top=(_system._scroll().y+5)+"px";
+      window.onresize=function(){_system._cover(true);_system.$("guide").style.top=(_system._scroll().y+5)+"px";};
+	  if(click){_system.$("cover").onclick=function(){
+	         _system._cover();
+	         _system.$("guide").style.display="none";
+	 _system.$("cover").onclick=null;
+	 window.onresize=null;
+	  };}
+   }
+}
+</script>
+{/if}
+{if $op=='error'}
+<div class="page-group">
+	<div class="page page-current" >
+		<header class="bar bar-nav">
+			<h1 class="title">活动详情</h1>
+		</header>
+		<div class="content" style="background-color: #fff;">
+			<div class="payicons" style="margin-top:30px;">
+				<div class="bd spacing">
+					<i class="weui_icon_msg weui_icon_success"></i>
+				</div>
+			</div>
+
+			<div class="paysucces_price" style="margin-top:30px;">本次活动已下架</div>
+			<div  style="margin-top:10px;" class="paysucces_text">
+				本次活动已下架，<br>
+				感谢您的参与。
+
+			</div>
+
+			<div style="position:fixed;bottom:0px;left:0%;width:100%;background-color:#fff;;z-index:9999999999;padding-bottom:20px;">
+				<img src="{TG_URL_ARES}images/aaa.png" width="60%" style="margin-left:20%;" />
+			</div>
+
+		</div>
+	</div>
+</div>
+{/if}
+{php include wl_template('common/footer');}

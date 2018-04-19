@@ -1,0 +1,251 @@
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <link rel="stylesheet" href="{TG_URL_ARES}css/aliicon/font.css?time=New Date()">
+    <avalon ms-skip="" class="avalonHide">
+        <style id="avalonStyle">
+            .main-view {
+                font-size: 14px;
+            }
+
+            .avalonHide {
+                display: none !important
+            }
+
+            .nav_item i {
+                background: #2e8ded;
+                width: 20px;
+                height: 20px;
+                border-radius: 50%;
+                line-height: 20px;
+                text-align: center;
+                color: #fff;
+                display: inline-block;
+                margin-right: 5px;
+                font-size: 12px;
+            }
+
+            .nav_item {
+                padding: 10px !important;
+            }
+        </style>
+    </avalon>
+    <title>{if empty($_Session['btitle'])}{$pagetitle}{else}{$_Session['btitle']}{/if}</title>
+    {php echo register_jssdk();}
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
+    <meta name="format-detection" content="telephone=no">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Cache-Control" content="no-store">
+    <meta http-equiv="Expires" content="0">
+    <LINK href="../addons/feng_fightgroups/template/css/style_366c9ef.css" rel="stylesheet">
+    <LINK href="../addons/feng_fightgroups/template/css/font-awesome-4.3.0/css/font-awesome.min.css" rel="stylesheet">
+</head>
+<body avalonctrl="root">
+<div class="container">
+    <section class="main-view">
+
+        <div>
+            <div class="nav">
+                <ul class="nav_list">
+                    {if $member['enable']==1}
+                    <li class="nav_item nav_cart">
+                        <div style="padding: 10px 0 "><i class="iconal-wodefankui" style="background-color: #af7070"></i>我的提成
+                        </div>
+                        <div class="nav_item_bd">
+
+                        <a href="{php echo app_url('member/leader',array('op' => 'apply'))}">
+                            <span class="nav_item_txt">可申请<br>￥<?php echo number_format($apply_total,2)?></span>
+                        </a>
+                        <a href="{php echo app_url('member/leader',array('op' => 'withdraw' , 'status' => 1))}">
+                            <span class="nav_item_txt">待审核<br>￥<?php echo number_format($get_total,2)?></span>
+                        </a>
+                        <a href="{php echo app_url('member/leader',array('op' => 'withdraw' , 'status' => 2))}">
+                            <span class="nav_item_txt">已审核<br>￥<?php echo number_format($gets_total,2)?></span>
+                        </a>
+                        <a href="{php echo app_url('member/leader',array('op' => 'withdraw' , 'status' => 3))}">
+                            <span class="nav_item_txt">已发放<br>￥<?php echo number_format($give_total,2)?></span>
+                        </a>
+                        </div>
+                    </li>
+
+                    {/if}
+                </ul>
+            </div>
+        </div>
+
+        {if $op == 'apply'}
+        <!--<div>-->
+            <!--<div class="nav">-->
+                <!--<form name='form' method="post" onsubmit="return toVaild()">-->
+
+                    <!--<table style="width: 100%;overflow-x: hidden; font-size: 12px;">-->
+                        <!--{if !empty($record)}-->
+                        <!--<tr>-->
+                            <!--<th style="width:20%;text-align: center">微信昵称</th>-->
+                            <!--<th style="width:20%;text-align: center">提现金额</th>-->
+                            <!--<th style="width:20%;text-align: center">提成金额</th>-->
+                            <!--<th style="width:40%;text-align: center" >提现时间</th>-->
+                        <!--</tr>-->
+                        <!--<tbody>-->
+                        <!--{loop $record $item}-->
+                        <!--<tr>-->
+                            <!--<td style="width:20%;text-align: center">{if !empty($item['member']['name'])}{$item['member']['name']}{else}{$item['member']['nickname']}{/if}</td>-->
+                            <!--<td style="width:20%;text-align: center">{if !empty($item['price'])}￥{$item['price']}{else}0.00{/if}</td>-->
+                            <!--<td style="width:20%;text-align: center">{if !empty($item['commission'])}￥{$item['commission']}{else}0.00{/if}</td>-->
+                            <!--<td style="width:40%;text-align: center">{if !empty($item['ptime'])}{php echo date("Y-m-d H:i:s", $item['ptime'])}{/if}</td>-->
+                        <!--</tr>-->
+                        <!--{/loop}-->
+                        <!--<p class="action">-->
+                            <!--<button type="submit" name="submit" value="yes" id= 'submit' class="pay2_btn" style="position:fixed;bottom:0;margin:0;width:100%;background-color:#6fbfd8;font-color:1.5em;">申请提现</button>-->
+                            <!--<input type="hidden" name="token" value="{$_W['token']}"/>-->
+                        <!--</p>-->
+
+                        <!--{else}-->
+                        <!--<tr><td colspan="4" style="text-align: center;color:red; font-size: 16px;">暂无可申请提现记录</td></tr>-->
+                        <!--{/if}-->
+                        <!--</tbody>-->
+                    <!--</table>-->
+                <!--</form>-->
+            <!--</div>-->
+        <!--</div>-->
+
+        <form name='form' method="post" onsubmit="return toVaild()">
+            <div class="wx_wrap" style="font-size:16px;margin-top:20px;margin-left:20px;">
+                <p style="margin:40px 0;">
+                    <label for="name"><SPAN class="tit">提现金额</SPAN>
+                        <input name="name" id="name" type="text" placeholder="请输入大于1元的金额" value="" style="height:35px;border:none;margin-left:10px;padding-left:5px;line-height:40px;">
+
+                    </label>
+                </p>
+
+            </div>
+
+            <p class="action">
+            <button type="submit" name="submit" value="yes" id= 'submit' class="pay2_btn" style="position:fixed;bottom:0;margin:0;width:100%;background-color:#6fbfd8;">申请提现</button>
+            <input type="hidden" name="token" value="{$_W['token']}"/>
+            </p>
+
+        </form>
+
+        {else}
+
+        <div>
+            <div class="nav">
+                <form name='form' method="post" onsubmit="return toVaild()">
+                    <table style="width: 100%;overflow-y:auto;overflow-x: hidden; font-size: 12px;">
+                        {if !empty($list)}
+                        <thead>
+                            <!--<th style="width:80px;">银行流水单</th>-->
+                            <th>处理进度</th>
+                            <th>申请提现金额</th>
+                            {if $_GPC['status'] == 1}
+                            <th>待审批提现金额</th>
+                            {elseif $_GPC['status'] == 2}
+                            <th>已审批提现金额</th>
+                            {elseif $_GPC['status'] == 3}
+                            <th>已发放金额</th>
+                            {/if}
+                            {if $_GPC['status'] == 1}
+                            <th>申请提现时间</th>
+                            {elseif $_GPC['status'] == 2}
+                            <th>审批时间</th>
+                            {elseif $_GPC['status'] == 3}
+                            <th>发放时间</th>
+                            {/if}
+                        </thead>
+                        <tbody>
+                        {loop $list $item}
+
+                        <tr>
+                            <td style="width: 20%;text-align: center;">
+                                {if $item['status'] == 1}<label class="label label-default">待确认</label>
+                                {elseif $item['status'] == 2}<label class="label label-danger">待打款</label>
+                                {elseif $item['status'] == 3}<label class="label label-success">已打款</label>
+                                {/if}
+                            </td>
+                            <td style="width: 25%;text-align: center;">{$item['apply']}元</td>
+                            <td style="width: 25%;text-align: center;">{if $item['status'] != 3}{$item['get']}{else}{$item['give']}{/if}元</td>
+                            <td style="width: 30%;text-align: center;">
+                                {if $item['status'] == 1}
+                                {php echo date("Y-m-d H:i:s",$item['createtime'])}
+                                {elseif $item['status'] == 2}
+                                {php echo date("Y-m-d H:i:s",$item['updatetime'])}
+                                {elseif $item['status'] == 3}
+                                {php echo date("Y-m-d H:i:s",$item['give_time'])}
+                                {/if}
+                            </td>
+                        </tr>
+                        {/loop}
+                        {else}
+                        <tr>
+                            <td colspan="4" class="text-center" style="text-align: center">
+                                <span style="color:red;font-weight: 700;font-size:18px;">暂无记录</span>
+                            </td>
+                        </tr>
+                        {/if}
+                        </tbody>
+                    </table>
+                </form>
+            </div>
+        </div>
+
+        {/if}
+
+    </section>
+
+</div>
+</body>
+<script>
+    wx.ready(function () {
+        var shareData = {
+            title: "{$share_indexname}",
+            desc: "{$share_indexdesc}",
+            link: "{$tourl}",
+            imgUrl: "{php echo tomedia($share_images)}",
+        };
+        //分享朋友
+        wx.onMenuShareAppMessage({
+            title: shareData.title,
+            desc: shareData.desc,
+            link: shareData.link,
+            imgUrl: shareData.imgUrl,
+            trigger: function (res) {
+            },
+            success: function (res) {
+            },
+            cancel: function (res) {
+            },
+            fail: function (res) {
+                alert(JSON.stringify(res));
+            }
+        });
+        //朋友圈
+        wx.onMenuShareTimeline({
+            title: shareData.title,
+            link: shareData.link,
+            imgUrl: shareData.imgUrl,
+            trigger: function (res) {
+            },
+            success: function (res) {
+            },
+            cancel: function (res) {
+            },
+            fail: function (res) {
+                alert(JSON.stringify(res));
+            }
+        });
+        var shareAddress = {php echo json_encode($shareAddress)};
+        WeixinJSBridge.invoke('editAddress', shareAddress, function (res) {
+            if (res.err_msg == 'edit_address:ok') {
+                $("#myname").val(res.userName);
+                $('#myphone').val(res.telNumber);
+                $('#detailed_address').val(res.addressDetailInfo);
+                var city = res.proviceFirstStageName + " " + res.addressCitySecondStageName + " " + res.addressCountiesThirdStageName;
+                $('#city-picker').val(city);
+            }
+        });
+    });
+
+</script>
+</html>

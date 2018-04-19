@@ -1,0 +1,1073 @@
+<!doctype html>
+<html>
+    <head>
+        <meta charset='utf-8'>
+        <title>提交订单</title>
+		<meta name="viewport" content="width=device-width,initial-scale=0.34, minimum-scale=0.34, maximum-scale=0.34, user-scalable=no">
+        <style>
+            *{
+                font-family:"Microsoft YaHei";
+                color:#3c3c3c;
+            }
+            body{
+                background-color:#f5f5f5;
+            }
+            .header{
+                width:96%;
+                margin:1% 2%;
+                background-color:#fff;
+            }
+            .header>div{
+                margin:0 20px;
+            }
+            .first{
+                border-bottom:1px solid #ccc;
+                height:120px;
+            }
+            .first span:first-child{
+                color:gray;
+                line-height:120px; 
+                font-size:50px;              
+            }
+
+            .second{
+                min-height:260px;
+				height:auto;
+                border-bottom:1px solid #ccc;
+                position:relative;
+            }
+            .detailimg{
+                display:block;
+                float:left;
+                margin:55px 20px;
+            }
+            .second p{
+                width:auto;
+                min-height:70px;
+				height:auto;
+                margin:0px;
+                line-height:70px;
+                color:gray;
+                font-size:40px;
+            }
+            .name{
+                padding-top:45px;
+                font-size:40px!important;
+            }
+            .price{
+                position:absolute;
+                right:30px;
+                bottom:20px;
+                line-height:90px;
+                color:#ff5466;
+                font-size:60px;
+            }
+            .price>span{
+                font-size: 0.8em;
+                color:gray;
+            }
+            .buydiv{
+                position:absolute;
+                width:370px;
+                height:120px;
+                right:0px;
+                top:40px;
+            }
+            .buydiv span:last-child{
+                width:100px;
+                height:60px;
+                background-color:#ff5466;
+                color:white;
+                display: block;
+                line-height:60px;
+                text-align:center;
+                float:right;
+                margin:30px 10px;
+                border-radius:30px;
+                font-size:60px;
+            }
+            .buydiv span:nth-child(2){
+                width:100px;
+                height:60px;
+                color:gray;
+                display: inline-block;
+                line-height:60px;
+                text-align:center;
+                margin:30px 10px;
+                border-radius:30px;
+                border:1px solid #ff5466;
+                font-size:60px;
+            }
+            .buydiv span:first-child{
+                width:100px;
+                height:60px;
+                background-color:#ff5466;
+                color:white;
+                display: block;
+                line-height:60px;
+                text-align:center;
+                margin:30px 10px;
+                border-radius:30px;
+                font-size:60px;
+                float:left;
+            }
+            .third{
+                height:120px;
+                border-bottom:1px solid #ccc;
+                font-size:40px;
+            }
+            .third>p{
+                margin:0px;
+                line-height:60px;
+
+            }
+            .third>p>span{
+                font-size:0.8em;
+                color:#ff5466;
+            }
+            .third>span{
+                width:200px;
+                height:48px;
+                line-height:48px;
+                background-color:red;
+                color:white;
+                font-size:0.8em;
+                display:block;
+                text-align:center;
+                border-radius:10px;
+            }
+            .forth{
+                height:120px;
+                font-size:40px;
+				position:relative;
+            }
+            .forth div:first-child{
+                height:120px;
+                
+                float:left;
+                line-height:120px;
+            }
+            .forth div:last-child{
+                height:86px;
+                padding-top:35px;
+				position:absolute;
+				right:10px;
+            }
+            .forthspan{
+                display:inline-block;
+                line-height:40px;
+                height:40px;
+                font-size:32px;
+                letter-spacing: 2px;
+            }
+            .forthspan span{
+                font-size:1.5em;
+                color:#ff5466;
+            }
+            .send{
+                width:96%;
+                margin:20px 2%;
+                background-color:#fff;
+                height:120px;
+                font-size:34px;
+            }
+            .send>div{
+                margin:0 20px;
+                height:120px;
+                line-height: 40px;
+                font-size:40px;
+                letter-spacing: 2px;
+                width:86px;
+                float:left;
+                padding-top:20px;
+                color:#3c3c3c;
+            }
+            .send span:nth-child(2n){
+                padding-left:20px;
+                line-height:120px;
+                font-size:40px;
+            }
+            .send span:nth-child(2n+1){
+                display:inline-block;
+                width:40px;
+                height:40px;
+                border-radius:20px;
+                border:1px solid #ff5466;
+                margin-top:30px;
+                vertical-align: center;
+                line-height:30px;
+                text-align: center;
+                margin:auto;
+                background-color:#ff5466;
+                margin-left:8px;
+                color:white;
+				font-size:45px;
+            }
+            .active{
+                background-color:white!important;
+            }
+            .address{
+                width:96%;
+                margin:20px 2%;
+                background-color:#fff;
+                height:auto;
+				min-height:120px;
+                position:relative;
+                font-size:35px;
+            }
+			.address1{
+                width:96%;
+                margin:20px 2%;
+                background-color:#fff;
+                height:auto;
+                position:relative;
+                font-size:35px;
+				min-height:120px;
+            }
+			.address1 div:first-child{
+               margin:0 20px;
+                height:120px;
+                line-height: 40px;
+                font-size:40px;
+                letter-spacing: 2px;
+                width:86px;
+                float:left;
+                padding-top:20px;
+                color:#3c3c3c;
+            }
+            .address div:first-child{
+                margin:auto 20px;
+				top:0px;
+				bottom:0px;
+                height:120px;
+                line-height: 40px;
+               font-size:40px;
+                letter-spacing: 2px;
+                width:86px;
+                padding-top:20px;
+                color:#3c3c3c;
+                position:absolute;
+            }
+            .addressdiv{
+                height:auto;
+                min-height:120px;  
+                border:1px solid transparent;  
+            }
+            .addressdiv span{
+                display:block;
+                line-height:50px;
+                min-height:50px;
+				height:auto;
+                font-size:34px;
+                margin-left:150px;
+				width:700px;
+            }
+			.addressdiv span:nth-child(3n){
+                min-height:40px;
+				position:absolute;
+				right:10px;
+				
+            }
+            .addressdiv span:first-child{
+                display: block;
+                height:auto;
+                margin-top:20px;
+                color:gray;
+            }
+			.addressdiv span:nth-child(2n){				
+				margin-bottom:10px;
+			}
+            .pay{
+                width:96%;
+                margin:20px 2%;
+                background-color:#fff;
+                height:186px;
+                position:relative;
+            }
+            .pay div:first-child{
+                margin:0 20px 0 20px;
+                height:186px;
+                line-height: 40px;
+               line-height: 40px;
+               font-size:40px;
+                width:86px;
+                float:left;
+                padding-top:50px;
+                color:#3c3c3c;
+                position:absolute;
+            }
+            .img1{
+                position:absolute;
+                top:30px;
+                left:150px;
+                height:40px; 
+                text-align: center;
+                line-height:40px;     
+                font-size:40px;      
+            }
+            .img2{
+                position:absolute;
+                left:150px;
+                top:90px;
+                height:40px;
+                text-align: center;
+                line-height:40px; 
+                font-size:40px;
+            }
+            .tel{
+                width:96%;
+                margin:20px 2%;
+                background-color:#fff;
+                min-height:120px;
+                position:relative;
+				height:auto;
+            }
+            .tel>div{
+                 margin:auto 20px;
+				 top:0px;
+				 bottom:0px;
+                height:120px;
+                line-height: 40px;
+               font-size:40px;
+                width:86px;
+                float:left;
+                padding-top:20px;
+                color:#3c3c3c;
+                position:absolute;
+            }
+            #telphone{
+                margin-left:140px;
+                height:86px;
+                font-size:40px;
+                width:600px;
+                border:none;
+            }
+			#buyername{
+                margin-left:140px;
+                height:86px;
+                font-size:40px;
+                width:600px;
+                border:none;
+            }
+            .some{
+                  width:96%;
+                margin:20px 2%;
+                background-color:#fff;
+                height:240px;
+                position:relative; 
+                margin-bottom:120px;
+            }
+            .some div{
+                  margin:0 20px 0 20px;
+                height:240px;
+                line-height: 40px;
+                line-height: 40px;
+               font-size:40px;
+                width:86px;
+                float:left;
+                padding-top:86px;
+                color:#3c3c3c;
+                position:absolute;
+            }
+            .some textarea{
+                position:absolute;
+                left:150px;
+                top:0;
+                bottom:0;
+                margin:auto;
+                height:160px;
+                font-size:40px;
+                width:600px;
+                border:none;
+                
+            }
+            .footer{
+                position:fixed;
+                bottom:0px;
+                left:0px;
+                width:100%;
+                height:140px;
+                background-color:transparent;
+            }
+
+            .footer span:last-child{
+                display:block;
+                width:90%;
+				margin-left:5%;
+                height:120px;
+                background-color:#ff5466;
+                border-radius:50px;
+                color:white;
+                font-size:54px;
+                text-align:center;
+                line-height:120px;
+                margin-top:10px;
+            }
+            option{
+                font-size:16px;
+            }
+            *{
+                list-style: none;
+            }
+            input[type="radio"]{
+                height:40px;
+                width:40px;
+                display:block;				
+                float:right;
+                margin-right:50px;
+            }
+            ul{
+				margin-top:0px;
+                margin-bottom:0px;
+            }
+			.time{
+                 width:96%;
+                margin:20px 2%;
+                background-color:#fff;
+                height:120px;
+                position:relative;
+            }
+            .time>div{
+                 margin:0 20px 0 20px;
+                height:120px;
+                line-height: 40px;
+               font-size:40px;
+                width:86px;
+                float:left;
+                padding-top:20px;
+                color:#3c3c3c;
+                position:absolute;
+            }
+            .time select{
+                height:86px;
+				margin:20px auto 20px 150px;
+                width:200px;
+                border:none;
+				border-radius:5px;
+				font-size:40px;				
+            }
+			.time select:last-child{
+				margin-left:60px;
+				width:400px;
+			}
+			.time1{
+                 width:96%;
+                margin:20px 2%;
+                background-color:#fff;
+                height:120px;
+                position:relative;
+            }
+            .time1>div{
+                 margin:0 20px 0 20px;
+                
+                line-height: 40px;
+               font-size:40px;
+                width:86px;
+                float:left;
+                color:#3c3c3c;
+				padding-top:20px;
+                position:absolute;
+            }
+			.time1 p{
+				left:150px;
+				position:absolute;
+				margin:0;
+				top:4px;
+				font-size:40px;
+				width:700px;
+			}
+			a{
+			text-decoration:none;
+			color:#c3c3c3;
+			}
+			.address1 ul{
+				margin-left:-33px;
+			}
+			.addressAdd{
+				margin-left:150px;
+				width:700px;
+				text-align:left;
+			}
+			.storeAddress,.storeTelphone{
+				margin-left:0px!important;
+			}
+			.addorminus{
+				display:inline-block;
+				color:white;
+				width:60px;
+				height:60px;
+				background-color:#ff5466;
+				text-align:center;
+				font-size:40px;
+				border-radius:50%;
+				line-height:40px;
+				margin:auto 30px; 
+				line-height:60px;
+				font-weight:900;
+				cursor:pointer;
+			}
+        </style>
+		<script>
+
+	 </script>
+    </head>
+    <body>
+	 <form name='form' method="post" action="{php echo app_url('order/orderconfirm', array('op' => 'submit'))}" id="myForm">
+	
+        <div class="header">
+            <div class="first">
+                <span>已购买商品</span>
+            </div>
+            <div class="second">
+                <img src="{if empty($goods['share_gimg'])}{php echo tomedia($goods['gimg'])}{else}{php echo tomedia($goods['share_gimg'])}{/if}" alt="{$goods['gname']}" width="150px" height="150px" class="detailimg">
+                <p class="name">{$goods['gname']}</p>
+                 {if !empty($goods['optionname'])} <p>规格:{$goods['optionname']}</p>{/if}
+                <p style="margin-top:0.6em;">数量:<span style="display:none;" class="addorminus">-</span><span id="ordernum" style="font-size:1.2em;">{$num}</span><span style="display:none;" class="addorminus">+</span></p>
+                <span class="price">￥{$price}元</span>        
+				{if $firstdiscount && $tuan_first==1}
+			            <div class="item"><span class="attname">团长优惠：</span><span class="attval">{$firstdiscount}元</span></div>
+			           	{/if}				
+            </div>
+           <!-- <div class="third">
+                <p>现有以下活动<span>（灰色表示未参与）</span></p>
+                <span>首单免运费</span>
+            </div>-->
+			<input type="hidden" name="cos" id="cos" value="0" />
+			<input type="hidden" name="allPrice" id="allPrice" value="{$pay_price}" />
+			<input type="hidden" name="storeaddress" id="storeaddress" value="" />
+			<input type="hidden" name="buynumber" id="buynumber" value="1"/>
+			<input type="hidden" name="buyprice" id="buyprice" value="{$pay_price}"/>
+            <div class="forth">
+                <div>总计{$num}件商品</div>
+                <div>
+                    <span class="forthspan">运费:<span id="expressnum">￥0.00</span></span>
+                    <span class="forthspan">总价:<span  id="totalPrice">￥{$pay_price}元</span></span>
+                </div>
+            </div>
+        </div>
+		<!--配送类型的值0-->
+		<input type="hidden" name="dispatchtype" id="dispatchtype" value="" />
+		<!--快递的值-->
+		<input type="hidden" name="express" id="express" value="" />
+         <div class="send">
+             <div>配送类型</div>
+            <span class="textselect" {if $goods['deliverytype']==3 || $goods['deliverytype']==5 || $goods['deliverytype']==6}style="display:none"{/if}>快递派送</span><span class="select" {if ($goods['deliverytype']==3 || $goods['deliverytype']==5 || $goods['deliverytype']==6)}style="display:none"{/if}><br/></span>
+            <span class="textselect" {if $goods['deliverytype']==2 || $goods['deliverytype']==5 || $goods['deliverytype']==4}style="display:none"{/if}>到店自提</span><span class="select" {if ($goods['deliverytype']==2 || $goods['deliverytype']==5 || $goods['deliverytype']==4)}style="display:none"{/if}><br/></span>
+            <span class="textselect" {if $goods['deliverytype']==1 || $goods['deliverytype']==6 || $goods['deliverytype']==4}style="display:none"{/if}>送货上门</span><span class="select" {if ($goods['deliverytype']==1 || $goods['deliverytype']==6 || $goods['deliverytype']==4)}style="display:none"{/if}><br/></span>
+        </div>
+
+		<div class="address1">
+             <div>收货地址</div>
+             <div style="position:absolute;top:15px;bottom:0px;margin-left:150px;height:auto;min-height:120px;">
+			 {if !empty($adress_fee)}
+                <a href="{php echo $this->createMobileUrl('addmanage',array('op'=>'changeaddres','groupnum'=>$all['groupnum'],'sharenum'=>$_GPC[sharenum],'tuan_id'=>$tuan_id,'orderid'=>$orderid,'g_id'=>$all['id']));}">
+                <input type="hidden" name="addres" id='address' value="{$adress_fee}"/>
+                    <div class="" >
+                        <ul id="editAddBtn" class="selected" adid="4">
+                            <li>{$adress['detailed_address']}</li>
+                            <li><strong>{$adress['cname']}</strong>{$adress['tel']}</li>
+                        </ul>
+                    </div>
+                    </a>
+                {else}
+                <a style="padding-top:-10px;" href="{php echo $this->createMobileUrl('createadd',array('op'=>'conf','groupnum'=>$all['groupnum'],'sharenum'=>$_GPC[sharenum],'tuan_id'=>$tuan_id,'orderid'=>$orderid,'g_id'=>$all['id']));}">
+                        <span style="margin:0;line-height:120px;font-size:34px;font-weight:bolder;">您还没有收货地址，点击新增</span>
+                </a>
+                {/if}
+			 </div>
+        </div>		
+        <div class="address ad1">
+            <div style="position:absolute;left:20px;top:0px;bottom:0px;
+            margin:auto;">配送方式</div>
+                <ul id="selectExpress" style="margin-left:115px;">
+				{loop $express $items}
+                    <li style="display:none;"><label for="{$items['id']}">{$items['dispatchname']}<input type="radio" id="{$items['id']}" name="kuaidi" value="{$items['id']}" onclick="yunfei({$items['id']})" ><label></li>
+					<li style="border:2px solid transparent;margin-bottom:20px;"><span><span>{$items['dispatchname']}</span><span class="checkcolor" style=" display:block;width:40px;height:40px;background-color:#fff;float:right;margin-right:40px;margin-top:3px;border-radius:50%;border:1px solid #ff5466;"></span></span></li>
+					{/loop}	                  
+                </ul>
+                
+        </div>    
+        <div class="address">
+            <div>到店自提</div>
+			{loop $storelist $items}
+            <div class="addressdiv addressAdd">			
+                <span class="storeAddress">商铺地址:{$items['address']}</span>
+                <span class="storeTelphone">联系方式:{$items['tel']}</span>	
+				<span class="checkaddress" style=" display:block;width:40px;height:40px!important;background-color:#fff;float:right;margin-right:40px;margin-top:-75px;border-radius:50%;border:1px solid #ff5466;"></span>
+             </div>
+			 	{/loop}	
+        </div>    
+        <div class="address">
+            <div>送货上门</div>
+            <div class="addressdiv">
+                <span>你的地址</span>
+                <span>联系方式</span>
+             </div>
+        </div>
+		 
+		 <?php
+						$nowtime=date('Y-m-d');
+				$nexttime = time() + (1 * 24 * 60 * 60); // 7 days; 24 hours; 60 mins; 60secs
+
+				$lasttime = time() + (2 * 24 * 60 * 60); // 7 days; 24 hours; 60 mins; 60secs
+
+				?>    
+<?php $hour= date("H")?> 	
+		 <div class="time" {if $this->module['config']['sendorder'] == 1}style="display:none;"{/if}>
+             <div>送货时间</div>
+             <select name="date" id="date"><option value="today">今天</option><option value="tomorrow">明天</option><option value="nextday">后天</option></select>
+			 <select name="time" id="time">
+			  {loop $sendtimes $items}
+							 {if $hour<$items['starttime']}
+							 {if $items['a']==1}
+								<option value="{$items['starttime']}:00-{$items['endtime']}:59" >{$items['starttime']}:00-{$items['endtime']}:59</option>	
+								{/if}
+								{/if}
+								{/loop}		
+			 </select>
+        </div>
+		<div class="time1">
+             <div>送货时间</div>
+			 <p>我们会在组团成功后24小时内送货上门，请注意安排查收</p>
+        </div>
+		
+        <div class="tel">
+             <div>联系方式</div>
+			 <input type="text" id="buyername" name="buyername" placeholder="请输入你的姓名" required />
+             <input name="mobile" type="tel" id="telphone" placeholder="请输入联系电话"/>
+        </div>
+        <div class="some">
+             <div>备注信息</div>
+             <textarea name="buyremark" row="25" cols="4" placeholder="请添加备注"></textarea>
+        </div>
+        <div class="footer"><span id="submit">提交订单</span></div>
+		 </form>
+        <script>
+            window.onload=function(){
+                var select=document.querySelectorAll(".select"),
+                address=document.querySelectorAll(".address");
+				var shouAddress=document.querySelector(".address1");
+				var tel=document.querySelector(".tel");
+				var time=document.querySelector(".time");
+				var time1=document.querySelector('.time1');
+				var textselect=document.querySelectorAll(".textselect");
+				var dispatchtype=document.getElementById('dispatchtype');
+				var telphone=document.getElementById("telphone");
+				var buyprice=document.getElementById("buyprice");
+				time1.style.display="none";
+				tel.style.display="none";
+				time.style.display="none";
+				address[2].style.display="none";
+				address[1].style.display="none";
+				address[0].style.display="none";
+				shouAddress.style.display="none";
+				
+				var express=document.getElementById("express");
+				
+                for (var i=0,len=select.length;i<len;i++){
+                    if (i==0){
+                        select[i].classList.remove("active");
+                        address[i].style.display="block";
+                    }else{
+                        address[i].style.display="none";
+                        select[i].classList.add("active");
+                    }
+					//选择配送类型改变下面的栏目
+					textselect[i].onclick=function(ev){
+						for (var j=0;j<len;j++){
+                            if (ev.target==textselect[j]){
+                                address[j].style.display="block";
+                                select[j].classList.remove("active");
+                            }else{
+                                address[j].style.display="none";
+                                select[j].classList.add("active");
+                            }
+							}
+							if (ev.target==textselect[0]){
+								selectFirstOrder();
+							}
+							if (ev.target==textselect[1]){
+							shouAddress.style.display="none";
+							tel.style.display="block";
+							resetExpress();
+							}else{
+								tel.style.display="none";
+								shouAddress.style.display="block";
+							}
+							if (ev.target==textselect[2]){
+								time.style.display="none";
+								time1.style.display="block";
+								resetExpress();
+								//sh();
+							}else{
+								time.style.display="none";
+								time1.style.display="none";
+							}
+							address[2].style.display="none";
+						validate();
+					}
+					//选择配送类型改变下面的栏目
+                    select[i].onclick=function(ev){
+                        for (var j=0;j<len;j++){
+                            if (ev.target==select[j]){
+                                address[j].style.display="block";
+                                select[j].classList.remove("active");
+                            }else{
+                                address[j].style.display="none";
+                                select[j].classList.add("active");
+                            }						
+							}
+							if (ev.target==select[0]){
+								selectFirstOrder();
+							}
+							if (ev.target==select[1]){
+							shouAddress.style.display="none";
+							tel.style.display="block";
+							resetExpress();
+							}else{
+								tel.style.display="none";
+								shouAddress.style.display="block";
+							}
+							if (ev.target==select[2]){
+								time.style.display="none";
+								time1.style.display="block";
+								resetExpress();
+								//sh();
+							}else{
+								time1.style.display="none";
+								time.style.display="none";
+							}
+							address[2].style.display="none";
+                        
+						validate();
+                    }
+                }
+				//默认配送类型初始化
+				var spans=document.querySelectorAll(".send span:nth-child(2n)");
+				if ((spans[0].style.display!="none")&& (spans[1].style.display!="none") && (spans[2].style.display!="none")){
+					address[0].style.display="block";
+					shouAddress.style.display="block";
+					 select[0].classList.remove("active");
+					 select[1].classList.add("active");
+					 select[2].classList.add("active");
+					 selectExpress();
+				}
+				if ((spans[0].style.display=="none")&& (spans[1].style.display!="none") && (spans[2].style.display!="none")){
+					address[1].style.display="block";
+					address[0].style.display="none";
+					tel.style.display="block";
+					select[1].classList.remove("active");
+					 select[0].classList.add("active");
+					 select[2].classList.add("active");
+				}
+				if ((spans[0].style.display=="none")&& (spans[1].style.display=="none") && (spans[2].style.display!="none")){
+					shouAddress.style.display="block";
+					time1.style.display="block";
+					address[0].style.display="none";
+					select[2].classList.remove("active");
+					 select[1].classList.add("active");
+					 select[0].classList.add("active");
+				}
+				if ((spans[0].style.display!="none")&& (spans[1].style.display!="none") && (spans[2].style.display=="none")){
+					address[0].style.display="block";
+					shouAddress.style.display="block";
+					 select[0].classList.remove("active");
+					 select[1].classList.add("active");
+					 select[2].classList.add("active");
+					 selectExpress();
+				}
+				if ((spans[0].style.display!="none")&& (spans[1].style.display=="none") && (spans[2].style.display!="none")){
+					address[0].style.display="block";
+					shouAddress.style.display="block";
+					 select[0].classList.remove("active");
+					 select[1].classList.add("active");
+					 select[2].classList.add("active");
+					 selectExpress();
+				}
+				if ((spans[0].style.display!="none")&& (spans[1].style.display=="none") && (spans[2].style.display=="none")){
+					address[0].style.display="block";
+					shouAddress.style.display="block";
+					 select[0].classList.remove("active");
+					 select[1].classList.add("active");
+					 select[2].classList.add("active");
+					 selectExpress();
+				}
+				if ((spans[0].style.display=="none")&& (spans[1].style.display!="none") && (spans[2].style.display=="none")){
+					address[1].style.display="block";
+					address[0].style.display="none";
+					tel.style.display="block";
+					select[1].classList.remove("active");
+					 select[0].classList.add("active");
+					 select[2].classList.add("active");
+				}
+				validate();
+				function validate(){
+					if (Text(select[0],"active")){
+						dispatchtype.value=0;
+					}
+					if (Text(select[1],"active")){
+						dispatchtype.value=1;
+					}
+					if (Text(select[2],"active")){
+						dispatchtype.value=2;
+					}
+					//alert(dispatchtype.value);
+				}	
+				//验证手机号
+				function checkTelphone(str){
+					var pattern=/^1\d{10}$/;
+					if (pattern.test(str)){
+						return true;
+					}else{
+						alert("请输入正确的电话号码");
+						return false;
+					}
+				}
+				var name=document.getElementById("buyername");
+				//验证是否选择快递
+				function Check(){
+					if (Text(select[0],"active")){					
+					if (!express.value){
+						//alert("未选择快递或者商家不支持快递派送");
+						return false;						
+					}
+					}
+					if (Text(select[1],"active")){
+						if (!ss){
+							alert("商家不支持自提");
+							return false;
+						}
+						else if (!name.value){
+							alert("请确认已经填写姓名");
+							return false;
+						} else if (!checkTelphone(telphone.value)){
+							return false;
+						}else if (!telphone.value){
+							alert("请确认已经填写联系电话");
+							return false;
+						}
+					}
+					return true;
+				}
+				function checkExpress(){
+					if (Text(select[0],"active")){					
+						if (!express.value){
+							alert("商家不支持快递派送");
+							return false;						
+						}
+					}
+					return true;
+				}
+				var ss=!!document.querySelector(".storeAddress");
+				function valueTel(){
+					if (Text(select[1],"active")){
+						if (!ss){
+							alert("商家不支持自提");
+							return false;
+						}
+						else if (!telphone.value){							
+							return false;
+						}else if (!checkTelphone(telphone.value)){
+							return false;
+						}
+											
+					}
+					return true;
+				}
+				var submit=document.getElementById('submit');
+				submit.onclick=function(ev){				
+						if (Check()){
+							myForm.submit();
+						}
+						if(!document.querySelector("input[type='radio']") && valueTel() && checkExpress()){
+							myForm.submit();
+						 }
+				}
+					function Text(elem,cls){
+						if (elem.classList.contains(cls)){
+							return false;
+						}else{
+							return true;
+						}
+					}					
+					var selectExpresses=document.querySelectorAll("#selectExpress li:nth-child(2n)");
+					if (document.querySelector(".checkcolor")){
+					document.querySelector(".checkcolor").style.backgroundColor="#ff5466";
+					//alert(selectExpresses[1].innerHTML);
+					var epressNum=selectExpresses.length;
+					var radioinputs=document.querySelectorAll("input[type='radio']");
+					for (var i=0;i<epressNum;i++){
+						selectExpresses[i].onclick=function(ev){
+							//alert("liclick");
+							for (var j=0;j<epressNum;j++){
+								if ((ev.target.parentNode.parentNode==selectExpresses[j])||(ev.target.parentNode==selectExpresses[j]) ||(ev.target==selectExpresses[j])){
+									radioinputs[j].checked=true;
+									yunfei(radioinputs[j].id);
+									//alert(radioinputs[j].checked);
+									//alert("liclick1");
+									selectExpresses[j].querySelector(".checkcolor").style.backgroundColor="#ff5466";
+								} 
+								else{
+									selectExpresses[j].querySelector(".checkcolor").style.backgroundColor="white";
+								}
+							}
+						}
+					}
+					}
+					//if(document.querySelector("input[type='radio']")){
+						var storeaddress=document.getElementById("storeaddress");
+						var addressAdd=document.getElementsByClassName("addressAdd");
+						var addressNum=addressAdd.length;
+						if (document.getElementsByClassName("checkaddress").length!=0){
+						var checkaddress=document.getElementsByClassName("checkaddress");
+						//alert(checkaddress.length);
+						//alert(checkaddress.length);
+							for (var i=0;i<addressNum;i++){
+								addressAdd[i].onclick=function(ev){
+									for (var j=0;j<addressNum;j++){
+										if ((ev.target==addressAdd[j])||(ev.target.parentNode==addressAdd[j])){
+											checkaddress[j].style.backgroundColor="#ff5466";
+											var address=addressAdd[j].querySelector(".storeAddress").innerHTML.slice(5);
+											var telphone=addressAdd[j].querySelector(".storeTelphone").innerHTML.slice(5);
+											var storeAddressandTelphone=address;
+											storeaddress.value=storeAddressandTelphone;
+											//alert(storeaddress.value);
+											//alert(storeaddress.value);
+										}else{
+											checkaddress[j].style.backgroundColor="white";
+										}								
+									}
+								}
+							}
+						
+							checkaddress[0].style.backgroundColor="#ff5466";
+						
+						var selectaddress=addressAdd[0].querySelector(".storeAddress").innerHTML.slice(5);
+						storeaddress.value=selectaddress;
+					}
+					var addorminus=document.querySelectorAll(".addorminus");
+					var ordernum=document.getElementById("ordernum");
+					addorminus[1].addEventListener("click",function(){
+						var n=parseInt(ordernum.innerHTML);
+						n++;
+						ordernum.innerHTML=n;
+						var pricet=document.getElementById("cos").value;
+						var expressT=Number(document.getElementById("expressnum").innerHTML.slice(1));
+						var pricett=n*pricet+expressT;
+						document.getElementById("totalPrice").innerHTML="￥"+pricett+"元";
+						buyprice.value=n*pricet;
+						document.getElementById("allPrice").value=pricett;
+						document.getElementById("buynumber").value=n;
+					},false);
+					addorminus[0].addEventListener("click",function(){
+						var totalPrice=document.getElementById("totalPrice");
+						var n=parseInt(ordernum.innerHTML);
+						if (n==1){
+							alert("不能减为0");
+						}
+						else{
+							n--;
+						}
+						ordernum.innerHTML=n;
+						var pricet=document.getElementById("cos").value;
+						var expressT=Number(document.getElementById("expressnum").innerHTML.slice(1));
+						var pricett=n*pricet+expressT;
+						document.getElementById("totalPrice").innerHTML="￥"+pricett+"元";
+						buyprice.value=n*pricet;
+						document.getElementById("allPrice").value=pricett;
+						document.getElementById("buynumber").value=n;
+					},false)
+            }
+			function resetExpress(){
+				var express=document.getElementById("express");
+				var totalPrice=document.getElementById("totalPrice");
+				var expressnum=document.getElementById("expressnum");
+				var allPrice=document.getElementById("allPrice");
+				var expressN=0.00;
+				expressnum.innerHTML="￥"+expressN;									
+				var totalPricehidden=document.getElementById("cos");
+				var totalnum=Number(buyprice.value)+Number(expressN);
+				totalPrice.innerHTML="￥"+buyprice.value+"元";
+				document.getElementById("allPrice").value=totalnum;
+				express.value="";
+				document.getElementById("cos").value=0;
+			}
+			function selectExpress(){
+			if(document.querySelector("input[type='radio']")){
+				var radioinput=document.querySelector("input[type='radio']");
+				radioinput.checked=true;
+				yunfei(radioinput.id);
+				}
+				}
+			//选择按钮用ajax来调用运费费用更新运费金额和总金额
+			function yunfei(id) {
+			
+			var express=document.getElementById("express");
+			var data=new FormData();
+			data.append("express",id);
+			var url="{php echo app_url('order/orderconfirm', array('op' => 'ck'))}";
+				var xhr=new XMLHttpRequest();
+				var totalPrice=document.getElementById("totalPrice");
+				var expressnum=document.getElementById("expressnum");
+				var allPrice=document.getElementById("allPrice");
+				var expressN;
+				xhr.onreadystatechange=function(){
+					if (xhr.readyState==4){
+						if ((xhr.status>=200 & xhr.status<300)|| xhr.status==304){
+							var totalPricehidden=document.getElementById("cos");
+							expressN=xhr.responseText;
+							//alert(expressN);
+							expressnum.innerHTML="￥"+expressN;	
+							var totalnum=Number(buyprice.value)+Number(expressN);
+							totalPrice.innerHTML="￥"+totalnum+"元";
+							allPrice.value=totalnum;
+							express.value=id;
+							document.getElementById("cos").value=expressN;
+						}
+					}
+				};
+				xhr.open("post",url,true);
+				xhr.send(data);
+				
+			}
+		function selectFirstOrder(){
+		if(document.querySelector("input[type='radio']")){
+			var radioinputs=document.querySelectorAll("input[type='radio']");
+			for (var i=0;i<radioinputs.length;i++){
+				if (radioinputs[i].checked){
+					yunfei(radioinputs[i].id)
+				}
+			}
+		}
+		}
+		//选择按钮用ajax来调用运费费用更新运费金额和总金额
+		function sh() {
+			var data=new FormData();
+			//data.append("express",express);
+			var url="{php echo app_url('order/orderconfirm', array('op' => 'sh'))}";
+				var xhr=new XMLHttpRequest();
+				var totalPrice=document.getElementById("totalPrice");
+				var expressnum=document.getElementById("expressnum");
+				var expressN;
+				var allPrice=document.getElementById("allPrice");
+				xhr.onreadystatechange=function(){
+					if (xhr.readyState==4){
+						if ((xhr.status>=200 & xhr.status<300)|| xhr.status==304){
+							var totalPricehidden=document.getElementById("cos");
+							expressN=xhr.responseText;
+							alert(expressN);
+							expressnum.innerHTML="￥"+expressN;	
+							var totalnum=Number(buyprice.value)+Number(expressN);
+							totalPrice.innerHTML="￥"+totalnum+"元";
+							allPrice.value=totalnum;
+						}
+					}
+				};
+				xhr.open("post",url,true);
+				xhr.send(data);
+	}
+	
+
+        </script>
+    </body>
+</html>

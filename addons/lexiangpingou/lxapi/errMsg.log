@@ -1,0 +1,451 @@
+array (
+  'op' => 'wx_query',
+  'appid' => 'wxd11509514ffc5faf',
+  'mch_id' => '1336922201',
+  'out_trade_no' => 'XCX151322411315486064',
+  'paykey' => 'zl5dscvpfbemgzf3jddw3wgpeorjqsky',
+)
+'{&quot;uniontid&quot;:&quot;XCX151322411315486064&quot;,&quot;orderno&quot;:&quot;XCX15132241131548&quot;,&quot;transid&quot;:&quot;4200000026201712143936857330&quot;,&quot;fee&quot;:&quot;1&quot;}'
+array (
+  'op' => 'wx_query',
+  'appid' => 'wx82af9e82799f4af5',
+  'mch_id' => '1493156792',
+  'out_trade_no' => 'XCX151365558972795953',
+  'paykey' => '3pwqdvilfgbffm1tjk2sq45g4a4ck2xr',
+)
+array (
+  'op' => 'wx_query',
+  'appid' => 'wx82af9e82799f4af5',
+  'mch_id' => '1493156792',
+  'out_trade_no' => 'XCX151365558972797673',
+  'paykey' => '3pwqdvilfgbffm1tjk2sq45g4a4ck2xr',
+)
+array (
+  'op' => 'wx_query',
+  'appid' => 'wx82af9e82799f4af5',
+  'mch_id' => '1493156792',
+  'out_trade_no' => 'XCX151365558972794437',
+  'paykey' => '3pwqdvilfgbffm1tjk2sq45g4a4ck2xr',
+)
+array (
+  'op' => 'wx_query',
+  'appid' => 'wx82af9e82799f4af5',
+  'mch_id' => '1493156792',
+  'out_trade_no' => 'XCX151365558972798940',
+  'paykey' => '3pwqdvilfgbffm1tjk2sq45g4a4ck2xr',
+)
+array (
+  'op' => 'wx_query',
+  'appid' => 'wx82af9e82799f4af5',
+  'mch_id' => '1493156792',
+  'out_trade_no' => 'XCX151365558972793288',
+  'paykey' => '3pwqdvilfgbffm1tjk2sq45g4a4ck2xr',
+)
+array (
+  'op' => 'wx_query',
+  'appid' => 'wx82af9e82799f4af5',
+  'mch_id' => '1493156792',
+  'out_trade_no' => 'XCX151365558972794376',
+  'paykey' => '3pwqdvilfgbffm1tjk2sq45g4a4ck2xr',
+)
+array (
+  'op' => 'wx_query',
+  'appid' => 'wx82af9e82799f4af5',
+  'mch_id' => '1493156792',
+  'out_trade_no' => 'XCX151365558972796864',
+  'paykey' => '3pwqdvilfgbffm1tjk2sq45g4a4ck2xr',
+)
+array (
+  'op' => 'wx_query',
+  'appid' => 'wx7020d8002a7b0d0e',
+  'mch_id' => '1470464302',
+  'out_trade_no' => 'XCX151460487263304498',
+  'paykey' => '15888580135158885801351588858013',
+)
+array (
+  'op' => 'wx_query',
+  'appid' => 'wxd3e1f1e147f56759',
+  'mch_id' => '1462601802',
+  'out_trade_no' => 'XCX151487660862095684',
+  'paykey' => 'pd1kqp4p30e41tasn1dbwcxklthxgdek',
+)
+array (
+  'op' => 'wx_query',
+  'appid' => 'wxd11509514ffc5faf',
+  'mch_id' => '1336922201',
+  'out_trade_no' => 'XCX151487785630490450',
+  'paykey' => 'zl5dscvpfbemgzf3jddw3wgpeorjqsky',
+)
+array (
+  'op' => 'wx_query',
+  'appid' => 'wxa311a7658a460485',
+  'mch_id' => '1489451132',
+  'out_trade_no' => 'XCX151495826114961586',
+  'paykey' => 'jingheying370828199111202612zddd',
+)
+array (
+  'op' => 'wx_query',
+  'appid' => 'wx05303ff41a9299a4',
+  'mch_id' => '1484362752',
+  'out_trade_no' => 'XCX151505794003566403',
+  'paykey' => '3fpljrjrnjvb2fich2iw1v3jfo4abbwb',
+)
+array (
+  'op' => 'wx_query',
+  'appid' => 'wx82af9e82799f4af5',
+  'mch_id' => '1493156792',
+  'out_trade_no' => 'XCX151539992185154933',
+  'paykey' => '3pwqdvilfgbffm1tjk2sq45g4a4ck2xr',
+)
+array (
+  'op' => 'wx_query',
+  'appid' => 'wx82af9e82799f4af5',
+  'mch_id' => '1493156792',
+  'out_trade_no' => 'XCX151539992185156736',
+  'paykey' => '3pwqdvilfgbffm1tjk2sq45g4a4ck2xr',
+)
+array (
+  'op' => 'wx_query',
+  'appid' => 'wx82af9e82799f4af5',
+  'mch_id' => '1493156792',
+  'out_trade_no' => 'XCX151539992185150676',
+  'paykey' => '3pwqdvilfgbffm1tjk2sq45g4a4ck2xr',
+)
+array (
+  'op' => 'wx_query',
+  'appid' => 'wxa311a7658a460485',
+  'mch_id' => '1489451132',
+  'out_trade_no' => 'XCX151574124507554477',
+  'paykey' => 'jingheying370828199111202612zddd',
+)
+array (
+  'op' => 'wx_query',
+  'appid' => 'wxa311a7658a460485',
+  'mch_id' => '1489451132',
+  'out_trade_no' => 'XCX151574124507556991',
+  'paykey' => 'jingheying370828199111202612zddd',
+)
+array (
+  'op' => 'wx_query',
+  'appid' => 'wxccfecb841f09d6c7',
+  'mch_id' => '1482764082',
+  'out_trade_no' => 'XCX151575998391876536',
+  'paykey' => 'pinduoduoshuiguo2017rdelife12345',
+)
+array (
+  'op' => 'wx_query',
+  'appid' => 'wx095aa4f95e3de167',
+  'mch_id' => '1482904912',
+  'out_trade_no' => 'XCX151582563632628575',
+  'paykey' => 'vezt1wmyzmpgcc2tlxw1yihnemqmfv2p',
+)
+array (
+  'op' => 'wx_query',
+  'appid' => 'wx095aa4f95e3de167',
+  'mch_id' => '1482904912',
+  'out_trade_no' => 'XCX151597312487258772',
+  'paykey' => 'vezt1wmyzmpgcc2tlxw1yihnemqmfv2p',
+)
+array (
+  'op' => 'wx_query',
+  'appid' => 'wxf4f7432bb9821bf9',
+  'mch_id' => '1484273192',
+  'out_trade_no' => 'XCX151677950905698393',
+  'paykey' => 'dradgv5vckpdmintwszpkauzhephbo14',
+)
+array (
+  'op' => 'wx_query',
+  'appid' => 'wxd11509514ffc5faf',
+  'mch_id' => '1336922201',
+  'out_trade_no' => 'XCX151693193386907062',
+  'paykey' => 'zl5dscvpfbemgzf3jddw3wgpeorjqsky',
+)
+array (
+  'op' => 'wx_query',
+  'appid' => 'wxf4f7432bb9821bf9',
+  'mch_id' => '1484273192',
+  'out_trade_no' => 'XCX151721609740716564',
+  'paykey' => 'dradgv5vckpdmintwszpkauzhephbo14',
+)
+array (
+  'op' => 'wx_query',
+  'appid' => 'wx333aab5a7c4a210f',
+  'mch_id' => '1411586502',
+  'out_trade_no' => 'XCX152171053787369351',
+  'paykey' => 'hCsZTMJaMvCkAk1kT26vLauA6SZK87Jc',
+)
+array (
+  'op' => 'wx_query',
+  'appid' => 'wxd11509514ffc5faf',
+  'mch_id' => '1336922201',
+  'out_trade_no' => 'XCX152188249767865788',
+  'paykey' => 'zl5dscvpfbemgzf3jddw3wgpeorjqsky',
+)
+array (
+  'op' => 'wx_query',
+  'appid' => 'wxa311a7658a460485',
+  'mch_id' => '1489451132',
+  'out_trade_no' => 'XCX152215820155290611',
+  'paykey' => 'jingheying370828199111202612zddd',
+)
+array (
+  'op' => 'wx_query',
+  'appid' => 'wxa311a7658a460485',
+  'mch_id' => '1489451132',
+  'out_trade_no' => 'XCX152215820155293772',
+  'paykey' => 'jingheying370828199111202612zddd',
+)
+array (
+  'op' => 'wx_query',
+  'appid' => 'wxd11509514ffc5faf',
+  'mch_id' => '1336922201',
+  'out_trade_no' => 'XCX152239862119805151',
+  'paykey' => 'zl5dscvpfbemgzf3jddw3wgpeorjqsky',
+)
+array (
+  'op' => 'wx_query',
+  'appid' => 'wx333aab5a7c4a210f',
+  'mch_id' => '1411586502',
+  'out_trade_no' => 'XCX152264621172696761',
+  'paykey' => 'hCsZTMJaMvCkAk1kT26vLauA6SZK87Jc',
+)
+array (
+  'op' => 'wx_query',
+  'appid' => 'wx333aab5a7c4a210f',
+  'mch_id' => '1411586502',
+  'out_trade_no' => 'XCX152264621172693288',
+  'paykey' => 'hCsZTMJaMvCkAk1kT26vLauA6SZK87Jc',
+)
+array (
+  'op' => 'wx_query',
+  'appid' => 'wx333aab5a7c4a210f',
+  'mch_id' => '1411586502',
+  'out_trade_no' => 'XCX152264621172692015',
+  'paykey' => 'hCsZTMJaMvCkAk1kT26vLauA6SZK87Jc',
+)
+array (
+  'op' => 'wx_query',
+  'appid' => 'wx333aab5a7c4a210f',
+  'mch_id' => '1411586502',
+  'out_trade_no' => 'XCX152264621172696439',
+  'paykey' => 'hCsZTMJaMvCkAk1kT26vLauA6SZK87Jc',
+)
+array (
+  'op' => 'wx_query',
+  'appid' => 'wx333aab5a7c4a210f',
+  'mch_id' => '1411586502',
+  'out_trade_no' => 'XCX152264621172697786',
+  'paykey' => 'hCsZTMJaMvCkAk1kT26vLauA6SZK87Jc',
+)
+array (
+  'op' => 'wx_query',
+  'appid' => 'wx333aab5a7c4a210f',
+  'mch_id' => '1411586502',
+  'out_trade_no' => 'XCX152264651015962049',
+  'paykey' => 'hCsZTMJaMvCkAk1kT26vLauA6SZK87Jc',
+)
+array (
+  'op' => 'wx_query',
+  'appid' => 'wxd11509514ffc5faf',
+  'mch_id' => '1336922201',
+  'out_trade_no' => 'XCX152272246988437929',
+  'paykey' => 'zl5dscvpfbemgzf3jddw3wgpeorjqsky',
+)
+array (
+  'op' => 'wx_query',
+  'appid' => 'wxd11509514ffc5faf',
+  'mch_id' => '1336922201',
+  'out_trade_no' => 'XCX152272349852793268',
+  'paykey' => 'zl5dscvpfbemgzf3jddw3wgpeorjqsky',
+)
+array (
+  'op' => 'wx_query',
+  'appid' => 'wxa311a7658a460485',
+  'mch_id' => '1489451132',
+  'out_trade_no' => 'XCX152302959842620993',
+  'paykey' => 'jingheying370828199111202612zddd',
+)
+array (
+  'op' => 'wx_query',
+  'appid' => 'wxa311a7658a460485',
+  'mch_id' => '1489451132',
+  'out_trade_no' => 'XCX152302959842625615',
+  'paykey' => 'jingheying370828199111202612zddd',
+)
+array (
+  'uniacid' => '33',
+  'op' => 'wx_query',
+  'appid' => 'wx6086cdfacbe1db2e',
+  'mch_id' => '1489784642',
+  'out_trade_no' => 'APP15232414305532',
+  'paykey' => 'zl5dscvpfbemgzf3jddw3wgpeorjqskz',
+)
+'WechatError: -2'
+array (
+  'uniacid' => '2180',
+  'op' => 'wx_query',
+  'appid' => 'wx11e29b1857b6aead',
+  'mch_id' => '1499165462',
+  'out_trade_no' => 'APP15232519877773',
+  'paykey' => 'hxfp4zwj4vc03z5bpccgzvpgrdghcbky',
+)
+array (
+  'uniacid' => '2180',
+  'op' => 'wx_query',
+  'appid' => 'wx11e29b1857b6aead',
+  'mch_id' => '1499165462',
+  'out_trade_no' => 'APP15234136916426',
+  'paykey' => 'hxfp4zwj4vc03z5bpccgzvpgrdghcbky',
+)
+array (
+  'uniacid' => '2180',
+  'op' => 'wx_query',
+  'appid' => 'wx11e29b1857b6aead',
+  'mch_id' => '1499165462',
+  'out_trade_no' => 'APP15234147409454',
+  'paykey' => 'hxfp4zwj4vc03z5bpccgzvpgrdghcbky',
+)
+array (
+  'uniacid' => '2180',
+  'op' => 'wx_query',
+  'appid' => 'wx11e29b1857b6aead',
+  'mch_id' => '1499165462',
+  'out_trade_no' => 'APP15234180423593',
+  'paykey' => 'hxfp4zwj4vc03z5bpccgzvpgrdghcbky',
+)
+array (
+  'uniacid' => '2180',
+  'op' => 'wx_query',
+  'appid' => 'wx11e29b1857b6aead',
+  'mch_id' => '1499165462',
+  'out_trade_no' => 'APP15234181681911',
+  'paykey' => 'hxfp4zwj4vc03z5bpccgzvpgrdghcbky',
+)
+array (
+  'uniacid' => '2180',
+  'op' => 'wx_query',
+  'appid' => 'wx11e29b1857b6aead',
+  'mch_id' => '1499165462',
+  'out_trade_no' => 'APP15234182801012',
+  'paykey' => 'hxfp4zwj4vc03z5bpccgzvpgrdghcbky',
+)
+array (
+  'uniacid' => '2180',
+  'op' => 'wx_query',
+  'appid' => 'wx11e29b1857b6aead',
+  'mch_id' => '1499165462',
+  'out_trade_no' => 'APP15234188841835',
+  'paykey' => 'hxfp4zwj4vc03z5bpccgzvpgrdghcbky',
+)
+array (
+  'uniacid' => '2180',
+  'op' => 'wx_query',
+  'appid' => 'wx11e29b1857b6aead',
+  'mch_id' => '1499165462',
+  'out_trade_no' => 'APP15234189555833',
+  'paykey' => 'hxfp4zwj4vc03z5bpccgzvpgrdghcbky',
+)
+array (
+  'uniacid' => '2180',
+  'op' => 'wx_query',
+  'appid' => 'wx11e29b1857b6aead',
+  'mch_id' => '1499165462',
+  'out_trade_no' => 'APP15234190063758',
+  'paykey' => 'hxfp4zwj4vc03z5bpccgzvpgrdghcbky',
+)
+array (
+  'uniacid' => '2180',
+  'op' => 'wx_query',
+  'appid' => 'wx11e29b1857b6aead',
+  'mch_id' => '1499165462',
+  'out_trade_no' => 'APP15234192120866',
+  'paykey' => 'hxfp4zwj4vc03z5bpccgzvpgrdghcbky',
+)
+array (
+  'uniacid' => '2180',
+  'op' => 'wx_query',
+  'appid' => 'wx11e29b1857b6aead',
+  'mch_id' => '1499165462',
+  'out_trade_no' => 'APP15234192857273',
+  'paykey' => 'hxfp4zwj4vc03z5bpccgzvpgrdghcbky',
+)
+array (
+  'uniacid' => '2180',
+  'op' => 'wx_query',
+  'appid' => 'wx11e29b1857b6aead',
+  'mch_id' => '1499165462',
+  'out_trade_no' => 'APP15234263446039',
+  'paykey' => 'hxfp4zwj4vc03z5bpccgzvpgrdghcbky',
+)
+array (
+  'uniacid' => '2180',
+  'op' => 'wx_query',
+  'appid' => 'wx11e29b1857b6aead',
+  'mch_id' => '1499165462',
+  'out_trade_no' => 'APP15234267452480',
+  'paykey' => 'hxfp4zwj4vc03z5bpccgzvpgrdghcbky',
+)
+array (
+  'uniacid' => '2180',
+  'op' => 'wx_query',
+  'appid' => 'wx11e29b1857b6aead',
+  'mch_id' => '1499165462',
+  'out_trade_no' => 'APP15235005408427',
+  'paykey' => 'hxfp4zwj4vc03z5bpccgzvpgrdghcbky',
+)
+array (
+  'uniacid' => '2180',
+  'op' => 'wx_query',
+  'appid' => 'wx11e29b1857b6aead',
+  'mch_id' => '1499165462',
+  'out_trade_no' => 'APP15235033611151',
+  'paykey' => 'hxfp4zwj4vc03z5bpccgzvpgrdghcbky',
+)
+array (
+  'uniacid' => '2180',
+  'op' => 'wx_query',
+  'appid' => 'wx11e29b1857b6aead',
+  'mch_id' => '1499165462',
+  'out_trade_no' => 'APP15235035434527',
+  'paykey' => 'hxfp4zwj4vc03z5bpccgzvpgrdghcbky',
+)
+array (
+  'uniacid' => '2180',
+  'op' => 'wx_query',
+  'appid' => 'wx11e29b1857b6aead',
+  'mch_id' => '1499165462',
+  'out_trade_no' => 'APP15235038237713',
+  'paykey' => 'hxfp4zwj4vc03z5bpccgzvpgrdghcbky',
+)
+array (
+  'uniacid' => '2180',
+  'op' => 'wx_query',
+  'appid' => 'wx11e29b1857b6aead',
+  'mch_id' => '1499165462',
+  'out_trade_no' => 'APP15235217498381',
+  'paykey' => 'hxfp4zwj4vc03z5bpccgzvpgrdghcbky',
+)
+array (
+  'uniacid' => '2180',
+  'op' => 'wx_query',
+  'appid' => 'wx11e29b1857b6aead',
+  'mch_id' => '1499165462',
+  'out_trade_no' => 'APP15235218823008',
+  'paykey' => 'hxfp4zwj4vc03z5bpccgzvpgrdghcbky',
+)
+array (
+  'uniacid' => '2180',
+  'op' => 'wx_query',
+  'appid' => 'wx11e29b1857b6aead',
+  'mch_id' => '1499165462',
+  'out_trade_no' => 'APP15235225586782',
+  'paykey' => 'hxfp4zwj4vc03z5bpccgzvpgrdghcbky',
+)
+array (
+  'uniacid' => '2180',
+  'op' => 'wx_query',
+  'appid' => 'wx11e29b1857b6aead',
+  'mch_id' => '1499165462',
+  'out_trade_no' => 'APP15235236507689',
+  'paykey' => 'hxfp4zwj4vc03z5bpccgzvpgrdghcbky',
+)

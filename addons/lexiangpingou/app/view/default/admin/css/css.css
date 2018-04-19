@@ -1,0 +1,67 @@
+*{padding:0;margin:0;}
+html{height:100%;}
+body{height:100%;font:12px "微软雅黑","黑体";line-height:2.0;color:#333;background-color:#E7E8EC;}
+ul{list-style:none;}
+a:link{color:#2E2E2E;text-decoration:none;}
+a:hover{color:orange;text-decoration:none;}
+a:visited{color:#2E2E2E;text-decoration:none;}
+*:focus{outline:none;}
+img{border:none;}
+.clear{clear:both;}
+.fl{float:left;}
+.fr{float:right;}
+.placeholder{color:#888!important}
+#content{width:710px;padding:5px 15px 106px 15px;margin:0 auto;background-color:#fff;display:table;}
+#tab{width:100%;display:table;margin-top:40px;position:relative;}
+.seekDiv{width:45%;height:26px;position:relative;}
+.seekDiv:first-child{width:53%;}
+.seekDiv input[type="text"]{height:26px;line-height:26px;padding:0px 10px;font-size:14px;border:1px solid #B0D35B;border-right:none;float:left;}
+.seekDiv #ddIDtext{width:220px;}
+.seekDiv #telNumber{width:170px;}
+.seekDiv span{display:block;width:100px;height:34px;line-height:34px;background-color:#B0D35B;position:absolute;top:-34px;left:0px;color:#fff;text-align:center;}
+.buttonStyle{display:inline-block;padding:1.2px 30px;background-color:#5AAEA8;border:1px solid #399f97;color:#fff!important;}
+.buttonStyle:hover{background-color:#428BCA;}
+.buttonStyle:active{background-color:#2d5f57;}
+.mt80{margin-top:60px;}
+.Smallticket{width:100%;margin-top:10px;border:1px dashed #525E4A;position:relative;display:table;}
+.Smallticket h2{font-weight:normal;display:block;text-align:center;margin-top:20px;}
+.Smallticket ul{padding:20px 30px;font-size:12px;}
+.Smallticket ul li{clear:both;width:100%;min-height:20px;cursor:pointer;border:1px solid white;}
+.Smallticket ul li span{line-height:20px;}
+.Smallticket ul li .gline{width:100%;height:1px;background-color:#ccc;margin-top:10px;}
+.Smallticket ul li span{display:block;height:100%;float:left;overflow:Hidden;}
+.Smallticket ul li .td1{width:16%;text-align:right;}
+.Smallticket ul li .td2{width:83%;}
+.Smallticket ul li .td3{width:78%;text-align:center;}
+.Smallticket ul li .td4{width:20%;}
+.buttonGroup{width:100%;height:90px;background-color:#fff;position:fixed;bottom:0px;left:0px;border-top:1px solid skyblue;}
+.buttonGroup #writeOff{display:block;width:16px;height:16px;margin-top:10px;margin-top:8px\9;cursor:pointer;float:left;}
+.buttonGroup #explain{display:block;color:#039DD2;float:right;}
+.buttonGroup #explain:hover{color:#E10718}
+.buttonGroup p{clear:both;width:80%;margin:10px auto 0 auto;}
+.buttonGroup .hxtext{font-size:16px;margin-left:10px;margin-top:0px;cursor:pointer;font-weight:normal;float:left;}
+.buttonGroup .hxtext:hover{color:#B71700;}
+.buttonGroup button{width:31%;height:38px;background-color:brown;color:#fff!important;font-family:"微软雅黑","黑体";font-size:14px;margin-left:2%;}
+#hxdd{background-color: #5cb85c;border-color: #4cae4c;margin-left:0px!important}
+#dd{background-color: #428bca;border-color: #357ebd;}
+#empty{background-color:#666;border-color:#555;}
+#goodsprice:before{content:"¥";}
+#discount_fee:before{content:"¥";}
+#pay_price:before{content:"¥";}
+.table th,.table td {text-align:center;border:1px solid #ccc; }
+.orderWinpop{width:90%;height:auto;padding:5%;background-color:#fff;display:none;}
+.orderWinpop table thead tr td{background-color:#efefef;border-bottom:none;}
+.orderWinpop table tr td:first-child(0){background-color:skyblue;}
+.orderWinpop table tr:hover{background-color:#b1d8f9;}
+.orderWinpop table tr td{height:26px;text-align:center;}
+.orderWinpop table tr td input[type="radio"]{width:14px;height:14px;}
+.orderWinpop .ordersubmit{width:80px;height:30px;display:none;}
+.layui-layer-content{min-height:100%!important;}
+.orderWinpop table{width:100%;}
+.orderWinpop table tr td{border:1px solid #eee;}
+.orderWinpop table tr td input[type="radio"]{margin-top:4px;}
+.quickKey{width:440px;}
+.quickKey p{height:40px;line-height:40px;margin-top:10px;}
+.quickKey span{display:inline-block;width:150px;height:100%;text-align:right;font-size:14px;}
+.quickKey b{font-size:16px;display:inline-block;width:36px;height:36px;line-height:36px;text-align:center;background-color:#333;color:#fff;margin-left:6px;}
+

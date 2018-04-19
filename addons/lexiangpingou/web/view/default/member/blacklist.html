@@ -1,0 +1,285 @@
+{php include wl_template('common/header');}
+<ul class="nav nav-tabs">
+    <li {if $operation == 'display'} class="active" {/if}>
+    <a href="{php echo web_url('member/blacklist',array('op' =>'display'))}">黑名单列表</a>
+    </li>
+    <!--<li {if $operation == 'set'} class="active" {/if}><a href="{php echo web_url('member/blacklist',array('op' =>'set'))}">自动设置</a></li>-->
+    <li {if $operation=='set'} class="active" {/if}>
+    <a href="{php echo web_url('member/blacklist',array('op' =>'set','id'=>$blacklist['id']))}">自动添加黑名单设置</a>
+    </li>
+    <!--{if !empty($blacklist['id']) &&  $operation == 'post'}<li class="active"><a href="{php echo web_url('member/blacklist',array('op' =>'post','id'=>$blacklist['id']))}">编辑黑名单</a></li>{/if}-->
+</ul>
+
+{if $operation == 'display'}
+<div class="main panel panel-default">
+    <div class="panel-body table-responsive">
+        <table class="table table-hover">
+            <thead class="navbar-inner">
+            <tr>
+                <!--<th style="width:40px;">-->
+                <!--<input type="checkbox" name="checkall" value="" id="checkall" onclick="var ck = this.checked; $(':checkbox').each(function(){this.checked = ck});"/>-->
+                <!--</th>-->
+                <th style="width:5%;">ID</th>
+                <th style="width:15%;">公众号编号</th>
+                <th style="width:20%;">昵称</th>
+                <th style="width:20%;">添加时间</th>
+                <th style="width:20%;">添加时未到店提货次数</th>
+                <th style="width:20%;">是否有效</th>
+                <th class="text-center" style="width:20%;">操作</th>
+            </tr>
+            </thead>
+            <tbody>
+            {loop $list $blacklist}
+            <tr>
+                <!--<td><input type="checkbox" id="gid" name="items[{php echo $blacklist['id']}]" value="{$blacklist['id']}" class="items" /></td>-->
+                <td>{$blacklist['id']}</td>
+                <!--<td>-->
+                <!--<img width='45' height="45" src="{IMAGE_PIXEL}" data-url="{php echo tomedia($blacklist['pic']);}" class="scrollLoading" onerror="this.src='{IMAGE_NOPIC_SMALL}'" />-->
+                <!--</td>-->
+                <!--<td>{$blacklist['name']}</td>-->
+                <td>{$blacklist['uniacid']}</td>
+                <td>{$blacklist['nickname']}</td>
+                <td>{php echo date('Y-m-d H:i:s' , $blacklist['createtime'])}</td>
+                <td>{$blacklist['times']}</td>
+                <td>{if $blacklist['status'] == 1}<label class="label label-success">有效</label>{else}<label class="label label-danger">已失效</label><br>{php echo date('Y-m-d H:i:s' , $blacklist['failtime'])}{/if}</td>
+                <!--<td>-->
+                    <!--&lt;!&ndash;<input type="hidden" name="items[{php echo $blacklist['openid']}]" value="{$blacklist['openid']}" />&ndash;&gt;-->
+                    <!--{$blacklist['idcard']}-->
+                <!--</td>-->
+                <td class="text-right">
+                    <!--<a href="{php echo web_url('member/blacklist', array('op' => 'post', 'id' => $blacklist['id']))}" class="btn btn-default btn-sm" data-toggle="tooltip" data-placement="top" title="修改"><i class="fa fa-edit"></i></a>-->
+                    <a href="javascript:;" c-id="{$blacklist['id']}" class="btn btn-default btn-sm js-delete"
+                       data-toggle="tooltip" data-placement="top" title="使失效"><i class="fa fa-times"></i></a>
+                </td>
+            </tr>
+            {/loop}
+            {if !empty($blacklist)}
+            <tr>
+                <!--<td><input type="checkbox" name="checkall" value="id[]" id="checkall" onclick="var ck = this.checked; $(':checkbox').each(function(){this.checked = ck});" /></td>-->
+                <!--<td colspan="4" class="text-right"><a href="javascript:;" class="btn btn-danger min-width js-batch">批量删除</a></td>-->
+                <td colspan="7"><a href="javascript:;" class="btn btn-danger min-width js-deleteAll">全部失效</a></td>
+            </tr>
+
+            {else}
+            <tr>
+                <td colspan="7" style="text-align: center"><span style="color:red;font-size: 16px;">黑名单为空</span></td>
+            </tr>
+            {/if}
+            <tr>
+                <td colspan="7">{$pager}</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+<script>
+    require(['bootstrap'], function ($) {
+        $('.btn').hover(function () {
+            $(this).tooltip('show');
+        }, function () {
+            $(this).tooltip('hide');
+        });
+    });
+    $(function () {
+ 
+        $('.js-delete').click(function (e) {
+            e.stopPropagation();
+            var cid = $(this).attr('c-id');
+            var $this = $(this);
+            var html = '确认将该用户移除黑名单?【移除黑名单之后，未到店提货次数将重新计算】';
+            util.nailConfirm(this, function (state) {
+                if (!state) {
+                    return;
+                }
+                $.post("{php echo web_url('member/blacklist/delete')}", {id: cid}, function (data) {
+                    if (!data.errno) {
+//                        $this.parent().parent().remove();
+                        setTimeout(function(){location.href = "{php echo web_url('member/blacklist');}";},1000);
+                    }
+                    ;
+                    util.tips(data.message);
+                }, 'json');
+            }, {html: html});
+        });
+        $('.js-deleteAll').click(function (e) {
+            e.stopPropagation();
+            var op = 'deleteAll';
+            var $this = $(this);
+            var html = '确认清空黑名单?【清空黑名单之后，所有未到店提货次数将重新计算】';
+            util.nailConfirm(this, function (state) {
+                if (!state) return;
+                $.post("{php echo web_url('member/blacklist/delete')}", {funcop: op}, function (data) {
+                    if (!data.errno) {
+//                        location.reload();
+                        setTimeout(function(){location.href = "{php echo web_url('member/blacklist');}";},1000);
+                    }
+                    ;
+                    util.tips(data.message, 2000);
+                }, 'json');
+            }, {html: html});
+        });
+        $('.js-batch').click(function (e) {
+            e.stopPropagation();
+            var goods_ids = [];
+            var $checkboxes = $('.items:checkbox:checked');
+            $checkboxes.each(function () {
+                if (this.checked) {
+                    goods_ids.push(this.value);
+                }
+                ;
+            });
+
+            if (goods_ids.length == 0) {
+                util.tips('请选择要操作的项目!', 2000);
+                return false;
+            }
+            var op = 'deleteCheck';
+            var html = '确认删除选择黑名单?【移除黑名单之后，未参加活动次数将重新计算】';
+            var $this = $(this);
+            util.nailConfirm(this, function (state) {
+                if (!state) return;
+                $.post("{php echo web_url('member/blacklist/delete')}", {funcop: op, ids: goods_ids}, function (data) {
+                    if (!data.errno) {
+                        $checkboxes.each(function () {
+                            $(this).parent().parent().remove();
+                        });
+                    }
+                    ;
+                    util.tips(data.message, 2000);
+                }, 'json');
+            }, {html: html});
+        });
+    });
+
+</script>
+{elseif $operation == 'post'}
+<!--<div class="main">-->
+<!--<form action="" method="post" class="form-horizontal form" onsubmit='return formcheck()'>-->
+<!--<input type="hidden" name="id" value="{$blacklist['id']}" />-->
+<!--<div class="panel panel-default">-->
+<!--<div class="panel-heading">-->
+<!--黑名单管理-->
+<!--</div>-->
+<!--<div class="panel-body">-->
+<!--<div class="form-group">-->
+<!--<label class="col-xs-12 col-sm-3 col-md-2 control-label">公众号id</label>-->
+<!--<div class="col-sm-9 col-xs-12">-->
+<!--<input type="text" name="uniacid" disabled class="form-control" value="{$_W['uniacid']}" />-->
+<!--</div>-->
+<!--</div>-->
+<!--<div class="form-group">-->
+<!--<label class="col-xs-12 col-sm-3 col-md-2 control-label">微信会员id</label>-->
+<!--<div class="col-sm-9 col-xs-12">-->
+<!--<input type="text" id="oid" readonly name="openid" class="form-control" value="{$blacklist['openid']}" />-->
+<!--</div>-->
+<!--</div>-->
+<!--<div class="form-group">-->
+<!--<label class="col-xs-12 col-sm-3 col-md-2 control-label">微信会员昵称</label>-->
+<!--<div class="col-sm-9 col-xs-12">-->
+<!--<input type="text" readonly name="nickname" class="form-control" value="{$blacklist['nickname']}" />-->
+<!--</div>-->
+<!--</div>-->
+<!--</div>-->
+<!--</div>-->
+<!--<div class="form-group col-sm-12">-->
+<!--<input type="submit" name="submit" value="提交" class="btn btn-primary col-lg-1" />-->
+<!--<input type="hidden" name="token" value="{$_W['token']}" />-->
+<!--</div>-->
+<!--</form>-->
+<!--</div>-->
+
+{elseif $operation == 'set'}
+<div class="main">
+    <form action="" method="post" class="form-horizontal form" onsubmit='return formcheck()'>
+        <input type="hidden" name="id" value="{$list['id']}"/>
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                自动添加黑名单设置
+            </div>
+            <div class="panel-body">
+                <div class="form-group">
+                    <label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label"><span style='color:red'>*</span>用户未到店提货超过</label>
+                    <div class="col-md-8">
+                        <div class="input-group">
+                            <input type="hidden" name="id" value="{$list['id']}"/>
+                            <input type="number" id="blacktime" name="blacktime" class="form-control"
+                                   value="{$list['blacktime']}"/>
+                            <span class="input-group-addon">次加入黑名单</span>
+                        </div>
+                    </div>
+                </div>
+                <!--<div class="form-group">-->
+                    <!--<label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label"><span style='color:red'>*</span>用户可取消订单</label>-->
+                    <!--<div class="col-md-8">-->
+                        <!--<div class="input-group">-->
+                            <!--<input type="hidden" name="id" value="{$list['id']}"/>-->
+                            <!--<input type="number" id="activity" name="activity" class="form-control"-->
+                                   <!--value="{$list['activity']}"/>-->
+                            <!--<span class="input-group-addon">小时前</span>-->
+                        <!--</div>-->
+                    <!--</div>-->
+                <!--</div>-->
+                <!--<div class="form-group">-->
+                    <!--<label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label"><span style='color:red'>*</span>活动前推送时间</label>-->
+                    <!--<div class="col-md-8">-->
+                        <!--<div class="input-group">-->
+                            <!--<input type="hidden" name="id" value="{$list['id']}"/>-->
+                            <!--<input type="number" id="activity_before" name="activity_before" class="form-control"-->
+                                   <!--value="{$list['activity_before']}"/>-->
+                            <!--<span class="input-group-addon">小时前(活动开始前推送提醒)</span>-->
+                        <!--</div>-->
+                    <!--</div>-->
+                <!--</div>-->
+                <!--<div class="form-group">-->
+                    <!--<label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label"><span style='color:red'>*</span>活动后推送时间</label>-->
+                    <!--<div class="col-md-8">-->
+                        <!--<div class="input-group">-->
+                            <!--<input type="hidden" name="id" value="{$list['id']}"/>-->
+                            <!--<input type="number" id="activity_after" name="activity_after" class="form-control"-->
+                                   <!--value="{$list['activity_after']}"/>-->
+                            <!--<span class="input-group-addon">小时后(活动结束后未到推送)</span>-->
+                        <!--</div>-->
+                    <!--</div>-->
+                <!--</div>-->
+                <div class="form-group">
+                    <label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label"><span style='color:red'>*</span>自动添加黑名单功能</label>
+                    <div class="col-md-8">
+                        <div class="input-group">
+                            <input type="radio" name="status" value="1" {if $list['status'] == 1}checked{/if}/>开启
+                            <input type="radio" name="status" value="0" {if $list['status'] != 1}checked{/if}/>不开启
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="form-group col-sm-12">
+            <!--<a href="{php echo web_url('member/clock');}"></a>-->
+            <input type="submit" name="submit" onclick="formcheck()" value="提交" class="btn btn-primary col-lg-1"/>
+            <input type="hidden" name="token" value="{$_W['token']}"/>
+        </div>
+    </form>
+</div>
+
+<script>
+    function formcheck() {
+        if ($("#blacktime").val() == '') {
+            util.message("请填写最多未参加活动次数!", '', 'error');
+            return false;
+        }
+        if ($("#activity").val() == '') {
+            util.message("请填写可取消订单时间!", '', 'error');
+            return false;
+        }
+        if ($("#activity_before").val() == '') {
+            util.message("请填写活动推送时间!", '', 'error');
+            return false;
+        }
+        if ($("#activity_after").val() == '') {
+            util.message("请填写活动推送时间!", '', 'error');
+            return false;
+        }
+        return true;
+    }
+</script>
+{/if}
+{php include wl_template('common/footer');}

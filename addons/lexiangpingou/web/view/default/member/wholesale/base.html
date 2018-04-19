@@ -1,0 +1,121 @@
+{php include wl_template('common/header');}
+<style type="text/css">
+    .red-text {
+        color:red;
+        font-size: 18px;
+        margin-top: -12px;
+    }
+</style>
+<ol class="breadcrumb">
+  <li><a href="{php echo web_url('member/wholesale');}">批发管理</a></li>
+  <li class="active">批发会员</li>
+</ol>
+<ul class="nav nav-tabs">
+    <li class="active">
+        <a href="{php echo web_url('member/wholesale/base');}">基本设置</a>
+    </li>
+    <li>
+        <a href="{php echo web_url('member/wholesale/record');}">全部记录</a>
+    </li>
+    <li>
+        <a href="{php echo web_url('member/wholesale/unaudited');}">待审核</a>
+    </li>
+    <li>
+        <a href="{php echo web_url('member/wholesale/audited');}">已审核</a>
+    </li>
+    <li>
+        <a href="{php echo web_url('member/wholesale/cancel');}">已取消</a>
+    </li>
+</ul>
+<div class="panel panel-default">
+    <div class="panel-body table-responsive" style="padding: 0px;">
+        <div class="main_bd">
+            <div class="plugins_wrp">
+                <dl>
+                    <dd>
+                        <ul id="js_plugins1">
+                            <li class="item_wrp" style="width: 100%;">
+                                <div class="plugin_item">
+                                    <div class="plugin_icon"><img src="{TG_URL_WRES}images/function/fans/pifa.png"></div>
+                                    <div class="plugin_status">
+                                        <i class="access"></i>
+                                        <span class="status_txt">
+                                        <input class="flag1" type="checkbox" name="apply" value="{$setting['apply']}" {if $setting['apply'] == 1}checked{/if} />
+                                    </span>
+                                    </div>
+                                    <div class="plugin_content">
+                                        <h3 class="title">批发管理</h3>
+                                        <p class="desc" style="width: 100%;">
+                                            启用批发管理后，可通过手机后台入口申请，审核通过才能查看批发商品。
+                                        </p>
+                                        <div class="red-text">批发商品目前只支持商团蓝色模板，请勿使用其它模板</div>
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
+                    </dd>
+                </dl>
+            </div>
+        </div>
+        <div class="main_bd">
+            <div class="plugins_wrp">
+                <dl>
+                    <dd>
+                        <ul id="js_plugins2">
+                            <li class="item_wrp" style="width: 100%;">
+                                <div class="plugin_item">
+                                    <div class="plugin_icon"><img src="{TG_URL_WRES}images/function/fans/duanxin.png"></div>
+                                    <div class="plugin_status">
+                                        <i class="access"></i>
+                                        <span class="status_txt">
+                                        <input class="flag2" type="checkbox" name="smscode" value="{$setting['smscode']}" {if $setting['smscode'] == 1}checked{/if} />
+                                    </span>
+                                    </div>
+                                    <div class="plugin_content">
+                                        <h3 class="title">短信验证</h3>
+                                        <p class="desc" style="width: 100%;">
+                                            启用短信验证功能后，人员申请时，需要通过短信验证码来申请。短信需要商家购买数量，当数量不足时，将无法获取短信验证码。
+                                        </p>
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
+                    </dd>
+                </dl>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    $(function () {
+        require(['bootstrap.switch'], function ($) {
+            $('.flag1:checkbox').bootstrapSwitch({onText: '启用', offText: '禁用'});
+            $('#js_plugins1 .bootstrap-switch-wrapper').click(function (e) {
+                e.stopPropagation();
+                $.post("{php echo web_url('member/wholesale/ajax' , array('apply' => 1))}", function (d) {
+                    if (!d.errno) {
+                        util.tips(d.message);
+                        setTimeout(function(){location.href = "{php echo web_url('member/wholesale/base');}";},1000);
+                    }
+                }, "json");
+            });
+        });
+    });
+    $(function () {
+        require(['bootstrap.switch'], function ($) {
+            $('.flag2:checkbox').bootstrapSwitch({onText: '启用', offText: '禁用'});
+            $('#js_plugins2 .bootstrap-switch-wrapper').click(function (e) {
+                e.stopPropagation();
+                $.post("{php echo web_url('member/wholesale/ajax' , array('smscode' => 1))}", function (d) {
+                    if (!d.errno) {
+                        util.tips(d.message);
+                        setTimeout(function(){location.href = "{php echo web_url('member/wholesale/base');}";},1000);
+                    }
+                }, "json");
+            });
+        });
+    });
+</script>
+
+
+{php include wl_template('common/footer');}

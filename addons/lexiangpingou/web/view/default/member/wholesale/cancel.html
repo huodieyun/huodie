@@ -1,0 +1,103 @@
+{php include wl_template('common/header');}
+<ol class="breadcrumb">
+  <li><a href="{php echo web_url('member/wholesale');}">批发管理</a></li>
+  <li class="active">批发会员</li>
+</ol>
+<ul class="nav nav-tabs">
+    <li>
+        <a href="{php echo web_url('member/wholesale/base');}">基本设置</a>
+    </li>
+    <li>
+        <a href="{php echo web_url('member/wholesale/record');}">全部记录</a>
+    </li>
+    <li>
+        <a href="{php echo web_url('member/wholesale/unaudited');}">待审核</a>
+    </li>
+    <li>
+        <a href="{php echo web_url('member/wholesale/audited');}">已审核</a>
+    </li>
+    <li class="active">
+        <a href="{php echo web_url('member/wholesale/cancel');}">已取消</a>
+    </li>
+</ul>
+
+<div class="main">
+    <div class="panel panel-info">
+        <div class="panel-heading">筛选</div>
+        <div class="panel-body">
+        <form action="{php echo web_url('member/wholesale')}" method="post" class="form-horizontal" role="form" id="form1">
+                <input type="hidden" name="status" value="{$status}"/>
+                <div class="form-group">
+                    <label class="col-xs-12 col-sm-2 col-md-2 col-lg-2 control-label">昵称</label>
+                    <div class="col-sm-8 col-lg-9 col-xs-12">
+                        <input class="form-control" name="keyword" id="" type="text" value="{$_GPC['keyword']}" placeholder="可查询昵称">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-xs-12 col-sm-2 col-md-2 col-lg-2 control-label">申请时间</label>
+                    <div class="col-sm-5 col-lg-7 col-xs-12">
+                        {php echo tpl_form_field_daterange('time', array('starttime'=>date('Y-m-d',$starttime),'endtime'=>date('Y-m-d', $endtime)));}
+                    </div>
+                    <div class="col-sm-3 col-lg-2" style="text-align:right;">
+                        <button class="btn btn-default"><i class="fa fa-search"></i> 搜索</button>
+                    </div>
+                </div>
+                <div class="form-group">
+                </div>
+            </form>
+
+        </div>
+    </div>
+    <div class="panel panel-default">
+        <div class="panel-body table-responsive">
+            <table class="table table-hover">
+                <thead class="navbar-inner">
+                <tr>
+                    <th style="width:10%;"></th>
+                    <th style="width:10%;">姓名</th>
+                    <th style="width:10%;">状态</th>
+                    <th style="width:10%;">手机号</th>
+                    <th style="width:15%;">申请时间</th>
+                    <th style="width:15%;">审核时间</th>
+                    <th style="width:20%; text-align:right;">操作</th>
+                </tr>
+                </thead>
+                <tbody>
+                {loop $list $key $item}
+                <tr>
+                    <td>
+                        <img src="{$item['avatar']}" style='width:30px;height:30px;padding1px;border:1px solid #ccc' />
+                    </td>
+                    <td>{$item['name']}</td>
+                    <td>
+                        {if $item['wholesaler_status'] == 0}
+                        <label class="control-label label label-warning">待审核</label>
+                        {elseif $item['wholesaler_status'] == 1}
+                        <label class="control-label label label-success">已通过</label>
+                        {elseif $item['wholesaler_status'] == 2}
+                        <label class="control-label label label-danger">已取消</label>
+                        {/if}
+                    </td>
+                    <td>{$item['addmobile']}</td>
+                    <td>{if $item['wholesaler_apply_time']}{php echo date('Y-m-d H:i' , $item['wholesaler_apply_time'])}{else}-{/if}</td>
+                    <td>{if $item['wholesaler_check_time']}{php echo date('Y-m-d H:i' , $item['wholesaler_check_time'])}{else}-{/if}</td>
+                    <td style="text-align:right;">
+                        <a class="btn btn-sm btn-success" href="{php echo web_url('member/wholesale', array('op' => 'checked','id'=>$item['id']))}" style="margin-bottom:5px"> 审核通过</a>
+                    </td>
+                </tr>
+                {/loop}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{$pager}
+<script type="text/javascript">
+    require(['daterangepicker'], function ($) {
+        $('.daterange').on('apply.daterangepicker', function (ev, picker) {
+            $('#form1')[0].submit();
+        });
+    });
+</script>
+
+{php include wl_template('common/footer');}

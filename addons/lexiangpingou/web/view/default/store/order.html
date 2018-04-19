@@ -1,0 +1,782 @@
+{php include wl_template('common/header');}
+<style type='text/css'>
+       .trbody td {text-align: center; vertical-align:top;border-left:1px solid #ccc; border-bottom: 1px solid #ddd;}
+</style>
+<style>
+	.order-rank img{width:16px; height:16px;}
+	.js-remark,.js-admin-remark{word-break:break-all; overflow:hidden; background: #FDEEEE;color: #ED5050;padding: 5px 10px;}
+	td.goods-info{position:relative; padding-left:60px;}
+	.goods-info .img{margin-top:25px; background: url({IMAGE_LOADING}) center center no-repeat; width:50px;height:50px;float: left;clear: both;}
+	.goods-info span {white-space: nowrap;overflow: hidden;text-overflow: ellipsis;display: block;}
+	.status-text{cursor:pointer;}
+	.table>thead>tr>th, .table>tbody>tr>th, .table>tfoot>tr>th, .table>thead>tr>td, .table>tbody>tr>td, .table>tfoot>tr>td {border-top: 1px solid rgba(221, 221, 221, 0);}
+	.atitle:last-child hr{display:none;}
+</style>
+<ul class="nav nav-tabs">
+	<li {if $op == 'received' && $status == '' }class="active"{/if}>
+        <a href="{php echo web_url('order/order/received',array('dispatchtype'=>$dispatchtype))}">全部订单({$all})</a>
+    </li>
+	{if $dispatchtype != '-1'}
+	<li {if $op == 'received' && $status == '17' }class="active"{/if}>
+        <a href="{php echo web_url('order/order/received',array('status' => 17,'dispatchtype'=>$dispatchtype))}">单买订单({$status17})</a>
+    </li>
+	{/if}
+    <li {if $op == 'received' && $status == '0'} class="active"{/if}>
+        <a href="{php echo web_url('order/order/received', array('status' => 0,'dispatchtype'=>$dispatchtype))}">待付款({$status0})</a>
+    </li>
+	<li {if $op == 'received' && $status == '1'} class="active"{/if}>
+        <a href="{php echo web_url('order/order/received', array('status' => 1,'dispatchtype'=>$dispatchtype))}">已付款({$status1})</a>
+    </li>
+	{if $dispatchtype != '-1'}
+	<li {if $op == 'received' && $status == '8'}class="active"{/if}>
+        <a href="{php echo web_url('order/order/received', array('status' => 8,'dispatchtype'=>$dispatchtype))}">待发货({$status8})</a>
+    </li>
+	<li {if $op == 'received' && $status == '2'}class="active"{/if}>
+        <a href="{php echo web_url('order/order/received', array('status' => 2,'dispatchtype'=>$dispatchtype))}">待收货({$status2})</a>
+    </li>
+	<li {if $op == 'received' && $status == '3'}class="active"{/if}>
+        <a href="{php echo web_url('order/order/received', array('status' => 3,'dispatchtype'=>$dispatchtype))}">已签收({$status3})</a>
+    </li>
+    <li {if $op == 'received' && $status == '9'}class="active"{/if}>
+        <a href="{php echo web_url('order/order/received', array('status' => 9,'dispatchtype'=>$dispatchtype))}">已取消({$status9})</a>
+    </li>
+  <li {if $op == 'received' && ($status == '10')}class="active"{/if}>
+        <a href="{php echo web_url('order/order/received', array('status' => 10,'dispatchtype'=>$dispatchtype))}">待退款({$status10})</a>
+    </li>
+    <li {if $op == 'received' && ($status == '7'||$status == '4')}class="active"{/if}>
+        <a href="{php echo web_url('order/order/received', array('status' => 7,'dispatchtype'=>$dispatchtype))}">已退款({$status4})</a>
+    </li>
+	{/if}
+	{if $dispatchtype == '-1'}
+	<li {if $op == 'received' && ($issued == '-1')}class="active"{/if}>
+        <a href="{php echo web_url('order/order/received', array('issued' => '-1','dispatchtype'=>$dispatchtype))}">待处理({$status18})</a>
+    </li>
+	<li {if $op == 'received' && ($godluck == '-1')}class="active"{/if}>
+        <a href="{php echo web_url('order/order/received', array('godluck' => '-1','status'=>7,'dispatchtype'=>$dispatchtype))}">未中奖({$status19})</a>
+    </li>
+	<li {if $op == 'received' && ($godluck == '1')}class="active"{/if}>
+        <a href="{php echo web_url('order/order/received', array('godluck' => '1','dispatchtype'=>$dispatchtype))}">已中奖待发货({$status20})</a>
+    </li>
+
+	<li {if $op == 'received' && ($issued == '2')}class="active"{/if}>
+        <a href="{php echo web_url('order/order/received', array('issued' => '2','status' => '3','dispatchtype'=>$dispatchtype))}">已领奖({$status21})</a>
+    </li>
+	{/if}
+	{if $op == 'detail'}
+    <li class="active">
+        <a href="#">订单详情</a>
+    </li>
+    {/if}
+</ul>
+{if $op== 'update'}
+<div class="panel panel-info">
+	    <div class="panel-heading">筛选</div>
+	    <div class="panel-body">
+            <form action="./index.php" method="get" class="form-horizontal" role="form" id="form2">
+                 <input type="hidden" name="c" value="site" />
+                <input type="hidden" name="a" value="entry" />
+                <input type="hidden" name="m" value="lexiangpingou" />
+                <input type="hidden" name="do" value="order" />
+                <input type="hidden" name="ac" value="order" />
+                <input type="hidden" name="op" value="update"/>
+                 <input type="hidden" name="status" value="{$status}"/>
+                <input type="hidden" name="id" value="{$id}" />
+                <div class="form-group">
+                    <label class="col-xs-12 col-sm-2 col-md-2 col-lg-2 control-label">订单价格</label>
+                    <div class="col-sm-8 col-lg-9 col-xs-12">
+                        <input class="form-control" name="price" id="" type="text" value="{$item['price']}" placeholder="新的订单价格">
+                    </div>
+                </div>
+
+
+                <div class="form-group">
+
+                        <div class="col-sm-3 col-lg-2" style="text-align:right;"><button class="btn btn-default"><i class="fa fa-search"></i> 修改</button>
+                        </div>
+                 </div>
+
+            </form>
+
+	    </div>
+	</div>
+{/if}
+{if $op == 'received'}
+<div class="main">
+    <div class="panel panel-info">
+	    <div class="panel-heading">筛选</div>
+	    <div class="panel-body">
+            <form action="./index.php" method="get" class="form-horizontal" role="form" id="form1">
+                <input type="hidden" name="c" value="site" />
+                <input type="hidden" name="a" value="entry" />
+                <input type="hidden" name="m" value="lexiangpingou" />
+                <input type="hidden" name="do" value="order" />
+                <input type="hidden" name="ac" value="order" />
+				<input type="hidden" name="dispatchtype" value="{$dispatchtype}" />
+                <input type="hidden" name="op" value="received"/>
+                 <input type="hidden" name="status" value="{$status}"/>
+				  <input type="hidden" name="issued" value="{$issued}"/>
+				   <input type="hidden" name="saler" value="{$saler}"/>
+                <div class="form-group">
+					<!--<label class="col-md-4 col-lg-1 control-label">所属商家</label>
+					<div class="col-md-4">
+						<select name="merchantid" class="form-control">
+							<option value="">{$_W['account']['name']}</option>
+						{loop $merchants $row}
+				            <option value="{$row['id']}" {if $_GPC['merchantid']==$row['id']}selected="selected"{/if}>{$row['name']}</option>
+						{/loop}}
+				        </select>
+					</div>-->
+					 <label class="col-md-3 col-lg-1 control-label">商品名称</label>
+                    <div class="col-md-3">
+                        <select name="goodsid2" class="form-control">
+                            <option value="">--所有--</option>
+                            {loop $allgoods $key $type}
+                            <option value="{$type['id']}" {if $_GPC['goodsid2']==$type['id']}selected="selected"{/if}>{$type['gname']}</option>
+                            {/loop}
+                        </select>
+                    </div>
+					<label class="col-md-4 col-lg-1 control-label">订单号</label>
+                    <div class="col-md-3">
+                        <input class="form-control" name="keyword" id="" type="text" value="{$_GPC['keyword']}" placeholder="可查询订单号">
+                    </div>
+					<?php
+						$allsaler=pdo_fetchall("select * from ".tablename('tg_saler')." where uniacid=".$_W['uniacid']);
+					?>
+					<label class="col-md-3 col-lg-1 control-label">核销员</label>
+					<div class="col-md-3">
+						<select name="salers" class="form-control">
+							<option value="">--所有--</option>
+							{loop $allsaler $key $type}
+							<option value="{$type['openid']}" {if $_GPC['salers']==$type['openid']}selected="selected"{/if}>{$type['nickname']}</option>
+							{/loop}
+						</select>
+					</div>
+				</div>
+                 <div class="form-group">
+                    <label class="col-md-3 col-lg-1 control-label">微信订单</label>
+                    <div class="col-md-3">
+                        <input class="form-control" name="transid" id="" type="text" value="{$_GPC['transid']}" placeholder="微信订单号">
+                    </div>
+                     <label class="col-md-3 col-lg-1 control-label">姓名</label>
+                    <div class="col-md-3">
+                        <input class="form-control" name="member" id="" type="text" value="{$_GPC['member']}" placeholder="可查询 姓名">
+                    </div>
+					 <label class="col-md-3 col-lg-1 control-label">手机号</label>
+					 <div class="col-md-3">
+						 <input class="form-control" name="mobile" id="" type="text" value="{$_GPC['mobile']}" placeholder="可查询手机号">
+					 </div>
+                </div>
+				<div class="form-group">
+					<label class="col-md-3 col-lg-1 control-label">用户地址</label>
+                    <div class="col-md-3">
+                        <input class="form-control" name="address" id="" type="text" value="{$_GPC['address']}" placeholder="用户地址">
+                    </div>
+				<label class=" col-md-3 col-lg-1 control-label">地址类型</label>
+                    <div class=" col-md-3 col-lg-2">
+                        <select name="addresstype" class="form-control" >
+                            <option value="">--所有--</option>
+                            <option value="1" {if $_GPC['addresstype']==1}selected="selected"{/if}>公司</option>
+                           <option value="2" {if $_GPC['addresstype']==2}selected="selected"{/if}>家庭</option>
+                        </select>
+                    </div>
+					<label class="col-md-3 col-lg-1 control-label">下单时间</label>
+					<div class="col-md-3">
+						{php echo tpl_form_field_daterange('time', array('starttime'=>date('Y-m-d H:i:s', $starttime),'endtime'=>date('Y-m-d H:i:s', $endtime)),true);}
+					</div>
+				</div>
+
+				<div class="form-group">
+
+                        <div class="col-sm-3 col-lg-2" style="text-align:right;"><button class="btn btn-default"><i class="fa fa-search"></i> 搜索{$_GPC['issued']}</button>
+                        </div>
+					{if checkstr($_W['user']['perms'],'received.output')}
+						<a  class="btn btn-default" href='{php echo web_url('order/order/output', array('status'=>$status,'keyword'=>$keyword,'issued'=>$_GPC['issued'],'transid'=>$transid,'addresstype'=>$_GPC['addresstype'],'member'=>$member,'pay_type'=>$pay_type,'starttime'=>$starttime,'endtime'=>$endtime,'address'=>$_GPC['address'],'time'=>$time,'goodsid'=>$_GPC['goodsid'],'goodsid2'=>$_GPC['goodsid2'],'salers'=>$_GPC['salers'],'merchantid'=>$_GPC['merchantid'],'dispatchtype'=>$dispatchtype))}'>
+            		<i class="fa fa-download"></i> 导出{if $_GPC['dispatchtype']==-1}抽奖{/if}订单
+            	</a>（如果按条件导出请先选择条件后查询，再导出。）{/if}
+				{if $_GPC['dispatchtype']==3}
+					{if checkstr($_W['user']['perms'],'received.updaterefund')}
+						<a  class="btn btn-default" href='{php echo web_url('order/order/updaterefund', array('status'=>$status,'keyword'=>$keyword,'issued'=>$_GPC['issued'],'transid'=>$transid,'addresstype'=>$_GPC['addresstype'],'member'=>$member,'pay_type'=>$pay_type,'starttime'=>$starttime,'endtime'=>$endtime,'time'=>$time,'address'=>$address,'goodsid'=>$_GPC['goodsid'],'goodsid2'=>$_GPC['goodsid2'],'salers'=>$_GPC['salers'],'merchantid'=>$_GPC['merchantid'],'dispatchtype'=>$dispatchtype))}'>
+						<i class="fa fa-download"></i> 强制转换待退款
+						</a>
+						{/if}
+						{/if}
+                    </div>
+                <!--<div class="form-group">
+                    <label class="col-md-4 col-lg-1 control-label">支付方式</label>
+                    <div class="col-md-4">
+                        <select name="pay_type" class="form-control">
+                            <option value="">不限</option>
+                            {loop $paytype $key $type}
+                            <option value="{$key}" >{$type['name']}</option>
+                            {/loop}
+                        </select>
+                    </div>
+                </div>-->
+
+                <div class="form-group">
+                </div>
+            </form>
+                 <div class="form-group" {if $_GPC['dispatchtype']!=-1}style="display:none;"{/if}>
+
+                      <form name="sendForm" enctype="multipart/form-data" class="form-horizontal" action="{php echo web_url('order/order', array('op' => 'import'))}" method="post">
+						  {if checkstr($_W['user']['perms'],'received.input')}
+						  <div class="form-group">
+                    <label class="col-xs-12 col-sm-4 col-md-4 col-lg-1 control-label">导入中奖订单</label>
+                    <div class="col-sm-5 col-lg-7 col-xs-12">
+                        <input type="file" name="fileName" class="btn btn-success" />
+                    </div>
+                    <div class="col-sm-3 col-lg-2" style="text-align:right;"><button id="searchBtn" type="submit" class="btn btn-success"> 导 入 </button>
+                    </div>
+                </div>
+						  {/if}
+	   		</form>
+
+                    </div>
+	   		 <!--<div class="form-group">
+                <label class="col-md-4 col-lg-1 control-label" style="text-align: right;padding-right: 30px;">数据统计</label>
+				<a href='{php echo web_url('order/data/', array('status' => $status))}'><button class="btn btn-danger"><i class="fa fa-align-justify"></i> 数据统计</button></a>
+	   		 </div>-->
+	    </div>
+	</div>
+
+	<div class="order-list">
+		<div class="panel-body table-responsive collapse in" id="order-template-item-4" style="padding: 0;">
+			<button id="module-judgment" style="display:none"  class="btn btn-default" type="button" onclick="popwin = $('#modal-module-judgment').modal();">隐藏点击</button>
+
+		</div>
+		{loop $list $item}
+		<?php
+				 $s1=pdo_fetch("select nickname,parentid from" . tablename('tg_member') . " where from_user ='".$item['openid']."'");
+
+				  $pmember=pdo_fetch("select nickname from" . tablename('tg_member') . " where id ='".$s1['parentid']."'");
+
+
+
+
+				if(!empty($item['comadd'])&&$item['dispatchtype']==3)
+				{
+					$saler=pdo_fetch("select * from" . tablename('tg_member') . " where from_user ='".$item['veropenid']."'");
+					$store=pdo_fetch("select * from" . tablename('tg_store') . " where id ='".$item['comadd']."'");
+					$realstore=pdo_fetch("select * from" . tablename('tg_store') . " where id ='".$item['checkstore']."'");
+				}
+			if($item['selltype']==7){
+			$master_order=pdo_fetch("select * from ".tablename('tg_order')." where master_orderno=:master_orderno",array(':master_orderno'=>$item['orderno']));
+			}
+
+
+				?>
+
+		<div class="panel panel-default" >
+
+				<table class="table" style="background-color:#888">
+					<thead style="">
+						<tr>
+							<!--<th style="width:60px;" class="text-center"><input type="checkbox" onclick="var ck = this.checked;$(':checkbox').each(function(){this.checked = ck});" />全选</th>-->
+							<th style="width:180px;">订单号/商品</th>
+							<th style="width:80px; text-align:center;">属性</th>
+							<!--<th style="width:80px; text-align:center;">所属商家</th>-->
+							<th style="width:100px; text-align:center;">状态</th>
+							<th style="width:110px; text-align:center;">时间</th>
+							<th style="width:160px; text-align:center;">联系人</th>
+							<th style="width:50px; text-align:center;">操作</th>
+						</tr>
+					</thead>
+
+			</table>
+
+			<div class="panel-body table-responsive" style="padding: 0px;">
+				<table class="table table-bordered">
+					<tbody>
+						<tr>
+							<!--<td class="text-center" style="width:60px;"><input type="checkbox" name="checkbox[]"  value="{$item['id']}" /></td>-->
+							<td class="goods-info line-feed" style="width:180px;padding-left: 10px;">
+							<b style="position: relative;left: -20px;font-size: 16px;">订单号: {$item['orderno']}
+								{if $item['selltype']==7&&$item['bukuanstatus']>=1}
+								<br> 补款单号：{$master_order['orderno']}
+								{/if}
+							</b>
+
+							{if $item['g_id']>0}
+								<div class="img" style="    margin-top: 10px;">
+								<img width="80" height="80" class="oscrollLoading" src="{php echo tomedia($item['gimg'])}" data-url="{php echo tomedia($item['gimg'])}" height="50" width="50" onerror="this.src='{IMAGE_NOPIC_SMALL}'" >
+
+								</div>
+								<div class="title" style="text-align:left;padding-left: 85px;margin-top:10px;">
+									<p>{$item['gname']}</p>
+									<p>	{if $item['optionname']}规格：{$item['optionname']},{/if}数量:{$item['gnum']},单价:{$item['goodsprice']}</p>
+									<p>
+										{if checkstr($_W['user']['perms'],'received.evaluation')}
+										<a onclick="judgment({$item['g_id']},'{$item['orderno']}')"  class="label label-danger"   >评价管理</a>
+										{/if}
+									</p>
+
+								</div>
+								{else}
+								<?php
+								$col=pdo_fetchall("select sid,orderno,item,oprice,num from ".tablename('tg_collect')." where  orderno=:orderno",array('orderno'=>$item['orderno']));
+								?>
+								 {loop $col $v}
+								 <?php
+								$gs=pdo_fetch("select gname,gimg from ".tablename('tg_goods')." where  id=:id",array('id'=>$v['sid']));
+								?>
+									 <div class="img" style="    margin-top: 10px;">
+									<img width="80" height="80" class="oscrollLoading" src="{php echo tomedia($gs['gimg'])}" data-url="{php echo tomedia($gs['gimg'])}" height="50" width="50" onerror="this.src='{IMAGE_NOPIC_SMALL}'" >
+
+									</div>
+									<div class="atitle" style="text-align: left;padding-left: 85px;margin-top: 10px;line-height: 12px;">
+										<p>{$gs['gname']}</p>
+										<p>{if !empty($v['item'])}规格：{$v['item']},{/if}</p>
+										<p>数量:{$v['num']},单价:{$v['oprice']}</p>
+										<p>
+											{if checkstr($_W['user']['perms'],'received.evaluation')}
+									<a onclick="judgment({$v['sid']},{$v['orderno']})"  class="label label-danger"   >评价管理</a>
+										{/if}
+									</p>
+										<hr style="margin-top: 10px;margin-bottom: 0px;"/>
+									</div>
+
+								 {/loop}
+								{/if}
+							</td>
+							<td class="text-left" style="width:80px;">
+
+							<p>运费:{$item['freight']}</p>
+							<p class="actualPay">实付:{if empty($item['pay_price'])}{$item['price']}{else}{$item['pay_price']}{/if}</p>
+							<p>退款:{$item['resultfee']}</p>
+								{if $item['selltype']==7&&$item['bukuanstatus']==2}
+								<br> 补款：{$master_order['price']}
+								{/if}
+							</td>
+						<!--	<td class="text-center" style="width:80px;">{if empty($item['merchant']['name'])}{$_W['account']['name']}{else}{$item['merchant']['name']}{/if}</td>-->
+							<td class="text-left" style="width:100px;">
+								<p></p>
+								<p><span>团长:</span> <span class="label btn-success">{if $item['tuan_first']==1}是{else}否{/if}</span></p>
+
+						<!--	支付方式:<span class="label label-primary"> {$item['paytype']}</span><br>-->
+
+							<p><span style="color:black;">状态:<span>
+						{if $item['status'] == '待付款'}<span class="label label-warning">待付款</span>{/if}
+						{if $item['status'] == '已付款'}<span class="label label-info">已付款</span>{/if}
+						{if $item['status'] == '待收货'}<span class="label label-primary">待收货</span>{/if}
+						{if $item['status'] == '已签收'}<span class="label label-warning">已签收</span>{/if}
+						{if $item['status'] == '已退款'}<span class="label label-danger">已退款</span>{/if}
+						{if $item['status'] == '强退款'}<span class="label label-danger">强退款</span>{/if}
+						{if $item['status'] == '部分退款'}<span class="label label-danger">部分退款</span>{/if}
+						{if $item['status'] == '团长免单'}<span class="label label-success">团长免单</span>{/if}
+						{if $item['status'] == '待发货'}<span class="label label-success">待发货</span>{/if}
+						{if $item['status'] == '已取消'}<span class="label label-success">已取消</span>{/if}
+						{if $item['status'] == '已关闭'}<span class="label label-success">已关闭</span>{/if}
+						{if $item['status'] == '申请退款'}<span class="label label-danger">申请退款</span>{/if}
+						{if $item['status'] == '货到付款'}<span class="label label-danger">货到付款</span>{/if}
+						{if $item['status'] == '不处理'}<span class="label label-danger">不处理</span>{/if}
+					{if $item['status'] == '待退款'}<span class="label label-danger">待退款</span>{/if}
+						{if $item['status'] == '全额退款并要求退货'}<span class="label label-danger">全额退款并要求退货</span>{/if}
+						{if $item['status'] == '全额退款'}<span class="label label-danger">全额退款</span>{/if}
+						{if $item['status'] == '再次申诉'}<span class="label label-danger">再次申诉</span>{/if}</p>
+						{if $item['is_tuan']==1 || $item['is_tuan']==3}
+								{if checkstr($_W['user']['perms'],'received.group_detail')}
+					<p><a href="{php echo web_url('order/group/group_detail', array('groupnumber' => $item['tuan_id'],'dispatchtype'=>$dispatchtype))}">
+					<span style="color:black;font-weight:normal;">类型:<span><span class="label label-warning">团：{$item['tuan_id']}</span></a></p>
+								{/if}
+					{elseif $item['is_tuan']==0}
+								{if checkstr($_W['user']['perms'],'received.group_detail')}
+					<p><a href="{php echo web_url('order/order/detail', array( 'id' => $item['id'],'is_tuan'=>1,'dispatchtype'=>$dispatchtype))}">
+					<span style="color:black;">类型：<span><span class="label label-success">{if $item['g_id']==0}购物车{else}单买{/if}</span>
+					</a></p>
+{/if}
+					{elseif $item['is_tuan']==2}
+								{if checkstr($_W['user']['perms'],'received.group_detail')}
+										<p><a href="{php echo web_url('order/group/group_detail', array('groupnumber' => $item['tuan_id'],'dispatchtype'=>$dispatchtype))}">
+										<span style="color:black;">类型：<span><span class="label label-default">团满退款单</span></a>
+										</p>
+					{/if}
+					{/if}
+							{if $item['dispatchtype']==3}	<p><span>核销状态:</span> <span class="label btn-success">{if !empty($item['veropenid'])}是{else}否{/if}</span></p>{/if}
+						{if !empty($item['veropenid'])}	<p><span>核销员:</span> <span class="label btn-success">{$saler['nickname']}</span></p>{/if}
+							{if !empty($pmember['nickname'])}<b>推广员:</b> <span class="label btn-success">{$pmember['nickname']}</span>	{/if}
+						{if $item['selltype']==5}<p><span>中奖:</span> <span class="label btn-success">{if $item['godluck']==1}是{else}否{/if}</span></p>{/if}
+							</td>
+							<td class="text-left" style="width:110px;">	  <p><span>下单:  </span>{php echo date('Y-m-d', $item['createtime'])}</p>
+
+						 {if !empty($item['ptime'])}<p><span>支付: </span>{php echo date('Y-m-d H:i', $item['ptime'])}</p>{/if}
+						 <?php
+							$group=pdo_fetch("select * from ".tablename('tg_group')." where groupnumber=".$item['tuan_id']);
+						 ?>
+
+						  {if !empty($group['successtime'])}<p><span>成团: </span>{php echo date('Y-m-d H:i', $group['successtime'])}</p>{/if}
+						   {if !empty($item['hexiaotime'])}<p><span>核销: </span>{php echo date('Y-m-d H:i', $item['hexiaotime'])}</p>{/if}</td>
+							<td class="text-left" style="width:160px;">
+								<p><span>昵称:</span> <span class="label btn-success">{$s1['nickname']}</span>	</p>
+								<p><span>姓名:</span> <span class="label btn-success">{if $item['cname']}{$item['cname']}{else}{$item['addname']}{/if}</span>	</p>
+								<p><span>电话:</span> <span class="label btn-success">{if $item['tel']}{$item['tel']}{else}{$item['mobile']}{/if}</span>	</p>
+							{if $item[dispatchtype]==3}
+							<p><span>自提点:</span> <span class="label btn-success">{$store['storename']}</span></p>
+							<p><span>实提自提点:</span> <span class="label btn-success">{$realstore['storename']}</span></p>
+								{if checkstr($_W['user']['perms'],'received.writeoff')}
+							<a onclick="code('{$item['orderno']}')"  class="label label-danger"  {if $item['status'] == '已签收'}style="display:none" {/if}>核销二维码</a>
+							{/if}
+
+							{else}
+							<p><span>地址:</span> <span class="label btn-success">{$item['address']}</span></p>
+							{/if}
+							</td>
+							<td class="text-center" style="width:50px;text-align:center;">
+							<span class="text-muted"></span>
+							<a class="modifyPrice" href="{php echo web_url('order/order/update', array('id' => $item['id'],'dispatchtype'=>$dispatchtype))}" {if $item['status'] != '待付款'}style="display:none;"{/if}>修改价格</a><br/>
+								{if checkstr($_W['user']['perms'],'received.dayin')}
+							<a  href="{php echo web_url('order/order/dayin', array('id' => $item['id'],'dispatchtype'=>$dispatchtype))}" >小票打印</a><br/>
+								{/if}
+								{if checkstr($_W['user']['perms'],'received.detail')}
+							<a  href="{php echo web_url('order/order/detail', array('id' => $item['id'],'dispatchtype'=>$dispatchtype))}" target="_blank">查看详情</a><br/>
+								{/if}
+								{if checkstr($_W['user']['perms'],'received.remarks')}
+							<a  href="javascript:;" class="js-order-edit-remark" order-id="{$item['id']}">备注</a>
+								{/if}
+						</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+
+			<div  class="panel-footer js-remark" {if empty($item['remark'])}style="display: none;"{/if} style="background-color:white;color:#428bca;">
+				买家备注:{$item['remark']}
+			</div>
+			<div class="panel-footer js-admin-remark{$item['id']} " order-id="{$item['id']}" {if empty($item['adminremark'])}style="display: none;"{/if} style="background-color:lightgoldenrodyellow">
+				卖家备注：<span id="js-admin-remark{$item['id']}" style="">{$item['adminremark']}</span>
+			</div>
+		</div>
+		{/loop}
+	</div>
+	{$pager}
+</div>
+<div class="modal in" id="order-remark-container" style="display: none;">
+<div class="modal-dialog">
+<div class="modal-content">
+<div class="modal-header">
+	<button type="button" class="close"><span id="close">×</span></button>
+	<h4 class="modal-title">卖家备注</h4>
+</div>
+<div class="modal-body">
+	<textarea id="remark" name="admin_remark" class="form-control" rows="5" oninput="$(this).parent().next().find('.js-count').text(255 - $(this).val().length);;" onpropertychange="$(this).parent().next().find('.js-count').text(255 - $(this).val().length);;" maxlength="255" placeholder="最多填写 255 字"></textarea>
+</div>
+<div class="modal-footer" style="padding: 5px 15px;">
+	<span class="help-block pull-left">					
+		您还可以输入：<storng><span style="color:red; font-size:18px;" name="count" class="js-count">251</span></storng> 个字符				
+	</span>
+	<a class="btn btn-default js-cancel">取消</a>
+	<a class="btn btn-primary js-order-remark-post" order-id="">确定</a>
+</div>
+</div>
+</div>
+</div>
+
+{/if}
+
+<!--评价-->
+<div id="modal-module-judgment" class="modal fade sc" tabindex="-1">
+							<div class="modal-dialog" style='margin-top:100px;width:50%; height:85%;font-size: 14px; text-align: left; padding: 30px;'>
+								<a id="closebtn" class="closeBtn" style="position: absolute; top:40px; right:40px; z-index: 9999999;" data-dismiss="modal"><font color="ff0000">x</font></a>
+								<div class="modal-content" style=" padding: 30px;overflow:hidden;overflow-y:auto;height:100% ">
+
+									<div id="referral_show">
+
+
+									</div>
+
+
+								</div>
+							</div>
+					</div>
+<!--评价-->
+
+
+<script type="text/javascript">
+function code(orderno){
+$("#referral_show").empty();
+$(".modal-dialog").css('width','400px');
+$("#referral_show>div").css("text-align","center!import");
+$(".modal-content").css("height","370px");
+//$('.modal-content').css('height','80%').css('width','80%');
+ var ajaxHtml = '';
+ ajaxHtml += '<div style="clear: both; padding:10px; padding-bottom:0px; text-align: justify; border-bottom: 1px solid #f0f0f0;">';
+  ajaxHtml +='<img  src="{TG_URL}data/qrcode/'+{$_W['uniacid']}+'/' + orderno + '.png"></div>';
+
+$("#referral_show").append(ajaxHtml);
+$("#module-judgment").trigger("click");
+}
+function judgment(id,orderno){
+
+
+	$('.modal-content').css('height','80%');
+//$("#module-judgment").trigger("click");
+		var uid = id;
+		$.ajax({
+             type: "GET",
+             url: "{php echo web_url('order/judgment_admin',array('op' => 'ajax_list'))}",
+             data:{
+			 "gid":uid,
+			 "orderno":orderno,
+			 },
+			 dataType: "json",
+			  beforeSend: function(){
+				util.tips('数据加载中，请稍等', 2000);
+              },
+             success: function(data){
+			 if(data.length==0)
+			 {
+			 util.tips("暂无评价");
+			 return false;
+			 }
+			 var ajaxHtml = '';
+			 for (var i = 0; i < data.length; i++) {
+			 var aid=String(data[i].judgment_id);
+				 ajaxHtml += '<div style="clear: both; padding:10px; padding-bottom:0px; text-align: justify; border-bottom: 1px solid #f0f0f0;"><div style="width: 7%; float: left;"><img style="max-height: 50px; max-width: 50px;border-radius: 50%" src="' + data[i].avatar + '"></div><div style="width: 80%; float:left;margin-left: 10px; "><span style="color: #666;">' + data[i].openname + '<button onclick="lijihuifu('+data[i].id+')" style="background:#e4393c;color: #fff;border: 0;border-radius: 5px;margin-left: 10px;padding: 2px 8px;">立即回复</button></span><br><span style="color: #666; font-size: 12px; ">' + data[i].time + '</span></div><div style="clear: both;"></div><div style="font-size: 0.9em; padding-top: 3px; padding-bottom: 3px; color: #1a1a1a;">' + data[i].main_content + '</div></div>';
+				 if (data[i].contents.length > 0) {
+					 var pinglunHtml = "";
+					 for (var j = 0; j < data[i].contents.length; j++) {
+						 if (data[i].contents[j].who == '1') {
+							 pinglunHtml += '<label>商家回复</label>';
+						 } else {
+							 pinglunHtml += '<label>用户追评</label>';
+						 }
+						 pinglunHtml += ' <span style="color: #b8c0cc; font-size: 12px;">' + data[i].contents[j].time + '</span> <div style="font-size: 12px; font-weight: 400;padding: 3px 0;">' + data[i].contents[j].content + '</div>';
+					 }
+					 ajaxHtml+=pinglunHtml;
+				 }
+			 }
+
+				$("#referral_show").append(ajaxHtml);
+				$("#module-judgment").trigger("click");
+
+
+			 }
+         });
+	$("#referral_show").empty();
+}
+function lijihuifu(id){
+
+	$('.modal-content').css('height','30%');
+	var huifuHtml='<textarea style="margin-top:20px" class="form-control" name="content" id="content" rows="3"  placeholder="请输入回复内容" ></textarea><button onclick="huifu_sub('+id+')" class="btn btn-primary col-lg-1" style="float: right;margin-top: 10px">提交</button>';
+	$("#referral_show").html(huifuHtml);
+}
+function huifu_sub(id){
+var con=$('#content').val();
+	$.ajax({
+             type: "GET",
+             url: "{php echo web_url('order/judgment_admin',array('op' => 'ajax_reply'))}",
+             data:{
+			 "id":id,
+			 "con":con
+			 },
+			 dataType: "json",
+             success: function(data){
+			 console.log(data);
+			 judgment(data.gid,data.orderno);
+			 }
+         });
+}
+var modifyPrices = document.getElementsByClassName("modifyPrice");
+var PriceLen = modifyPrices.length;
+var urlModify = "{php echo web_url('order/order/modifyPrice')}";
+var actualPays = document.getElementsByClassName("actualPay");
+//修改urlModify，发送id,price,取到1为修改成功，取到0为失败
+for (var i = 0; i < PriceLen; i++) (function (i) {
+	modifyPrices[i].onclick = function (event) {
+		event.preventDefault();
+		var href = event.target.href
+		var idIndex = href.indexOf('id=');
+		var id = href.slice(idIndex + 3);
+		var price = Number(prompt("请输入修改的价格", ""));
+		if (price > 0 && price != NaN) {
+			postAjax(urlModify, id, price, i);
+		}
+	};
+})(i)
+function postAjax(url, id, price, i){
+    var formData = new FormData();
+	formData.append("id", id);
+	formData.append("price", price);
+
+	var xhr = new XMLHttpRequest();
+	xhr.open("post", url, true);
+	xhr.send(formData);
+	console.log(id + "  " + url + "   " + price);
+	xhr.onreadystatechange = function () {
+		if (xhr.readyState == 4) {
+			if ((xhr.status >= 200 && xhr.status < 300) || xhr.status == 304) {
+				console.log(xhr.responseText);
+			    if (xhr.responseText == '1') {
+					actualPays[i].textContent = "实付:"+price+"元";
+				    util.tips("修改成功");
+				}
+				else {
+					util.tips("修改失败");
+				}
+			}
+			else {
+				util.tips("网络失败或url错误");
+			}
+		}
+	}
+}
+
+var atitle = document.getElementsByClassName("atitle");
+var titlelen = atitle.length;
+for (var a = 0; a<titlelen;a++) {
+	var p = atitle[a].getElementsByTagName("p")[1];
+	if (p.innerHTML == '') {
+		atitle[a].style.marginTop = "35px";
+		atitle[a].style.lineHeight = "12px";
+
+		atitle[a].style.marginBottom = "0px";
+	}
+}
+
+require(['daterangepicker'], function($){
+	$('.daterange').on('apply.daterangepicker', function(ev, picker) {
+		$('#form1')[0].submit();
+	});
+});
+
+	$(function(){
+		$('[name="rank_all"]').click(function() {
+			var checked = this.checked;
+			$('.js-rank').find('input:checkbox').each(function() {
+				this.checked = checked;
+			});
+		});
+		$('#export').click(function() {
+			if ($('[name="selecttime[start]"]').val() == '') {
+				util.tips('请选择下单时间');
+				$(this).focus();
+				return false;
+			};
+			$(this).attr('type', 'submit').submit();
+		});
+
+		$('.order-rank').each(function(){
+			o.rank(this);
+		});
+
+
+		var $pop = null;
+		$('.goods-info').hover(function() {
+			var obj = this;
+			var img = $(this).find('img').attr('src');
+			var $pop = util.popover(obj, function($popover, obj) {
+				obj.$popover = $popover;
+			}, '<div><img src="'+ img+'" style="max-width:200px; max-height:200px;"></div>');
+		}, function() {
+			this.$popover.remove();
+		});
+
+		$('.js-order-status').delegate('.status-text', 'mouseover mouseout', function(event){
+			var obj = this;
+			if (event.type == 'mouseover'){
+				var $pop = util.popover(obj, function($popover, obj) {obj.$popover = $popover;}, {html: '<span>'+$(obj).data('title')+'</span>', placement : 'top'});
+			} else {
+				this.$popover.remove();
+			}
+		});
+
+		$('.js-order-status').delegate('.express', 'mouseover mouseout', function(event){
+			var obj = this;
+			if (event.type == 'mouseover'){
+				var $pop = util.popover(obj, function($popover, obj) {obj.$popover = $popover;}, {html: '<p class="mb0">物流公司：'+$(obj).data('express')+'</p><p class="mb0">物流单号：'+$(obj).data('express-no')+'</p>', placement : 'top'});
+			} else {
+				this.$popover.remove();
+			}
+		});
+
+		// 修改备注
+		$('.js-order-edit-remark').click(function() {
+			var order_id = $(this).attr('order-id');
+			$('.js-order-remark-post').attr("order-id",order_id);
+			$('#order-remark-container').show();
+			$('.main').css("opacity","0.2");$('.nav').css("opacity","0.2");$('.big-menu').css("opacity","0.2");
+		});
+		$('.js-cancel,.close').click(function() {
+			$('#order-remark-container').hide();
+			$('.main').css("opacity","1");$('.nav').css("opacity","1");$('.big-menu').css("opacity","1");
+		});
+		$('.js-order-remark-post').click(function() {
+			var order_id = $(this).attr('order-id');
+			var remark = $('#remark').val();
+			$.post("{php echo web_url('order/order/remark')}",{id:order_id,remark:remark},function(d){
+				if(!d.errno){
+					$('#js-admin-remark'+order_id).html(remark);
+					$('.js-admin-remark'+order_id).show();
+				}
+			},"json");
+			$('#order-remark-container').hide();
+			$('.main').css("opacity","1");$('.nav').css("opacity","1");$('.big-menu').css("opacity","1");
+		});
+
+		// 修改价格
+		$('.js-order-edit-payment').click(function() {
+			var $this = $(this);
+			var order_id = $this.attr('order-id');
+
+			o.editPayment(order_id, function(order) {
+				$this.parent()
+					.find('.js-order-payment').find('.js-fee').html(order.payment).end().end()
+					.find('.js-order-post-fee').find('.js-fee').html(order.post_fee);
+
+				var adjust_fee = parseFloat(order.adjust_fee);
+				if (adjust_fee){
+					var title = adjust_fee > 0 ? '加价' : '减价';
+					console.log(title);
+					$this.parent()
+						.find('.js-order-adjust-fee').show()
+						.find('.js-title').text(title).end()
+						.find('.js-fee').text(adjust_fee.toFixed(2));
+				} else {
+					$this.parent()
+						.find('.js-order-adjust-fee').hide()
+						.find('.js-title').text('').end()
+						.find('.js-fee').text('');
+				}
+			});
+		});
+
+		// 取消订单
+		$('.order-list').delegate('.js-order-cancel', 'click', function(){
+			var $this = $(this);
+			var order_id = $this.attr('order-id');
+			o.adminClose(order_id, function(order){
+				console.log(order);
+				$this.parent().parent().find('.status-text').text(order.status_text).data('title', order.status_content + '<br/>关闭原因:' + order.cancel_reason);
+				$this.remove();
+			});
+		});
+
+		//发货
+		$('.order-list').delegate('.js-order-send', 'click', function(){
+			var $this = $(this);
+			var order_id = $this.attr('order-id');
+			o.send(order_id, function(order) {
+				$this.parent().parent()
+					.append($('<p class="express b">物流信息</p>').data('express', order.express_company).data('express-no', order.express_no))
+					.find('.status-text').text(order.status_text).data('title', order.status_content);
+				$this.remove();
+			});
+		});
+		//删除
+		$('.order-list').delegate('.js-remove', 'click', function(e){
+			e.stopPropagation();
+			var $this = $(this);
+			var id = $this.attr('order-id');
+			util.nailConfirm(this, function(state) {
+				if(!state) return;
+				$.post("{php echo url('order/order/delete');}", { id : id }, function(data){
+					if(!data.errno){
+						$this.parent().parent().parent().parent().remove();
+					};
+					util.tips(data.message);
+				}, 'json');
+			}, {html: '确认删除?'});
+		});
+	});
+
+</script>
+{php include wl_template('common/footer');}

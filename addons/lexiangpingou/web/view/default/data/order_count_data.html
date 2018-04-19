@@ -1,0 +1,343 @@
+{php include wl_template('common/header');}
+<style>
+    .container{background:#fff;padding: 10px}
+    #dingdanTJ1,#dingdanTJ2{height:400px;}
+    .container label{
+        width: 60px;
+        line-height: 34px;
+    }
+    .btn-default:focus,.btn-default.active{
+        background-color: #44b549;
+        color: #fff0cc;
+        border-color: #ccc;
+        box-shadow:none;
+    }
+    .topGM{
+        margin-bottom: 20px;
+    }
+    .loading{
+        position: absolute;
+        top: 0;
+        left: 15px;
+        z-index: 10;
+        background: rgba(0,0,0,0.3);
+        width: 100%;
+        height: 100%;
+        text-align: center;
+        color: #eee;
+        padding-top: 17rem;
+        font-size: 16px;
+    }
+</style>
+
+<div class="container">
+    <div class="loading">
+        <i class="glyphicon glyphicon-refresh"></i>
+        <span>数据加载中......</span>
+    </div>
+    <div class="btn-group topGM" role="group">
+        <button type="button" class="btn btn-default active">最近七天</button><button type="button" class="btn btn-default">最近20天</button><button type="button" class="btn btn-default">最近30天</button>
+    </div>
+    <div id="dingdanTJ1"></div>
+    <div id="dingdanTJ2"></div>
+</div>
+<script type="text/javascript">
+
+    // 路径配置
+    require.config({
+        paths: {
+            echarts: "//www.lexiangpingou.cn/addons/lexiangpingou/web/resource/js/echarts/build/dist"
+        }
+    });
+
+
+    $('.topGM').on('click','button',function(){
+        if($(this).hasClass('active')){return false;}
+        $('.topGM button').removeClass('active');
+        $(this).addClass('active');
+        if($(this).html()=='最近七天') {
+            $('.loading').css('display', 'block');
+            ajaxZHL(getBeforeDate(6), getBeforeDate(0),7);
+        }else if($(this).html()=='最近20天'){
+            $('.loading').css('display','block');
+            ajaxZHL(getBeforeDate(19),getBeforeDate(0),20);
+        }else if($(this).html()=='最近30天'){
+            $('.loading').css('display','block');
+            ajaxZHL(getBeforeDate(29),getBeforeDate(0),30);
+        }
+    });
+
+    ajaxZHL(getBeforeDate(6),getBeforeDate(0),7);
+
+    function ajaxZHL(a,b,c) {
+        $.get(
+                location.origin + '/minapi.php?op=order_count_data&uniacid={$_W["uniacid"]}',
+                {
+                    stime: a,
+                    etime: b
+                },
+                function (res) {
+                    $('.loading').css('display','none');
+                    var data = JSON.parse(res).data;
+                    console.log(data);
+                    var dataTime=[];
+                    if(data.length<Number(c)){
+                        for(var j=c-1;j>=0;j--){
+                            dataTime.push(getBeforeDate(j));
+                        }
+                        console.log(dataTime);
+                    }
+                    var option1 = {
+                        title: {
+                            text: '订单统计',
+                            subtext: '各时间段订单'
+                        },
+                        tooltip: {
+                            trigger: 'axis'
+                        },
+                        legend: {
+                            data: ['所有订单', '已签收订单', '已支付订单', '退款订单']
+                        },
+                        toolbox: {
+                            show : true,
+                            feature : {
+                                magicType : {show: true, type: ['line', 'bar']},
+                                restore : {show: true},
+                                saveAsImage : {show: true}
+                            }
+                        },
+                        calculable : true,
+                        xAxis: [
+                            {
+                                boundaryGap : false,
+                                type: 'category',
+                                data: []
+                            }
+                        ],
+                        yAxis: [
+                            {
+                                type: 'value'
+                            }
+                        ],
+                        series: [
+                            {
+                                smooth:true,
+//							itemStyle: {normal: {areaStyle: {type: 'default'}}},
+                                "name": "所有订单",
+                                "type": "line",
+                                "data": [5, 20, 40, 10, 10, 20]
+                            },
+                            {
+                                smooth:true,
+//							itemStyle: {normal: {areaStyle: {type: 'default'}}},
+                                "name": "已签收订单",
+                                "type": "line",
+                                "data": [15, 30, 50, 30, 3, 10]
+                            },
+                            {
+                                smooth:true,
+//							itemStyle: {normal: {areaStyle: {type: 'default'}}},
+                                "name": "已支付订单",
+                                "type": "line",
+                                "data": [5, 30, 44, 16, 10, 25]
+                            },
+                            {
+                                smooth:true,
+//							itemStyle: {normal: {areaStyle: {type: 'default'}}},
+                                "name": "退款订单",
+                                "type": "line",
+                                "data": [45, 30, 50, 30, 3, 17]
+                            }
+                        ]
+                    };
+                    var option2 = {
+                        title: {
+                            text: '金额统计',
+                            subtext: '各时间段金额'
+                        },
+                        tooltip: {
+                            trigger: 'axis'
+                        },
+                        legend: {
+                            data: ['下单总金额', '交易成功金额', '支付金额', '退款金额', '客单价']
+                        },
+                        toolbox: {
+                            show : true,
+                            feature : {
+                                magicType : {show: true, type: ['line', 'bar']},
+                                restore : {show: true},
+                                saveAsImage : {show: true}
+                            }
+                        },
+                        calculable : true,
+                        xAxis: [
+                            {
+                                boundaryGap : false,
+                                type: 'category',
+                                data: []
+                            }
+                        ],
+                        yAxis: [
+                            {
+                                type: 'value'
+                            }
+                        ],
+                        series: [
+                            {
+                                smooth:true,
+//							itemStyle: {normal: {areaStyle: {type: 'default'}}},
+                                "name": "下单总金额",
+                                "type": "line",
+                                "data": [5, 20, 54, 17, 15, 20]
+                            },
+                            {
+                                smooth:true,
+//							itemStyle: {normal: {areaStyle: {type: 'default'}}},
+                                "name": "交易成功金额",
+                                "type": "line",
+                                "data": [11, 30, 52, 30, 5, 10]
+                            },
+                            {
+                                smooth:true,
+//							itemStyle: {normal: {areaStyle: {type: 'default'}}},
+                                "name": "支付金额",
+                                "type": "line",
+                                "data": [51, 22, 10, 14, 16, 80]
+                            },
+                            {
+                                smooth:true,
+//							itemStyle: {normal: {areaStyle: {type: 'default'}}},
+                                "name": "退款金额",
+                                "type": "line",
+                                "data": [16, 36, 57, 33, 23, 70]
+                            },
+                            {
+                                smooth:true,
+//							itemStyle: {normal: {areaStyle: {type: 'default'}}},
+                                "name": "客单价",
+                                "type": "line",
+                                "data": [65, 32, 10, 36, 5, 80]
+                            }
+                        ]
+                    };
+                    var addtime=[];
+                    var sydd=[],yqsdd=[],yzfdd=[],tkdd=[];
+                    var xdzje=[],jycgje=[],zfje=[],tkje=[],kdj=[];
+                    for(var i= 0,ii=0;i<data.length;i++,ii++){
+                        if(dataTime.length>0&&(dataTime[ii]!=data[i]['addtime'])){
+                            addtime.push(dataTime[ii]);
+                            sydd.push('0');
+                            yqsdd.push('0');
+                            yzfdd.push('0');
+                            tkdd.push('0');
+                            xdzje.push('0');
+                            jycgje.push('0');
+                            zfje.push('0');
+                            tkje.push('0');
+                            kdj.push('0');
+                            i--;
+                        }else {
+                            addtime.push(data[i]['addtime']);
+                            sydd.push(data[i]['order_total']);
+                            yqsdd.push(data[i]['order_receive']);
+                            yzfdd.push(data[i]['order_pay']);
+                            tkdd.push(data[i]['order_refund']);
+                            xdzje.push(data[i]['order_price']);
+                            jycgje.push(data[i]['success_price']);
+                            zfje.push(data[i]['pay_price']);
+                            tkje.push(data[i]['refund_price']);
+                            kdj.push(data[i]['customer_price']);
+                        }
+                    }
+                    if(addtime.length<dataTime.length){
+                        for(var jj=0;jj<(dataTime.length-addtime.length);jj++){
+                            addtime.push(dataTime[addtime.length-1]);
+                            sydd.push('0');
+                            yqsdd.push('0');
+                            yzfdd.push('0');
+                            tkdd.push('0');
+                            xdzje.push('0');
+                            jycgje.push('0');
+                            zfje.push('0');
+                            tkje.push('0');
+                            kdj.push('0');
+                        }
+                    }
+                    option1.xAxis[0].data=addtime;
+                    option2.xAxis[0].data=addtime;
+                    option1.series[0].data=sydd;
+                    option1.series[1].data=yqsdd;
+                    option1.series[2].data=yzfdd;
+                    option1.series[3].data=tkdd;
+                    option2.series[0].data=xdzje;
+                    option2.series[1].data=jycgje;
+                    option2.series[2].data=zfje;
+                    option2.series[3].data=tkje;
+                    option2.series[4].data=kdj;
+                    $('.loading').css('display','none');
+                    if(data.length==0) {
+                        option1.series = [{
+                            name: '',
+                            type: '',
+                            radius: '',
+                            center: [],
+                            data: []
+                        }];
+                        option2.series = [{
+                            name: '',
+                            type: '',
+                            radius: '',
+                            center: [],
+                            data: []
+                        }];
+                    }
+                    ajaxEh(option1,option2);
+                }
+        );
+    }
+
+    function ajaxEh(option1,option2) {
+        require(
+                [
+                    'echarts',
+                    'echarts/chart/bar', // 使用柱状图就加载bar模块，按需加载
+                    'echarts/chart/line',
+                    'echarts/chart/funnel',
+                    'echarts/chart/pie'
+                ],
+                function (ec) {
+                    // 基于准备好的dom，初始化echarts图表
+                    var myChart1 = ec.init(document.getElementById('dingdanTJ1'));
+                    var myChart2 = ec.init(document.getElementById('dingdanTJ2'));
+                    myChart1.setOption(option1);
+                    myChart2.setOption(option2);
+                }
+        );
+    }
+
+    function getBeforeDate(n){
+        var n = n;
+        var d = new Date();
+        var year = d.getFullYear();
+        var mon=d.getMonth()+1;
+        var day=d.getDate();
+        if(day <= n){
+            if(mon>1) {
+                mon=mon-1;
+            }
+            else {
+                year = year-1;
+                mon = 12;
+            }
+        }
+        d.setDate(d.getDate()-n);
+        year = d.getFullYear();
+        mon=d.getMonth()+1;
+        day=d.getDate();
+        s = year+"-"+(mon<10?('0'+mon):mon)+"-"+(day<10?('0'+day):day);
+        return s;
+    }
+
+
+</script>
+{php include wl_template('common/footer');}

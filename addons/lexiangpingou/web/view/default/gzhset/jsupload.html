@@ -1,0 +1,80 @@
+{wl_template 'common/header'}
+<style>
+    #upfiles {
+        padding: 6px 12px;
+        border: 1px solid #428bca;
+        border-radius: 4px;
+    }
+</style>
+<div class="main">
+    <form action="" class="form-horizontal form" method="post" enctype="multipart/form-data">
+        <input type="hidden" name="id" value="{$item['id']}">
+        <input type="hidden" name="uniacid" value="{$item['uniacid']}">
+        <div class="panel panel-default">
+            <div class="panel-heading">JS授权文件设置</div>
+            <div class="panel-body">
+
+                <div class="form-group">
+                    <label class="col-xs-12 col-sm-3 col-md-2 control-label" style="color:red;font-size:24px;line-height: 16px;">授权文件</label>
+                    <input type='hidden' name='MAX_FILE_SIZE' value='262111' />
+                    <input type="text" size="20" name="upfiles" id="upfiles" class="upfiles">
+                    <input type="button" value="浏览" onclick="file.click()" style="background: #428bca none repeat scroll 0 0; border: 1px solid #ccc; color: #fff; padding: 5px 20px;">
+                    <input type="file" name="upfile" id="file" style="display:none" onchange="upfiles.value=this.value;changed();">
+
+                    <!-- <input id="name" /> -->
+                    <!-- <button class = "btn" onclick = "clpfile();">选择文件</button>  -->
+                    <!-- <input  name='upfile' type="file" id="file" class="upload-button" onchange="upfile.value=this.value"/> -->
+                </div>
+
+                <div class="form-group col-sm-12">
+                    <input type="hidden" name="token" value="{$_W['token']}" />
+                    <input type="submit" class="btn btn-primary col-lg-1" name="submit" value="提交" />
+                </div>
+            </div>
+        </div>
+</div>
+
+</form>
+{if $files}
+
+<ul class="nav nav-tabs">
+    <li {if $status==0}class="active"{/if}><a>文件列表</a></li>
+</ul>
+<div class="panel panel-default">
+    <div class="panel-body table-responsive">
+        <table class="table table-hover">
+            <thead class="navbar-inner">
+            <tr>
+                <th >序号</th>
+                <th >文件名</th>
+            </tr>
+            </thead>
+            <tbody>
+            {loop $files $key $file}
+            <tr>
+                <td>{php echo $key+1;}</td>
+                <td>{$file}</td>
+            </tr>
+            {/loop}
+            </tbody>
+        </table>
+    </div>
+</div>
+</div>
+{/if}
+<script>
+    function changed(){
+        var filepath = $("input[name='upfile']").val();
+        var extStart = filepath.lastIndexOf(".");
+        var ext = filepath.substring(extStart, filepath.length).toUpperCase();
+        if (ext != ".TXT") {
+            $("#upfiles").val("图片限于txt格式").css({"border":"1px solid red","color":"red"});
+        } else{
+            $("#upfiles").css({"border":"1px solid #428bca","color":"#000"}).val($("#file").val());
+        }
+    }
+    function clpfile(){
+        return $("#file").click();
+    }
+</script>
+{wl_template 'common/footer'}

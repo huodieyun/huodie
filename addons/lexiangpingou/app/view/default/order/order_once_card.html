@@ -1,0 +1,201 @@
+{php include wl_template('common/header');}
+<style type="text/css">
+    .wx_wrap {
+        font-size:16px;
+        margin-top:20px;
+        margin-left:20px;
+    }
+    .toaddress {
+        margin-left: 40px;
+        margin-top: 10px;
+    }
+    .icon_pos {
+        margin-left: 5px;
+    }
+    #dt_address {
+        height: 60px;
+    }
+    .name {
+        margin-bottom: 5px;
+    }
+    .u_address {
+        position: relative;
+    }
+    .address {
+        height: inherit;
+    }
+    i.address_flag {
+        margin-top: -10px;
+    }
+    .address_txt {
+        width:95%;
+        margin-bottom: 5px;
+    }
+    .address_flag {
+        margin-top: 40px;
+    }
+    .shade-map {
+        position: fixed;
+        z-index: 1;
+        top: 0;
+        height: 100%;
+        width: 100%;
+        background: rgba(157, 157, 157, 0.8);
+    }
+    .address-list {
+        z-index: 2;
+        position: fixed;
+        top: 5%;
+        margin: 0 20px;
+        padding: 10px;
+        background: #fff;
+    }
+    .close {
+        float: right;
+        border: 1px solid;
+        border-radius: 50%;
+        width: 20px;
+        height: 20px;
+        line-height: 20px;
+        text-align: center;
+    }
+    button[name=submit] {
+        color: #fff;
+        display: inline-block;
+        margin-top: 30px;
+        padding: 0 20px;
+    }
+    .form-label {
+        margin: 10px 0;
+        background: #fff;
+        padding: 10px;
+    }
+    .form-label .cont {
+        width: 100%;
+        border: 1px solid #eee;
+        padding: 5px;
+        padding-left: 10px;
+    }
+</style>
+<div class="page-group">
+    <div class="page page-current" id="page-order-list">
+        <div class="content infinite-scroll native-scroll" data-distance="10">
+            <div class="tabs">
+                <form method="post" action="{php echo app_url('order/order_once_card/order_post')}">
+                    <div class="wx_wrap">
+                        <input type="hidden" name="orderid" value="{$item['id']}">
+                    <div class="form-label">
+                        <span class="tit">配送时间</span>
+                        <select class="cont" name="once_card_json">
+                            {if $goods['once_card_mon']}<option {php echo $item['once_card_json'] == 'once_card_mon' ? 'selected="selected"' : ''} value="once_card_mon">星期一</option>{/if}
+                            {if $goods['once_card_tues']}<option {php echo $item['once_card_json'] == 'once_card_tues' ? 'selected="selected"' : ''} value="once_card_tues">星期二</option>{/if}
+                            {if $goods['once_card_wed']}<option {php echo $item['once_card_json'] == 'once_card_wed' ? 'selected="selected"' : ''} value="once_card_wed">星期三</option>{/if}
+                            {if $goods['once_card_thur']}<option {php echo $item['once_card_json'] == 'once_card_thur' ? 'selected="selected"' : ''} value="once_card_thur">星期四</option>{/if}
+                            {if $goods['once_card_fir']}<option {php echo $item['once_card_json'] == 'once_card_fir' ? 'selected="selected"' : ''} value="once_card_fir">星期五</option>{/if}
+                            {if $goods['once_card_sat']}<option {php echo $item['once_card_json'] == 'once_card_sat' ? 'selected="selected"' : ''} value="once_card_sat">星期六</option>{/if}
+                            {if $goods['once_card_sun']}<option {php echo $item['once_card_json'] == 'once_card_sun' ? 'selected="selected"' : ''} value="once_card_sun">星期日</option>{/if}
+                            {if $goods['once_card_half_month']}<option {php echo $item['once_card_json'] == 'once_card_half_month' ? 'selected="selected"' : ''} value="once_card_half_month">半个月</option>{/if}
+                            {if $goods['once_card_month']}<option {php echo $item['once_card_json'] == 'once_card_month' ? 'selected="selected"' : ''} value="once_card_month">一个月</option>{/if}
+                        </select>
+                    </div>
+                        <!-- 1 送货上门 2快递 3自提 -->
+                    {if $item['dispatchtype'] == 1 || $item['dispatchtype'] == 2 || $item['dispatchtype'] == 0}
+                        <div class="form-label">
+                            <span class="tit">签收地址</span>
+                            <div id="show-address" class="u_address cont" onclick="show()">
+                                <i class="icon_pos"></i>
+                                    <div class="address">
+                                    <input type="hidden" name="addressid" value="0">
+                                    <span class="name">{$item['addname']}</span>
+                                    <span class="tel">{$item['mobile']}</span>
+                                    <span class="address_txt">
+                                    {$item['province']}{$item['city']}{$item['county']}</span>
+                                    <span class="address_txt">{$item['detailed_address']}</span>
+                                    </div>
+                                <i class="arrow arrow_show"></i>
+                            </div>
+                        </div>
+                    {elseif $item['dispatchtype'] == 3}
+                        <div class="form-label">
+                            <span class="tit">姓名</span>
+                            <input class="cont" type="text" name="name" value="{$item['addname']}">
+                        </div>
+                        <div class="form-label">
+                            <span class="tit">手机</span>
+                            <input class="cont" type="text" name="mobile" value="{$item['mobile']}">
+                        </div>
+                        <div class="form-label">
+                            <span class="tit">自提点</span>
+                            <select class="cont" name="storeid">
+                                {loop $stores $store}
+                                    <option value="{$store['id']}" {php echo $store['id'] == $item['comadd'] ? 'selected="selected"' : ''}>{$store['storename']}</option>
+                                {/loop}
+                            </select>
+                        </div>
+                    {/if}
+                    </div>
+                    <p class="action text-center">
+                        <button type="submit" name="submit">提交</button>
+                    </p>
+                </form>
+<!--                 <div class="link-ding">
+                    <div class="link-ding-header">
+                        <div>订单号:{$item['orderno']}</div>
+                        <span>{$item['send_date']}</span>
+                    </div>
+                    <div class="link-ding-body">
+                        <div>
+                            <div>快递：{$item['express']}</div>
+                            <span>快递单号：{$item['expresssn']}</span>
+                        </div>
+                        <div class="link-body-feight" style="position: relative">
+                            <div style="color:#999">手机：{$item['mobile']}</div>
+                            <div class="link-total"><span class="ed5CO" style="color:#6fbfd8;font-size: 16px;">{php echo date('Y/m/d H:i', $item['delivery_date'])}</span></div>
+                        </div>
+                    </div>
+                </div> -->
+                <div class="shade-map" hidden="hidden"></div>
+                <div class="address-list" hidden="hidden">
+                    <div id="closeIcon" class="close" onclick="close()">X</div>
+                    {loop $adresses $ad}
+                    <div class="u_address" onclick="choose(this)">
+                        <i class="icon_pos"></i>
+                        <div class="address">
+                        <input type="hidden" name="addressid" value="{$ad['id']}">
+                        <span class="name">{$ad['cname']}</span>
+                        <span class="tel">{$ad['tel']}</span>
+                        <span class="address_txt">
+                        {$ad['province']}{$ad['city']}{$ad['county']}</span>
+                        <span class="address_txt">{$ad['detailed_address']}</span>
+                        </div>
+                        <i class="address_flag">{if $ad['type']==2}家庭{elseif $ad['type']==1}公司{/if}</i>
+                    </div>
+                    {/loop}
+                    <a href="{php echo app_url('address/createadd/display',array('isshop'=>1))}">
+                        <span href="javascript:;" id="addrsub" class="weui_btn weui_btn_primary">点击新增地址</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{php include wl_template('common/footerbar');}
+<script type="text/javascript">
+    function close() {
+        $('.shade-map').hide();
+        $('.address-list').hide();
+    }
+    function show() {
+        $('.shade-map').show();
+        $('.address-list').show();
+    }
+    $('#closeIcon').click(function () {
+        close();
+    });
+    function choose(e) {
+        $('#show-address').html($(e).html());
+        close();
+        console.log(e);
+    }
+</script>
+{php include wl_template('common/footer');}

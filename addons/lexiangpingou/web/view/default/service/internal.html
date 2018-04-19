@@ -1,0 +1,273 @@
+{php include wl_template('common/header');}
+<style>
+    .editBJ{
+        display: none;
+        position: fixed;
+        top: 0;
+
+        left: 0;
+        width: 100%;
+        z-index: 9999;
+        background: rgba(0,0,0,0.7);
+        height: 100%;
+    }
+    .editBJ>div{
+        width: 40%;
+        left: 30%;
+        position: absolute;
+        top: 15%;
+    }
+</style>
+<ul class="nav nav-tabs">
+    <li {if $_GPC['op'] == '' || ($_GPC['op'] == 'display' && $status == '')}class="active"{/if}>
+    <a href="{php echo web_url('service/internal', array('op' => 'display'))}">全部工单</a>
+    </li>
+    <li {if $status == '-1'}class="active"{/if}>
+    <a href="{php echo web_url('service/internal', array('op' => 'display', 'status' =>'-1'))}">待处理工单</a>
+    </li>
+    <li {if $status == '2'}class="active"{/if}>
+    <a href="{php echo web_url('service/internal', array('op' => 'display', 'status' =>'2'))}">已完成工单</a>
+    </li>
+
+    <li {if $_GPC['op'] == 'insert'}class="active"{/if}>
+    <a href="{php echo web_url('service/internal', array('op' => 'insert'))}">提交工单</a>
+    </li>
+
+</ul>
+
+{if $_GPC['op'] == 'display' || $_GPC['op'] == ''}
+<div class="main">
+    <a title="" style="overflow: hidden;"></a>
+    <!--<div class="panel panel-info">
+        <div class="panel-heading">筛选</div>
+        <div class="panel-body">
+            <form action="{php echo web_url('agent/examine')}" method="get" class="form-horizontal" role="form" id="form1">
+                <input type="hidden" name="c" value="site" />
+                <input type="hidden" name="a" value="entry" />
+                <input type="hidden" name="m" value="lexiangpingou" />
+                <input type="hidden" name="do" value="service" />
+                <input type="hidden" name="ac" value="internal" />
+                <input type="hidden" name="op" value="display" />
+                &lt;!&ndash;<input type="hidden" name="develop_status" value="{$develop_status}" />&ndash;&gt;
+                &lt;!&ndash;<div style="padding-left: 116px; padding-bottom: 5px; margin-bottom: 15px; border-bottom: 2px solid #E7E8EB;" ><label>注：</label><span>乐享拼购将按照工单提交时间的先后来决定开发顺序，一般在15个工作日内完成。</span></div>&ndash;&gt;
+
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">工单号</label>
+                    <div class="col-sm-6 ">
+                        <input class="form-control" name="keyword_form_id" id="" type="text" value="{$_GPC['keyword_form_id']}" placeholder="可查询工单号">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">公众号</label>
+                    <div class="col-sm-6 ">
+                        <input class="form-control" name="keyword_gzname" id="" type="text" value="{$_GPC['keyword_gzname']}" placeholder="根据公众号查询">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-md-offset-2 col-sm-2 col-lg-2" style="text-align: left;">
+                        <button class="btn btn-default"><i class="fa fa-search"></i> 搜索</button>
+                    </div>
+                </div>
+            </form>
+
+            &lt;!&ndash;  <a href='{php echo $this->createWebUrl('grouporder', array('op' => 'output','groupstatus'=>$groupstatus,'starttime'=>$starttime,'endtime'=>$endtime))}'><button class="btn btn-info"><i class="fa fa-download"></i> 导出记录</button></a>&ndash;&gt;
+        </div>
+    </div>-->
+    <div class="panel panel-default">
+        <div class="panel-body table-responsive">
+            <table class="table table-hover">
+                <thead class="navbar-inner">
+                <tr>
+                    <th style="width:18%">工单编号</th>
+                    <th style="width:15%">提交人</th>
+                    <th style="width:43%">工单主题</th>
+                    <th style="width:15%">开发开始/结束时间</th>
+                    <th style="width:11%">开发小组</th>
+                    <th style="width:8%;text-align: center;">操作</th>
+                </tr>
+                </thead>
+                <tbody>
+                {loop $allform $form}
+                <tr>
+                    <td>{$form['form_id']}</td>
+                    <td {if $form['vip'] == 1}style="font-weight: bold;"{/if}>{$form['name']}</td>
+                    <td style="text-align: center;">
+                        <span style="font-size: 12px; font-weight: bold;">{if $form['type'] == 1}(异常){elseif $form['type'] == 2}(功能){elseif $form['type'] == 3}(模板){/if}</span>
+                        {$form['title']}
+                    </td>
+                    <td>
+                        {if empty($form['start_time'])}
+                            暂未开始开发
+                        {else}
+                            {php echo date('Y-m-d H:i' , $form['start_time'])}<br>
+                            {if !empty($form['end_time'])}
+                                {php echo date('Y-m-d H:i' , $form['end_time'])}
+                            {/if}
+                        {/if}
+                    </td>
+
+                    <td>
+                        {if $form['develop_status'] == 1}
+                        <a class="btn btn-warning btn-xs " style="margin-top: 6px;">开发中</a><br>
+                        {elseif $form['develop_status'] == 2}
+                        <a class="btn btn-success btn-xs " style="margin-top: 6px;">开发完成</a><br>
+                        {/if}
+                        {if $form['group'] == 1}
+                        技术一组
+                        {elseif $form['group'] == 2}
+                        技术二组
+                        {/if}
+                    </td>
+                    <td style="text-align:center">
+                        <a class="btn btn-default btn-xs" href="{php echo web_url('service/internal',array('op' => 'detail','form_id' => $form['form_id'],'status'=> $status))}">查看详情</a>
+                        {if $form['develop_status'] == 0}<br><a class="btn btn-info btn-xs " style="margin-top: 6px;" onclick="develop_start('{$form['form_id']}')">开始开发</a>{/if}
+                    </td>
+
+                </tr>
+                {/loop}
+                </tbody>
+            </table>
+            {$pager}
+        </div>
+    </div>
+</div>
+
+<div class="editBJ">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            编辑
+            <span style="float:right;" onclick="$('.editBJ').css('display','none')">关闭</span>
+        </div>
+        <div class="panel-body edit">
+            <div class="form-group">
+                <div class="input-group" style="margin-top: 15px;">
+                    <label class="radio radio-inline" style="margin: 0">
+                        <input type="radio" value="1" name="group" checked>技术一组
+                    </label>
+                    <label class="radio radio-inline">
+                        <input type="radio" value="2" name="group" >技术二组
+                    </label>
+                </div>
+            </div>
+            <div class="form-group col-sm-12">
+                <input type="button" value="提交" class="btn btn-primary col-lg-1" onclick="update2()" style="float: right">
+                <!--<input type="hidden" name="token" value="e404298d" />-->
+            </div>
+        </div>
+
+    </div>
+</div>
+<script>
+
+    var url_start="{php echo web_url('service/internal/develop_start')}";
+    function update2(){
+
+        $.get(url_start,{group:$('.editBJ input:checked').val(),form_id:$('.editBJ input.btn').attr('data-id')},function(res){
+            if(res=='1'){
+                location.reload();
+            }
+        })
+    }
+
+    function develop_start(id){
+        $('.editBJ').css('display','block');
+        $('.editBJ input.btn').attr('data-id',id);
+    }
+</script>
+{/if}
+
+{if $_GPC['op'] == 'insert'}
+<script>
+    function submitAction() {
+        var list = $('input:radio[name="type"]:checked').val();
+        var vip = '{$acct['
+        vip
+        ']}';
+        if ($('#title').val() == '') {
+            util.message('请简要描述您遇到的情况或者需求。');
+            return false;
+        }
+        else if ($('#content').val() == '') {
+            util.message('请尽量详细描述相关问题或者需求，便于我们的沟通。');
+            return false;
+        }
+        else if (list == '2' && vip == '0') {
+
+            alert('新功能开发申请目前只对vip用户开放。');
+            //util.message('新功能开发申请工单将显示成工单结束状态，乐享拼购将根据订单提交时间安排开发优先度。');
+
+        }
+        return ture;
+
+
+    }
+
+
+</script>
+<div class="clearfix">
+    <form class="form form-horizontal" action="" method="post" role="form" id="form1">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                填写工单
+            </div>
+            <div class="panel-body">
+                <div class="form-group">
+                    <label class="col-xs-12 col-sm-3 col-md-2 control-label"><span
+                            style='color:red'>*</span>工单类型:</label>
+                    <div class="col-sm-9 col-xs-12">
+                        <label class="radio-inline">
+                            <input checked type="radio" name="type" id="inlineRadio12" value="1"> 异常处理
+                        </label>
+                        <label class="radio-inline">
+                            <input type="radio" name="type" id="inlineRadio22" value="2"> 功能开发
+                        </label>
+                        <label class="radio-inline">
+                            <input type="radio" name="type" id="inlineRadio12" value="3"> 模板定制
+                        </label>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-2 control-label"><span style='color:red'>*</span>工单主题:</label>
+                    <div class="col-md-9" style="position:relative">
+                        <div style="position:relative; padding-left: 0px;">
+                            <input autofocus="autofocus" required oninvalid="setCustomValidity('请简要描述您遇到的情况或者需求。')"
+                                   oninput="setCustomValidity('')" type="text" name="title" class="form-control"
+                                   maxlength="40" id="title" placeholder="主题将在列表页作为概要显示，最多填写40个字。" value=""
+                                   autocomplete="off"/>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-2 control-label"><span style='color:red'>*</span>详细描述:</label>
+                    <div class="col-md-9" style="position:relative">
+                        <div style="position:relative; padding-left: 0px;">
+                            <textarea class="form-control" required
+                                      oninvalid="setCustomValidity('请尽量详细描述相关问题或者需求，便于我们的沟通。')"
+                                      oninput="setCustomValidity('')" required="required" name="content" id="content"
+                                      rows="10" placeholder="请尽量详细描述相关问题或者需求，便于我们的沟通，可以通过右下角拖拽来使输入框边长。"></textarea>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-xs-12 col-sm-3 col-md-2 control-label">相关图片</label>
+                    <div class="col-sm-6">
+                        {php echo tpl_form_field_multi_image('img',$piclist);}
+                        <span class="help-block">附上图片说明</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-sm-12">
+                <input onclick="submitAction(); return false;" type="submit" name="submit" value="提交"
+                       class="btn btn-primary col-lg-1"/>
+                <input type="hidden" name="token" value="{$_W['token']}" />
+            </div>
+        </div>
+    </form>
+</div>
+{/if}
+
+{php include wl_template('common/footer');}

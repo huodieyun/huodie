@@ -1,0 +1,87 @@
+{php include wl_template('common/header');}
+<ul class="nav nav-tabs" style="margin-bottom: 0px;">
+	<li class="active"><a href="{php echo url('platform/special/display')}">系统通知 </a></li>
+</ul>
+<div class="warp">
+	<div class="text-center">
+		<h4>缺货？上极限单品！供货？上极限单品！</h4>
+	</div>
+	<div class="swiper-container swiper-container-rr">
+		<div class="swiper-wrapper">
+			{loop $supply_goods $item}
+				<div class="swiper-slide">
+					<a href="{php echo web_url('platform/goods_list/supply_goods_detail', array('id' => $item['id']))}">
+						<div class="back-img" style="background-image: url('{php echo !is_null($item['advert_img']) ? tomedia($item[advert_img]) : tomedia($item[gimg])}');"></div>
+						<div class="bottom-title">【{$item['name']}】，¥{$item['oprice']} ，{php echo $item['ctype'] == '0' ? '一件代发' : '整件批发'}</div>
+					</a>
+				</div>
+			{/loop}
+		</div>
+		<div class="swiper-button-next swiper-button-white"></div>
+		<div class="swiper-button-prev swiper-button-white"></div>
+	</div>
+	<div class="page">
+		<div class="swiper-pagination"></div>
+	</div>
+</div>
+<div class="clearfix">
+	<div class="panel panel-default" style="background: none;  padding: 0px; border: none !important;">
+				{loop $list $item}
+				<a href="{php echo web_url('gzhset/notification-list',array('op' => 'content','id' => $item['id']))}">
+				<div class="panel panel-default" style="padding: 15px !important; margin-top: 20px; margin-bottom: 0px !important;">
+					<span style="color: #222; font-weight: bold;">{if $item['uniacid']==33}【系统通知】{else}【通告】{/if}{$item['title']}</span><span style="margin-left:20px; color: #b8c0cc; font-size: 12px;">{$item['stime']}</span><br/>
+					<div style="color: #6d757a; padding: 10px; font-weight: 400;">{$item['summary']}</div>
+					{if $_W['uniacid']==33}<a href="{php echo web_url('gzhset/notification-list',array('op' => 'post','id' => $item['id']))}">编辑</a>
+					<a href="{php echo web_url('gzhset/notification',array('op' => 'delete','id' => $item['id']))}">删除 </a>{/if}
+				</div>
+				</a>
+				{/loop}
+				
+
+	</div>
+	{$pager}
+</div>
+<script>
+	$('.js-batch').click(function(e){
+		var sids=sid.val().toString();
+        var titles=title.val().toString();
+        var contents=content.val().toString();
+	    $.ajax({
+		    type: "GET",
+		    url: "{php echo web_url('store/notification/publish');}",
+		    data:{"title":titles,"sid":sids,"content":contents},
+			dataType: "json",
+		    success: function(data){
+				if (data.statustype ==1){
+					util.tips('发布成功！', 4000);
+				}
+				if (data.statustype ==2){
+					util.tips('更新成功！', 4000);
+				}		
+			}
+    	});
+	}
+</script>
+<script>
+var mySwiper = new Swiper('.swiper-container-rr', {
+	slidesPerView: 3,
+	spaceBetween: 30,
+	slidesPerGroup: 3,
+	loop: true,
+	loopFillGroupWithBlank: true,
+	pagination: {
+	  el: '.swiper-pagination',
+	  clickable: true,
+	},
+	navigation: {
+	  nextEl: '.swiper-button-next',
+	  prevEl: '.swiper-button-prev',
+	},
+	autoplay: {
+	    delay: 5000,
+	    stopOnLastSlide: false,
+	    disableOnInteraction: true,
+    },
+})
+</script>
+{php include wl_template('common/footer');}

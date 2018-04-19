@@ -1,0 +1,227 @@
+{php include wl_template('common/header');}
+
+<style>
+    .all {
+        display: inline-block;
+        width: 450px;
+        height: 300px;
+        border: 1px solid #66ade9;
+        position: relative;
+
+        overflow: hidden;
+        margin: 10px 50px 10px 50px;
+        vertical-align: top;
+    }
+
+    .productpic {
+        width: 450px;
+        height: 225px;
+    }
+
+    .name {
+        position: absolute;
+        left: 20px;
+        top: 150px;
+        font-size: 30px;
+        color: white;
+        font-weight: bolder;
+    }
+
+    .describe {
+        margin-left: 10px;
+        margin-top: 5px;
+        line-height: 30px;
+        width: 300px;
+        font-size: 22px;
+        color: gray;
+    }
+
+    .biaoqian {
+        position: absolute;
+        left: 0px;
+        top: 0px;
+        width: 225px;
+        height: 159px;
+        color: white;
+        font-size: 30px;
+        background-color: #66ade9;
+        text-align: center;
+        line-height: 280px;
+        transform-origin: 0 159px;
+        transform: rotate(-45deg);
+
+    }
+
+    .setting {
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        background-color: #66ade9;
+        color: white;
+        font-size: 30px;
+        font-weight: bold;
+        position: absolute;
+        right: 30px;
+        top: 195px;
+        text-align: center;
+        line-height: 75px;
+        cursor: pointer;
+    }
+
+    .bottom {
+        height: 75px;
+        width: 35%;
+        position: absolute;
+        top: 300px;
+        left: 0px;
+        cursor: pointer;
+    }
+
+    .cord {
+        padding-left: 20px;
+        height: 40px;
+        width: 40px;
+        margin-top: 10px
+
+    }
+
+    .yulan {
+        font-size: 24px;
+        color: gray;
+        line-height: 60px;
+        height: 45px;
+        position: absolute;
+        margin-left: 10px;
+    }
+
+    .cordMain {
+        position: absolute;
+        left: 10px;
+        bottom: 67.50px;
+        height: 187.5px;
+        width: 187.5px;
+    }
+
+    .beijing {
+        position: absolute;
+        left: 0px;
+        top: 0px;
+        height: 225px;
+        width: 100%;
+        background-color: rgba(0, 0, 0, 0.3);
+    }
+
+    .imgset {
+        margin-top: -18px;
+    }
+
+    .lookover {
+        position: absolute;
+        margin: auto;
+        left: 0px;
+        right: 0px;
+        bottom: 0px;
+        top: 0px;
+
+    }
+
+    .nactive {
+        display: none;
+    }
+
+    .price, .nprice, .npaycord, .paycord, .tmpname, .ntmpname {
+        display: none;
+    }
+
+    .datedesc {
+        display: block;
+        line-height: 30px;
+        padding-left: 3px;
+        cursor: pointer;
+    }
+
+    #selectDate {
+        position: absolute;
+        width: 90px;
+        height: 150px;
+        top: 130px;
+        left: 100px;
+        border: 1px solid black;
+        background-color: white;
+    }
+
+    .selectDateadd {
+        display: none;
+    }
+
+    #Main {
+        width: 100%;
+        height: auto;
+        background-color: white;
+    }
+
+    p {
+        margin-top: 0.8em;
+        margin-bottom: 0.8em;
+    }
+
+    .use {
+        font-size: 21px;
+        line-height: 70px;
+        background-color: #66ade9;
+
+    }
+
+    .buy {
+        font-size: 21px;
+        line-height: 60px;
+        background-color: #ff5466;
+    }
+</style>
+<div class="main">
+    <form action="" method="post" class="form-horizontal form">
+        <div class="panel panel-default">
+            <!-- <div class="panel-heading">系统设置</div> -->
+            <div class="panel-body">
+
+                <div class="form-group">
+                    <label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label">商城配送方式</label>
+                    <div class="col-xs-12 col-sm-8">
+                        <div class="input-group">
+                            <label class="radio radio-inline">
+                                <input type="radio" name="deliverytype" value="0" {if intval($merchant['deliverytype'])==0}checked="checked"{/if}> 无
+                            </label>
+
+                            <label class="radio radio-inline">
+                                <input type="radio" name="deliverytype" value="1" {if intval($merchant['deliverytype'])==1 }checked="checked"{/if}> 快递+自提
+                            </label>
+                            <label class="radio radio-inline">
+                                <input type="radio" name="deliverytype" value="2" {if intval($merchant['deliverytype'])==2 }checked="checked"{/if}> 快递+送货上门
+                            </label>
+                            <label class="radio radio-inline">
+                                <input type="radio" name="deliverytype" value="3" {if intval($goods['deliverytype'])==3 }checked="checked"{/if}> 自提+送货上门
+                            </label>
+                            <label class="radio radio-inline">
+                                <input type="radio" name="deliverytype" value="4" {if intval($merchant['deliverytype'])==4 }checked="checked"{/if}> 快递
+                            </label>
+                            <label class="radio radio-inline">
+                                <input type="radio" name="deliverytype" value="5" {if intval($merchant['deliverytype'])==5 }checked="checked"{/if}> 送货上门
+                            </label>
+                            <label class="radio radio-inline">
+                                <input type="radio" name="deliverytype" value="6" {if intval($merchant['deliverytype'])==6 }checked="checked"{/if}> 自提
+                            </label>
+                            <label class="radio radio-inline">
+                                <input type="radio" name="deliverytype" value="7" {if intval($merchant['deliverytype'])==7}checked="checked"{/if}> 快递+自提+送货上门
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <input type="submit" name="submit" value="提交" class="btn btn-primary col-lg-1" style="float: left;position: relative;top: -10px;left:95px;">
+        <input type="hidden" name="token" value="{$_W['token']}" />
+    </form>
+</div>
+
+
+{php include wl_template('common/footer');}

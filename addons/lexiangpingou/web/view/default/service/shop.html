@@ -1,0 +1,886 @@
+{php include wl_template('common/header');}
+<ul class="nav nav-tabs">
+
+    <li {if $_GPC['op'] == 'display' || $_GPC['op'] == ''}class="active"{/if}><a href="{php echo web_url('service/shop/display/');}">多商户列表</a></li>
+    <li {if $_GPC['op'] == 'post'}class="active"{/if}><a href="{php echo web_url('service/shop/post');}">新增</a></li>
+    <li {if $_GPC['op'] == 'batch'}class="active"{/if}><a href="{php echo web_url('service/shop/batch');}">续费</a></li>
+</ul>
+{if $_GPC['op'] == 'display'}
+<div class="panel panel-info">
+    <div class="panel-heading">筛选</div>
+    <div class="panel-body">
+        <form action="./index.php" method="get" class="form-horizontal" role="form">
+            <input type="hidden" name="c" value="site"/>
+            <input type="hidden" name="a" value="entry"/>
+            <input type="hidden" name="m" value="lexiangpingou"/>
+            <input type="hidden" name="do" value="service"/>
+            <input type="hidden" name="ac" value="shop"/>
+            <input type="hidden" name="op" value="display"/>
+
+            <div class="form-group col-xs-12">
+                <label class="col-sm-2 col-md-2 control-label">公众号名称</label>
+                <div class=" col-sm-4 col-md-4 ">
+                    <input class="form-control" name="uniacidname" id="" type="text" value="{$_GPC['uniacidname']}"
+                           placeholder="可模糊查询公众号名称">
+                </div>
+                <label class="col-sm-2 col-md-1  control-label">功能名称</label>
+                <div class="col-sm-4 col-md-4 ">
+                    <input class="form-control" name="functionname" id="" type="text" value="{$_GPC['functionname']}"
+                           placeholder="可模糊查询功能名称">
+                </div>
+                <div class="col-md-1">
+                    <button class="btn btn-default min-width"><i class="fa fa-search"></i> 搜索</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<div class="panel panel-default">
+    <div class="table-responsive">
+        <table class="table table-hover">
+            <thead>
+            <tr>
+                <th style="width:30%;">公众号名称</th>
+                <th class="text-center" style="width:20%;">商户上限</th>
+                <th class="text-center" style="width:20%;">剩余商户数</th>
+                <th class="text-center" style="width:30%;">到期时间</th>
+                <th class="text-center" style="width:20%;text-align: center;">操作</th>
+            </tr>
+            </thead>
+            <tbody>
+            {loop $account $item}
+            <tr data-toggle="popover" data-trigger="hover" data-placement="left" class="js-goods-img">
+
+                <td class="line-feed">
+                    {php echo cutstr($item['name'], 30, true);}
+                </td>
+                <td class="text-center">
+                    <span class="label label-info">{php echo cutstr($item['merchant_num'], 30, true);}</span>
+
+                </td>
+                <td class="text-center">
+                    <span class="label label-info">{php echo cutstr($item['merchant_new'], 30, true);}</span>
+
+                </td>
+                <td class="text-center">
+                    <span class="label label-danger">{if !empty($item['expire_time'])}{php echo date('Y-m-d H:i:s' , $item['expire_time'])}{/if}</span>
+                </td>
+
+                <td class="text-center" style="text-align: center;">
+                    <!--{if checkstr($_W['user']['perms'],'shop.post')}-->
+                    <a href="{php echo web_url('service/shop/buy_history' , array('uniacid' => $item['uniacid']));}" class="">购买详情</a>
+                    <!--<br>-->
+                    <!--{/if}-->
+                    <!--{if checkstr($_W['user']['perms'],'shop.renewal')}-->
+                    <!--<a href="{php echo web_url('goods/goods', array('op' => 'sendnotice','id' => $goods['id'],'type'=>1))}"-->
+                    <!--class="upjia">续费通知</a>- -->
+                    <!--{/if}-->
+                    <!--{if checkstr($_W['user']['perms'],'shop.reduction')}-->
+                    <!--<a href="{php echo web_url('goods/goods', array('op' => 'sendnotice','id' => $goods['id'],'type'=>2))}"-->
+                    <!--class="downjia">降价通知</a>-->
+                    <!--{/if}-->
+                </td>
+            </tr>
+            {/loop}
+
+            </tbody>
+        </table>
+    </div>
+</div>
+
+{$pager}
+{/if}
+
+{if $_GPC['op'] == 'buy_history'}
+
+<div class="main">
+
+    <div class="panel panel-default">
+        <div class="panel-body table-responsive">
+            <form method="post">
+                <table class="table table-hover">
+                    <thead class="navbar-inner">
+                    <tr>
+                        <th style="width:30%;">购买批次</th>
+                        <th class="text-center" style="width:20%;">购买商户数</th>
+                        <th class="text-center" style="width:20%;">剩余商户数</th>
+                        <th class="text-center" style="width:30%;">购买时间/天</th>
+                        <th class="text-center" style="width:30%;">到期时间</th>
+                        <th class="text-center" style="width:20%;text-align: center;">操作</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {loop $list $item}
+
+                    <tr data-toggle="popover" data-trigger="hover" data-placement="left" class="js-goods-img">
+
+                        <td class="line-feed">
+                            {php echo cutstr($item['merchant_batch'], 30, true);}
+                        </td>
+                        <td class="text-center">
+                            <span class="label label-info">{php echo cutstr($item['merchant_num'], 30, true);}</span>
+
+                        </td>
+                        <td class="text-center">
+                            <span class="label label-warning">{php echo cutstr($item['merchant_stock'], 30, true);}</span>
+
+                        </td>
+                        <td class="text-center">
+                            <span class="label label-success">{php echo cutstr($item['addtime'], 30, true);}</span>
+
+                        </td>
+                        <td class="text-center">
+                            <span class="label label-danger">{if !empty($item['endtime'])}{php echo date('Y-m-d H:i:s' , $item['endtime'])}{else}已到期{/if}</span>
+                        </td>
+                        <td class="text-center" style="text-align: center;">
+                            <a href="{php echo web_url('service/shop/batch' , array('uniacid' => $item['uniacid'] , 'batch' => $item['merchant_batch']));}" class="">续费</a>
+                        </td>
+                    </tr>
+                    {/loop}
+                    {if empty($list)}
+                    <tr>
+                        <td colspan="8" class="text-center" style="text-align: center">
+                            <span style="color:red;font-weight: 700;font-size:18px;">暂无购买记录</span>
+                        </td>
+                    </tr>
+                    {elseif $pager > 0}
+                    <tr><td colspan="7">{$pager}</td></tr>
+                    {/if}
+
+                    </tbody>
+                </table>
+            </form>
+        </div>
+    </div>
+</div>
+
+{/if}
+
+{if $_GPC['op'] == 'post'}
+<div class="clearfix">
+    <style>
+        .label1 {
+            display: block;
+            float: left;
+            width: 16%;
+            text-align: left;
+        }
+
+        datalist {
+            height: 6em;
+            overflow: scroll;
+        }
+
+        .message_by_ajax div span {
+            margin-left: 10px;
+        }
+
+        #publicName {
+            display: block;
+            width: 100%;
+            text-align: center;
+        }
+
+        #publicName .message_by_ajax {
+            display: -webkit-inline-box;
+        }
+
+        #publicName .message_by_ajax div {
+            margin: 0 10px;
+        }
+    </style>
+    <div class="panel panel-info">
+        <div class="panel-heading">多商户购买</div>
+        <form action="" method="post" class="form-horizontal form" id="form" style="overflow: hidden; padding: 10px">
+            <div class="form-group">
+                <label for="firstname" class="col-sm-2 control-label">请选择公众号</label>
+                <div class="col-sm-5"> 
+                    <input id="publicNum" name="publicNum" value="{$_GPC['uniacid']}" class="form-control" type="text" required placeholder="suib"/>    
+                </div>
+                <div id="publicbtn" class="col-sm-4"></div>  
+                <div id="publicName"></div>
+            </div>
+            <div class="form-group">
+                <label for="firstname" class="col-sm-2 control-label">申请人</label>
+                <div class="col-sm-8">
+                    <input id="salename" required name="salename" type="text" class="form-control"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="firstname" class="col-sm-2 control-label">申请添加商户数</label>
+                <div class="col-sm-8">
+                    <input id="merchant_num" name="merchant_num" type="number" class="form-control"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="firstname" class="col-sm-2 control-label">申请添加短信条数</label>
+                <div class="col-sm-8">
+                    <input id="smsnum" name="smsnum" type="number" class="form-control"/>
+                </div>
+            </div>
+            <div style="clear:both;">
+                <div style="display:none;">
+                    <label><input id="year" name="year" type="text" list="yearlist" autocomplete="false">年</label>
+                    <label><input id="months" name="month" type="text" list="monthlist" autocomplete="false">月</label>
+                    <label><input id="day" name="day" type="text" list="daylist" autocomplete="false">日</label>
+                </div>
+                <div style="display:none;">
+                    <label><input id="hour" name="hour" type="text" list="hourlist" autocomplete="false">时</label>
+                    <label><input id="minute" name="minute" type="text" list="minutelist" autocomplete="false">分</label>
+                    <label><input id="second" name="second" type="text" list="secondlist" autocomplete="false">秒</label>
+                </div>
+                <div class="form-group">
+                    <label for="firstname" class="col-sm-2 control-label">多商户购买时间</label>
+                    <!--<div class="col-sm-4">-->
+                        <!--<div class="input-group">-->
+                            <!--<input id="month" name="month" type="number" class="form-control"/>-->
+                            <!--<span class="input-group-addon">月</span>-->
+                        <!--</div>-->
+                    <!--</div>-->
+                    <div class="col-sm-8">
+                        <div class="input-group">
+                            <input id="day" name="day" type="number" class="form-control"/>
+                            <span class="input-group-addon">天</span>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="firstname" class="col-sm-2 control-label">是否开通https</label>
+                <div class="col-sm-2 control-label">
+                    <input id="" required name="is_https" value="1" type="radio" />开通
+                    <input id="" required name="is_https" value="0" type="radio" checked />不开通
+                </div>
+                <label for="firstname" class="col-sm-2 control-label">是否开通多商户</label>
+                <div class="col-sm-2 control-label">
+                    <input id="" required name="is_merchant" value="1"  type="radio"  />开通
+                    <input id="" required name="is_merchant" value="0"  type="radio" checked />不开通
+                </div>
+                <!--<label for="firstname" class="col-sm-2 control-label">是否开通小程序</label>-->
+                <!--<div class="col-sm-2 control-label">-->
+                    <!--<input id="" required name="is_applet" value="1"  type="radio" />开通-->
+                    <!--<input id="" required name="is_applet" value="0"  type="radio" checked />不开通-->
+                <!--</div>-->
+            </div>
+            <!-- <div class="form-group">
+                <label for="firstname" class="col-sm-2 control-label">是否开通小程序</label>
+                <div class="col-sm-8">
+                    <input id="" required name="is_applet" {if $acc['is_applet'] == '1'}checked{/if} type="radio" />开通
+                    <input id="" required name="is_applet" {if $acc['is_applet'] != '1'}checked{/if} type="radio" />不开通
+                </div>
+            </div> -->
+            <div class="col-xs-2" style="float: right;right: 15%;">
+                <input type="submit" name="submit" value="提交" class="btn btn-primary col-lg-10"/>
+                <input type="hidden" name="token" value="{$_W['token']}"/>
+            </div>
+        </form>
+    </div>
+    <datalist id="yearlist" style="display:none;">
+    </datalist>
+    <datalist id="monthlist" style="display:none;">
+    </datalist>
+    <datalist id="monthslist" name="monthslist" style="display:none;">
+        <option value="1">1</option>
+        <option value="3">3</option>
+        <option value="6">6</option>
+        <option value="9">9</option>
+        <option value="12">12</option>
+        <option value="18">18</option>
+        <option value="24">24</option>
+    </datalist>
+    <datalist id="daylist" style="display:none;">
+    </datalist>
+    <datalist id="hourlist" style="display:none;">
+    </datalist>
+    <datalist id="minutelist" style="display:none;">
+    </datalist>
+    <datalist id="secondlist" style="display:none;">
+    </datalist>
+    <script>
+        var yearlist = document.getElementById("yearlist");
+        var monthlist = document.getElementById("monthlist");
+        var daylist = document.getElementById("daylist");
+        var hourlist = document.getElementById("hourlist");
+        var minutelist = document.getElementById("minutelist");
+        var secondlist = document.getElementById("secondlist");
+        var year = document.getElementById("year");
+        var months = document.getElementById("months");
+        var day = document.getElementById("day");
+        var hour = document.getElementById("hour");
+        var minute = document.getElementById("minute");
+        var second = document.getElementById("second");
+        var date = new Date();
+        var datetime = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+        var publicNum = document.getElementById("publicNum");
+        var functionValue = document.getElementById("functionValue");
+        var check = document.getElementsByClassName("check");
+        var form1 = document.getElementById("form");
+        var submitForm = document.getElementById("submitForm");
+
+        console.log(check.length);
+        function functionValues() {
+            var len = check.length;
+            var str = '';
+            for (var i = 0; i < len; i++) {
+                if (check[i].checked) {
+                    str += check[i].value + ',';
+                }
+            }
+            functionValue.value = str.slice(0, -1);
+        }
+        publicNum.value = '';
+        year.value = '';
+        months.value = '';
+        day.value = '';
+        hour.value = '';
+        minute.value = '';
+        second.value = '';
+        for (var i = 0; i < 3; i++) {
+            var option = document.createElement("option");
+            option.value = date.getFullYear() + i;
+            yearlist.appendChild(option);
+        }
+
+        year.onblur = function () {
+
+            months.value = '';
+            day.value = '';
+            hour.value = '';
+            minute.value = '';
+            second.value = '';
+            var monthlist = document.getElementById("monthlist");
+            if (year.value == date.getFullYear()) {
+                monthlist.innerHTML = '';
+                daylist.innerHTML = '';
+                hourlist.innerHTML = '';
+                minutelist.innerHTML = '';
+                secondlist.innerHTML = '';
+                var month = date.getMonth();
+                for (var i = month + 1; i < 13; i++) {
+                    var option = document.createElement("option");
+                    option.value = i;
+                    monthlist.appendChild(option);
+                }
+            }
+            else {
+                monthlist.innerHTML = '';
+                daylist.innerHTML = '';
+                hourlist.innerHTML = '';
+                minutelist.innerHTML = '';
+                secondlist.innerHTML = '';
+                for (var i = 1; i < 13; i++) {
+                    var option = document.createElement("option");
+                    option.value = i;
+                    monthlist.appendChild(option);
+                }
+            }
+        }
+
+        months.onblur = function () {
+            day.value = '';
+            hour.value = '';
+            minute.value = '';
+            second.value = '';
+            if (year.value == date.getFullYear() && months.value == date.getMonth() + 1) {
+                daylist.innerHTML = '';
+                hourlist.innerHTML = '';
+                minutelist.innerHTML = '';
+                secondlist.innerHTML = '';
+                for (var i = date.getDate() + 1; i < datetime[date.getMonth() + 1] + 1; i++) {
+                    var option = document.createElement("option");
+                    option.value = i;
+                    daylist.appendChild(option);
+                }
+            }
+            else if ((year.value == date.getFullYear() && months.value > date.getMonth() + 1) || (year.value > date.getFullYear())) {
+                daylist.innerHTML = '';
+                hourlist.innerHTML = '';
+                minutelist.innerHTML = '';
+                secondlist.innerHTML = '';
+                for (var i = 1; i < datetime[Number(months.value) - 1] + 1; i++) {
+                    var option = document.createElement("option");
+                    option.value = i;
+                    daylist.appendChild(option);
+                }
+            }
+        }
+
+        day.onblur = function () {
+            hour.value = '';
+            minute.value = '';
+            second.value = '';
+            hourlist.innerHTML = '';
+            minutelist.innerHTML = '';
+            secondlist.innerHTML = '';
+            for (var i = 1; i < 25; i++) {
+                var option = document.createElement("option");
+                option.value = i;
+                hourlist.appendChild(option);
+            }
+        }
+
+        hour.onblur = function () {
+            minute.value = '';
+            second.value = '';
+            minutelist.innerHTML = '';
+            secondlist.innerHTML = '';
+            for (var i = 1; i < 61; i++) {
+                var option = document.createElement("option");
+                option.value = i;
+                minutelist.appendChild(option);
+            }
+        }
+        minute.onblur = function () {
+            second.value = '';
+            secondlist.innerHTML = '';
+            for (var i = 1; i < 61; i++) {
+                var option = document.createElement("option");
+                option.value = i;
+                secondlist.appendChild(option);
+            }
+        }
+
+        var publicNum = document.getElementById("publicNum");
+        var publicName = document.getElementById("publicName");
+        var publicbtn = document.getElementById("publicbtn");
+        var id;
+        publicNum.onblur = function (ev) {
+            var url = "{php echo web_url('service/shop/ajax');}"
+            id = ev.target.value;
+            postAjax(id, url);
+
+        }
+
+        function postAjax(id, url) {
+            var formData = new FormData();
+            formData.append('id', id);
+            var xhr = new XMLHttpRequest();
+            xhr.open('post', url, true);
+            xhr.send(formData);
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState == 4) {
+                    if ((xhr.status >= 200 && xhr.status < 300) || xhr.status == 304) {
+                        // publicName.textContent = xhr.responseText;
+                        var data = xhr.responseText;
+                        data = JSON.parse(data);
+                        var is_applet = data.is_applet;
+                        var is_https = data.is_https;
+                        var is_merchant = data.is_merchant;
+                        var vip = data.vip;
+                        is_https == '1' ? $('input[name="is_https"]')[0].checked = true : $('input[name="is_https"]')[1].checked = true;
+                        is_applet == '1' ? $('input[name="is_applet"]')[0].checked = true : $('input[name="is_applet"]')[1].checked = true;
+                        is_merchant == '1' ? $('input[name="is_merchant"]')[0].checked = true : $('input[name="is_merchant"]')[1].checked = true;
+                        publicName.innerHTML = '<div class="message_by_ajax">' +
+                            '<div>公众号名称:<span>' + data.name + '</span></div>' +
+                            '<div>多商户到期时间:<span>' + data.expire_time + '</span></div>' +
+                            '<div>VIP到期时间:<span>' + data.endtime + '</span></div>' +
+                            '<div>商户总数:<span>' + data.merchant_num + '</span></div>' +
+                            '<div>剩余商户数:<span>' + data.merchant_now + '</span></div>' +
+                            '<div>可用短信数:<span>' + data.smsnum + '</span></div>' +
+                            '</div>';
+                        if(is_merchant == '1') {
+                            var is_merchant_html ='<div>'+
+                                '<a class="btn btn-default" onclick="merchant(this)">多商户立即到期</a>'+
+                             '</div>';
+                            publicbtn.innerHTML = is_merchant_html;
+                        }
+                        if(vip == '1') {
+                            var is_vip_html ='<div>'+
+                                '<a class="btn btn-default" onclick="vip(this)">vip立即到期</a>'+
+                             '</div>';
+                            publicbtn.innerHTML = is_vip_html; 
+                        }
+                        if(is_merchant == '1' && vip == '1') { 
+                            var both_html = '<div class="col-sm-5">'+
+                                '<a class="btn btn-default" onclick="merchant(this)">多商户立即到期</a>'+
+                             '</div>'+
+                             '<div class="col-sm-6">'+
+                                '<a class="btn btn-default" onclick="vip(this)">vip立即到期</a>'+
+                             '</div>';
+                            publicbtn.innerHTML = both_html;
+                        }
+                    }
+                    else {
+                        console.log("cuowu");
+                    }
+                }
+            }
+        }
+        $('form').submit(function() {
+            if($('input[name="salename"]').val == ''){
+                util.tips('请填写申请人');
+                return false;
+            }
+        })
+        function Merchant (uniacid,status) {
+            var applicant = $('input[name="salename"]').val();
+            if(applicant != '') {
+                $.post("{php echo web_url('service/shop/expire')}",{uniacid:uniacid,status:status},function (res) {
+                    console.log(res)
+                    if(status) {
+                       window.postAjax(id,"{php echo web_url('service/shop/ajax');}");
+                    }
+                })
+            }else{
+                util.tips('请填写申请人')
+            }
+        }
+        function merchant () {
+            window.Merchant(id,'1')
+        }
+        function vip() {
+            window.Merchant(id,'2')
+        }
+    </script>
+</div>
+{/if}
+
+{if $_GPC['op'] == 'batch'}
+<div class="clearfix">
+    <style>
+        .label1 {
+            display: block;
+            float: left;
+            width: 16%;
+            text-align: left;
+        }
+
+        datalist {
+            height: 6em;
+            overflow: scroll;
+        }
+
+        .message_by_ajax div span {
+            margin-left: 10px;
+        }
+
+        #publicName {
+            display: block;
+            width: 100%;
+            text-align: center;
+        }
+
+        #publicName .message_by_ajax {
+            display: -webkit-inline-box;
+        }
+
+        #publicName .message_by_ajax div {
+            margin: 0 10px;
+        }
+    </style>
+    <div class="panel panel-info">
+        <div class="panel-heading">多商户购买</div>
+        <form action="" method="post" class="form-horizontal form" id="form" style="overflow: hidden; padding: 10px">
+            <div class="form-group">
+                <label for="firstname" class="col-sm-2 control-label">请选择公众号</label>
+                <div class="col-sm-5">
+                    <input id="publicNum" name="publicNum" value="{$_GPC['uniacid']}" class="form-control" type="text" />
+                </div>
+                <div id="publicbtn" class="col-sm-4"></div>
+                <div id="publicName"></div>
+            </div>
+            <div class="form-group">
+                <label for="firstname" class="col-sm-2 control-label">申请人</label>
+                <div class="col-sm-8">
+                    <input id="salename" required name="salename" type="text" class="form-control"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="firstname" class="col-sm-2 control-label">申请续费批次编号</label>
+                <div class="col-sm-8">
+                    <input id="batch" name="batch" type="text" value="{$_GPC['batch']}" class="form-control"/>
+                </div>
+            </div>
+            <div style="clear:both;">
+                <div style="display:none;">
+                    <label><input id="year" name="year" type="text" list="yearlist" autocomplete="false">年</label>
+                    <label><input id="months" name="month" type="text" list="monthlist" autocomplete="false">月</label>
+                    <label><input id="day" name="day" type="text" list="daylist" autocomplete="false">日</label>
+                </div>
+                <div style="display:none;">
+                    <label><input id="hour" name="hour" type="text" list="hourlist" autocomplete="false">时</label>
+                    <label><input id="minute" name="minute" type="text" list="minutelist" autocomplete="false">分</label>
+                    <label><input id="second" name="second" type="text" list="secondlist" autocomplete="false">秒</label>
+                </div>
+                <div class="form-group">
+                    <label for="firstname" class="col-sm-2 control-label">多商户购买时间</label>
+                    <!--<div class="col-sm-4">-->
+                        <!--<div class="input-group">-->
+                            <!--<input id="month" name="month" type="number" class="form-control"/>-->
+                            <!--<span class="input-group-addon">月</span>-->
+                        <!--</div>-->
+                    <!--</div>-->
+                    <div class="col-sm-8">
+                        <div class="input-group">
+                            <input id="day" name="day" type="number" class="form-control"/>
+                            <span class="input-group-addon">天</span>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <div class="col-xs-2" style="float: right;right: 15%;">
+                <input type="submit" name="submit" value="提交" class="btn btn-primary col-lg-10"/>
+                <input type="hidden" name="token" value="{$_W['token']}"/>
+            </div>
+        </form>
+    </div>
+    <datalist id="yearlist" style="display:none;">
+    </datalist>
+    <datalist id="monthlist" style="display:none;">
+    </datalist>
+    <datalist id="monthslist" name="monthslist" style="display:none;">
+        <option value="1">1</option>
+        <option value="3">3</option>
+        <option value="6">6</option>
+        <option value="9">9</option>
+        <option value="12">12</option>
+        <option value="18">18</option>
+        <option value="24">24</option>
+    </datalist>
+    <datalist id="daylist" style="display:none;">
+    </datalist>
+    <datalist id="hourlist" style="display:none;">
+    </datalist>
+    <datalist id="minutelist" style="display:none;">
+    </datalist>
+    <datalist id="secondlist" style="display:none;">
+    </datalist>
+    <script>
+        var yearlist = document.getElementById("yearlist");
+        var monthlist = document.getElementById("monthlist");
+        var daylist = document.getElementById("daylist");
+        var hourlist = document.getElementById("hourlist");
+        var minutelist = document.getElementById("minutelist");
+        var secondlist = document.getElementById("secondlist");
+        var year = document.getElementById("year");
+        var months = document.getElementById("months");
+        var day = document.getElementById("day");
+        var hour = document.getElementById("hour");
+        var minute = document.getElementById("minute");
+        var second = document.getElementById("second");
+        var date = new Date();
+        var datetime = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+        var publicNum = document.getElementById("publicNum");
+        var functionValue = document.getElementById("functionValue");
+        var check = document.getElementsByClassName("check");
+        var form1 = document.getElementById("form");
+        var submitForm = document.getElementById("submitForm");
+
+        console.log(check.length);
+        function functionValues() {
+            var len = check.length;
+            var str = '';
+            for (var i = 0; i < len; i++) {
+                if (check[i].checked) {
+                    str += check[i].value + ',';
+                }
+            }
+            functionValue.value = str.slice(0, -1);
+        }
+//        publicNum.value = '';
+        year.value = '';
+        months.value = '';
+        day.value = '';
+        hour.value = '';
+        minute.value = '';
+        second.value = '';
+        for (var i = 0; i < 3; i++) {
+            var option = document.createElement("option");
+            option.value = date.getFullYear() + i;
+            yearlist.appendChild(option);
+        }
+
+        year.onblur = function () {
+
+            months.value = '';
+            day.value = '';
+            hour.value = '';
+            minute.value = '';
+            second.value = '';
+            var monthlist = document.getElementById("monthlist");
+            if (year.value == date.getFullYear()) {
+                monthlist.innerHTML = '';
+                daylist.innerHTML = '';
+                hourlist.innerHTML = '';
+                minutelist.innerHTML = '';
+                secondlist.innerHTML = '';
+                var month = date.getMonth();
+                for (var i = month + 1; i < 13; i++) {
+                    var option = document.createElement("option");
+                    option.value = i;
+                    monthlist.appendChild(option);
+                }
+            }
+            else {
+                monthlist.innerHTML = '';
+                daylist.innerHTML = '';
+                hourlist.innerHTML = '';
+                minutelist.innerHTML = '';
+                secondlist.innerHTML = '';
+                for (var i = 1; i < 13; i++) {
+                    var option = document.createElement("option");
+                    option.value = i;
+                    monthlist.appendChild(option);
+                }
+            }
+        }
+
+        months.onblur = function () {
+            day.value = '';
+            hour.value = '';
+            minute.value = '';
+            second.value = '';
+            if (year.value == date.getFullYear() && months.value == date.getMonth() + 1) {
+                daylist.innerHTML = '';
+                hourlist.innerHTML = '';
+                minutelist.innerHTML = '';
+                secondlist.innerHTML = '';
+                for (var i = date.getDate() + 1; i < datetime[date.getMonth() + 1] + 1; i++) {
+                    var option = document.createElement("option");
+                    option.value = i;
+                    daylist.appendChild(option);
+                }
+            }
+            else if ((year.value == date.getFullYear() && months.value > date.getMonth() + 1) || (year.value > date.getFullYear())) {
+                daylist.innerHTML = '';
+                hourlist.innerHTML = '';
+                minutelist.innerHTML = '';
+                secondlist.innerHTML = '';
+                for (var i = 1; i < datetime[Number(months.value) - 1] + 1; i++) {
+                    var option = document.createElement("option");
+                    option.value = i;
+                    daylist.appendChild(option);
+                }
+            }
+        }
+
+        day.onblur = function () {
+            hour.value = '';
+            minute.value = '';
+            second.value = '';
+            hourlist.innerHTML = '';
+            minutelist.innerHTML = '';
+            secondlist.innerHTML = '';
+            for (var i = 1; i < 25; i++) {
+                var option = document.createElement("option");
+                option.value = i;
+                hourlist.appendChild(option);
+            }
+        }
+
+        hour.onblur = function () {
+            minute.value = '';
+            second.value = '';
+            minutelist.innerHTML = '';
+            secondlist.innerHTML = '';
+            for (var i = 1; i < 61; i++) {
+                var option = document.createElement("option");
+                option.value = i;
+                minutelist.appendChild(option);
+            }
+        }
+        minute.onblur = function () {
+            second.value = '';
+            secondlist.innerHTML = '';
+            for (var i = 1; i < 61; i++) {
+                var option = document.createElement("option");
+                option.value = i;
+                secondlist.appendChild(option);
+            }
+        }
+
+        var publicNum = document.getElementById("publicNum");
+        var publicName = document.getElementById("publicName");
+        var publicbtn = document.getElementById("publicbtn");
+        var id;
+        publicNum.onblur = function (ev) {
+            var url = "{php echo web_url('service/shop/ajax');}"
+            id = ev.target.value;
+            postAjax(id, url);
+
+        }
+
+        function postAjax(id, url) {
+            var formData = new FormData();
+            formData.append('id', id);
+            var xhr = new XMLHttpRequest();
+            xhr.open('post', url, true);
+            xhr.send(formData);
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState == 4) {
+                    if ((xhr.status >= 200 && xhr.status < 300) || xhr.status == 304) {
+                        // publicName.textContent = xhr.responseText;
+                        var data = xhr.responseText;
+                        data = JSON.parse(data);
+                        var is_applet = data.is_applet;
+                        var is_https = data.is_https;
+                        var is_merchant = data.is_merchant;
+                        var vip = data.vip;
+                        publicName.innerHTML = '<div class="message_by_ajax">' +
+                            '<div>公众号名称:<span>' + data.name + '</span></div>' +
+                            '<div>多商户到期时间:<span>' + data.expire_time + '</span></div>' +
+                            '<div>VIP到期时间:<span>' + data.endtime + '</span></div>' +
+                            '<div>商户总数:<span>' + data.merchant_num + '</span></div>' +
+                            '<div>剩余商户数:<span>' + data.merchant_now + '</span></div>' +
+                            '<div>可用短信数:<span>' + data.smsnum + '</span></div>' +
+                            '</div>';
+                        if(is_merchant == '1') {
+                            var is_merchant_html ='<div>'+
+                                '<a class="btn btn-default" onclick="merchant(this)">多商户立即到期</a>'+
+                                '</div>';
+                            publicbtn.innerHTML = is_merchant_html;
+                        }
+                        if(vip == '1') {
+                            var is_vip_html ='<div>'+
+                                '<a class="btn btn-default" onclick="vip(this)">vip立即到期</a>'+
+                                '</div>';
+                            publicbtn.innerHTML = is_vip_html;
+                        }
+                        if(is_merchant == '1' && vip == '1') {
+                            var both_html = '<div class="col-sm-5">'+
+                                '<a class="btn btn-default" onclick="merchant(this)">多商户立即到期</a>'+
+                                '</div>'+
+                                '<div class="col-sm-6">'+
+                                '<a class="btn btn-default" onclick="vip(this)">vip立即到期</a>'+
+                                '</div>';
+                            publicbtn.innerHTML = both_html;
+                        }
+                    }
+                    else {
+                        console.log("cuowu");
+                    }
+                }
+            }
+        }
+        $('form').submit(function() {
+            if($('input[name="salename"]').val == ''){
+                util.tips('请填写申请人');
+                return false;
+            }
+        })
+        function Merchant (uniacid,status) {
+            var applicant = $('input[name="salename"]').val();
+            if(applicant != '') {
+                $.post("{php echo web_url('service/shop/expire')}",{uniacid:uniacid,status:status},function (res) {
+                    console.log(res)
+                    if(status) {
+                        window.postAjax(id,"{php echo web_url('service/shop/ajax');}");
+                    }
+                })
+            }else{
+                util.tips('请填写申请人')
+            }
+        }
+        function merchant () {
+            window.Merchant(id,'1')
+        }
+        function vip() {
+            window.Merchant(id,'2')
+        }
+    </script>
+</div>
+{/if}
+
+{php include wl_template('common/footer');}

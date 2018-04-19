@@ -1,0 +1,713 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="initial-scale=1.0,maximum-scale=1.0,minimum-scale=1,user-scalable=no">
+    <meta content="yes" name="apple-mobile-web-app-capable">
+    <meta content="black" name="apple-mobile-web-app-status-bar-style">
+    <meta content="telephone=no" name="format-detection">
+    <meta content="email=no" name="format-detection">
+    <title>和{$tousers['name']}的对话</title>
+    <link rel="stylesheet" href="{TG_URL_ARES}static/newui/css/reset.css"/>
+    <link rel="stylesheet" href="{TG_URL_ARES}static/newui/css/style.css"/>
+	<link rel="stylesheet" href="{TG_URL_ARES}/emoji/emoji.css"/>
+	<link rel="stylesheet" href="{TG_URL_ARES}static/iconfont/iconfont.css"/>
+	<link rel="stylesheet" href="{TG_URL_ARES}static/css/jquery-weui.min.css"/>
+	{php echo register_jssdk(false);}
+    <script>
+        var deviceWidth = document.documentElement.clientWidth;
+        document.documentElement.style.fontSize = deviceWidth / 7.5 + 'px';
+    </script>
+	<style>
+	.hide{
+		display:none;
+	}
+	.blackbg {
+		position: fixed;
+		top: 0;
+		left: 0;
+		right: 0;
+		bottom: 0;
+		background: #000;
+		opacity: 0.3;
+		z-index: 9998;
+	}
+	.alerts{ width:6rem;position: fixed; top: 15%;left:0.75rem; z-index:9999;background:#fff;border-radius:0.15rem;}
+	.alert{ width: auto; position: relative; top: 0;}
+	.alert-close{font-size:0.5rem;padding:0.1rem 0.2rem;text-align:right;}
+	.alert-content{padding:0 0.2rem;text-align:center;}
+	.alert-content img{max-width:100%;}
+
+	.fsz {
+		position: fixed;
+		z-index: 12;
+		left: 35%;
+		font-size: 0.3rem;
+		color: #fff;
+		width: 30%;
+		text-align: center;
+		top: 45%;
+		height:50px;
+		line-height:50px;
+		background:#000;
+		opacity:0.4;
+		border-radius:10px;
+	}
+        #imgB{
+            position: fixed;
+            z-index:10086;
+            top:0;
+            left: 0;
+            background: #000;
+            display: none;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+        }
+        #imgB img{
+            width: 100%;
+            box-sizing: border-box;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translateX(-50%) translateY(-50%);
+        }
+    @media only screen and (max-width: 320px) {
+        #imgB img {
+            box-sizing: border-box;
+            position: absolute;
+            top: 20%;
+            left: 0;
+            width: 100%;
+            transform: translateX(-100%) translateY(-100%);
+        }
+    }
+    #div {
+    	overflow: hidden;
+    	box-sizing: border-box;
+    	padding:10px;
+    	padding-bottom: 0;
+		width: 100%;
+		height: 20%;
+		font-size: 12px;
+		background-color: #fff;
+		font-family: "Helvetica Neue",Helvetica,sans-serif;
+		position: relative;
+	}
+    #div .images_wrapper {
+    	display: inline-block;
+		width: 25%;
+		height: 80%;
+    }
+    #div .images_wrapper img{
+    	object-fit: cover;
+    	width: 100%;
+    	height: 100%;
+    }
+
+    #div .inline{
+		display: inline-block;
+    }
+    #div .name {
+    	vertical-align: top;
+    	margin-left: 10px;
+    	width: 70%;
+    	text-overflow: ellipsis;
+    	overflow: hidden;
+    	white-space: nowrap;
+		font-size: 14px;
+    }
+    #div .pirce_and_num {
+    	display: inline-block;
+    	position: absolute;
+    	top: 35px;
+    	left: 95px;
+    	align-items: center;
+    	font-size: 0;
+    }
+    #div .pirce_and_num .price span{
+    	font-size: 14px;
+    	font-weight: 700;
+    	color:#e4393c;;
+    }
+	
+   	#div .pirce_and_num .tuan{
+   		color: #666;
+   		font-size: 12px;
+   	}
+   	#div .url {
+		position: absolute;
+		bottom: 10px;
+		right: 10px;
+   	}
+
+   	#div .url span {
+   		display: inline-block;
+		padding: 0px 10px;
+   		line-height: 20px;
+		white-space: nowrap;
+   		border-radius: 15px;
+   		box-shadow:  0 0 2px #aaa;
+   		border: 1px solid #e4393c;
+   		color: #e4393c;
+   		text-align: center;
+   		font-size: 12px;
+   	}
+	.chat-content{
+		padding: 0;
+	}
+	</style>
+</head>
+
+<body class="chat" style="background-color:{$setting['bgcolor']};">
+
+	{if $_W['fans']['follow'] != 1 && $setting['isshowwgz'] == 1}
+	<div class="alerts">
+		<div class="alert">
+			<div class="alert-close"><span class="iconfont">&#xe736;</span></div>
+			<div class="alert-content">
+				<img src="{php echo tomedia($setting['followqrcode']);}" />
+			</div>
+			<div style="font-size:0.35rem;text-align:center;padding-bottom:0.2rem;">{$setting['unfollowtext']}</div>
+		</div>
+	</div>
+	{/if}
+
+	{if $cservice['iskefuqrcode'] == 1}
+	<div class="alerts hide kefuqrcodediv">
+		<div class="alert">
+			<div class="alert-close"><span class="iconfont">&#xe736;</span></div>
+			<div class="alert-content" style="padding-bottom:0.2rem;">
+				<img src="{php echo tomedia($cservice['kefuqrcode']);}" />
+			</div>
+		</div>
+	</div>
+	{/if}
+
+	{if ($_W['fans']['follow'] != 1 && $setting['isshowwgz'] == 1) || $cservice['iskefuqrcode'] == 1}
+	<div class="blackbg {if $cservice['iskefuqrcode'] == 1}hide{/if}"></div>
+	{/if}
+
+	<!--录音区域-->
+	<div class="mask hide"></div>
+	<div class="fsz hide">消息发送中</div>
+    <div class="fix fx-audio hide">
+        <i class="audio-start bigvoice"></i>
+        <p>按住此区域语音</p>
+    </div>
+	<!--消息内容-->
+
+    <div class="chat-content" id="messagelist" style="-webkit-overflow-scrolling:touch;">
+		{if !empty($shop)}
+		<div data-name="" id="div" >
+			<div class="images_wrapper">
+				<img src="{$shop['img']}" alt="">
+			</div>
+			<div class="name inline">
+				<span id="shop_name" value="{$shop['name']}">{$shop['name']}</span>
+			</div>
+			<div class="pirce_and_num">
+				<div class="price inline">
+					<span>￥</span>
+					<span>{$shop['tprice']}</span>
+				</div>
+				<div class="tuan inline">
+					<span>/</span>
+					<span>{$shop['last_number']}</span>
+					<span>人团</span>
+				</div>
+			</div>
+			<div class="url inline">
+				<span id="submit_url">发送宝贝链接</span>
+
+			</div>
+			<input type="hidden" name="" value="{$shop['url']}" id="shop_url">
+		</div>
+		{/if}
+	<div class="main" style="padding: 0.2rem">
+		<div class="chat-msg">
+			<div class="time" style="display: none">客服在线时间：{$cservice['starthour']}点至{$cservice['endhour']}点</div>
+			{if $cservice['autoreply']}
+			<div class="msg left clear">
+				<div class="nick-img">
+					<img src="{php echo tomedia($cservice['thumb']);}" />
+				</div>
+				<div class="nick-text">
+					<div class="txt-con">
+						{$cservice['autoreply']}
+					</div>
+				</div>
+			</div>
+			{/if}
+		</div>
+		{if $chatcon}
+			{loop $chatcon $row}
+			<div class="chat-msg">
+				<div class="time">{php echo date('Y-m-d H:i:s',$row['time'])}</div>
+				{if $row['openid'] != $openid}
+				<div class="msg left clear">
+				{else}
+				<div class="msg right clear">
+				{/if}
+					<div class="nick-img">
+						<img src="{$row['avatar']}" alt=""/>
+					</div>
+					<div class="nick-text">
+						<div class="txt-con">
+							{if $row['type'] == 3 || $row['type'] == 4}
+							<img src="{$row['content']}" onclick="showbigimga(this.src);" style="max-width:100%;"  />
+							{elseif $row['type'] == 5 || $row['type'] == 6}
+								<span class="audio-msg voiceplay" onclick="playvoice('{$row['content']}');"><i class="a-icon"></i></span>
+							{elseif $row['type'] == 99}
+								<a href="{php echo $this->createMobileUrl('chat',array('toopenid'=>$row['content']))}">客服转接</a>
+							{else}
+								{$row['content']}
+							{/if}
+						</div>
+					</div>
+				</div>
+			</div>
+			{/loop}
+		{/if}
+	</div>
+	</div>
+
+	<!--回复输入区域-->
+	<div class="chat-input">
+		<div class="quickandvoice">
+			<div class="quick"></div>
+			<div class="audio"></div>
+		</div>
+
+		<div class="input">
+			<textarea type="text" class="cell input-txt" id="chatcontent" placeholder="请输入咨询内容..."></textarea>
+		</div>
+
+		<div class="other">
+			<div class="jia"></div>
+			<div class="send" id="btnSend">发送</div>
+		</div>
+    </div>
+
+	<div class="showmore hide">
+		<div class="camera itemitem">
+			<div class="item">
+				<div class="photo"></div>
+				<div class="text">上传图片</div>
+			</div>
+		</div>
+		{if $cservice['iskefuqrcode'] == 1}
+		<div class="itemitem">
+			<div class="item">
+				<div class="kefuqrcode"></div>
+				<div class="text">客服微信</div>
+			</div>
+		</div>
+		{/if}
+	</div>
+
+	<!--快捷回复-->
+	<div class="quick-list hide">
+		<ul>
+			{if empty($fansauto)}
+			 <li>暂无快捷消息</li>
+			{else}
+				{loop $fansauto $fansrow}
+				<li class="autocontent">{$fansrow}</li>
+				{/loop}
+			{/if}
+		</ul>
+	</div>
+<input type="hidden" id="toopenid" value="{$toopenid}" />
+<input type="hidden" id="timestamp" value="{$timestamp}" />
+        <div id="imgB" onclick="$(this).fadeOut()">
+            <img src="" alt="">
+        </div>
+</body>
+<script src="{TG_URL_ARES}/static/newui/js/jquery-3.1.1.min.js"></script>
+<script src="{TG_URL_ARES}/static/newui/js/jquery-weui.min.js"></script>
+<script src="{TG_URL_ARES}/static/newui/js/swiper.min.js"></script>
+<script>
+    function showbigimga(src) {
+        $('#imgB').fadeIn();
+        $('#imgB img').attr('src',src);
+    }
+	var pb = $.photoBrowser({
+		items: [
+			{loop $imglist $irow}
+				"{$irow['content']}",
+			{/loop}
+		]
+	});
+	var windowHeight=$(window).height();
+	var datamsg = '';
+	var chatHeight=$(".main").height();
+	function showbigimg(){
+		pb.open();  //打开
+	}
+    $(function(){
+		$('.kefuqrcode').click(function(){
+			$('.kefuqrcodediv').removeClass('hide');
+			$('.blackbg').removeClass('hide');
+		});
+		$('.jia').click(function(){
+			$('.showmore').toggle();
+			if($('.showmore').hasClass('hide')){
+				var chatContentHeight=windowHeight-deviceWidth / 7.5*1;
+				$(".chat-content").css({"height":chatContentHeight});
+			}else{
+				var chatContentHeight=windowHeight-deviceWidth / 7.5*3.6;
+				$(".chat-content").css({"height":chatContentHeight});
+			}
+			$("body").animate({scrollTop:chatHeight},500);
+		});
+		$('.alert-close').click(function(){
+			$('.alerts').addClass('hide');
+			$('.blackbg').addClass('hide');
+		});
+		{if $cservice['isautosub'] == 0}
+		$('.quick-list li.autocontent').click(function(){
+			$.ajax({
+				 url:"{php echo app_url('chat/chat')}",
+				 type:'post',
+				 data:{
+				     op:"doMobileAddchat",
+					toopenid:$('#toopenid').val(),
+					content:$(this).text(),
+					type:1,
+				 },
+				 dataType:'json',
+				 success:function(data){
+					if(data.error == 0){
+						shuaxin();
+						$('#chatcontent').val("");
+						$('.quick-list').addClass("hide");
+					}else{
+						alert(data.msg);
+					}
+				 }
+			});
+		});
+		{else}
+		$('.quick-list li.autocontent').click(function(){
+			$('#chatcontent').val($('#chatcontent').val()+$(this).text());
+			$('.quick-list').addClass("hide");
+		});
+		{/if}
+
+        domInit();
+        //点击输入框
+        $(".input-txt").on("focus",function(){
+            setTimeout(function(){
+                $(window).scrollTop(windowHeight);
+            },300);
+        });
+
+		$(".quick").on("click",function(){
+			if($(".quick-list").hasClass("hide")){
+				$(".quick-list").removeClass("hide");
+			}else{
+				$(".quick-list").addClass("hide")
+			}
+		})
+        function escapeHtml(text) {
+            var a=text.replace(/(\&lt;)/g,"<");
+            var b=a.replace(/(\&gt;)/g,">");
+            var c=b.replace(/(\&amp;)/g,"\&");
+            var d=c.replace(/(\&quot;)/g,"\"");
+            return d;
+        }
+        $("#submit_url").on("click",function(){
+            $('.fsz').removeClass('hide');
+            var shop_name = $("#shop_name").attr("value");
+            var shop_url = $('#shop_url').val();
+            shop_url = "<a href = '"+shop_url+"'>"+shop_name+"</a>";
+            //这里发送消息
+            $.ajax({
+                url:"{php echo app_url('chat/chat');}",
+                type:'post',
+                data:{
+                    op:'doMobileAddchat',
+                    toopenid:$('#toopenid').val(),
+                    content:escapeHtml(shop_url),
+                    type:1,
+                },
+                dataType:'json',
+                success:function(data){
+                    if(data.error == 0){
+                        shuaxin();
+//                        $('#shop_url').val("");
+                    }else{
+                        alert(data.msg);
+                    }
+                    $('.fsz').addClass('hide');
+                }
+            });
+        });
+
+
+
+
+
+        //点击发送按钮
+        $(".send").on("click",function(){
+            $('.fsz').removeClass('hide');
+            //这里发送消息
+            $.ajax({
+                url:"{php echo app_url('chat/chat');}",
+                type:'post',
+                data:{
+                    op:'doMobileAddchat',
+                    toopenid:$('#toopenid').val(),
+                    content:$('#chatcontent').val(),
+                    type:1,
+                },
+                dataType:'json',
+                success:function(data){
+                    if(data.error == 0){
+                        shuaxin();
+                        $('#chatcontent').val("");
+                    }else{
+                        alert(data.msg);
+                    }
+                    $('.fsz').addClass('hide');
+                }
+            });
+        });
+
+        //录音按钮
+        $(".audio").on("click",function(){
+            $(".mask,.fx-audio").removeClass("hide");
+        });
+        //关闭弹层
+        $(".mask").on("click",function(){
+            $(".mask,.fix,.fsz").addClass("hide");
+        });
+    });
+
+	function domInit(){
+        var chatContentHeight=windowHeight-deviceWidth / 7.5*1;
+        $(".chat-content").css({"height":chatContentHeight});
+		$(".chat-content").animate({scrollTop:chatHeight},500);
+    }
+
+	shuaxin();
+	//$(".chat-content").animate({scrollTop:chatHeight},500);
+
+	function shuaxin(){
+		$.ajax({
+			 url:"{php echo app_url('chat/chat')}",
+			 type:'post',
+			 data:{
+			     op:"doMobileShuaxinchat",
+				toopenid:$('#toopenid').val(),
+				timestamp:$('#timestamp').val(),
+			 },
+			 dataType:'json',
+			 success:function(data){
+				if(data.msg != ''){
+					if(datamsg != data.msg || datamsg == ''){
+						$('#messagelist .main').append(data.msg);
+						datamsg = data.msg;
+						$(".chat-content").animate({scrollTop:chatHeight},500);
+					}
+				}
+				$('#timestamp').val(data.timestamp);
+				setTimeout("shuaxin()",3000);
+			 }
+		});
+	}
+	function playvoice(serverid){
+		wx.downloadVoice({
+			serverId: serverid,
+			success: function (res) {
+				wx.playVoice({
+					localId: res.localId, // 需要播放的音频的本地ID，由stopRecord接口获得
+				});
+			}
+		});
+	}
+</script>
+<script type="text/javascript">
+var images = {
+	localIds: [],
+};
+var voice = {
+	localId: '',
+	serverId: ''
+};
+$(function(){
+	//假设全局变量已经在外部定义
+
+	$('.bigvoice').on('touchstart', function(event){
+		$('.fx-audio p').text('松开即可完成录音');
+		event.preventDefault();
+		START = new Date().getTime();
+
+		recordTimer = setTimeout(function(){
+			wx.startRecord({
+				success: function(){
+					localStorage.rainAllowRecord = 'true';
+				},
+				cancel: function () {
+					alert('您拒绝授权录音');
+				}
+			});
+		},300);
+	});
+	//松手结束录音
+	$('.bigvoice').on('touchend', function(event){
+		$('.fx-audio p').text('请按住进行录音');
+		event.preventDefault();
+		END = new Date().getTime();
+
+		if((END - START) < 300){
+			END = 0;
+			START = 0;
+			//小于300ms，不录音
+			alert('录音时间太短');
+			clearTimeout(recordTimer);
+		}else{
+			wx.stopRecord({
+				success: function (res) {
+					voice.localId = res.localId;
+					$('.fx-audio').addClass("hide");
+					$('.mask').addClass("hide");
+					uploadVoice();
+			    },
+			    fail: function (res) {
+					alert('录音失败');
+			    }
+			});
+		}
+	});
+	//上传录音
+	function uploadVoice(){
+		//调用微信的上传录音接口把本地录音先上传到微信的服务器
+		//不过，微信只保留3天，而我们需要长期保存，我们需要把资源从微信服务器下载到自己的服务器
+		wx.uploadVoice({
+			localId: voice.localId, // 需要上传的音频的本地ID，由stopRecord接口获得
+			isShowProgressTips: 1, // 默认为1，显示进度提示
+			success: function (res) {
+				//把录音在微信服务器上的id（res.serverId）发送到自己的服务器供下载。
+				$.ajax({
+					 url:"{php echo app_url('chat/chat')}",
+					 type:'post',
+					 data:{
+					     op:"doMobileAddchat",
+						toopenid:$('#toopenid').val(),
+						content:res.serverId,
+						type:5,
+					 },
+					 dataType:'json',
+					 success:function(data){
+						if(data.error == 0){
+							shuaxin();
+						}else{
+							alert(data.msg);
+						}
+					 }
+				});
+			}
+		});
+	}
+	$('.camera').click(function(){
+		wx.chooseImage({
+			count: 3, // 最多选3张
+			sizeType: ['compressed'], // 可以指定是原图还是压缩图，默认二者都有
+			sourceType: ['album', 'camera'], // 可以指定来源是相册还是相机，默认二者都有
+			success: function(res) {
+				images.localIds = res.localIds; // 返回选定照片的本地ID列表，localId可以作为img标签的src属性显示图片
+				var i = 0; var length = images.localIds.length;
+				var upload = function() {
+					wx.uploadImage({
+						localId:'' + images.localIds[i],
+						isShowProgressTips: 1,
+						success: function(res) {
+							var serverId = res.serverId;
+							$.ajax({
+								 url:"{php echo app_url('chat/chat')}",
+								 type:'post',
+								 data:{
+								     op:"doMobileGetmedia",
+									media_id:serverId,
+								 },
+								 dataType:'json',
+								 success:function(data){
+									if (data.error == 1) {
+										alert(data.message);
+									} else {
+										$.ajax({
+											 url:"{php echo app_url('chat/chat')}",
+											 type:'post',
+											 data:{
+											     op:"doMobileAddchat",
+												toopenid:$('#toopenid').val(),
+												content:data.imgurl,
+												type:4,
+											 },
+											 dataType:'json',
+											 success:function(data){
+												if(data.error == 0){
+													shuaxin();
+												}else{
+													alert(data.msg);
+												}
+											 }
+										});
+									}
+								 }
+							});
+							//如果还有照片，继续上传
+							i++;
+							if (i < length) {
+								upload();
+							}
+						}
+					});
+				};
+				upload();
+			}
+		});
+	});
+})
+</script>
+<script type="text/javascript">
+wx.ready(function () {
+	sharedata = {
+		title: '{$setting["sharetitle"]}',
+		desc: '{$setting["sharedes"]}',
+		link: '{$setting["shareurl"]}',
+		imgUrl: '{php echo tomedia($setting["sharethumb"]);}',
+		trigger: function (res) {
+			//alert('用户点击发送给朋友');
+		},
+		success: function (res) {
+			//alert('已分享');
+		},
+		cancel: function (res) {
+			//alert('已取消');
+		},
+		fail: function (res) {
+			alert("分享失败");
+		}
+	};
+	wx.onMenuShareAppMessage(sharedata);
+	wx.onMenuShareTimeline(sharedata);
+	wx.onMenuShareQQ(sharedata);
+	wx.onMenuShareWeibo(sharedata);
+	//注册微信播放录音结束事件【一定要放在wx.ready函数内】
+	wx.onVoicePlayEnd({
+		success: function (res) {
+
+		}
+	});
+	wx.onVoiceRecordEnd({
+		complete: function (res) {
+			voice.localId = res.localId;
+			alert('录音时间已超过一分钟');
+		}
+	});
+});
+</script>
+</html>

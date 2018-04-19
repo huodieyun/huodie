@@ -1,0 +1,811 @@
+<style>
+    .input-group .form-control{
+        z-index: 0;
+    }
+    #modal-module-menus2 td{
+        overflow: inherit;
+    }
+    .chat_img_samll {
+        width: 80px;
+        height: 160px;
+        margin-right: 10px; 
+    }
+</style>
+<div class="panel panel-info">
+    <div class="panel-heading">筛选</div>
+    <div class="panel-body">
+        <div class="form-group" style="background-color: #fff;padding: 25px 0;">
+            <label class="col-xs-12 col-sm-3 col-md-2 control-label">商家选择</label>
+            <div class="col-sm-7 col-xs-12">
+                <div class='input-group'>
+                    <input type="text" name="saler" maxlength="30" value="{$_GPC['uname']}" id="saler" data-id="{$_GPC['id']}" class="form-control" readonly />
+                    <div class='input-group-btn'>
+                        <button class="btn btn-default" type="button" onclick="popwin = $('#modal-module-menus2').modal();">选择商家</button>
+                    </div>
+                </div>
+                <div class='input-group' style="margin-top: 10px;">
+                    <input type="text" name="singleno" maxlength="30" value="{$_GPC['singleno']}" id="singleno" class="form-control"/>
+                    <div class='input-group-btn'>
+                        <button class="btn btn-default" type="button">填写平台单号</button>
+                    </div>
+                </div>
+                <div id="modal-module-menus2"  class="modal fade" tabindex="-1">
+                    <div class="modal-dialog" style='width: 660px;'>
+                        <div class="modal-content">
+                            <div class="modal-header"><button style="display: none" aria-hidden="true" data-dismiss="modal" class="saler_close" type="button">×</button><h3>选择商家</h3></div>
+                            <div class="modal-body" >
+                                <div class="row">
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" name="keyword" value="" id="search-kwd2" placeholder="请输入公众号名称" />
+                                        <span class='input-group-btn'><button type="button" class="btn btn-default" onclick="search_members2();">搜索</button></span>
+                                    </div>
+                                </div>
+                                <div id="module-menus2" style="padding-top:5px;"></div>
+                            </div>
+                            <div class="modal-footer"><a href="#" class="btn btn-default" data-dismiss="modal" aria-hidden="true">关闭</a></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-2 col-xs-12"><button class="btn btn-primary searchGZH">搜索</button></div>
+            <div style="clear: both"></div>
+        </div>
+    </div>
+</div>
+<script>
+    function search_members2() {
+//        if( $.trim($('#search-kwd2').val())==''){
+//            Tip.focus('#search-kwd2','请输入关键词');
+//            return;
+//        }
+
+        $("#module-menus2").html("正在搜索....");
+        $.get("{php echo web_url('platform/platform_order',array('op'=>'supply_account'))}", {
+            keyword: $.trim($('#search-kwd2').val())
+        }, function(dat){
+            $('#module-menus2').html(dat);
+        })
+    }
+
+    //查询公众号
+    function select_member(o) {
+        $("#saler").val(o.name).attr('data-id',o.uniacid);
+        $(".saler_close").click();
+    }
+
+    //搜索按钮
+    $('.searchGZH').click(function () {
+        var id=$('#saler').attr('data-id');
+        if(!id){
+            return;
+        }
+        var uname=$('#saler').val();
+        var singleno=$('#singleno').val();
+        location.href="{php echo web_url('platform/platform_order',array('op'=>$_GPC['op'] , 'status' => $_GPC['status']))}"+'&id='+id+'&uname='+uname+'&singleno='+singleno;
+    });
+
+    //立即打款
+    $('.payNow').click(function(){
+        //暂无接口
+    })
+</script>
+<div class="order-list">
+    <div class="panel-body table-responsive collapse in" id="order-template-item-4" style="padding: 0;">
+        <button id="module-judgment" style="display:none"  class="btn btn-default" type="button" onclick="popwin = $('#modal-module-judgment').modal();">隐藏点击</button>
+
+    </div>
+
+    {if !empty($order)}
+    <div class="panel panel-default" >
+
+
+        <table class="table" style="background-color:#888">
+            <thead style="">
+            <tr>
+                <th>批次号</th>
+                <th>极限单品名称</th>
+                <th style="width: 180px;">极限单品单号</th>
+                <th style="text-align:center;">订单总价</th>
+                <th style="text-align:center;">下单时间</th>
+                <th style="text-align:center;">支付状态/时间</th>
+                <th style="text-align:center;">支付方式/单号</th>
+
+            </tr>
+            </thead>
+
+        </table>
+
+        <div class="panel-body table-responsive" style="padding: 0px;">
+            <table class="table table-bordered">
+                <tbody>
+                <tr>
+                    <td class="goods-info line-feed" style="padding-left: 10px;">{$order['pici']}</td>
+                    <td class="goods-info line-feed" style="padding-left: 10px;">{$order['gname']}</td>
+                    <td class="goods-info line-feed" style="width: 180px;padding-left: 10px;">{$order['singleno']}</td>
+                    <td class="goods-info line-feed" style="padding-left: 10px;">{$order['price']}</td>
+                    <td class="goods-info line-feed" style="padding-left: 10px;">{php echo date('Y-m-d', $order['createtime'])}</td>
+
+                    <td class="text-left">
+                        <p style="text-align: center">
+                            {if $order['uni_pay'] == '0'}<span class="label label-warning">待付款</span>{/if}
+                            {if $order['uni_pay'] != '0'}
+                            <span class="label label-info">已付款</span>
+                            支付时间 {php echo date('Y-m-d', $order['uni_paytime'])}
+                            {/if}
+
+                        </p>
+
+                    </td>
+                    <td class="text-left">
+                        {if $order['uni_pay'] != '0'}
+                        <p>{if $order['uni_paytype']==0}微信支付{/if}{if $order['uni_paytype']==1}银行卡支付{/if}</p>
+                        <p>{if $order['uni_pay'] != '0'}支付单号 {$order['uni_payno']}{/if}</p>
+                        {/if}
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div  class="panel-footer js-remark" {if empty($order['remark'])}style="display: none;"{/if} style="background-color:white;color:#428bca;">
+        买家备注:{$order['remark']}
+    </div>
+</div>
+{/if}
+
+{if empty($list)}
+<div style="text-align: center;padding: 100px 0;" class="panel panel-default">暂无数据~</div>
+{else}
+    <div class="panel panel-default" >
+
+        <table class="table" style="background-color:#888">
+            <thead style="">
+            <tr>
+                <th>交易订单号</th>
+                <th style="text-align:center;">供应价</th>
+                <th style="text-align:center;">订单状态</th>
+                <th style="text-align:center;">购买数量</th>
+                <th style="text-align:center;">操作</th>
+            </tr>
+            </thead>
+
+            <!--</table>-->
+
+            <div class="panel-body table-responsive" style="padding: 0px;">
+                <!--<table class="table table-bordered">-->
+                <tbody style="background-color: #fff">
+                {loop $list $item}
+                <tr>
+                    <td class="goods-info line-feed" style="padding-left: 10px;overflow: inherit">
+                        交易：{$item['orderno']}<br>
+                        平台：{$item['singleno']}
+                    </td>
+                    <td class="goods-info line-feed" style="padding-left: 10px;">{$item['oprice']}</td>
+                    <td>
+                        <p style="text-align: center">
+                            {if $item['platform_status'] == '0'}
+                                <span class="label label-warning" style="display: inline-block;margin-top: 5px">待审核</span>
+                            {elseif $item['platform_status'] == '1' && $item['supply_status'] == '0'}
+                                <span class="label label-info" style="display: inline-block;margin-top: 5px">待发货</span>
+                            {elseif $item['platform_status'] == '1' && $item['supply_status'] == '1'}
+                                <span class="label label-success" style="display: inline-block;margin-top: 5px">已发货</span>
+                            {elseif $item['platform_status'] == '1' && $item['supply_status'] == '2'}
+                                <span class="label label-success" style="display: inline-block;margin-top: 5px">已签收</span>
+                            {elseif $item['platform_status'] == '-1'}
+                                <span class="label label-danger" style="display: inline-block;margin-top: 5px">拒绝发货</span>
+                            {/if}
+                            <br>
+                            {if $item['refund'] == '1'}
+                            <span class="label label-warning" style="display: inline-block;margin-top: 5px">商家申请退款</span>
+                            {/if}
+                            {if $item['refund'] == '2' && $item['shop_refund_orderid'] <= 0 && $_GPC['ac'] != 'supply_order'}
+                            <span class="label label-danger" style="display: inline-block;margin-top: 5px">平台待打款</span>
+                            {/if}
+                            {if $item['refund'] == '2' && $item['shop_refund_orderid'] > 0}
+                            <span class="label label-success" style="display: inline-block;margin-top: 5px">平台已退款商家</span><br>
+                            {/if}
+                            {if $item['refund'] == '2' && $item['shop_refund_orderid'] > 0 && $item['supply_refund_orderid'] <= 0 && $_GPC['ac'] == 'platform_order'}
+                            <span class="label label-danger" style="display: inline-block;margin-top: 5px">待申请打款</span><br>
+                            {/if}
+                            {if $item['refund'] == '2' && $item['supply_refund_orderid'] > 0 && $_GPC['ac'] != 'shop_order'}
+                            <span class="label label-danger" style="display: inline-block;margin-top: 5px">供货商待打款</span>
+                            {/if}
+                            {if $item['refund'] == '-1'}
+                            <span class="label label-danger" style="display: inline-block;margin-top: 5px">拒绝退款</span>
+                            {/if}
+                        </p>
+                    </td>
+                    <td>{$item['num']}</td>
+                    <td style="text-align: center">
+                        <a onclick="ajaxdetail({$item['id']})" data-id="{$item['id']}" href="javascript:;">查看详情</a><br/>
+                        {if $item['uni_pay'] == '2' && $_GPC['ac'] == 'shop_order'}
+                        <a onclick="openSQ({$item['id']})" data-id="{$item['id']}" href="javascript:;">申请退款</a><br>
+                        {elseif $item['refund'] == '1' && $_GPC['ac'] == 'platform_order'}
+                        <a onclick="openSH({$item['id']},{$item['price']})" href="javascript:;">退款审核</a>
+                        {/if}
+                    </td>
+                </tr>
+                {/loop}
+                </tbody>
+            </div>
+        </table>
+
+        <div  class="panel-footer js-remark" {if empty($item['remark'])}style="display: none;"{/if} style="background-color:white;color:#428bca;">
+        买家备注:{$item['remark']}
+    </div>
+    <div class="panel-footer js-admin-remark{$item['id']} " order-id="{$item['id']}" {if empty($item['adminremark'])}style="display: none;"{/if} style="background-color:lightgoldenrodyellow">
+    卖家备注：<span id="js-admin-remark{$item['id']}" style="">{$item['adminremark']}</span>
+    </div>
+    </div>
+{/if}
+</div>
+{$pager}
+
+{if !empty($_GPC['id'])}
+<div style="text-align: right"><button type="button" class="btn btn-default payNow">立即打款</button></div>
+{/if}
+</div>
+<!--退款-->
+<div class="modal-backdrop fade in" style="display: none"></div>
+<div id="modal-refund" class="modal fade in" tabindex="-1" role="dialog" aria-hidden="false" style="display:none;width: 600px; margin: 0px auto; padding-right: 17px;">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button onclick="$('#modal-refund,.modal-backdrop').fadeOut();" aria-hidden="true" data-dismiss="modal" class="close" type="button">×</button>
+                <h3>退款</h3>
+            </div>
+            <div class="modal-body">
+                <div class="form-group" style="height: 70px;">
+                    <label class="col-xs-12 col-sm-3 col-md-2 control-label">原因说明</label>
+                    <div class="col-sm-9">
+                        <input class="form-control" id="refund_res" name="refund_res" placeholder="请填写退款原因">
+                    </div>
+                </div>
+
+                <div class="form-group" style="height: 200px;margin-top: 30px;">
+                    <label class="col-xs-12 col-sm-3 col-md-2 control-label">截图凭据</label>
+                    <div class="col-sm-9">
+                        {php echo tpl_form_field_multi_image('refund_imgs');}
+                        <span class="help-block">请上传聊天截图凭据</span>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer" style="border-top: 0">
+                <button onclick="refund()" class="btn btn-success js-refund1">提交申请</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="modal-refund1" class="modal fade in" tabindex="-1" role="dialog" aria-hidden="false" style="display:none;width: 600px; margin: 0px auto; padding-right: 17px;">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button onclick="$('#modal-refund1,.modal-backdrop').fadeOut();" aria-hidden="true" data-dismiss="modal" class="close" type="button">×</button>
+                <h3>退款审核</h3>
+            </div>
+            <div class="modal-body">
+                <div class="form-group" style="height: 60px;">
+                    <label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label">结果</label>
+                    <div class="col-xs-12 col-sm-8">
+                        <div class="input-group">
+                            <label style="margin: 0" class="radio radio-inline">
+                                <input type="radio" name="success" value="2" checked>通过
+                            </label>
+                            <label class="radio radio-inline">
+                                <input type="radio" name="success" value="-1">不通过
+                            </label>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group" style="height: 70px;">
+                    <label class="col-xs-12 col-sm-3 col-md-2 control-label">原因说明</label>
+                    <div class="col-sm-9">
+                        <input class="form-control" id="refund_res1" name="reason" placeholder="请填写退款原因">
+                    </div>
+                </div>
+                <div class="form-group" style="height: 70px;">
+                    <label class="col-xs-12 col-sm-3 col-md-2 control-label">退款金额</label>
+                    <div class="col-sm-9">
+                        <input class="form-control oprice" name="refund_res" value="" readonly>
+                    </div>
+                </div>
+
+            </div>
+            <div class="modal-footer" style="border-top: 0">
+                <button onclick="refund1(this)" class="btn btn-success js-refund11">提交申请</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    //加载商品详情
+    function ajaxdetail(id) {
+        $.get("{php echo web_url('platform' , array('ac' => $_GPC['ac'] , 'op' => 'detail' , 'id' => $item['id']))}",{"id":id},function(res){
+            var data=JSON.parse(res);
+            if(data.status==1){
+                var data=data.data;
+                $('.detail').fadeIn();
+//                util.tips(data.data);
+                $('.orderno').html(data.orderno);//商家单号
+                $('.singleno').html(data.singleno);//平台单号
+                $('#newaddress').html(data.province + " " + data.city + " " + data.county + " " + data.address+","+data.realname+","+data.mobile);//地址和收货人信息
+                var supplyStatus='',orderStatusContent='';
+                if(data.supply_status=='2'){
+                    supplyStatus='已签收';
+                    orderStatusContent='买家已签收。';
+                } else if(data.supply_status=='1'){
+                    supplyStatus='待收货';
+                    orderStatusContent='供应商已发货。';
+                } else if(data.platform_status=='1'){
+                    supplyStatus='待发货';
+                    orderStatusContent='买家下单并支付，供应商待发货。。';
+                } else if(data.order.uni_pay=='2'){
+                    supplyStatus='已付款';
+                    orderStatusContent='商家下单并支付。';
+                } else if(data.order.uni_pay=='1'){
+                    supplyStatus='部分付款';
+                    orderStatusContent='商家下单并支付部分。';
+                } else if(data.order.uni_pay=='0'){
+                    supplyStatus='待付款';
+                    orderStatusContent='商家下单，未支付。';
+                    $('.price_title').html('应付总金额');
+                }
+                $('#order_status_text span').html(supplyStatus);//订单状态
+                $('#order_status_content').html(orderStatusContent);
+                $('.b.big').html('￥'+data.refund_price);//退款金额
+                $('.text-currency.a').html('￥'+Number(data.oprice).toFixed(2));//商品单价
+                $('.freight_price').html('￥'+Number(data.freight).toFixed(2));//运费
+                // $('.refund_price').html('￥'+Number(data.refund_price).toFixed(2));//退款
+                $('.order-model-detail .goodsname').text(data.goodsname);//商品名
+                $('.order-model-detail .optionname').text(data.optionname);//规格名
+                if (data.optionname == "") {
+                    $('.order-model-detail .optionname').parents('h5').hide();
+                }
+                $('.order-model-detail .num').text(data.num);//商品数量
+                $('.fare').html('￥'+(Number(data.freight)).toFixed(2));
+                $('.uni_payno').html(data.order.uni_payno);
+                $('.uni_payprice').html(data.order.uni_payprice);
+                $('.shop_accountname').html(data.shop_accountname)
+                var _html = '';
+                if(data.refund_imgs.length != 0) {
+                    for(var i = 0,len = data.refund_imgs.length;i < len; i++) {
+                        _html += '<img class="chat_img_samll" src='+data.refund_imgs[i]+' alt="聊天截图'+i+'" onmouseover="$(this).next().show()" onmouseout="$(this).next().hide()">'
+                            +'<img style="display: none;position: fixed;top: 12%;left: 55%;width: 20%;z-index: 500" src='+data.refund_imgs[i]+' alt="聊天截图放大">'
+                    }
+                    $('.chat_img').html(_html);
+                } else {
+                    $('.chat_img').html('<span>暂无聊天截图</span>')
+                }
+                if(data.order.uni_pay=='0'){
+                    $('.b.big').html('￥'+data.price);//应付金额
+                }
+                $('.refund_reason').html(data.refund_reason);//退款原因
+            }else{
+                util.tips(data.data);
+                return false;
+            }
+        })
+    }
+    //打开退款申请界面
+    function openSQ(id){
+        $('.modal-backdrop,#modal-refund').show();
+        $('.js-refund1').attr('data-id',id);
+    }
+    //打开退款审核界面
+    function openSH(id,oprice){
+        $('.modal-backdrop,#modal-refund1').show();
+        $('.js-refund11').attr('data-id',id);
+        $('input.oprice').val(oprice);
+    }
+
+    //退款事件
+    function refund() {
+        var refund_reason=$('#refund_res').val();
+        var id=$('.js-refund1').attr('data-id');
+        var data={
+            "id":id,
+            "refund_reason":refund_reason
+        };
+        if(refund_reason==''){
+            util.tips('请填写退款原因');
+            return false;
+        }
+        if($('input[name="refund_imgs[]"]').length<=0){
+            util.tips('请上传图片');
+            return false;
+        }
+        for(var i=0;i<$('input[name="refund_imgs[]"]').length;i++){
+            var keya='img['+i+']';
+            data[keya]=$('input[name="refund_imgs[]"]')[i].value;
+        }
+        $.post("{php echo web_url('platform/shop_order/refund');}",data,function(res){
+            var data=JSON.parse(res);
+            if(data.status==1){
+                util.tips(data.message);
+                setTimeout(function(){location.reload()},1000)
+            }else{
+                util.tips(data.message);
+                return false;
+            }
+        })
+    }
+    //退款审核
+    function refund1(self){
+        if($('#modal-refund1 input:checked').val()=='-1'&&$('input[name="reason"]').val()==''){
+            util.tips('请填写原因');
+            return false;
+        }
+        $.post("{php echo web_url('platform/platform_order/refund_review')}",
+            {
+                id:$(self).attr('data-id'),
+                status:$('#modal-refund1 input:checked').val(),
+                platform_reason:$('input[name="reason"]').val(),
+                refund_price:$('input.oprice').val()
+            },
+            function(res){
+                var data = JSON.parse(res);
+                if (data.status == 1) {
+                    util.tips(data.message);
+                    setTimeout(function () {
+                        location.reload()
+                    }, 1000)
+                } else {
+                    util.tips(data.message);
+                }
+            })
+    }
+
+</script>
+<style type="text/css">
+    .rank img{width:16px; height:16px;}
+    ul.order-process li {float : left; width : 20%; text-align : center; overflow : hidden;}
+    ul.order-process li p {margin-bottom : 10px;}
+    ul.order-process .order-process-time {color : #CCC;}
+    ul.order-process .order-process-state {color : #999;}
+    ul.order-process .square {display : inline-block; width : 20px; height : 20px; border-radius : 10px; background-color : #E6E6E6; color : #FFF;font-style : normal; position : absolute; left : 50%; z-index : 2; top : 50%; margin : -10px 0 0 -10px;}
+    ul.order-process .square.finish{padding-top:2px; padding-right:2px;}
+    ul.order-process .bar {position : relative; height : 20px;}
+    ul.order-process .bar:after {content : " "; display : block; width : 100%; height : 4px; background-color : #E6E6E6; position : absolute; top : 50%; margin-top : -2px; z-index : 1;}
+    ul.order-process li:first-child .bar:after {margin-left : 50%;}
+    ul.order-process li:last-child .bar:after {margin-left :-50%;}
+    ul.order-process .active .square,ul.order-process .active .bar:after {background-color : #80CCFF;}
+    ul.order-process .active .order-process-state {color : #80CCFF;}
+    .order-detail-info>div{margin-bottom:10px; padding-left:15px;}
+    .page-trade-order h4{font-size:14px; font-weight:700;}
+    .page-trade-order .form-group{margin-bottom:0;}
+    .page-trade-order .form-group .control-label{font-weight:normal; color:#999;}
+    .page-trade-order .order-infos{border-right:1px solid #ddd;}
+    .page-trade-order .parting-line{height:1px;border-top:1px dashed #e5e5e5; margin:3px 0;}
+    .page-trade-order .order-state{padding-left:40px; position:relative; margin:20px 0 40px;}
+    .page-trade-order .order-state>span{color:#07d; position:absolute; left:0; top:5px; font-size:25px; display:inline-block; width:30px; height:30px; border:1px solid #07d; border-radius:30px; text-align:center; line-height:30px;}
+    #close-order ul li{padding:5px 15px; cursor:pointer;}
+    #close-order ul li:hover{background:#eee;}
+    .fix a.js-order-edit-address{display:none; color:red;}
+    .fix:hover a.js-order-edit-address{display:inline;}
+    .page-trade-order .col-sm-9{word-break: break-word; overflow:hidden;}
+    .text-center{ text-align: center !important;}
+</style>
+
+<!--订单概况 start-->
+<!--<div class="panel-body clearfix" style="background-color: rgba(0,0,0,0.7);position: fixed;top: 0;left: 0;width: 100%;height: 100%;display: none">-->
+<!--<form class="form-horizontal" role="form" style="background-color: #fff;position: absolute;top: 10%;left: 17%;z-index: 10;">-->
+<div class="page-trade-order detail" onclick="$(this).fadeOut()" style="background-color: rgba(0,0,0,0.7);position: fixed;top: 0;left: 0;width: 100%;height: 100%;display: none">
+    <div class="order-list"  style="background-color: #fff;position: absolute;top: 10%;left: 17%;z-index: 10;width: 60%">
+        <div class="freight-content">
+            <div class="freight-template-item panel panel-default">
+                <div class="panel-body clearfix">
+                    <form class="form-horizontal" role="form">
+                        <div class="col-xs-12 col-sm-6 order-infos">
+                            <h4>订单信息</h4>
+                            <div class="form-group clearfix">
+                                <label class="col-md-3 control-label">平台订单编号 ：</label>
+                                <div class="col-md-9 form-control-static singleno"></div>
+                            </div>
+                            <div class="form-group clearfix">
+                                <label class="col-md-3 control-label">商家订单编号：</label>
+                                <div class="col-md-9 form-control-static orderno"></div>
+                            </div>
+                            {if $item['selltype']==7}
+                            <?php
+								$master_order=pdo_fetch("select * from ".tablename('tg_order')." where master_orderno=:master_orderno",array(':master_orderno'=>$item['orderno']));
+                            ?>
+                            <div class="form-group clearfix">
+                                <label class="col-md-3 control-label">补款编号：</label>
+                                <div class="col-md-9 form-control-static">
+
+
+                                    {$master_order['orderno']}
+                                </div>
+                            </div>
+                            <div class="form-group clearfix">
+                                <label class="col-md-3 control-label">微信补款编号：</label>
+                                <div class="col-md-9 form-control-static">
+
+
+                                    {$master_order['transid']}
+                                </div>
+                            </div>
+                            {/if}
+                            <!--<div class="form-group clearfix">-->
+                            <!--<label class="col-md-3 control-label">微信单号：</label>-->
+                            <!--<div class="col-md-9 form-control-static">-->
+                            <!--{$item['transid']}-->
+                            <!--</div>-->
+                            <!--</div>-->
+                            <div class="form-group clearfix">
+                                <label class="col-md-3 control-label">付款类型：</label>
+                                <div class="col-md-9 form-control-static">
+                                    在线支付
+                                </div>
+                            </div>
+                            <!--<div class="form-group clearfix">
+                                <label class="col-md-3 control-label">支付流水：</label>
+                                <div class="col-md-9 form-control-static">
+                                    {$item['price']}元
+                                </div>
+                            </div>-->
+                            <div class="form-group clearfix hidden" >
+                                <label class="col-md-3 control-label">付款方式：</label>
+                                <div class="col-md-9 form-control-static">
+                                    微信支付
+                                </div>
+                            </div>
+                            <div class="form-group clearfix hidden">
+                                <label class="col-md-3 control-label">买家：</label>
+                                <div class="col-md-9 form-control-static">
+                                    非粉丝
+                                </div>
+                            </div>
+                            <!--<div class="parting-line"></div>-->
+                            <!--<div class="form-group clearfix">-->
+                            <!--<label class="col-md-3 control-label">配送方式：</label>-->
+                            <!--<div class="col-md-9 form-control-static">-->
+                            <!--{if $item['dispatchtype']==1}送货上门{elseif $item['dispatchtype']==2}快递{elseif $item['dispatchtype']==3}自提{/if}-->
+                            <!--</div>-->
+                            <!--</div>-->
+                            <!--<div class="form-group clearfix">-->
+                            <!--<label class="col-md-3 control-label">配送时间：</label>-->
+                            <!--<div class="col-md-9 form-control-static">-->
+                            <!--{php echo $item['senddate'].'    '.$item["sendtime"];}-->
+                            <!--</div>-->
+                            <!--</div>-->
+
+                            {if $item['dispatchtype']==2}
+                            <div class="form-group clearfix">
+                                <label class="col-md-3 control-label">物流公司：</label>
+                                <div class="col-md-9 form-control-static">
+                                    {if !empty($item['express'])} {$item['express']}{else} - {/if}
+                                </div>
+                            </div>
+                            <div class="form-group clearfix">
+                                <label class="col-md-3 control-label">物流单号：</label>
+                                <div class="col-md-9 form-control-static">
+                                    {if $item['expresssn']} {$item['expresssn']} <a href="javascript:;" express-data="{$item['express']}" express-no-data="{$item['express_no']}" class="js-logistics" id="seeFreight">[物流跟踪]</a> {else} - {/if}
+                                </div>
+                            </div>
+                            {/if}
+
+                            <div class="form-group clearfix">
+                                <label class="col-md-3 control-label">收货信息：</label>
+                                <div class="col-md-9 form-control-static fix">
+                                    <p class="js-receive-address" order-id="{$item['id']}">
+                                        <span id="newaddress"></span>
+                                    </p>
+                                </div>
+                            </div>
+
+                            <div class="parting-line"></div>
+                            <div class="form-group clearfix">
+                                <label class="col-md-3 control-label">买家留言：</label>
+                                <div class="col-md-9 form-control-static">
+                                    {$item['remark']}
+                                </div>
+                            </div>
+                            <div class="form-group clearfix" >
+                                <label class="col-md-3 control-label">退款原因：</label>
+                                <div class="col-md-9 form-control-static refund_reason">
+                                    
+                                </div>
+
+                            </div>
+                            <div class="form-group clearfix uni_payimg" style="overflow: auto;max-height: 300px;">
+                                <label class="col-md-3 control-label">聊天截图：</label>
+                                <div class="col-md-9 chat_img">
+                                    <!-- <img style="width: 100%" src="" alt="" onmouseover="$(this).next().show()" onmouseout="$(this).next().hide()"> -->
+                                    <!-- <img style="display: none;position: absolute;bottom: 0;left: 95%;width: 200%;z-index: 500" src="" alt=""> -->
+                                </div>
+                            </div>
+                </div>
+                <div class="col-xs-12 col-sm-6">
+                    <div class="order-state">
+                        <span><i class="fa fa-exclamation"></i></span>
+                        <h4>
+                            订单状态 : <span id="order_status_text" class="big"><span class="label label-success"></span></span>
+                            <h5 class="text-gray" id="order_status_content"></h5>
+
+                            <h5 class="js-cancel-reason b">
+                                如买家未在规定时间内付款，订单将自动成为已取消订单，如买家未在设置时间内确认收货，订单将自动成为已签收订单；
+                            </h5>
+                        </h4>
+                        <button onclick="$('.page-trade-order.detail').fadeOut();" style="position: absolute;top:0;right: 0;" aria-hidden="true" data-dismiss="modal" class="close" type="button">×</button>
+                    </div>
+                    <div class="form-group clearfix js-fee">
+                        <div class="col-md-offset-1 col-md-6">
+                            <div>
+                                <h5>商品单价<span class="pull-right text-currency b a"></span></h5>
+                                <h5>运费<span class="pull-right b freight_price"></span></h5>
+                                <!-- <h5>退款<span class="pull-right b refund_price"></span></h5> -->
+                                <hr>
+                                <h4><span class="big">退款金额：</span><span class="pull-right text-currency b big"></span><p></p></h4>
+
+                            </div>
+                        </div>
+                    </div>
+                    <!--<div class="parting-line"></div>-->
+                    <!--<div class="form-group clearfix" style="margin-top: 7px;">-->
+                    <!--<label class="col-md-offset-1 col-md-3 " style="color: #999; width: 20%;">卖家备注：</label>-->
+                    <!--<div class="col-md-8 js-admin-remark" style="padding: 0;">-->
+                    <!--</div>-->
+                    <!--</div>-->
+                </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+<div class="modal in" id="order-remark-container" style="display: none;">
+    <div class="modal-dialog">
+        <div class="modal-content" style="height: 300px;">
+            <div class="modal-header">
+                <button type="button" class="close"><span id="close">×</span></button>
+                <h4 class="modal-title">修改地址</h4>
+            </div>
+            <div class="modal-body" >
+                <div class="form-group">
+                    <label class="col-md-3 control-label">收件人地址</label>
+                    <div class="col-md-8 form-control-static">
+                        <input class="form-control address" type="text" value="{$item['address']}" id="address" style="width: 400px;">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-3 control-label">收件人姓名</label>
+                    <div class="col-md-8 form-control-static">
+                        <input class="form-control" type="text" value="{$item['addname']}" id="realname" style="width: 400px;">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-3 control-label">收件人电话</label>
+                    <div class="col-md-8 form-control-static">
+                        <input class="form-control" type="text" value="{$item['mobile']}" id="mobile" style="width: 400px;">
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer" style="padding: 5px 15px;">
+                <a class="btn btn-default js-cancel">取消</a>
+                <a class="btn btn-primary js-order-remark-post" order-id="">确定</a>
+            </div>
+        </div>
+    </div>
+</div>
+<!--立即打款弹窗-->
+<div class="paydetail" style="z-index: 10;position: fixed;top: 0;left: 0;background-color: rgba(0,0,0,0.7); width: 100%;height: 100%;display: none">
+    <div class="panel panel-default" style="position: absolute;top: 15%;left: 25%;width: 50%">
+        <div class="panel-heading">打款请填写打款单号和打款时间并上传流水详情图
+            <a onclick="$('.paydetail').fadeOut()" style="cursor:pointer; float:right; margin-right:10px; font-weight:bold;" href="javascript:;">X</a>
+        </div>
+        <div class="panel-body">
+            <div class="panel-body">
+                <div class="form-group" style="height: 60px;">
+                    <label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label">付款方式</label>
+                    <div class="col-xs-12 col-sm-8">
+                        <div class="input-group">
+                            <label style="margin: 0;" class="radio radio-inline" onclick="$('.wx').css('display','none');$('.card').css('display','block');$('.sqfh').attr('disabled','')">
+                                <input type="radio" name="uni_paytype" value="1" checked>银行卡
+                            </label>
+                            <!--<label class="radio radio-inline" onclick="wx_pay();$('.sqfh').attr('disabled','disabled')">-->
+                            <!--<input type="radio" name="uni_paytype" value="0" >微信-->
+                            <!--</label>-->
+                        </div>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="form-group" style="height: 60px;">
+                        <label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label">支付金额</label>
+                        <div class="col-md-8">
+                            <input type="number" name="uni_payprice" class="form-control" value="" readonly/>
+                        </div>
+                    </div>
+                    <div class="form-group" style="height: 60px;">
+                        <label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label">银行流水单号</label>
+                        <div class="col-md-8">
+                            <input type="text" name="uni_payno" class="form-control" value=""/>
+                        </div>
+                    </div>
+                    <div class="form-group" style="height: 60px;">
+                        <label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label">打款时间</label>
+                        <div class="col-md-8">
+                            <?php if(!$paytime) $paytime = TIMESTAMP ?>
+                            {php echo tpl_form_field_date('paytime', date('Y-m-d H:i:s', $paytime),true);}
+                            <!--<input type="date" name="paytime" class="form-control" value=""/>-->
+                        </div>
+                    </div>
+                    <div class="form-group" style="height: 145px;">
+                        <label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label">银行流水详情图</label>
+                        <div class="col-md-8">
+                            {php echo tpl_form_field_image('uni_payimg');}
+                            <!--<span class="help-block">34图片建议为640X300</span>-->
+                        </div>
+                    </div>
+                </div>
+                <!--<div class="form-group" style="height: 30px;">-->
+                <!--<label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label">备注</label>-->
+                <!--<div class="col-md-8">-->
+                <!---->
+                <!--</div>-->
+                <!--</div>-->
+            </div>
+        </div>
+        <div class="panel-footer" style="height: 60px">
+            <input onclick="sqfh(this)" type="submit" name="submit" value="提交" class="btn btn-primary col-lg-1 sqfh" style="float: right;">
+        </div>
+    </div>
+</div>
+<script>
+    $('.order-list').click(function (event) {
+        event.stopPropagation();
+    })
+    $('.payNow').click(function(){
+        $.get("{php echo web_url('platform/platform_order/shop_refund_submit')}",{id:"{$_GPC['id']}"},function(res){
+            var data=JSON.parse(res);
+            if(data.status==1){
+                $('.paydetail').show();
+                $('input[name="uni_payprice"]').attr('data-money',data.price).val(data.price);
+            }else{
+                util.tips('无可打款项目');
+                return;
+            }
+        })
+    });
+
+    //申请发货
+    function sqfh(self) {
+        if ($('input[name="uni_payno"]').val() == '') {
+            util.tips('请填写银行流水单号');
+            return false;
+        }
+        if ($('input[name="uni_payimg"]').val() == '') {
+            util.tips('请上传银行流水详情图');
+            return false;
+        }
+        if ($('input[name="paytime"]').val() == '') {
+            util.tips('请填写打款时间');
+            return false;
+        }
+        $.post(
+            "{php echo web_url('platform/platform_order/shop_refund_check_submit');}",
+            {
+                id: "{$_GPC['id']}",
+                uni_paytype: 1,
+                price: $('input[name="uni_payprice"]').val(),
+                uni_payno: $('input[name="uni_payno"]').val(),
+                uni_payimg: $('input[name="uni_payimg"]').val(),
+                paytime:$('input[name="paytime"]').val()
+            },
+            function (res) {
+                var data = JSON.parse(res);
+                if (data.status == 1) {
+                    util.tips('提交成功');
+                    setTimeout(function () {
+                        location.reload();
+                    }, 1000)
+                } else {
+                    util.tips('提交失败');
+                }
+            }
+        )
+    }
+</script>
+

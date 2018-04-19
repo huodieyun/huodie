@@ -1,0 +1,21 @@
+{php include wl_template('common/header');}
+<style>
+	iframe{
+		width: 100%;
+		height: 3em;
+		border: none;
+		overflow-x : hidden; 
+		overflow-y : hidden;
+	}
+</style>
+<div class="clearfix">
+	<h4>正在退款中,请勿关闭...</h4>
+	{loop $threadUrlArray $url}
+	<iframe src="{$url}"  ></iframe>
+	{/loop}
+</div>
+<div class="clearfix">
+	<a class="btn btn-primary" href="{php echo web_url('order/refund')}">返回</a>
+	如果出现隐藏线程，请返回重新处理！
+</div>
+{php include wl_template('common/footer');}

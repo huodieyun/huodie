@@ -1,0 +1,354 @@
+{php include wl_template('common/header');}
+<link rel="stylesheet" href="//cdn.bootcss.com/weui/1.1.1/style/weui.min.css">
+<link rel="stylesheet" href="//cdn.bootcss.com/jquery-weui/1.0.1/css/jquery-weui.min.css">
+<script type="text/javascript" src="{TG_URL_ARES}weiui/jquery-weui.min.js"></script>
+<script src="{TG_URL_ARES}weiui/city-picker.min.js"></script>
+<style>
+    body{
+        background: #fff;
+        overflow: inherit;
+    }
+    /*总分类*/
+    .fenLei{
+        min-height:100% ;
+        background: #fff;
+        position: fixed;
+        width: 100%;
+        height: 100%;
+        top:0;
+        left: 0;
+    }
+    .fenlei_title{
+        /*background: #fafafa;*/
+        /*text-align: center;*/
+        /*padding: 10px;*/
+        position: fixed;
+        width: 96%;
+        top:0;
+        z-index: 10;
+        left: 0;
+        /*font-size: 20px;*/
+        /*border-bottom: 1px solid #ddd;*/
+    }
+    .fenlei_title a{
+        position: absolute;
+        right: 20px;
+        top: 10px;
+        font-size: 25px;
+    }
+    .fenleiDetail{
+        display: none;
+    }
+    .bottombarr .fenlei i{
+        background-position: -96px 0!important;
+    }
+    .bottombarr a.cur span{
+        color: #e02e23;
+        opacity: 0.9;
+    }
+    .fenlei_content{
+        width: 35%;
+        /*float: left;*/
+        position: fixed;
+        left: 0;
+        top:90px;
+        overflow-y: auto;
+        height: 80%;
+        background: #fafafa;
+        font-size: 14px;
+    }
+    .fenlei_content a.active{
+        color: #e02e23;
+        background: #fff;
+    }
+    .fenlei_content .active .weui-cell_access .weui-cell__ft:after{
+        border-color:#e02e23 ;
+    }
+    .fenlei_text{
+        width: 60%;
+        /*float: left;*/
+        position: fixed;
+        left: 40%;
+        top:90px;
+        overflow-y: auto;
+        height: 80%;
+        z-index: 5;
+        background-color: #fff;
+    }
+    .weui-grid{
+        padding: 10px 5px;
+    }
+    .weui-grid:after,.weui-grid:before,.weui-grids:before,.weui-grids:after,.weui-cell:before{
+        border: inherit;
+    }
+    .weui-grid:before{
+        border: inherit;
+    }
+    .weui-grid__label{
+        font-size: 12px;
+    }
+    .weui-cell{.choose_job_warpper  .choose_job_container .choose_job_item
+        padding: 10px;
+    }
+    .weui-grid__label{
+        color: #666;
+    }
+    /*.input-search{ margin-top:0.8em; height:auto; height:3em;margin: 5px;}*/
+    /*.input-search span{position:absolute; left:5em; right:2.9em; border:1px solid #eee;*/
+        /*-webkit-border-radius:  5px 0 0 5px;*/
+        /*-moz-border-radius: 5px 0 0 5px;*/
+        /*border-radius: 5px 0 0 5px;background-color: #fff}*/
+    /*.input-search span input{width:100%; height:40px; font-size:1.2em; border:1px solid #fcfcfc; padding:0 0.6em; box-sizing:border-box; border-radius:0; border:none; border-radius:0.4em 0 0 0.4em;}*/
+    /*.input-search button{width:3.6em; height:42px;  background:#e6e6e6!important; display:block; position:absolute; right:0em; border-radius: 0 5px 5px 0; border:none;}*/
+    /*.input-search button i{color:#999; font-size:1.5em;}*/
+    .input-search{
+        position:relative; height:3em; overflow:hidden;padding:10px;
+        background: #ed5111;
+    }
+    .input-search span{position:absolute; left:3em; right:3em; border:1px solid #eee;
+        -webkit-border-radius:  0;
+        -moz-border-radius: 0;
+        border-radius: 3px;background-color: #fff;
+        top:6px;
+    }
+    .input-search span input{
+        width:100%; height:25px;
+        font-size:12px; border:1px solid #fcfcfc; padding:0 0.6em; box-sizing:border-box;  border:none;
+        border-radius:3px;
+    }
+    .input-search button{
+        width:3.6em; height:37px;  background:transparent!important; display:block; position:absolute; right:-7px;top:0px; border-radius: 0;
+        border:none;
+    }
+    .input-search button i{color:#fff; font-size:16px;}
+
+    .weui-picker-container, .weui-picker-overlay{
+        z-index: 9999;
+    }
+    .choose_job_warpper {
+        position: fixed;
+        display: none;
+        top: calc(42px + 0.8em);
+        left: 0.4em;
+        z-index: 99;
+        width: 100px;
+        background: rgba(0,0,0, 0.75);
+        border-radius: 4px;
+        z-index: 2000;
+    }
+    .choose_job_warpper:before{
+        display: block;
+        content:'';
+        position: absolute;
+        top: -16px;
+        right: 70px;
+        width: 0;
+        height: 0;
+        border: 8px solid ;
+        border-bottom-color: rgba(0, 0, 0, .75);
+        color: transparent;
+    }
+    .choose_job_warpper  .choose_job_container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+    .choose_job_warpper  .choose_job_container .choose_job_item {
+        box-sizing: border-box;
+        padding: 4px 0;
+        color:#fff;
+        text-align: center;
+        width: 100%;
+        background: transparent;
+        font-size: 14px;
+    }
+    .choose_job_warpper  .choose_job_container .choose_job_item:first-child {
+        border-bottom: 1px solid #222;
+    }
+    .choose_job_warpper  .choose_job_container .addpadding {
+        /*padding: 0 4px;*/
+        margin-right: 10px;
+    }
+    .choose_job_cover {
+        display: none;
+        position: fixed;
+        left: 0;
+        top: 0;
+        z-index: 98;
+        overflow: hidden;
+        width: 100%;
+        height: 100%;
+        background: rgba(0,0,0,0);
+    }
+</style>
+<div class="fenLei">
+        <!--<div class="input-search fenlei_title">-->
+            <!--<div class="weui-cell" style="height:42px;position:absolute;left: 0em;width: 22%;border: 1px solid #eee;-moz-border-radius: 5px;border-radius: 5px;padding: 0 10px;">-->
+                <!--<div class="weui-cell__bd" style="position: relative;top:0;">-->
+                    <!--<input class="weui-input" id="job" value="拼团" readonly="" data-values="1" style="position: absolute;top: -12px;">-->
+                    <!--<i class="iconal-xiangxiajiantou" style="position: absolute;top: -10px;font-size: 12px;right: .1em;"></i>-->
+                <!--</div>-->
+            <!--</div>-->
+
+            <!--<div class="choose_job_warpper">-->
+                <!--<div class="triangle"></div>    -->
+                <!--<div class="choose_job_container">-->
+                    <!--<div class="choose_job_item" data-value = '1'><i class="iconal-qunzuduoren addpadding"></i>拼团</div>-->
+                    <!--<div class="choose_job_item" data-value = '0'><i class="iconal-gouwuche addpadding"></i>商城</div>-->
+                <!--</div>-->
+            <!--</div>-->
+            <!--<div class="choose_job_cover"></div>    -->
+            <!--<span>-->
+                <!--<input name="keywords" type="search" placeholder="请输入搜索关键词！" id="keywordBox">-->
+            <!--</span>-->
+            <!--<button id="submit" value="搜索"><i class="iconal-sousuo"></i></button>-->
+        <!--</div>-->
+    <div class="input-search">
+        <span>
+        <input name="keywords" type="search" placeholder="请输入搜索关键词！" id="keywordBox">
+        </span>
+        <button id="submit" value="搜索"><i class="iconal-sousuo"></i></button>
+    </div>
+    <div class="buttons-tab">
+        <a data-value="1" href="javascript:;" class="tab-link active button">拼团</a>
+        <a data-value="0" href="javascript:;" class="tab-link button">商城</a>
+        <a data-value="2" href="javascript:;" class="tab-link button">全部</a>
+    </div>
+    <div class="fenlei_content">
+        {loop $category $itme}
+        <a class="weui-cell weui-cell_access" data-id="{$itme['id']}" data-selltype="{$itme['selltype']}">
+            <div class="weui-cell__bd weui-cell_primary">
+                <p class="fenlei_name">{$itme['name']}<img style="width: 25px;float: right;" src="{$itme['thumb']}" alt=""/></p>
+            </div>
+            <span class="weui-cell__ft"></span>
+        </a>
+        {/loop}
+    </div>
+    <div></div>
+    <div class="fenlei_text">
+        <div class="weui-grids">
+
+            <!--<a href="##" class="weui-grid js_grid" data-id="{$itme['id']}">-->
+            <!--<div class="weui-grid__icon">-->
+            <!--<img src="{php echo tomedia($itme['thumb']);}" alt="">-->
+            <!--</div>-->
+            <!--<p class="weui-grid__label">{$itme['name']}</p>-->
+            <!--</a>-->
+        </div>
+    </div>
+</div>
+<script>
+    console.log('多商户 分类页,带搜索 fenlei17');
+    $('.fenlei_content>a:first-child').addClass('active');
+    $('.fenlei_content').on('click','a',function(){
+        if($(this).hasClass('active'))return false;
+        $('.fenlei_content a').removeClass('active');
+        $(this).addClass('active');
+        ajaxEJFL($(this).attr('data-id'));
+    });
+    //默认加载首页的二级分类
+    ajaxEJFL($('.fenlei_content>a:first-child').attr('data-id'));
+    //加载二级分类
+    function ajaxEJFL(id) {
+        $.get(
+            "{php echo app_url('goods/list/fenleiTwo')}",
+            {'id': id},
+            function (res) {
+                var data = JSON.parse(res);
+                var html = '';
+                for (var i = 0; i < data.length; i++) {
+                    var url = data[i].url || "{php echo app_url('goods/list/fenlei_detail')}gid=" + data[i].parentid + '&ejid=' + data[i].id;
+                    html += '<a href='+url+' class="weui-grid js_grid"><div class="weui-grid__icon">' +
+                        '<img src='+data[i].thumb+' alt=""></div><p class="weui-grid__label">'+data[i].name+'</p></a>';
+                }
+                $('.fenlei_text>div').html(html);
+            })
+    }
+
+    //搜索按钮
+    $('#submit').click(function(){
+        var value=$('#keywordBox').val();
+        var status=$('.buttons-tab .active').attr('data-value');
+        if(value==""){
+            return false;
+        }
+        location.href="{php echo app_url('goods/list/search')}"+"&keyword="+value+'&status='+status;
+    });
+
+    //按条件搜索
+    // $("#job").select({
+    //     title: "请选择属性",
+    //     items: [
+    //         {
+    //             title: "拼团",
+    //             value: "1"
+    //         },
+    //         {
+    //             title: "商城",
+    //             value: "0"
+    //         }
+    //     ]
+    // });
+    $('#job').click(function() {
+        $('.choose_job_warpper').toggle();
+        $('.choose_job_cover').toggle();
+    })
+
+    $('.choose_job_cover').click(function() {
+        $('.choose_job_warpper').fadeOut();
+        $(this).hide();
+    })
+
+    $('.choose_job_item').click(function () {
+        var data_val = $(this).attr('data-value');
+        var _text = $(this).text();
+        $('#job').attr('data-values', data_val).attr('value',_text);
+        $('.choose_job_warpper').fadeOut();
+        $('#job').change();
+    })
+   function change(values){
+//        var values=$(this).attr('data-values');
+        if(values=='2'){
+            $('.fenlei_content a[data-selltype="1"]').css('display','-webkit-flex').css('display','flex');
+            $('.fenlei_content a[data-selltype="0"]').css('display','-webkit-flex').css('display','flex');
+            ajaxEJFL($('.fenlei_content>a:first-child').attr('data-id'));
+            $('.fenlei_content a').removeClass('active');
+            $('.fenlei_content>a:first-child').addClass('active');
+        }else if(values=='1'){
+            $('.fenlei_content a[data-selltype="1"]').css('display','-webkit-flex').css('display','flex');
+            $('.fenlei_content a[data-selltype="0"]').css('display','none');
+            ajaxEJFL($($('.fenlei_content a[data-selltype="1"]')[0]).attr('data-id'));
+            $('.fenlei_content a').removeClass('active');
+            $($('.fenlei_content a[data-selltype="1"]')[0]).addClass('active');
+        }else if(values=='0'){
+            $('.fenlei_content a[data-selltype="1"]').css('display','none');
+            $('.fenlei_content a[data-selltype="0"]').css('display','-webkit-flex').css('display','flex');
+            ajaxEJFL($($('.fenlei_content a[data-selltype="0"]')[0]).attr('data-id'));
+            $('.fenlei_content a').removeClass('active');
+            $($('.fenlei_content a[data-selltype="0"]')[0]).addClass('active');
+        }
+    }
+
+
+    $($('.fenlei_content a[data-selltype="1"]')[0]).css('display','-webkit-flex').css('display','flex');
+    $('.fenlei_content a[data-selltype="0"]').css('display','none');
+    ajaxEJFL($($('.fenlei_content a[data-selltype="1"]')[0]).attr('data-id'));
+    $('.fenlei_content a').removeClass('active');
+    $($('.fenlei_content a[data-selltype="1"]')[0]).addClass('active');
+
+    //搜索分类
+    $('.buttons-tab').on('click','a',function(){
+        if($(this).hasClass('active')){return}
+        $(this).addClass('active').siblings('a').removeClass('active');
+        var data_val = $(this).attr('data-value');
+        $('#input-search').attr('data-values', data_val);
+        change(data_val);
+    })
+</script>
+{php include wl_template('common/footerbar');}
+{php include wl_template('common/footer');}
+
+
+
+
+

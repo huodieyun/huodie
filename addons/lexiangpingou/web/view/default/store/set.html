@@ -1,0 +1,167 @@
+{php include wl_template('common/header');}
+<div class="main">
+    <form action="" method="post" class="form-horizontal form">
+        <input type="hidden" name="op" value="doWebSetting" >
+        <ul class="nav nav-tabs" role="tablist">
+            {if checkstr($_W['user']['perms'],'online_set.basic')}<li role="presentation" class="active"><a href="#basic" role="tab" data-toggle="tab">基本设置</a></li>{/if}
+            {if checkstr($_W['user']['perms'],'online_set.share')}<li role="presentation"><a href="#share" role="tab" data-toggle="tab">分享设置</a></li>{/if}
+            {if checkstr($_W['user']['perms'],'online_set.tplmsg')}<li role="presentation"><a href="#tplmsg" role="tab" data-toggle="tab">模板消息设置</a></li>{/if}
+            {if checkstr($_W['user']['perms'],'online_set.quick')}<li role="presentation"><a href="#quick" role="tab" data-toggle="tab">快捷消息设置</a></li>{/if}
+            {if checkstr($_W['user']['perms'],'online_set.allshare')}<li role="presentation"><a href="#allshare" role="tab" data-toggle="tab">共享设置</a></li>{/if}
+        </ul>
+
+        <div class="tab-content">
+            <div role="tabpanel" class="tab-pane active panel panel-default" id="basic">
+                <div class="panel-body">
+                    <div class="form-group">
+                        <label class="col-xs-12 col-sm-3 col-md-2 control-label">客服中心标题</label>
+                        <div class="col-sm-9 col-xs-12">
+                            <input name="title" class="form-control" value="{$setting['title']}" type="text">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-xs-12 col-sm-3 col-md-2 control-label">默认用户头像</label>
+                        <div class="col-sm-9 col-xs-12">
+                            {php echo tpl_form_field_image('defaultavatar', $setting['defaultavatar'], '', array('extras' => array('text' => 'readonly')))}
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-xs-12 col-sm-3 col-md-2 control-label">聊天界面背景颜色</label>
+                        <div class="col-sm-9 col-xs-12">
+                            {php echo tpl_form_field_color('bgcolor',$setting['bgcolor']);}
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-xs-12 col-sm-3 col-md-2 control-label">未关注用户说明</label>
+                        <div class="col-sm-7 col-xs-12">
+                            <textarea class="form-control" name="unfollowtext">{$setting['unfollowtext']}</textarea>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-xs-12 col-sm-3 col-md-2 control-label">公众号二维码</label>
+                        <div class="col-sm-9 col-xs-12">
+                            {php echo tpl_form_field_image('followqrcode', $setting['followqrcode'], '', array('extras' => array('text' => 'readonly')))}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div role="tabpanel" class="tab-pane panel panel-default" id="share">
+                <div class="panel-body">
+                    <div class="form-group">
+                        <label class="col-xs-12 col-sm-3 col-md-2 control-label">分享标题</label>
+                        <div class="col-sm-7 col-xs-12">
+                            <input name="sharetitle" class="form-control" value="{$setting['sharetitle']}" type="text">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-xs-12 col-sm-3 col-md-2 control-label">分享图片</label>
+                        <div class="col-sm-9 col-xs-12">
+                            {php echo tpl_form_field_image('sharethumb', $setting['sharethumb'], '', array('extras' => array('text' => 'readonly')))}
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-xs-12 col-sm-3 col-md-2 control-label">分享描述</label>
+                        <div class="col-sm-7 col-xs-12">
+                            <textarea class="form-control" name="sharedes">{$setting['sharedes']}</textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div role="tabpanel" class="tab-pane panel panel-default" id="tplmsg">
+                <div class="panel-body">
+                    <div class="form-group">
+                        <label class="col-xs-12 col-sm-3 col-md-2 control-label">是否开启客服消息通知</label>
+                        <div class="col-sm-9 col-xs-12">
+                            <label for="istplon1" class="radio-inline"><input name="istplon" value="1" id="istplon1" {if $setting['istplon'] == 1}checked="true"{/if} type="radio"> 是</label>
+                            &nbsp;&nbsp;&nbsp;
+                            <label for="istplon2" class="radio-inline"><input name="istplon" value="0" id="istplon2" {if $setting['istplon'] == 0}checked="true"{/if} type="radio"> 否</label>
+                            <span class="help-block"></span>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-xs-12 col-sm-3 col-md-2 control-label">客服消息提醒时间间隔</label>
+                        <div class="col-sm-2 col-xs-12">
+                            <div class="input-group">
+                                <input class="form-control" name="kefutplminute" value="{$setting['kefutplminute']}" type="text">
+                                <span class="input-group-addon">秒</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div role="tabpanel" class="tab-pane panel panel-default" id="quick">
+                <div class="panel-body">
+                    <div class="form-group">
+                        <label class="col-xs-12 col-sm-3 col-md-2 control-label">粉丝快捷消息</label>
+                        <div class="col-sm-7 col-xs-12">
+                            <textarea class="form-control" name="fansauto">{$setting['fansauto']}</textarea>
+                            <span class="help-block" style="color:#900;">多个可用|隔开</span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-xs-12 col-sm-3 col-md-2 control-label">客服快捷消息</label>
+                        <div class="col-sm-7 col-xs-12">
+                            <textarea class="form-control" name="kefuauto">{$setting['kefuauto']}</textarea>
+                            <span class="help-block" style="color:#900;">多个可用|隔开</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div role="tabpanel" class="tab-pane panel panel-default" id="allshare">
+                <div class="panel-body">
+                    <div class="form-group">
+                        <label class="col-xs-12 col-sm-3 col-md-2 control-label">是否开启客户聊天记录共享</label>
+                        <div class="col-sm-9 col-xs-12">
+                            <label for="issharemsg1" class="radio-inline"><input name="issharemsg" value="1" id="issharemsg1" {if $setting['issharemsg'] == 1}checked="true"{/if} type="radio"> 是</label>
+                            &nbsp;&nbsp;&nbsp;
+                            <label for="issharemsg2" class="radio-inline"><input name="issharemsg" value="0" id="issharemsg2" {if $setting['issharemsg'] == 0}checked="true"{/if} type="radio"> 否</label>
+                            <span class="help-block"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group col-sm-12">
+                <input type="hidden" name="id" value="{$setting['id']}" />
+                <input name="submit" type="submit" value="确定" class="btn btn-primary">
+                <input type="hidden" name="token" value="{$_W['token']}" />
+            </div>
+        </div>
+    </form>
+    <script type="text/javascript">
+        function sms_change()
+        {
+            $("#sms_product").show();
+            $("#sms_sign").show();
+            $("#sms_username").show();
+            $("#sms_pwd").show();
+        }
+
+        function sms_change1()
+        {
+            $("#sms_product").hide();
+            $("#sms_sign").hide();
+            $("#sms_username").show();
+            $("#sms_pwd").show();
+        }
+
+        function sms_change2()
+        {
+            $("#sms_product").hide();
+            $("#sms_sign").hide();
+            $("#sms_username").hide();
+            $("#sms_pwd").hide();
+        }
+    </script>
+</div>
+{php include wl_template('common/footer');}

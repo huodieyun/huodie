@@ -1,0 +1,204 @@
+<div class="main">
+    <div class="panel panel-info">
+        <div class="panel-heading">批量发货步骤</div>
+        <div class="panel-body">
+            <div class="form-group">
+                <label class="col-xs-12 col-sm-2 col-md-2 col-lg-12 control-label" style="text-align: left;padding-right: 30px;">
+                    1.按条件搜索出需要导出的待发货订单文件。
+                </label>
+                <label class="col-xs-12 col-sm-2 col-md-2 col-lg-12 control-label" style="text-align: left;padding-right: 30px;">
+                    2.导出订单文件，填写快递单号、快递公司。
+                </label>
+                <label class="col-xs-12 col-sm-2 col-md-2 col-lg-12 control-label" style="text-align: left;padding-right: 30px;">
+                    3.导入该订单文件<span style="color: red;">（csv格式文件）</span>，批量发货完成。
+                </label>
+                <label class="col-xs-12 col-sm-2 col-md-2 col-lg-12 control-label" style="text-align: left;padding-right: 30px;">
+                    4.<span style="color: red;">注意：不能删除导出表格中任意的列项，只需填好快递单号和快递公司即可保存导回系统中</span>
+                </label>
+            </div>
+        </div>
+    </div>
+    <div class="panel panel-info">
+        <div class="panel-heading">筛选</div>
+        <div class="panel-body">
+            <form action="./index.php" method="get" class="form-horizontal" role="form" id="form2">
+                <input type="hidden" name="c" value="site" />
+                <input type="hidden" name="a" value="entry" />
+                <input type="hidden" name="m" value="lexiangpingou" />
+                <input type="hidden" name="do" value="platform" />
+                <input type="hidden" name="ac" value="supply_order" />
+                <input type="hidden" name="op" value="ship"/>
+                <div class="form-group">
+
+                    <label class="col-xs-12 col-sm-4 col-md-4 col-lg-1 control-label">商品名称</label>
+                    <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
+                        <select name="goodsid" class="form-control">
+                            <option value="">--所有--</option>
+
+                            {loop $allgoods $t}
+                            <option value="{$t['id']}" {if $_GPC['goodsid'] == $t['id']}selected="selected"{/if}>{$t['name']}</option>
+                            {/loop}
+                        </select>
+                    </div>
+                    <label class="col-xs-12 col-sm-4 col-md-4 col-lg-1 control-label">单品单号</label>
+                    <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
+                        <input class="form-control" name="singleno" id="" type="text" value="{$_GPC['singleno']}" placeholder="">
+                    </div>
+                    <div class="col-sm-3 col-lg-2" style="text-align:right;">
+                        <button class="btn btn-default"><i class="fa fa-search"></i> 搜索</button>
+                    </div>
+                </div>
+
+            </form>
+        </div>
+    </div>
+    <div class="panel panel-info">
+        <div class="panel-heading">发货</div>
+        <div class="panel-body">
+            <div class="form-group">
+                <label class="col-xs-12 col-sm-4 col-md-4 col-lg-1 control-label" style="text-align: right;padding-right: 30px;">导出订单</label>
+                <a href="{php echo web_url('platform/supply_order/output' , array('goodsid' => $_GPC['goodsid'] , 'singleno' => $_GPC['singleno']));}">
+                    <button class="btn btn-info"><i class="fa fa-download"></i> 导出订单</button>
+                </a>
+            </div>
+            <form name="sendForm" enctype="multipart/form-data" class="form-horizontal" action="{php echo web_url('platform/supply_order', array('op' => 'import'))}" method="post">
+                <div class="form-group">
+                    <label class="col-xs-12 col-sm-4 col-md-4 col-lg-1 control-label">导入发货订单</label>
+                    <div class="col-sm-5 col-lg-7 col-xs-12">
+                        <input type="file" name="fileName" class="btn btn-success" />
+                    </div>
+                    <div class="col-sm-3 col-lg-2" style="text-align:right;"><button id="searchBtn" type="submit" class="btn btn-success"> 导 入 </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="order-list">
+        <div class="panel-body table-responsive collapse in" id="order-template-item-4" style="padding: 0;">
+
+        </div>
+        {loop $list $item}
+
+        <div class="panel panel-default" >
+
+            <table class="table" style="background-color:#888">
+                <thead style="">
+                <tr>
+                    <!--<th style="width:60px;" class="text-center"><input type="checkbox" onclick="var ck = this.checked;$(':checkbox').each(function(){this.checked = ck});" />全选</th>-->
+                    <th style="width:180px;">订单号/商品</th>
+                    <!--<th style="width:80px; text-align:center;">属性</th>-->
+                    <!--<th style="width:80px; text-align:center;">所属商家</th>-->
+                    <th style="width:100px; text-align:center;">状态</th>
+                    <th style="width:110px; text-align:center;">申请发货时间</th>
+                    <th style="width:160px; text-align:center;">联系人</th>
+                    <th style="width:50px; text-align:center;">操作</th>
+                </tr>
+                </thead>
+
+            </table>
+
+            <div class="panel-body table-responsive" style="padding: 0px;">
+                <table class="table table-bordered">
+                    <tbody>
+                    <tr>
+                        <!--<td class="text-center" style="width:60px;"><input type="checkbox" name="checkbox[]"  value="{$item['id']}" /></td>-->
+                        <td class="goods-info line-feed" style="width:180px;padding-left: 10px;position: relative">
+                            <b style="position: absolute;left: 10px;top: 10px;font-size: 16px;">单品单号: {$item['singleno']}</b>
+                            <div class="img" style="float:left;">
+                                <img width="50" height="50" class="oscrollLoading" src="{php echo tomedia($item['gimg'])}" data-url="{php echo tomedia($item['gimg'])}" height="50" width="50" onerror="this.src='{IMAGE_NOPIC_SMALL}'" >
+
+                            </div>
+                            <div class="title" style="text-align:left;padding-left: 60px;">
+                                <p>{$item['goodsname']}</p>
+                                <p>	{if $item['optionname']}规格：{$item['optionname']},{/if}数量:{$item['num']},单价:{$item['oprice']}</p>
+
+
+                            </div>
+                        </td>
+                        <!--<td class="text-left" style="width:80px;">-->
+
+                            <!--<p>运费:{$item['freight']}</p>-->
+                            <!--<p>实付:{if empty($item['pay_price'])}{$item['price']}{else}{$item['pay_price']}{/if}元</p>-->
+                        <!--</td>-->
+                        <!--	<td class="text-center" style="width:80px;">{if empty($item['merchant']['name'])}{$_W['account']['name']}{else}{$item['merchant']['name']}{/if}</td>-->
+                        <td class="text-center" style="width:100px;">
+                            <!--<p></p>-->
+                            <!--<p><span>团长:</span> <span class="label btn-success">{if $item['tuan_first']==1}是{else}否{/if}</span></p>-->
+
+                            <!--	支付方式:<span class="label label-primary"> {$item['paytype']}</span><br>-->
+
+                            <p>
+						{if $item['supply_status'] == '0'}<span class="label label-warning">待发货</span>{/if}
+						{if $item['refund'] == '1'}<span class="label label-warning">待退款</span>{/if}
+						{if $item['refund'] == '2'}<span class="label label-warning">已退款</span>{/if}
+						{if $item['supply_status'] == '1'}<span class="label label-info">已发货</span>{/if}
+						{if $item['status'] == '待收货'}<span class="label label-primary">待收货</span>{/if}
+						{if $item['status'] == '已签收'}<span class="label label-warning">已签收</span>{/if}
+						{if $item['status'] == '已退款'}<span class="label label-danger">已退款</span>{/if}
+						{if $item['status'] == '强退款'}<span class="label label-danger">强退款</span>{/if}
+						{if $item['status'] == '部分退款'}<span class="label label-danger">部分退款</span>{/if}
+						{if $item['status'] == '团长免单'}<span class="label label-success">团长免单</span>{/if}
+						{if $item['status'] == '待发货'}<span class="label label-success">待发货</span>{/if}
+						{if $item['status'] == '已取消'}<span class="label label-success">已取消</span>{/if}
+						{if $item['status'] == '已关闭'}<span class="label label-success">已关闭</span>{/if}
+						{if $item['status'] == '申请退款'}<span class="label label-danger">申请退款</span>{/if}
+						{if $item['status'] == '货到付款'}<span class="label label-danger">货到付款</span>{/if}
+						{if $item['status'] == '不处理'}<span class="label label-danger">不处理</span>{/if}
+
+						{if $item['status'] == '全额退款并要求退货'}<span class="label label-danger">全额退款并要求退货</span>{/if}
+						{if $item['status'] == '全额退款'}<span class="label label-danger">全额退款</span>{/if}
+						{if $item['status'] == '再次申诉'}<span class="label label-danger">再次申诉</span>{/if}</p>
+                            {if $item['dispatchtype']==1}	<p><span>核销状态:</span> <span class="label btn-success">{if !empty($item['veropenid'])}是{else}否{/if}</span></p>{/if}
+                            {if !empty($item['veropenid'])}	<p><span>核销员:</span> <span class="label btn-success">{$saler['nickname']}</span></p>{/if}
+                            {if !empty($pmember['nickname'])}<b>推广员:</b> <span class="label btn-success">{$pmember['nickname']}</span>	{/if}
+
+                        </td>
+                        <td class="text-left" style="width:110px;">	  <p><span>下单:  </span>{php echo date('Y-m-d', $item['order']['createtime'])}</p>
+
+                        </td>
+                        <td class="text-left" style="width:160px;">
+                            <p><span>昵称:</span> <span class="label btn-success">{$item['nickname']}</span>	</p>
+                            <p><span>姓名:</span> <span class="label btn-success">{$item['realname']}</span>	</p>
+                            <p><span>电话:</span> <span class="label btn-success">{if $item['tel']}{$item['tel']}{else}{$item['mobile']}{/if}</span>	</p>
+                            <p><span>地址:</span> <span class="label btn-success">{$item['province']} {$item['city']} {$item['county']} {$item['address']}</span></p>
+
+                        </td>
+                        <td class="text-center" style="width:50px;text-align:center;">
+                            <span class="text-muted"></span>
+                            <!--<a href="{php echo web_url('order/order/update', array('id' => $item['id'],'dispatchtype'=>$dispatchtype))}" >修改价格</a><br/>-->
+                            <!--<a  href="{php echo web_url('order/order/dayin', array('id' => $item['id'],'dispatchtype'=>$dispatchtype))}" >小票打印</a><br/>-->
+                            <!--<a  href="{php echo web_url('order/order/detail', array('id' => $item['orderid'],'dispatchtype'=>$dispatchtype))}" target="_blank">查看详情</a><br/>-->
+                            <!--<a  href="javascript:;" class="js-order-edit-remark" order-id="{$item['id']}">备注</a>-->
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div  class="panel-footer js-remark" {if empty($item['remark'])}style="display: none;"{/if} style="background-color:white;color:#428bca;">
+            买家备注:{$item['remark']}
+        </div>
+        <div class="panel-footer js-admin-remark{$item['id']} " order-id="{$item['id']}" {if empty($item['adminremark'])}style="display: none;"{/if} style="background-color:lightgoldenrodyellow">
+        卖家备注：<span id="js-admin-remark{$item['id']}" style="">{$item['adminremark']}</span>
+    </div>
+</div>
+{/loop}
+</div>
+</div>
+{$pager}
+<script type="text/javascript">
+    require(['daterangepicker'], function($){
+        $('.daterange').on('apply.daterangepicker', function(ev, picker) {
+            $('#form1')[0].submit();
+        });
+    });
+</script>
+<script>
+    require(['bootstrap'],function($){
+        $('.btn').hover(function(){
+            $(this).tooltip('show');
+        },function(){
+            $(this).tooltip('hide');
+        });
+    });
+</script>

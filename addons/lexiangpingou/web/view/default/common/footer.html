@@ -1,0 +1,495 @@
+			</div>
+		</div>
+	</div>
+	<span class="price" style="display:none;">{$checkfunction['price']}</span>
+	<style>
+		.ft.links{margin-bottom: 0px;}
+		.ft .links_item{border-left-color:#f1f1f1;*line-height:15px}
+		.ft .links_item a{color:#f1f1f1}
+		.foot{padding:24px 0;color:#f1f1f1;text-align:center;background-color:#b8b9b9;bottom: 0px;width: 100%;}
+		.foot ul {list-style-type: none;}
+		.copyright{display:inline}
+	</style>
+	<script>
+ 
+		require(['bootstrap']);
+		$('.js-clip').each(function(){
+			util.clip(this, $(this).attr('data-url'));
+		});
+		function subscribe(){
+			$.post("{url 'utility/subscribe'}", function(){
+				setTimeout(subscribe, 5000);
+			});
+		}
+		function sync() {
+			$.post("{url 'utility/sync'}", function(){
+				setTimeout(sync, 60000);
+			});
+		}
+		$(function(){
+			subscribe();
+			sync();
+		});
+		{if $_W['uid']}
+			function checknotice() {
+				$.post("{php echo url('utility/notice')}", {}, function(data){
+					var data = $.parseJSON(data);
+					$('#notice-container').html(data.notices);
+					$('#notice-total').html(data.total);
+					if(data.total > 0) {
+						$('#notice-total').css('background', '#ff9900');
+					} else {
+						$('#notice-total').css('background', '');
+					}
+					setTimeout(checknotice, 60000);
+				});
+			}
+			checknotice();
+		{/if}
+
+		{if defined('IN_MODULE')}
+		$.getJSON("{url 'utility/checkupgrade/module' array('m' => IN_MODULE)}", function(result) {
+			if (result.message.errno == -10) {
+				$('body').prepend('<div id="upgrade-tips-module" class="upgrade-tips"><a href="http://wpa.b.qq.com/cgi/wpa.php?ln=1&key=XzkzODAwMzEzOV8xNzEwOTZfNDAwMDgyODUwMl8yXw" target="_blank">' + result.message.message + '</a></div>');
+				if ($('#upgrade-tips').size()) {
+					$('#upgrade-tips-module').css('top', '25px');
+				}
+			}
+		});
+		{/if}
+	</script>
+	<div class="foot" id="footer">
+		<ul class="links ft">
+            <li class="links_item"><p class="copyright">Copyright © 2015-2020 火蝶云 All Rights Reserved.</p> </li>
+		</ul>
+	</div>
+	{if $_GPC['ac']!='setting'&&$_GPC['ac']!='goods'}
+	<!--模块购买-->
+<div class="openDIV nactive" style="background-color:rgba(0,0,0,0.3);width:100%;height:100%;position:fixed;left:0px;top:0px;z-index:9999">
+<div style="border-right:2px solid gray;border-bottom:2px solid gray;border-left:1px solid gray;border-top:1px solid gray;position:fixed;z-index:2;top:20px;left:0px;right:0px;margin-left:auto;margin-right:auto;width:400px;height:300px;background-color: white;overflow: hidden;">
+			<div style="height:60px;width:100%;position:relative;font-size:28px;padding-left:20px;line-height:60px;background-color:#f9f9f9;">购买功能<img id="closed" style="position:absolute;right:40px;top:0px;bottom:0px;margin-top:auto;margin-bottom:auto;cursor:pointer;" src="{TG_URL_WRES}images/4.svg" width="20px" height="20px"></div>
+			<span style="padding-left:15px;color:orange;font-size:1.0em;"  >请选择使用时长，即可扫码购买自动开通功能</span>
+			<p style="padding-left:20px;color:gray;margin-top:18px;">功能名称：<span id="template" style="padding-left:5px;color:#3c3c3c;">{$_W['page']['title']}</span></p>
+			<p style="padding-left:20px;color:gray;">使用时长：<span style="padding-left:5px;color:#3c3c3c;cursor:pointer;" id="valueDate">3个月</span></p>
+			<p style="padding-left:20px;color:gray;">优惠时长：<span style="padding-left:5px;color:#3c3c3c;" id="freeDate">3个月</span></p>
+			<p style="padding-left:20px;color:gray;">支付方式：<img style="position:absolute;padding-top:2px;" width="18px" height="18px" src="{TG_URL_WRES}images/05.svg"><span style="position:absolute;padding-left:23px;color:#3c3c3c;"> 微信支付</span></p>
+			<p  style="padding-left:20px;color:gray;">单月价格：<span style="padding-left:5px;color:orange;font-size:1.2em;"  id="valuePay">99.00</span>元</p>
+			<p  style="padding-left:20px;color:gray;">总价格：<span style="padding-left:22px;color:orange;font-size:1.2em;"  id="totalPay">99.00</span>元</p>
+			
+			<img style="position:absolute;right:30px;bottom:50px;" src="{TG_URL_WRES}images/paylogo.png" width="150px" height="150px" id="cordvalue">
+			<p id="shaomaid" style="margin-left:245px;margin-top:-20px;" >扫码完成支付<p/>
+			<div id="selectDate" class="selectDateadd">
+				<span class="datedesc" style="display: none">1个月</span>
+				<span class="datedesc">3个月</span>
+				<span class="datedesc">6个月</span>
+				<span class="datedesc">12个月</span>
+				<span class="datedesc">24个月</span>
+			</div>
+		</div>
+		</div>
+	<script>
+window.onload=function(){
+
+	if({$_W['auto_run_data']}==1){
+		$.get('http://www.lexiangpingou.cn/minapi.php?op=run_data_order',function(){})
+	}
+	if({$_W['auto_run_data']}==2){
+		$.get('http://www.lexiangpingou.cn/minapi.php?op=run_data_order&day=1',function(){})
+	}
+
+
+	var intervalEvent;
+	
+	if (document.getElementById("buyDaifu")){
+	var buyDaifu=document.getElementById("buyDaifu");
+		buyDaifu.onclick=function(ev){
+		if (openDIV.classList.contains("nactive")){
+				var cordvalue=document.getElementById("cordvalue");	
+			if ( document.querySelector('.price') ) {
+				valuePay.innerHTML=Number(document.querySelector('.price').innerHTML).toFixed(2);}
+				valueDate.innerHTML="请选择时长";
+				document.getElementById("totalPay").innerHTML="0.00";
+				document.getElementById("freeDate").innerHTML=0+"个月";
+				document.getElementById("shaomaid").style.display="none";										
+				openDIV.classList.remove("nactive");			
+		}
+	}
+	}
+
+	var close=document.getElementById("closed"),
+		openDIV=document.querySelector(".openDIV");
+	close.addEventListener('click',function(ev){
+		openDIV.classList.toggle("nactive");		
+		window.clearInterval(intervalEvent);
+		//ev.stopPropagation();
+	},false);
+	
+	if (document.getElementById("renewal")){
+	var renewal=document.getElementById("renewal");
+	renewal.onclick=function(){
+		if (openDIV.classList.contains("nactive")){
+				var cordvalue=document.getElementById("cordvalue");	
+				if ( document.querySelector('.price') ) {
+				valuePay.innerHTML=Number(document.querySelector('.price').innerHTML).toFixed(2);}
+				valueDate.innerHTML="请选择时长";
+				document.getElementById("totalPay").innerHTML="0.00";
+				document.getElementById("freeDate").innerHTML=0+"个月";
+				document.getElementById("shaomaid").style.display="none";										
+				openDIV.classList.remove("nactive");	
+		}
+	}
+}
+	var valuePay=document.getElementById("valuePay");
+		//var tmpnames=document.querySelectorAll(".tmpname");
+		var valueDate=document.getElementById("valueDate"),
+		selectDate=document.getElementById("selectDate");
+		valueDate.onclick=function(){
+			selectDate.classList.toggle("selectDateadd");
+		}
+		var orderno;
+		var datedesc=document.querySelectorAll(".datedesc");
+		var uniacid=33;//火蝶
+		for (var i=0;i<datedesc.length;i++){
+			datedesc[i].onclick=function(ev){
+			
+				var n,m;
+				for (var j=0;j<datedesc.length;j++){
+					if (ev.target==datedesc[j]){
+						switch (j){
+							case 0:
+							n=1;
+							m=0;
+							break;
+							case 1:
+							n=3;
+							m=0;
+							break;
+							case 2:
+							n=6;
+							m=1;
+							break;
+							case 3:
+							n=12;
+							m=2;
+							break;
+							case 4:
+							n=24;
+							m=5;
+							break;
+						}
+						var str=n+"个月";
+						valueDate.innerHTML=str;
+						document.getElementById("freeDate").innerHTML=m+"个月";
+						document.getElementById("totalPay").innerHTML=((n-m)*Number(valuePay.innerHTML)).toFixed(2);
+						var root='{$_W['siteroot']}';
+						var buyuniacid=3;
+						var tid='{$tid}';
+						orderno=RandomS();
+						var surl=root+"app/index.php?i="+uniacid+"&c=entry&m=lexiangpingou&do=pay&ac=payfunction&id="+tid+"&num="+n+"&buyuniacid="+buyuniacid;
+						var  baseurl;
+						var data=new FormData();
+						data.append('id',tid);						
+						data.append('num',n);
+						data.append('orderno',orderno);	
+						data.append('uniacid',uniacid);	
+						var url="{php echo web_url('store/setting/qr');}";
+						var xhr=new XMLHttpRequest();
+						xhr.onreadystatechange=function(){
+							if (xhr.readyState==4){
+								if ((xhr.status>=200 && xhr.status<300)|| xhr.status==304){
+									//alert(xhr.responseText);
+									document.getElementById("cordvalue").src="{TG_URL}"+"data/qrcode/"+uniacid+"/"+orderno+".png";
+									
+								}
+							}
+						}
+						xhr.open("post",url,true);
+						xhr.send(data);						
+					}
+				}
+				document.getElementById("shaomaid").style.display="block";	
+				selectDate.classList.toggle("selectDateadd");
+				var buyFormdata=new FormData();
+	/*验证是否购买*/var buyUrl="{php echo web_url('service/order_service',array('op'=>'check'))}";
+					if (intervalEvent){
+						window.clearInterval(intervalEvent);
+					}							
+					intervalEvent=window.setInterval(function(){
+					
+						var requestXhr=new XMLHttpRequest();
+						requestXhr.onreadystatechange=function(){
+						if (requestXhr.readyState==4){
+							if ((requestXhr.status>=200 && requestXhr.status<300)||requestXhr.status==304){								
+								if (JSON.parse(requestXhr.responseText).errno==0){
+									util.tips(JSON.parse(requestXhr.responseText).message);
+									openDIV.classList.add("nactive");
+									window.clearInterval(intervalEvent); 
+									location.reload();
+								}
+							}else{
+								util.tips(requestXhr.status.toString());
+							}
+						}
+					}
+					requestXhr.open('post',buyUrl,true);
+					buyFormdata.append("orderno",orderno);
+					requestXhr.send(buyFormdata);
+				},1000);	
+			}
+		}	
+		function RandomS(){
+		var now=new Date();
+		var year=now.getFullYear();
+		var month=now.getMonth()+1<10?0+""+(now.getMonth()+1):now.getMonth()+1;
+		var date=now.getDate()<10?0+""+now.getDate():now.getDate();
+		var time=now.getHours()<10?0+""+now.getHours():now.getHours();
+		var minutes=now.getMinutes()<10?0+""+now.getMinutes():now.getMinutes();
+		var seconds=now.getSeconds()<10?0+""+now.getSeconds():now.getSeconds();
+		var randoms=parseInt(Math.random()*9+1)+""+parseInt(Math.random()*9)+""+parseInt(Math.random()*9)+""+parseInt(Math.random()*9)+""+parseInt(Math.random()*9);
+		return month+""+date+""+time+""+minutes+""+seconds+""+randoms;
+		}
+}
+</script>
+{/if}
+<script>
+	$(function () {
+	var ac=GetQueryString('ac');
+	var nowurl=document.URL;
+	var acs=['notice',
+	'category',
+	'will_die',
+	'print',
+	'autoaddress',
+	'deliverylist',
+	'bdelete',
+	'selflogistics',
+	'sendtime',
+	'notification-list',
+	'menu',
+	'fans',
+	'workform_list_admin',
+	'workform_list_newfunction',
+	'agent_users',
+	'examine',
+	'agent_users_admin',
+	'fetch',
+	'adv'];
+	if(acs.indexOf(ac)!=-1)
+	{
+		var op=GetQueryString('op');
+		var id=GetQueryString('id');
+		var opp=GetQueryString('opp');
+		var type=GetQueryString('type');
+		var status=GetQueryString('status');
+		if(op!=null)
+		{
+			nowurl=funcUrlDel('op')+'&';
+		}
+		if(id!=null)
+		{
+			nowurl=funcUrlDels('id',nowurl)+'&';
+		}
+		if(opp!=null)
+		{
+			nowurl=funcUrlDels('opp',nowurl)+'&';
+		}
+		if(type!=null)
+		{
+			nowurl=funcUrlDels('type',nowurl)+'&';
+		}
+		if(status!=null)
+		{
+			nowurl=funcUrlDels('status',nowurl)+'&';
+		}
+		var groupstatus=GetQueryString('groupstatus');
+		if(groupstatus!=null)
+		{
+			nowurl=funcUrlDels('groupstatus',nowurl)+'&';
+		}
+		var will_die=GetQueryString('will_die');
+		if(will_die!=null)
+		{
+			nowurl=funcUrlDels('will_die',nowurl)+'&';
+		}
+		var develop_status=GetQueryString('develop_status');
+		if(develop_status!=null)
+		{
+			nowurl=funcUrlDels('develop_status',nowurl)+'&';
+		}
+		var page=GetQueryString('page');
+		if(page!=null)
+		{
+			nowurl=funcUrlDels('page',nowurl)+'&';
+		}
+		var servestype=GetQueryString('servestype');
+		if(servestype!=null)
+		{
+			nowurl=funcUrlDels('servestype',nowurl)+'&';
+		}
+	}
+	if(ac=='goods')
+	{
+		var op=GetQueryString('op');
+		var aa=funcUrlDel('status');
+		if(op!='post')
+		{
+			nowurl=aa+'&'+'status=0';
+		}
+		var page=GetQueryString('page');
+		if(page!=null)
+		{
+			nowurl=funcUrlDels('page',nowurl);
+		}
+	}
+	if(ac=='reply')
+	{
+		var op=GetQueryString('op');
+		if(op!=null)
+		nowurl=funcUrlDel('op');
+		var rid=GetQueryString('rid');
+		if(rid!=null)
+		{
+			nowurl=funcUrlDels('rid',nowurl);
+		}	
+	}
+	if(ac=='order')
+	{
+		var op=GetQueryString('op');
+		var status=GetQueryString('status');
+		if(op=='received'&&status!=null)
+		{
+			nowurl=funcUrlDel('status');
+		}
+		
+		var id=GetQueryString('id');
+		if(id!=null)
+		{
+			nowurl=funcUrlDels('id',nowurl)+'&';
+		}
+		
+	}
+	if(ac=='group')
+	{
+		var op=GetQueryString('op');
+		if(op!='summary'&&op!=null)
+		nowurl=funcUrlDels('op',nowurl)+'&';
+		var groupstatus=GetQueryString('groupstatus');
+		if(groupstatus!=null)
+		nowurl=funcUrlDels('groupstatus',nowurl)+'&';
+		var groupnumber=GetQueryString('groupnumber');
+		if(groupnumber!=null)
+		nowurl=funcUrlDels('groupnumber',nowurl)+'&';
+		
+		
+	}
+	if(ac=='import')
+	{
+		var status=GetQueryString('status');
+		//alert(status);
+		if(status!=null)
+		{
+			nowurl=funcUrlDel('status')+'&';
+		}
+		var godluck=GetQueryString('godluck');
+		if(godluck!=null)
+		{
+			nowurl=funcUrlDels('godluck',funcUrlDel('status'))+'&';
+		}
+		var id=GetQueryString('id');
+		if(id!=null)
+		{
+			nowurl=funcUrlDels('id',nowurl);
+		}
+	}
+	if(ac=='partjob'||ac=='cash'||ac=='coupon'||ac=='smsbuy')
+	{
+		var op=GetQueryString('op');
+		var groupstatus=GetQueryString('groupstatus');
+		var url=nowurl;
+		if(op!=null)
+		{
+			url=funcUrlDels('op',url)+'&';
+		}
+		if(groupstatus!=null)
+		{
+			url=funcUrlDels('groupstatus',url)+'&';
+		}
+		var id=GetQueryString('id');
+		if(id!=null)
+		{
+			url=funcUrlDels('id',url)+'&';
+		}
+		nowurl=url;
+	}
+	if(ac=='activity')
+	{
+	var op=GetQueryString('op');
+		var opp=GetQueryString('opp');
+		var url=nowurl;
+		if(op!=null)
+		{
+			url=funcUrlDels('op',url);
+		}
+		if(opp!=null)
+		{
+			url=funcUrlDels('opp',url);
+		}
+		nowurl=url+'&';
+	}
+	console.log(nowurl);
+	//alert(nowurl);
+	var aHref="a[href='"+nowurl+"']";
+$('.list-group-item').removeClass('active');
+$(aHref).addClass('active');
+})
+
+function GetQueryString(name)
+{
+     var reg = new RegExp("(^|&)"+ name +"=([^&]*)(&|$)");
+     var r = window.location.search.substr(1).match(reg);
+     if(r!=null)return  unescape(r[2]); return null;
+}
+// 删除url中某个参数,并跳转
+function funcUrlDel(name){
+    var loca = window.location;
+    var baseUrl = loca.origin + loca.pathname + "?";
+    var query = loca.search.substr(1);
+    if (query.indexOf(name)>-1) {
+        var obj = {}
+        var arr = query.split("&");
+        for (var i = 0; i < arr.length; i++) {
+            arr[i] = arr[i].split("=");
+            obj[arr[i][0]] = arr[i][1];
+        };
+        delete obj[name];
+        var url = baseUrl + JSON.stringify(obj).replace(/[\"\{\}]/g,"").replace(/\:/g,"=").replace(/\,/g,"&");
+        return url
+    };
+}
+function funcUrlDels(name,url){  
+    var baseUrl =url.split('?')[0]+'?';
+    var query = url.split('?')[1];
+    if (query.indexOf(name)>-1) {
+        var obj = {}
+        var arr = query.split("&");
+        for (var i = 0; i < arr.length; i++) {
+            arr[i] = arr[i].split("=");
+            obj[arr[i][0]] = arr[i][1];
+        };
+        delete obj[name];
+        var url = baseUrl + JSON.stringify(obj).replace(/[\"\{\}]/g,"").replace(/\:/g,"=").replace(/\,/g,"&");
+        return url
+    };
+}
+/*
+window.onload=function(){
+	$('script[data-garbage="true"]').remove();
+	$('iframe').remove();
+}
+*/
+</script>
+
+
+
+</body>
+</html>

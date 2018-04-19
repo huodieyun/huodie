@@ -1,0 +1,1486 @@
+{php include wl_template('common/header');}
+<style>
+    .modal-backdrop.in{display: none!important;}
+    .model-dialog {
+        z-index: 10;
+        position: fixed;
+        top: 0;
+        left: 0;
+        height: 80%;
+        overflow: auto;
+        margin-bottom: 10%;
+    }
+    .model-dialog .hiden-map {
+        background: #fff;
+    }
+    .model-dialog .hiden-map {
+        position: fixed;
+        top: 0;
+        left: 0;
+        z-index: 1;
+        height: 100%;
+        background: rgba(0,0,0,.5);
+        width: 100%;
+    }
+    .model-dialog .delivery-body {
+        width: 55%;
+        margin: auto;
+        z-index: 2;
+        position: relative;
+    }
+    .on {
+        white-space: initial !important;
+    }
+    .li-td {
+        white-space: normal;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: -webkit-box;
+        -webkit-line-clamp: 3;
+        -webkit-box-orient: vertical;
+    }
+    .datetimepicker {
+        position: relative; 
+        top: -24px; 
+        right: -70px;
+        width: 70px; 
+        height: 30px; 
+        opacity: 0 !important;
+    }
+</style>
+<ul class="nav nav-tabs">
+    <?php
+	    $shop = pdo_fetch("select is_merchant from " .tablename('account_wechats') ." where uniacid = :uniacid" , array(':uniacid' => $_W['uniacid']));
+    ?>
+    {if $_W['uniacid'] != 33}
+    <li {if $_GPC['op'] == 'buy_goods_list'}class="active"{/if}><a href="{php echo web_url('platform/goods_list/buy_goods_list');}">我的采纳</a></li>
+    <li {if intval($_GPC['status']) == 5}class="active"{/if}><a href="{php echo web_url('platform/goods_list',array('status' => '5'));}">我的供应</a></li>
+
+    <li {if $_GPC['op'] == 'supply_goods_list'}class="active"{/if}><a href="{php echo web_url('platform/goods_list/supply_goods_list');}">货源市场</a></li>
+    {else}
+    <li {if intval($_GPC['status']) == -1}class="active"{/if}><a href="{php echo web_url('platform/goods_list',array('status' => '-1'));}">审核中</a></li>
+    <li {if intval($_GPC['status']) == 1}class="active"{/if}><a href="{php echo web_url('platform/goods_list',array('status' => '1'));}">审核成功</a></li>
+    <li {if intval($_GPC['status']) == 2}class="active"{/if}><a href="{php echo web_url('platform/goods_list',array('status' => '2'));}">审核失败</a></li>
+    {/if}
+    <li {if intval($_GPC['status']) == 3}class="active"{/if}><a href="{php echo web_url('platform/goods_list',array('status' => '3'));}">已下架</a></li>
+</ul>
+{if intval($_GPC['status']) == '100'}
+
+
+<div class="openDIV nactive" style="background-color:rgba(0,0,0,0.3);width:100%;height:100%;position:fixed;left:0px;top:0px;z-index:9999;">
+
+</div>
+{else}
+<div class="panel panel-info">
+    <div class="panel-heading">筛选</div>
+    <div class="panel-body">
+        <form action="./index.php" method="get" class="form-horizontal" role="form">
+            <input type="hidden" name="c" value="site" />
+            <input type="hidden" name="a" value="entry" />
+            <input type="hidden" name="m" value="lexiangpingou" />
+            <input type="hidden" name="do" value="platform" />
+            <input type="hidden" name="ac" value="goods_list" />
+            <input type="hidden" name="op" value="{$_GPC['op']}" />
+            <input type="hidden" name="status" value="{$_GPC['status']}">
+            <div class="form-group">
+                <label class="col-xs-12 col-sm-2 col-md-2 col-lg-1 control-label">搜索条件</label>
+                <select name="con_type" class="categoryI form-control tpl-category-parent" style="margin-right:20px;display: inline-block;width: 20%;float: left;">
+                    <option value="1" {if $_GPC['con_type']==1} selected=true{/if}>商品名称</option>
+                    <option value="2" {if $_GPC['con_type']==2} selected=true{/if}>批次号</option>
+                    <option value="3" {if $_GPC['con_type']==3} selected=true{/if}>供应商</option>
+                </select>
+                <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
+                    <input class="form-control" name="keyword" id="" type="text" value="{$_GPC['keyword']}" placeholder="请输入搜索关键词">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-xs-12 col-sm-2 col-md-2 col-lg-1 control-label">价格类型</label>
+                <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
+                        <div class="input-group">
+                            <label class="radio radio-inline">
+                                <input type="radio" name="ctype" value="1" {if $_GPC['ctype'] == '1' }checked="checked"{/if}>整件批发
+                            </label>
+                            <label class="radio radio-inline">
+                                <input type="radio" name="ctype" value="0" {if $_GPC['ctype'] == '0'}checked="checked"{/if}>一件代发
+                            </label>
+                        </div>
+                </div>
+                <div class="col-md-2">
+                    <button class="btn btn-default min-width"><i class="fa fa-search"></i> 搜索</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+{if empty($goodses)}
+<div style="text-align: center;padding: 90px 0;" class="panel panel-default">暂无数据~</div>
+{else}
+<div class="panel panel-default">
+    <div class="table-responsive">
+        <table class="table table-hover" >
+            <thead>
+            <tr>
+                <th style="width:30px;">
+                    <input type="checkbox" name="checkall" value="" id="checkall" onclick="var ck = this.checked; $(':checkbox').each(function(){this.checked = ck});"/>
+                </th>
+                {if $_W['uniacid'] == 33}
+                <th class="text-center" style="width:70px;">排序</th>
+                {/if}
+                <th class="text-center">批次号</th>
+                <th>商品图</th>
+                <th>商品名</th>
+                <th class="text-center">建议零售价/供应价</th>
+                <th class="text-center">库存/销量</th>
+                <th class="text-center">协议</th>
+                <th class="text-center">操作</th>
+            </tr>
+            </thead>
+            <tbody>
+            <!-- 模态框（Modal） -->
+            <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                                &times;
+                            </button>
+                            <h4 class="modal-title" id="myModalLabel">
+                               审核此商品
+                            </h4>
+                        </div>
+                        <div class="modal-body">
+                            <div class="form-group">
+                                <label class="col-xs-12 col-sm-6 col-md-4 col-lg-4 control-label">原因</label>
+                                <div class="col-md-7">
+                                    <input type="text" class="form-control reason" value=""/>
+                                </div>
+                                <div style="clear: both;"></div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" id="yunxu" onclick="yunxu()">拒绝审核
+                            </button>
+                            <button type="button" class="btn btn-primary" id="jujue" onclick="jujue()">
+                                审核通过
+                            </button>
+                        </div>
+                    </div><!-- /.modal-content -->
+                </div><!-- /.modal -->
+            </div>
+            <div class="modal fade" id="myModal1" tabindex="-1" role="dialog" aria-labelledby="myModalLabel1" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                                &times;
+                            </button>
+                            <h4 class="modal-title" id="myModalLabel1">
+                                下架商品
+                            </h4>
+                        </div>
+                        <div class="modal-body">
+                            <div class="form-group">
+                                <label class="col-xs-12 col-sm-6 col-md-4 col-lg-4 control-label">原因</label>
+                                <div class="col-md-7">
+                                    <input type="text" class="form-control reason1" value=""/>
+                                </div>
+                                <div style="clear: both;"></div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-primary" onclick="xjBtn()">
+                                确定
+                            </button>
+                        </div>
+                    </div><!-- /.modal-content -->
+                </div><!-- /.modal -->
+            </div>
+            <div class="modal fade" id="reject" tabindex="-1" role="dialog" aria-labelledby="myModalLabel1" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                                &times;
+                            </button>
+                            <h4 class="modal-title" id="myModalLabel1">
+                                驳回商品
+                            </h4>
+                        </div>
+                        <div class="modal-body">
+                            <div class="form-group">
+                                <label class="col-xs-12 col-sm-6 col-md-4 col-lg-4 control-label">原因</label>
+                                <div class="col-md-7">
+                                    <input type="text" class="form-control reject_cause" value=""/>
+                                </div>
+                                <div style="clear: both;"></div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-primary" onclick="rejectBtn()">
+                                确定
+                            </button>
+                        </div>
+                    </div><!-- /.modal-content -->
+                </div><!-- /.modal -->
+            </div>
+            <!--延期确认模态框-->
+            <div class="modal fade" tabindex="-1" role="dialog" id="delayModal">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                            <h4 class="modal-title">确认延期</h4>
+                        </div>
+                        <div class="modal-body">
+                            <p >确认修改延期时间为：<span id="delaytime"></span></p>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                            <button type="button" class="btn btn-primary" id="confirmdelay">确认</button>
+                        </div>
+                    </div><!-- /.modal-content -->
+                </div><!-- /.modal-dialog -->
+            </div><!-- /.modal -->
+            <script>
+                function check(self) {
+                    var gid =  $(self).attr('data-id');
+                    var op = $(self).attr('id');  //你下面op都写死了  你在干嘛
+                    $('#yunxu').attr('data-id',gid);
+                };
+
+                function yunxu() {
+                    if($('.reason').val()==''){
+                        util.tips('请填写原因');
+                        return false;
+                    }
+                    $.ajax({
+                        url:"{php echo web_url('platform/goods_list')}",
+                        type:'post',
+                        dataType:"json",
+                        data:{
+                            'id': $('#yunxu').attr('data-id'),
+                            "op":"check",
+                            "status":2,
+                            "reason":$('.reason').val()
+                        },
+                        success:function (res) {
+                            window.location.reload();
+                        },
+                        error:function (res) {
+
+                        }
+                    });
+                }
+                //失败处理
+                function jujue() {
+                    $.ajax({
+                        url:"{php echo web_url('platform/goods_list')}",
+                        type:'post',
+                        dataType:"json",
+                        data:{
+                            'id':$('#yunxu').attr('data-id'),
+                            "op":"check",
+                            "status":1
+                        },
+                        success:function (res) {
+                            window.location.reload();
+                        },
+                        error:function (res) {
+
+                        }
+                    });
+                }
+            </script>
+            {php $i=0;}
+            {loop $goodses $goods}
+
+            <tr data-toggle="popover" data-trigger="hover" data-placement="left" class="js-goods-img" >
+                <td><input type="checkbox" id="gid"  name="items[{php echo $i}]" value="{$goods['id']}" class="items" /></td>
+                {if $_W['uniacid'] == 33}
+                <td class="text-center"><input id="gorder" onchange="showUser(this.value,{$goods['id']})" type="text" class="form-control js-displayorder" value="{php echo $goods['displayorder'];}" data-id="{$goods['id']}"/> </td>
+                {/if}
+                <td class="text-center">{$goods['pici']}</td>
+                <td><img class="scrollLoading" src="{php echo tomedia($goods['gimg'])}" data-url="{php echo tomedia($goods['gimg'])}" onerror="this.src='{IMAGE_NOPIC_SMALL}'" height="60" width="70"/></td>
+                <td class="line-feed" style="word-wrap:break-word;line-height:25px;">
+                    {if $_W['uniacid'] == 33 || $_W['uniacid'] == $goods['supply_id']}
+                    <span class="label label-warning">{$goods['supply_name']}</span><br>
+                    {/if}
+                    <span class="label label-info">{$goods['name']}</span><br>
+                    <span class="label label-success" >状态：
+                        {if $goods['status'] == 0}待提交
+						{elseif $goods['status'] == 1}审核通过
+                        {elseif $goods['status'] == -1}审核中
+                        {elseif $goods['status'] == 2}审核失败
+                        {elseif $goods['status'] == 3}供应商下架
+                        {elseif $goods['status'] == -3}强制下架
+                        {/if}
+                    </span>
+                </td>
+
+                <td class="text-center" style="line-height:25px;">
+                    <span class="label label-info">建议零售价：￥{php echo number_format($goods['oprice'], 2)}</span><br>
+                    <span class="label label-info">供应价：￥{php echo number_format($goods['mprice'], 2)}</span>
+                    {if $goods['activetime']}
+                    <br>
+                    <span class="label label-warning">到期评价时间：<br>{php echo date('Y-m-d H:i' , $goods['activetime'])}</span>
+                    {/if}
+                </td>
+                <td class="text-center" style="line-height:25px;">
+                    <span class="label label-warning">库存：{$goods['stock']}</span><br>
+                    <span class="label label-info">销量：{$goods['salenum']}</span>
+                    {if in_array($_W['uniacid'] , [33 , $goods['supply_id']])}
+                    <br><span class="label label-success">上架商家：{php echo intval($goods['on_shelf'])}</span>
+                    {/if}
+                    <br><span class="label label-info">{if $goods['ctype'] == 1}整件批发{else}一件代发{/if}</span>
+                </td>
+
+                <td>
+                    {if $_W['uniacid'] == 33 || $_W['uniacid'] == $goods['supply_id']}
+                        {if !empty($goods['xieyi_img'])}
+                            <img onclick="$('.detail3 img').attr('src',$(this).attr('src'));$('.detail3').fadeIn();" style="cursor:pointer;width: 100%;max-height: 100px;" src="{php echo tomedia($goods['xieyi_img']);}" alt="">
+                        {/if}
+                    {/if}
+                </td>
+                <td class="text-center" style="position:relative;">
+                    <a onclick="ajaxdetail({$goods['id']})" data-id="{$goods['id']}" href="javascript:;">查看详情</a><br/>
+                    {if $_W['uniacid'] == 33 && $goods['turn_down'] == 1}
+                    <a href="javascript:;" data-id="{$goods['id']}" data-toggle="modal" data-target="#reject" onclick="$('#reject').attr('data-id',{$goods['id']});">驳回</a><br/>
+                    {/if}
+                    {if $goods['status'] == 1 && intval($_GPC['status']) == 5}
+                    <a href="javascript:;" onclick="upDown(this)" mark="{$goods['is_advert_img']}" goodsid="{$goods['id']}">{php echo $goods['is_advert_img'] == '0' ? '上' : '下'}架广告图</a><br/>
+                    {/if}
+                    {if $goods['status'] == 1 && $_W['uniacid'] == 33}
+                        <a href="javascript:;" data-toggle="modal" data-target="#myModal1" onclick="$('#myModal1').attr('data-id',{$goods['id']});">强制下架</a><br/>
+                    {elseif $goods['status'] == 1 && $_W['uniacid'] == $goods['supply_id']}
+                        <a href="javascript:;" data-toggle="modal" data-target="#myModal1" onclick="$('#myModal1').attr('data-id',{$goods['id']});">下架</a><br/>
+                    {/if}
+                    {if ($goods['status'] == 0 || $goods['status'] == 2) && $goods['supply_id'] == $_W['uniacid'] && $goods['activetime'] > TIMESTAMP}
+                        <a href="javascript:;" data-pici="{$goods['pici']}" data-gname="{$goods['name']}" onclick="shelf(this,{$goods['id']})">上架审核</a>
+                    {/if}
+                    {if $goods['status'] == 1 && $goods['supply_id'] != $_W['uniacid'] && $goods['activetime'] > TIMESTAMP}
+                        {if intval($goods['is_copy']) == 0 && intval($goods['ctype']) == 0}
+                            <a href="javascript:;" onclick="copy(this,event,{$goods['id']},0)">采纳商品</a>
+                        {/if}
+                        {if intval($goods['copy']) == 0 && intval($goods['ctype']) == 1}
+                            <a href="javascript:;" onclick="openmode(this,{$goods['id']},{$goods['hasoption']},{$goods['mprice']},{$goods['weight']},{$goods['min_num']})">批量购买</a>
+                        {/if}
+
+                    {/if}
+
+                    {if $goods['supply_id'] == $_W['uniacid'] && ($goods['status']  == 0 || $goods['status'] == 2)}
+                        <a href="{php echo web_url('platform/goods_list', array('op' => 'edit','id' => $goods['id']))}" class="">编辑</a>
+                    {/if}
+                    {if $_W['uniacid'] == 33 && $goods['status'] == -1 && $goods['activetime'] > TIMESTAMP}
+                        <a href="javascript:;" class="" id="check" data-toggle="modal" data-target="#myModal" data-id="{$goods['id']}" onclick="check(this)">审核</a>
+                    {/if}
+                    {if $goods['activetime'] < TIMESTAMP && $goods['status'] == 1 && ($goods['copy'] || $goods['is_copy'])}
+                        <a href="{php echo web_url('platform/score', array('op' => 'add','id' => $goods['id']))}">评价</a>
+                    {/if}
+                    {if $goods['status'] != -3 && $goods['supply_id'] == $_W['uniacid']}
+                        <br />
+                        <a href="javascript:;" class="delay js-goods-copy" style="cursor: pointer !important;">
+                            延期
+                            <script type="text/javascript">
+//
+
+                                require(["datetimepicker"], function(){
+                                    $(function(){
+                                        var option = {
+                                            lang : "zh",
+                                            step : 5,
+                                            timepicker : true,
+                                            closeOnDateSelect : false,
+                                            closeOnTimeSelect:true,
+                                            format : "Y-m-d H:i",
+                                            minDate:0,
+                                            validateOnBlur:false,
+                                            closeOnWithoutClick:true,
+                                            onClose:function(dp,$input){
+                                                var id = $input.attr('data-id');
+                                                var delaytime = $input.val();
+                                                if(delaytime){
+                                                    $('#delayModal').modal();
+                                                    $('#delaytime').html(delaytime);
+                                                    $('#confirmdelay').on('click',function () {
+                                                        $.ajax({
+                                                            type: "POST",
+                                                            url: "{php echo web_url('platform/goods_list', array('op' =>'delay'))}",
+                                                            data:{
+                                                                "id":id,
+                                                                "activetime":delaytime,
+                                                            },
+                                                            dataType: "json",
+                                                            success: function(data){
+                                                                if(data == 1){
+                                                                    util.tips("延期成功" , 3000);
+                                                                    setTimeout(function () {
+                                                                        window.location.reload();
+                                                                    },1000)
+                                                                }else if(data == 2){
+                                                                    window.location.reload();
+                                                                }else if(data == 0){
+                                                                    util.tips("操作失败，请稍后重试" , 3000);
+                                                                    return false;
+                                                                }
+                                                            }
+                                                        });
+                                                        $('#delayModal').modal('hide');
+                                                    })
+                                                }
+                                            }
+                                        };
+                                        $(".datetimepicker[name = 'delaytime']").datetimepicker(option);
+                                    });
+                                });
+                            </script>
+                            <input  hidden type="text" data-id="{$goods['id']}" name="delaytime" value="" placeholder="请选择日期时间" readonly="readonly" class="datetimepicker form-control" style="padding-left:12px;cursor: pointer">
+                        </a>
+                    {/if}
+                </td>
+            </tr>
+
+            {php $i++;}
+            {/loop}
+            </tbody>
+        </table>
+    </div>
+</div>
+{/if}
+<style>
+    .options{
+        padding-left: 0;
+    }
+    .options li{
+        display: flex;
+        align-items: center;
+        display: -webkit-flex;
+        -webkit-align-items: center;
+    }
+    .options li div{
+        margin-left: 30px;
+    }
+    .options a,.courier a{
+        display: inline-block;
+        padding: 3px 15px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        margin: 0 5px;
+        color: inherit;
+    }
+    .options a.active,.courier a.active{
+        background-color: #428bca;
+        border-color: #428bca;
+        color: #fff;
+    }
+</style>
+<link rel="stylesheet" href="{TG_URL_WRES}lib/bootstrap-chinese-region/bootstrap-chinese-region.css">
+<style>
+    .detail .form-group{
+        width: 49%;
+        display: inline-block;
+    }
+    .detail img.payimg{
+        max-width: 100%;
+    }
+    .detail label{
+        text-align: right;
+    }
+    .gdesc,.goodsdesc{
+        word-wrap: break-word;
+        border: 1px solid #ddd;
+        padding: 10px;
+        border-radius: 5px;
+        max-height: 400px;
+        overflow-y: auto;
+    }
+    .detail .nav-tabs>li>a.active{
+        border-bottom-color:#44b549;
+        background-color: #eee;
+    }
+</style>
+<div class="page-trade-order detail" style="background-color: rgba(0,0,0,0.7);z-index:10;position: fixed;top: 0;left: 0;width: 100%;height: 100%;display: none">
+    <div class="panel panel-default" style="position: absolute;top: 5%;left: 15%;width: 70%;max-height: 90%;overflow-y: auto">
+        <div class="panel-heading">商品详情
+            <a onclick="$('.detail').fadeOut()" style="cursor:pointer; float:right; margin-right:10px; font-weight:bold;" href="javascript:;">X</a>
+        </div>
+        <div class="panel-body">
+            <ul class="nav nav-tabs">
+                <li><a data-class=".jbxx" class="active" href="javascript:;">基本信息</a></li>
+                <li><a data-class=".kcgg" href="javascript:;">规格库存</a></li>
+                <li><a data-class=".jjxq" href="javascript:;">商品简介</a></li>
+                <li><a data-class=".spxq" href="javascript:;">商品详情</a></li>
+            </ul>
+            <div class="jbxx">
+                <div class="form-group">
+                    <label class="col-xs-12 col-sm-6 col-md-4 col-lg-4 control-label">商品名称</label>
+                    <div class="col-md-7">
+                        <input type="text" class="form-control gname" readonly/>
+                    </div>
+                    <div style="clear: both;"></div>
+                </div><div class="form-group">
+                <label class="col-xs-12 col-sm-6 col-md-4 col-lg-4 control-label">单位</label>
+                <div class="col-md-7">
+                    <input type="text" class="form-control unit" readonly/>
+                </div>
+                <div style="clear: both;"></div>
+            </div><div class="form-group">
+                <label class="col-xs-12 col-sm-6 col-md-4 col-lg-4 control-label">库存</label>
+                <div class="col-md-7">
+                    <input type="text" class="form-control stock" readonly/>
+                </div>
+                <div style="clear: both;"></div>
+            </div><div class="form-group">
+                <label class="col-xs-12 col-sm-6 col-md-4 col-lg-4 control-label">服务费</label>
+                <div class="col-md-7">
+                    <input type="text" class="form-control taxrate" readonly/>
+                </div>
+                <div style="clear: both;"></div>
+            </div><div class="form-group">
+                <label class="col-xs-12 col-sm-6 col-md-4 col-lg-4 control-label">售价</label>
+                <div class="col-md-7">
+                    <input type="text" class="form-control oprice" readonly/>
+                </div>
+                <div style="clear: both;"></div>
+            </div><div class="form-group">
+                <label class="col-xs-12 col-sm-6 col-md-4 col-lg-4 control-label">供应价</label>
+                <div class="col-md-7">
+                    <input type="text" class="form-control mprice" readonly/>
+                </div>
+                <div style="clear: both;"></div>
+            </div><div class="form-group">
+                <label class="col-xs-12 col-sm-6 col-md-4 col-lg-4 control-label">重量</label>
+                <div class="col-md-7">
+                    <input type="text" class="form-control weight" readonly/>
+                </div>
+                <div style="clear: both;"></div>
+            </div>
+            <div class="form-group">
+                <label class="col-xs-12 col-sm-6 col-md-4 col-lg-4 control-label">规格</label>
+                <div class="col-md-7">
+                    <input type="text" class="form-control hasoption" readonly/>
+                </div>
+                <div style="clear: both;"></div>
+            </div>
+            <div class="form-group">
+                <label class="col-xs-12 col-sm-6 col-md-4 col-lg-4 control-label">价格类型</label>
+                <div class="col-md-7">
+                    <input type="text" class="form-control ctype" readonly/>
+                </div>
+                <div style="clear: both;"></div>
+            </div>
+            <div class="form-group">
+                <label class="col-xs-12 col-sm-6 col-md-4 col-lg-4 control-label">首页视频</label>
+                <div class="col-md-7">
+                    <input type="text" class="form-control index_video" readonly/>
+                </div>
+                <div style="clear: both;"></div>
+            </div><div class="form-group">
+                <label class="col-xs-12 col-sm-6 col-md-4 col-lg-4 control-label">快递</label>
+                <div class="col-md-7 dispatch_list">
+                    <input type="text" class="form-control " readonly/>
+                </div>
+                <div style="clear: both;"></div>
+            </div><div class="form-group">
+                <label class="col-xs-12 col-sm-6 col-md-4 col-lg-4 control-label">首页图片</label>
+                <div class="col-md-7">
+                    <img class="gimg payimg" src="" alt="">
+                </div>
+                <div style="clear: both;"></div>
+            </div>
+                <!--<div class="form-group">-->
+                <!--<label class="col-xs-12 col-sm-6 col-md-4 col-lg-4 control-label">图集</label>-->
+                <!--<div class="col-md-7 imgs">-->
+                <!--&lt;!&ndash;<img style="position: absolute;bottom:0;right: 100%;display: none;z-index: 20" class="id_card_img" src="" alt="">&ndash;&gt;-->
+                <!--</div>-->
+                <!--<div style="clear: both;"></div>-->
+                <!--</div>-->
+            </div>
+            <div class="kcgg" style="display: none"></div>
+            <div class="jjxq" style="display: none">
+                <div class="form-group" style="width: 100%">
+                    <label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label">商品属性</label>
+                    <div class="col-md-9 params">
+                    </div>
+                    <div style="clear: both;">
+
+                    </div>
+                </div><div class="form-group">
+                    <label class="col-xs-12 col-sm-6 col-md-4 col-lg-4 control-label">分享标题</label>
+                    <div class="col-md-7">
+                        <input type="text" class="form-control share_title" readonly/>
+                    </div>
+                    <div style="clear: both;"></div>
+                </div><div class="form-group">
+                    <label class="col-xs-12 col-sm-6 col-md-4 col-lg-4 control-label">分享描述</label>
+                    <div class="col-md-7">
+                        <input type="text" class="form-control share_desc" readonly/>
+                    </div>
+                    <div style="clear: both;"></div>
+                </div><div class="form-group">
+                    <label class="col-xs-12 col-sm-6 col-md-4 col-lg-4 control-label">分享图片</label>
+                    <div class="col-md-7">
+                        <img class="share_image payimg" src="" alt="">
+                    </div>
+                    <div style="clear: both;"></div>
+                </div>
+            </div>
+            <div class="spxq" style="display: none">
+                <div class="form-group" style="width: 100%">
+                    <label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label">详情简介</label>
+                    <div class="col-md-9 goodsdesc" style="margin-left: 10px">
+                    </div>
+                    <div style="clear: both;"></div>
+                </div><div class="form-group" style="width: 100%;max-height: 500px;">
+                    <label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label">商品详情</label>
+                    <div class="col-md-9 gdesc" style="margin-left: 10px">
+                    </div>
+                    <div style="clear: both;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="page-trade-order detail2" style="background-color: rgba(0,0,0,0.7);z-index:10;position: fixed;top: 0;left: 0;width: 100%;height: 100%;display: none">
+    <div class="panel panel-default" style="position: absolute;top: 5%;left: 15%;width: 70%;max-height: 90%;overflow-y: auto">
+        <div class="panel-heading">协议
+            <a onclick="$('.detail2').fadeOut()" style="cursor:pointer; float:right; margin-right:10px; font-weight:bold;" href="javascript:;">X</a>
+        </div>
+        <div class="panel-body">
+            <div class="news_box inset wxverify" id="print_xieyi" style="margin: 0 auto;height: 460px;overflow: auto">
+                <div class="inner" style="border:1px solid #ddd;padding: 10px">
+                    <h3 style="margin-top: 5px;text-align: center">极限单品批次供应承诺书</h3>
+                    <!--<h4>【首部及导言】</h4>-->
+                    <p>根据国家相关的法律、法规，双方经友好协商，在自愿、公开、诚信、守法、本着互利互惠的原则下，供应商做出以下承诺：</p>
+                    <p>一、承诺遵守供货商品的资质、质量及配送发货时间规定</p>
+                    <p>1、供应商品的品质符合国家标准、行业标准的相关规定</p>
+                    <p>2、具备相应的资格，如营业执照、食品流通许可证等相关资质证明，如相关资质变更、过期及时更新资质资料提交至平台。</p>
+                    <p>3、供应商品描述与实际货品相符</p>
+                    <p class="goods_msg">4、承诺----商品 ----批次保障商品质量及其售后服务。</p>
+                    <p>5、承诺接收到平台订单起24小时内完成发货，并将配送信息报表发至平台方。</p>
+                    <p>二、承诺遵守供货价格的相关规定</p>
+                    <p>1、供货商提供产品的价格应公平合理</p>
+                    <p>三、承诺遵守以下供货结算方式、交易风险及商品售后服务的相关规定</p>
+                    <p>（一）结算方式</p>
+                    <p>1、平台结算方式按供货批次结算，结算时间为该批次货品售卖成功且客户成功签收后无其他售后问题，火蝶将根据供货商提交的提现指示安排结算该批次货款。结算规则为默认7天+店铺评分权重值弹性结算方式。</p>
+                    <p>2、款项专属：对火蝶为您代收的货款，火蝶将予以妥善保管，除本协议另行规定外，不作任何其他非您指示的用途。火蝶通过您的登录名和密码识别您的指示，请您妥善保管您的登录名和密码，对于因密码泄露所致的损失，由您自行承担。</p>
+                    <p>3、交易异常处理：您使用本服务时，可能因银行本身系统问题、银行相关作业网络连线问题或其他不可抗拒因素，造成我司无法提供服务。您确保您所输入的您的资料无误，如果因资料错误造成火蝶于上述异常状况发生时，无法及时通知您相关交易后续处理方式的，火蝶不承担任何损害赔偿责任。</p>
+                    <p>4、火蝶会将与您火蝶账户相关的资金，独立于本公司营运资金之外，且不会将该资金用于非您指示的用途，但下述“交易风险”项约定的除外。</p>
+                    <p>（二）、交易风险</p>
+                    <p>您理解并同意，火蝶不对因下述任一情况导致的任何损害赔偿承担责任，包括但不限于利润、商誉、使用、数据等方面的损失或其他无形、间接损失的损害赔偿：</p>
+                    <p>1、因您的原因导致的任何损失由您自行承担，该过错包括但不限于：不按照交易提示操作，未及时进行交易操作，遗忘或泄漏密码，密码被他人破解，您使用的计算机被他人侵入。 </p>
+                    <p>2、违反《银行卡业务管理办法》使用银行卡，或利用信用卡套取现金（以下简称套现）。如您的交易涉及非真实或违法交易，火蝶公司有权冻结您的款项，并提交监管部门进行处理。</p>
+                    <p>3、火蝶在发现异常交易或有售后未处理或有违反法律规定或本协议约定之虞时，有权不经通知先行暂停或终止该账户的使用，并有权冻结货款资金用于处理违规问题（包括但不限于对该账户名下的款项和在途交易采取取消交易、调账等限制措施）</p>
+                    <p>4、其他火蝶有正当理由认为不适当之行为。 </p>
+                    <p style="height: 7px"></p>
+                    <p style="margin-left: 60%">承诺企业（个体）盖公章</p>
+                    <p style="height: 7px"></p>
+                    <p style="margin-left: 60%">承诺人（手印）</p>
+                    <p style="height: 7px"></p>
+                    <p style="margin-left: 60%">{php echo date('Y年m月d日')}</p>
+                </div>
+            </div>
+            <div class="form-group" style="height:inherit;margin: 50px 0">
+                <label class="col-xs-12 col-sm-3 col-md-1 col-lg-1 control-label"><span style='color:red'>*</span>上传协议</label>
+                <div class="col-md-6">
+                    <input type="text" readonly value="提交" class="btn btn-primary col-lg-1 shengheTJ" style="border: none;background-color: #44b549;float: right;position: relative;">
+                    <a href="javascript:;" type="button" onclick="print()" class="btn btn_primary"  id="down_button" style="margin-left:20px;color: #fff;margin-right:10px;float: right;border: none;background-color: #44b549;">点击立即打印</a>
+                    {php echo tpl_form_field_image('xieyi_img' , $goods['xieyi_img']);}
+                    <span class="help-block col-sm-12">协议需要盖章，签名后才有效</span>
+                </div>
+                <div class="col-md-12" style="border-bottom: 1px solid #ccc"></div>
+            </div>
+        </div>
+        <!--<div class="panel-footer" style="margin-bottom: 30px">-->
+            <!--<input type="text" readonly value="提交" class="btn btn-primary col-lg-1 shengheTJ" style="border: none;background-color: #44b549;float: right;position: relative;">-->
+            <!--<a href="javascript:;" type="button" onclick="print()" class="btn btn_primary"  id="down_button" style="color: #fff;margin-right:10px;float: right;border: none;background-color: #44b549;">点击立即打印</a>-->
+        <!--</div>-->
+    </div>
+</div>
+<div class="page-trade-order detail3" style="background-color: rgba(0,0,0,0.7);z-index:10;position: fixed;top: 0;left: 0;width: 100%;height: 100%;display: none">
+    <div class="panel panel-default" style="position: absolute;top: 5%;left: 25%;width: 50%;max-height: 90%;overflow-y: auto">
+        <div class="panel-heading">协议
+            <a onclick="$('.detail3').fadeOut();" style="cursor:pointer; float:right; margin-right:10px; font-weight:bold;" href="javascript:;">X</a>
+        </div>
+        <div class="panel-body" style="text-align: center">
+            <img style="max-width: 100%" src="" alt="">
+        </div>
+    </div>
+</div>
+<div class="paydetail" style="position: fixed;z-index:10;top: 0;left: 0;background-color: rgba(0,0,0,0.7); width: 100%;height: 100%;display: none">
+    <div class="panel panel-default" style="position: absolute;top: 15%;left: 25%;width: 50%">
+        <div class="panel-heading">批量购买
+            <a onclick="$('.paydetail').fadeOut();clearTimeJS();" style="cursor:pointer; float:right; margin-right:10px; font-weight:bold;" href="javascript:;">X</a>
+        </div>
+        <div class="panel-body" onclick="$('.dropdown-menu').hide()">
+            <div>
+                <div class="form-group">
+                    <label class="col-xs-12 col-sm-3 col-md-1 col-lg-1 control-label">姓名</label>
+                    <div class="col-md-8">
+                        <input class="form-control name" value=""/>
+                    </div>
+                    <div style="clear: both;"></div>
+                </div>
+                <div class="form-group">
+                    <label class="col-xs-12 col-sm-3 col-md-1 col-lg-1 control-label">手机号</label>
+                    <div class="col-md-8">
+                        <input class="form-control tel" maxlength="11" value=""/>
+                    </div>
+                    <div style="clear: both;"></div>
+                </div>
+                <div class="form-group hasoption" style="display: none">
+                    <div style="display:table;content:' ';"></div>
+                    <label class="col-xs-12 col-sm-3 col-md-1 col-lg-1 control-label">规格</label>
+                    <div class="col-md-8">
+                        <ul class="options">
+                            <li>
+                                <!--<h5>尺寸</h5>-->
+                                <!--<div>-->
+                                <!--<a href="javascript:;">大号</a>-->
+                                <!--<a href="javascript:;">中号</a>-->
+                                <!--</div>-->
+                            </li>
+                        </ul>
+                    </div>
+                    <div style="clear: both;"></div>
+                </div>
+                <div class="form-group">
+                    <label class="col-xs-12 col-sm-3 col-md-1 col-lg-1 control-label">重量</label>
+                    <div class="col-md-8">
+                        <input class="form-control weight" value="" readonly/>
+                    </div>
+                    <div style="clear: both;"></div>
+                </div>
+                <div class="form-group">
+                    <label class="col-xs-12 col-sm-3 col-md-1 col-lg-1 control-label">单价</label>
+                    <div class="col-md-8">
+                        <input class="form-control oprice" value="" readonly/>
+                    </div>
+                    <div style="clear: both;"></div>
+                </div>
+                <div class="form-group">
+                    <label class="col-xs-12 col-sm-3 col-md-1 col-lg-1 control-label">数量</label>
+                    <div class="col-md-8">
+                        <input type="number" class="form-control num" value="1"/>
+                    </div>
+                    <div style="clear: both;"></div>
+                </div>
+                <div class="form-group">
+                    <div style="display:table;content:' ';"></div>
+                    <label class="col-xs-12 col-sm-3 col-md-1 col-lg-1 control-label">地址</label>
+                    <div class="col-md-8">
+                        <div class="form-group">
+                            <div onclick="event.stopPropagation();$('.dropdown-menu').toggle();" class="bs-chinese-region flat dropdown" data-submit-type="id" data-min-level="1" data-max-level="3">
+                                <!--<input type="text" class="form-control" id="address" placeholder="选择你的地区" data-toggle="dropdown" readonly="" value="">-->
+                                <!--<div class="dropdown-menu" role="menu" aria-labelledby="dLabel">-->
+                                    <!--<div>-->
+                                        <!--<ul class="nav nav-tabs" role="tablist">-->
+                                            <!--<li role="presentation" class="active"><a href="#province" data-next="city" role="tab" data-toggle="tab">省份</a></li>-->
+                                            <!--<li role="presentation"><a href="#city" data-next="district" role="tab" data-toggle="tab">城市</a></li>-->
+                                            <!--<li role="presentation"><a href="#district" data-next="street" role="tab" data-toggle="tab">县区</a></li>-->
+                                        <!--</ul>-->
+                                        <!--<div class="tab-content">-->
+                                            <!--<div role="tabpanel" class="tab-pane active" id="province">&#45;&#45;</div>-->
+                                            <!--<div role="tabpanel" class="tab-pane" id="city">&#45;&#45;</div>-->
+                                            <!--<div role="tabpanel" class="tab-pane" id="district">&#45;&#45;</div>-->
+                                        <!--</div>-->
+                                    <!--</div>-->
+                                <!--</div>-->
+                                <select onchange="ajaxCity()" name="province" class="categoryI form-control tpl-category-parent" style="width:30%;margin-right:3%;display: inline-block;">
+                                    <option value="">省</option>
+                                    {loop $province $item}
+                                    <option value="{$item['id']}">{$item['areaname']}</option>
+                                    {/loop}
+                                </select>
+                                <select onchange="ajaxCounty()" name="city" class="categoryI form-control tpl-category-parent" style="width:30%;margin-right:3%;display: inline-block;">
+                                    <option value="">市</option>
+                                </select>
+                                <select name="county" class="categoryI form-control tpl-category-parent" style="width:30%;display: inline-block;">
+                                    <option value="">区</option>
+                                </select>
+                            </div>
+                            <input style="margin-top: 15px;" type="text" class="form-control addDetail"  placeholder="请填写详细地址" value="">
+                        </div>
+                    </div>
+                    <div style="clear: both;"></div>
+                </div>
+                <div class="form-group kd">
+                    <label class="col-xs-12 col-sm-3 col-md-1 col-lg-1 control-label">快递</label>
+                    <div class="col-md-8 courier">
+                        <!--<a href="javascript:;">顺丰</a>-->
+                    </div>
+                    <div style="clear: both;"></div>
+                </div>
+                <div class="form-group">
+                    <label class="col-xs-12 col-sm-3 col-md-1 col-lg-1 control-label">运费</label>
+                    <div class="col-md-8">
+                        <input type="number" class="form-control courier_num" value="" readonly/>
+                    </div>
+                    <div style="clear: both;"></div>
+                </div>
+            </div>
+        </div>
+        <div class="panel-footer" style="height: 60px">
+            <input onclick="buy(this)" type="submit" value="立即购买" class="btn btn-primary col-lg-2 buy" style="float: right;">
+        </div>
+        <div class="wx" style="text-align: center;position: absolute;right: 5%;width: 20%;top:20%;display: none;z-index: 100">
+            <img id="payimage" src="" alt="" style="width: 200px;">
+            <p style="text-align: center" id="myDiv"></p>
+        </div>
+    </div>
+</div>
+<div class="model-dialog delivery" hidden="hidden">
+    <div class="hiden-map"></div>
+    <div class="delivery-body">
+        <div class="panel panel-info">
+            <div class="panel-heading">
+                <span></span>
+                <a onclick="$('.delivery').fadeOut()" style="cursor:pointer; float:right; margin-right:10px; font-weight:bold;" href="javascript:;">X</a>
+            </div>
+            <div class="panel-body">
+                <table class="table table-hover mb0">
+                    <thead class="js-freight-cost-list-header">
+                        <tr>
+                            <th>可配送至</th>
+                            <th style="width:120px;">首重运费（元）</th>
+                            <th style="width:120px;">首重(g)</th>
+                            <th style="width:120px;">续重运费(元)</th>
+                            <th style="width:120px;">续重(g)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript" src="{TG_URL_WRES}lib/bootstrap/bootstrap.js"></script>
+<script type="text/javascript" src="{TG_URL_WRES}lib/bootstrap-chinese-region/bootstrap-chinese-region.js"></script>
+{$pager}
+{/if}
+
+<script type="text/javascript" src="//html2canvas.hertzen.com/build/html2canvas.js"></script>
+<script>
+    function showUser(str,gid) {
+        var paixv = str;
+        var orid = gid;
+        $.post("{php echo web_url('platform/goods_list/numx')}",{oridd:orid,paixvv:paixv}
+            ,function(data){
+                util.tips('新的排序已保存！', 2000);
+
+            },'json'
+        );
+    }
+    //下载协议canvas
+    function print(){
+        var _pici = $('.goods_msg').attr('data-pici');
+        var _gname = $('.goods_msg').attr('data-gname');
+
+        window.open("{php echo web_url('platform' , array('ac' => $_GPC['ac'],'op' => 'print1'))}&name="+_gname+"&pici="+_pici);
+    }
+
+    function escapeHtml(text) {
+        var a=text.replace(/(\&lt;)/g,"<");
+        var b=a.replace(/(\&gt;)/g,">");
+        var c=b.replace(/(\&amp;)/g,"\&");
+        var d=c.replace(/(\&quot;)/g,"\"");
+        return d;
+    }
+    //加载商品详情
+    function ajaxdetail(id) {
+        $.get("{php echo web_url('platform/goods_list/detail');}",{"id":id},function(res){
+            var data=JSON.parse(res);
+            if(data){
+                if(data.id) {
+                    if({$_W['uniacid']}==33||{$_W['uniacid']}==data.supply_id){
+                        $('.taxrate').val(data.taxrate+'%');
+                    }else{
+                        $('.taxrate').val('').parents('.form-group').hide();
+                        $('.dispatch_list').parents('.form-group').css('float','left');
+                    }
+                    $('.gname').val(data.name);
+                    $('.unit').val(data.unit);
+                    $('.stock').val(data.stock);
+
+                    $('.oprice').val(data.oprice);
+                    $('.mprice').val(data.mprice);
+                    $('.weight').val(data.weight);
+                    $('.index_video').val(data.index_video);
+                    $('.ctype').val((data.ctype == '1') ? '整件批发' : '一件代发');
+                    $('.hasoption').val((data.hasoption == '1') ? '有' : '无');
+                    $('.gimg').attr('src',data.gimg);
+//                    if(data.imgs){//图集
+//                        var html='';
+//                        for(var j=0;j<data.imgs;j++){
+//                            html+='<img src="'+data.imgs[j].src+'" alt="">';
+//                        }
+//                        $('.imgs').html(html);
+//                    }
+
+                    if(data.params){//商品属性
+                        var html='<table>';
+                        for(var i=0;i<data.params.length;i++){
+                            html+='<tr><td><input style="margin-bottom:10px;width: 95%" type="text" class="form-control param_title" value="'+data.params[i].title+'">' +
+                                '</td><td><input style="margin-bottom:10px;width: 95%" type="text" class="form-control param_value" value="'+data.params[i].value+'"></td></tr>';
+                        }
+                        $('.params').html(html+'</table>');
+                    }else{
+                        $('.params').html('无');
+                    }
+                    $('.goodsdesc').html(escapeHtml(data.goodsdesc));
+                    $('.gdesc').html(escapeHtml(data.gdesc));
+                    $('.share_title').val(data.share_title);
+                    $('.share_desc').val(data.share_desc);
+                    $('.share_image').attr('src',data.share_image);
+
+                    if(data.hasoption==0){//无规格
+                        $('.kcgg,.detail .nav-tabs>li>a:eq(1)').css('display','none');
+                    }else{
+                        $('.kcgg').html(data.guige);
+                        $('.kcgg input').attr('disabled','disabled');
+                    }
+                    if(data.isfree==0&&data.dispatch_list){//有运费
+                        var html='';
+                        for(var i=0;i<data.dispatch_list.length;i++){
+                            html+='<a style="margin-right: 5px" href="javascript:;" class="btn btn-default btn-sm" onclick="showDelivery('+ data.dispatch_list[i].id +')">'+data.dispatch_list[i].name+'</a>';
+                        }
+                        $('.dispatch_list').html(html);
+                    }else{
+                        $('.dispatch_list').html('<a href="javascript:;" class="btn btn-default btn-sm">包邮</a>');
+                    }
+
+
+                    $('.kcgg,.detail .nav-tabs>li>a:eq(1)').click();
+                    $('.page-trade-order.detail').fadeIn();
+//                util.tips(data.data);
+                }
+            }else{
+                util.tips(data.data);
+                return false;
+            }
+        })
+    }
+    //查看运费模板
+    function showDelivery(id) {
+        $.get("{php echo web_url('platform/goods_list/yunfei_detail');}",{"id":id},function(res){
+            var data = JSON.parse(res);
+            if (data.status) {
+                list = data.data;
+                $('.delivery-body').find('.panel-heading span').text(list.name);
+                var html = '';
+                var trData = list.region;
+                for (var i = 0; i < trData.length; i++) {
+                    if (trData[i] != null) {
+                        // if (trData[i].first_fee) {}
+                        var cities = trData[i].hasOwnProperty('cities') ? trData[i].cities : "";
+                        var first_fee = trData[i].hasOwnProperty('first_fee') ? trData[i].first_fee : "";
+                        var first_weight = trData[i].hasOwnProperty('first_weight') ? trData[i].first_weight : "";
+                        var second_fee = trData[i].hasOwnProperty('second_fee') ? trData[i].second_fee : "";
+                        var second_weight = trData[i].hasOwnProperty('second_weight') ? trData[i].second_weight : "";
+                        html += '<tr>'
+                                    +'<td class="on"><span class="li-td" onclick="showDeliveryCities(this)">'+ cities +'</span></td>'
+                                    +'<td>'+ first_fee +'</td>'
+                                    +'<td>'+ first_weight +'</td>'
+                                    +'<td>'+ second_fee +'</td>'
+                                    +'<td>'+ second_weight +'</td>'
+                                +'</tr>';
+                    }
+                }
+                $('.delivery-body').find('.panel-body tbody').append(html);
+                $('.model-dialog.delivery').fadeIn();
+            }
+            console.log(data);
+        });
+    }
+    function showDeliveryCities(e) {
+        if ($(e).hasClass('li-td')) {
+            $(e).removeClass('li-td');
+        } else {
+            $(e).addClass('li-td');
+        }
+    }
+    //查看详情导航
+    $('.detail .nav-tabs>li').on('click','a',function(){
+        if($(this).hasClass('active')){
+            return;
+        }
+        $('.detail .nav-tabs>li a').removeClass('active');
+        $(this).addClass('active');
+        $('.detail .panel-body>div').css('display','none');
+        $($(this).attr('data-class')).css('display','block');
+    });
+    //采纳商品
+    function copy(self,e,ida,s,option){
+        var id = $(self).prev().prev().attr("data-id");
+        if(option==1){
+
+        }else {
+            e.stopPropagation();
+
+            var html = "采纳本商品，将保存在【极限单品商品管理】【下架的商品】中！";
+            util.nailConfirm(self, function (state) {
+                if (!state) return;
+                $.post("{php echo web_url('platform/platform_copy')}", {id: ida, copy: s}, function (data) {
+                    console.log(data);
+                    if (Number(data.status) > 0) {
+                        util.tips("采纳成功");
+                        setTimeout(function () {
+                            location.href = "{php echo web_url('goods/jxdp' , array('status' => 2));}";
+                        }, 1000)
+                    } else {
+                        util.tips("采纳失败");
+                    }
+                }, 'json');
+            }, {html: html});
+        }
+    }
+    //下架商品
+    function xjBtn(){
+        if($('.reason1').val()==''){
+            util.tips('请填写原因');
+            return false;
+        }
+        var id = $('#myModal1').attr("data-id");
+        $.post("{php echo web_url('platform/goods_list/down')}", {id: id,reason:$('.reason1').val()}, function (res) {
+            var data = JSON.parse(res);
+            console.log(data);
+            if (Number(data.status) > 0) {
+                util.tips(data.message);
+                setTimeout(function () {
+                    location.href = "{php echo web_url('platform/goods_list');}";
+                }, 1000)
+            } else {
+                util.tips(data.message);
+            }
+        })
+    }
+
+    //驳回商品
+    function rejectBtn () {
+        if($('.reject_cause').val()==''){
+            util.tips('请填写原因');
+            return false;
+        }
+        var id = $('#reject').attr("data-id");
+        $.post("{php echo web_url('platform/goods_list/turn_down')}",{id: id, reason: $('.reject_cause').val()}, function (res) {
+            res = JSON.parse(res);
+            console.log(res);
+            util.tips(res.message);
+            setTimeout(function () {
+                location.href = location.href;
+            },1000)
+        })
+    }
+    //上架商品,同意协议操作
+    function shelf(self,ida){
+        $('.detail2').fadeIn().attr('data-id',ida);
+        var _pici = $(self).attr('data-pici');
+        var _gname = $(self).attr('data-gname');
+        $('.goods_msg').html('4、承诺<u>'+_gname+'</u>商品<u>'+_pici+'</u>批次保障商品质量及其售后服务。').attr('data-pici', _pici).attr('data-gname', _gname);
+    }
+    //提交按钮，确认提交审核
+    $('.shengheTJ').click(function(){
+        if($('input[name="xieyi_img"]').val()==''){
+            util.tips('请上传协议');
+            return;
+        }
+        $.post("{php echo web_url('platform/goods_list/check_goods')}",
+            {'id': $('.detail2').attr('data-id'),'xieyi_img':$('input[name="xieyi_img"]').val()},
+            function (data) {
+                console.log(data);
+                if (Number(data.status)>0) {
+                    util.tips("上架成功");
+                    setTimeout(function(){location.href = "{php echo web_url('platform/goods_list/display',array('status' => 5));}";},1000)
+                }else{
+                    util.tips("上架失败");
+                }
+        }, 'json');
+    });
+
+    //点击批量购买弹出选择框
+    function openmode(self,id,option,oprice,weight,min_num) {
+        //重置参数
+        $('input.name,input.tel,input.weight,input.oprice,#address,.addDetail,input.courier_num').val('');
+        $('input.num').val(1);
+
+
+        $('.buy').attr('data-id',id).attr('data-option',option).attr('data-minnum',min_num);
+        $('.oprice').val(oprice);
+        //加载规格
+        if(option==1){
+            $.get(
+                "{php echo web_url('platform/goods_list/options')}",
+                {'id':id},
+                function(res){
+//                    console.log(res);
+                    var data=JSON.parse(res);
+                    $('.buy').attr('data-options',JSON.stringify(data.options));
+                    var html='';
+                    for(var i=0;i<data.allspecs.length;i++){
+                        var li='<li><h5>'+data.allspecs[i].title+'</h5><div>';
+                        var a='';
+                        for(var j=0;j<data.allspecs[i].items.length;j++){
+                            a+='<a href="javascript:;">'+data.allspecs[i].items[j].title+'</a>'
+                        }
+                        html+=li+a+'</div></li>';
+                    }
+                    $('ul.options').html(html);
+                }
+            );
+            $('.hasoption').css('display','block');
+        }else{
+            $('.hasoption').css('display','none');
+            $('.weight').val(weight);
+        }
+        //加载运费模板
+        $.get(
+            "{php echo web_url('platform/goods_list/yunfei')}",
+            {"id":id},
+            function(res){
+                var data=JSON.parse(res);
+                if(data.dispatch_list){
+                    var html='';
+                    for(var j=0;j<data.dispatch_list.length;j++){
+                        html += '<a onclick="courier(this)" data-id="'+data.dispatch_list[j].id+'" href="javascript:;">'+data.dispatch_list[j].name+'</a>';
+                    }
+                    $('.courier').html(html);
+                }else{
+                    $('.courier').html('<a href="javascript:;" class="active">包邮</a>');
+                    $('.courier_num').val('0.00');
+                }
+                $('.paydetail').fadeIn();
+            }
+        );
+    }
+
+    //规格选择
+    $('.options').on('click','a',function(){
+        if($(this).html()=='包邮'){
+            return;
+        }
+        if($(this).hasClass('active')){
+            return;
+        }
+        $(this).parent().children('a').removeClass('active');
+        $(this).addClass('active');
+        var options=JSON.parse($('.buy').attr('data-options'));
+        var items='';
+        for(var j=0;j<$('.options li').length;j++){
+            if($($('.options li')[j]).find('a.active')) {
+                items += '+' + $($('.options li')[j]).find('a.active').html();
+            }
+        }
+        for(var i=0;i<options.length;i++){
+            if(items.slice(1)==options[i].title){
+                $('.oprice').val(options[i].costprice);
+                $('.weight').val(options[i].weight);
+                $('.hasoption').attr('data-optionname',options[i].title);
+            }
+        }
+    });
+
+    //运费模板选择
+   function courier(self){
+        if($('.weight').val()==''){
+            util.tips('请先选择规格');
+            return;
+        }
+        if($('[name="province"] option:selected').val()==''||$('[name="city"] option:selected').val()==''||$('[name="county"] option:selected').val()==''){
+            util.tips('请先选择地区');
+            return;
+        }
+        if($(self).hasClass('active')){
+            return;
+        }
+        var weight=Number($('.weight').val())*Number($('.num').val());
+        $.get(
+            "{php echo web_url('platform/goods_list/freight')}",
+            {
+                'tid':$(self).attr('data-id'),
+                'province':$('[name="province"] option:selected').html(),
+                'city':$('[name="city"] option:selected').html(),
+                'county':$('[name="county"] option:selected').html(),
+                'weight':weight
+            },
+            function(res){
+                var data=JSON.parse(res);
+                if(data.freight){
+                    $('.courier_num').val(data.freight);
+                }else{
+
+                }
+            }
+        );
+        $(self).parent().children('a').removeClass('active');
+        $(self).addClass('active');
+    };
+
+    //地址选择引入
+//     var urlB='{TG_URL_WRES}lib/bootstrap-chinese-region/sql_areas.json';
+//     $.getJSON(urlB,function(data){
+//         for (var i = 0; i < data.length; i++) {
+//             var area = {id:data[i].id,name:data[i].cname,level:data[i].level,parentId:data[i].upid};
+//             data[i] = area;
+//         }
+// //        setTimeout(function(){
+//             $('.bs-chinese-region').chineseRegion('source',data);
+// //        },2000)
+
+//     });
+
+    //立即购买按钮
+    function buy(self) {
+        if($(self).attr('data-option')==1){
+            var liLen=$('.options li').length;
+            var aLen=$('.options a.active').length;
+            if(liLen!=aLen){
+                util.tips('请选择规格');
+                return;
+            }
+        }
+        if($('input.tel').val()==''){
+            util.tips('请收入手机号');
+            return;
+        }
+        if(!(/^1[34578]\d{9}$/.test($('input.tel').val()))){
+            util.tips('手机号填写有误');
+            return;
+        }
+        if($('.num').val()==''){
+            util.tips('请填写数量');
+            return;
+        }
+        if($('#address').val()==''){
+            util.tips('请选择地址');
+            return;
+        }
+        if($('.paydetail .addDetail').val()==''){
+            util.tips('请填写详细地址');
+            return;
+        }
+        if(!$('.courier a').hasClass('active')){
+            util.tips('请选择快递');
+            return;
+        }
+        if(Number($('.num').val())<Number($(self).attr('data-minnum'))){
+            util.tips('购买量必须大于'+$(self).attr("data-minnum")+'件');
+            return;
+        }
+        $.post(
+            "{php echo web_url('platform/goods_list/shop_submit')}",
+            {
+                'id':$(self).attr('data-id'),
+                'tid':$('.courier .active').attr('data-id'),
+                'weight':$('.weight').val(),
+                'freight':$('.courier_num').val(),
+                'optionname':$('.hasoption').attr('data-optionname'),
+                'gnum':$('input.num').val(),
+                'addname':$('input.name').val(),
+                'mobile':$('input.tel').val(),
+                'province':$('[name="province"] option:selected').html(),
+                'city':$('[name="city"] option:selected').html(),
+                'county':$('[name="county"] option:selected').html(),
+                'address':$('.addDetail').val()
+            },
+            function(res){
+                var data=JSON.parse(res);
+                console.log(data);
+                if(data.status != '1') {
+                    util.tips(data.message);
+                    return;
+                }
+                if(data.copy==1){
+                    $.post("{php echo web_url('goods/goods/copy',array('copy'=>1));}", {id: $(self).attr('data-id')}, function (data) {
+                    }, 'json');
+                }
+                if(data.order_id>0){
+                    var orderid=data.order_id;
+                    $.post("{php echo web_url('platform/platform_pay/pay');}", {'money': data.money,'orderid':orderid}, function (res) {
+                        var data = JSON.parse(res);
+                        console.log(data);
+                        if (data.status == 'success') {
+                            $("#payimage").attr('src', urlC + data.data.url);
+                            $('.wx').css('display','block');
+                            timeJS(data.data.order_id,orderid);
+                        }
+                    });
+
+                }
+            }
+        )
+    }
+</script>
+<!--微信支付-->
+<script>
+    var urlC = 'http://paysdk.weixin.qq.com/example/qrcode.php?data=';
+    $(function () {
+
+//        var money = {$account['margin']};
+//        $.post("{php echo web_url('store/merchant_margin/pay');}", {money: money}, function (res) {
+//            var data = JSON.parse(res);
+//            console.log(data);
+//            if (data.status == 'success') {
+//                $("#payimage").attr('src', urlC + data.data.url);
+//                timeJS(data.data.order_id);
+//            }
+//        });
+    });
+    function clearTimeJS(){
+        window.clearInterval(myIntval);
+        $('#payimage').attr('src','');
+    }
+    var myIntval;
+    function timeJS(order_id,orderid) {
+        //设置每隔1000毫秒执行一次load() 方法
+        myIntval = setInterval(function () {
+            load()
+        }, 1000);
+        function load() {
+//            document.getElementById("timer").innerHTML=parseInt(document.getElementById("timer").innerHTML)+1;
+            var xmlhttp;
+            if (window.XMLHttpRequest) {
+                // code for IE7+, Firefox, Chrome, Opera, Safari
+                xmlhttp = new XMLHttpRequest();
+            } else {
+                // code for IE6, IE5
+                xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+            }
+            xmlhttp.onreadystatechange = function () {
+//                clearInterval(myIntval);
+                if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+                    trade_state = xmlhttp.responseText;
+                    console.log(trade_state);
+                    if (trade_state == 'SUCCESS') {
+//                        document.getElementById("myDiv").innerHTML = '支付成功';
+                        util.tips('支付成功');
+                        clearInterval(myIntval);
+
+                        //alert(transaction_id);
+                        //延迟3000毫秒执行tz() 方法
+
+                        //setTimeout("location.href='http://www.baidu.com'",3000);
+                        var num = order_id;
+                        $.ajax({
+                            url: "{php echo web_url('platform/platform_pay',array('op'=>'check_success'))}",
+                            type: "post",
+                            data: {
+                                order_id: String(num),
+                                orderid:orderid
+                            },
+                            success: function (res) {
+                                clearInterval(myIntval);
+//                                setTimeout(function () {
+                                    location.reload();
+//                                }, 700);
+                            },
+                            error: function (res) {
+                                alert('error');
+                            }
+                        });
+
+                    } else if (trade_state == 'REFUND') {
+//                        document.getElementById("myDiv").innerHTML = '转入退款';
+                        clearInterval(myIntval);
+                    } else if (trade_state == 'NOTPAY') {
+//                        document.getElementById("myDiv").innerHTML = '请扫码支付';
+
+                    } else if (trade_state == 'CLOSED') {
+//                        document.getElementById("myDiv").innerHTML = '已关闭';
+                        clearInterval(myIntval);
+                    } else if (trade_state == 'REVOKED') {
+//                        document.getElementById("myDiv").innerHTML = '已撤销';
+                        clearInterval(myIntval);
+                    } else if (trade_state == 'USERPAYING') {
+//                        document.getElementById("myDiv").innerHTML = '用户支付中';
+                    } else if (trade_state == 'PAYERROR') {
+//                        document.getElementById("myDiv").innerHTML = '支付失败';
+                        clearInterval(myIntval);
+                    }
+
+                }
+            };
+//            orderquery.php 文件返回订单状态，通过订单状态确定支付状态
+            xmlhttp.open("POST", "{php echo web_url('platform/platform_pay',array('op'=>'check'))}", false);
+            //下面这句话必须有
+            //把标签/值对添加到要发送的头文件。
+            xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+            xmlhttp.send("out_trade_no=" + order_id);
+        }
+
+    }
+
+    $('.scrollLoading').hover(function(){
+        var img = $(this).attr('src');
+        var obj = this;
+        var $pop = util.popover(obj, function($popover, obj){
+            obj.$popover = $popover;
+        }, '<div><img src="'+img+'" style="max-width:200px; max-height:200px;"></div>');
+    }, function(){
+        this.$popover.remove();
+    });
+
+    function ajaxCity() {
+        var id= $('select[name="province"] option:selected').val();
+        $.get(
+            "{php echo web_url('store/bdelete/county')}",
+            {
+                "opp":'city',
+                "sid":id
+            },
+            function (res) {
+                var data=JSON.parse(res).data;
+                console.log(data);
+                var html='<option value="">市</option>';
+                for(var key in data){
+                    html += "<option value='" + data[key].id + "'>" + data[key].areaname + "</option>";
+                }
+                $('select[name="city"]').html(html);
+                $('select[name="county"]').html('<option value="">区</option>');
+            }
+        )
+    }
+    function ajaxCounty() {
+        var id= $('select[name="city"] option:selected').val();
+        $.get(
+            "{php echo web_url('store/bdelete/county')}",
+            {
+                "opp":'county',
+                "cid":id
+            },
+            function (res) {
+                var data=JSON.parse(res).data;
+                console.log(data);
+                var html='<option value="">区</option>';
+                for(var key in data){
+                    html += "<option value='" + data[key].id + "'>" + data[key].areaname + "</option>";
+                }
+                $('select[name="county"]').html(html);
+            }
+        )
+    }
+    function upDown(e) {
+        var mark = $(e).attr('mark');
+        if (mark == "0") {
+            var text = '下架广告图';
+            var remark = 1;
+        } else {
+            var text = '上架广告图';
+            var remark = 0;
+        }
+        var goodsid = $(e).attr('goodsid');
+        $.post(
+            "{php echo web_url('platform/goods_list/up_down')}",
+            {
+                "goodsid": goodsid,
+                "is_advert_img": remark
+            },
+            function (res) {
+                util.tips('操作成功！');
+                $(e).text(text);
+                $(e).attr('mark', remark);
+            }
+        );
+    }
+</script>
+{php include wl_template('common/footer');}

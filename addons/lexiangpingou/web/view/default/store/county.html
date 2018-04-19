@@ -1,0 +1,153 @@
+<div class="main">
+    <div class='panel panel-default'>
+        <div class='panel-heading'>
+            核销门店设置
+        </div>
+        <div class='panel-body'>
+            <table class="table">
+                <thead>
+                <tr>
+                    <th>省</th>
+                    <th>市</th>
+                    <th>区</th>
+                    <th>操作</th>
+                </tr>
+                </thead>
+                <tbody>
+                {loop $list $row}
+                <tr>
+                    <td>{$row['province']}</td>
+                    <td>{$row['city']}</td>
+                    <td>{$row['county']}</td>
+                    <td style="position: relative">
+                        <!--<a class='btn btn-default' href="javascript:;" onclick="editAdd({$row['countyid']})"><i class='fa fa-edit'></i></a>-->
+                        <a class='btn btn-default js-delete-goods' goods-id="{$row['id']}"  href="jaascript:;"><i class='fa fa-remove'></i></a>
+                    </td>
+                </tr>
+                {/loop}
+                </tbody>
+            </table>
+        </div>
+        {if checkstr($_W['user']['perms'],'store.add')}
+        <div class='panel-footer'>
+            <a class='btn btn-default' href="javascript:;"  onclick="openDetail()"><i class="fa fa-plus"></i> 添加新区域</a>
+        </div>
+        {/if}
+    </div>
+</div>
+<div class="detail" style="z-index: 10;position: fixed;top: 0;left: 0;background-color: rgba(0,0,0,0.7); width: 100%;height: 100%;display: none">
+    <div class="panel panel-default" style="position: absolute;top: 15%;left: 25%;width: 50%">
+        <div class="panel-heading">请选择省市区
+            <a onclick="$('.detail').fadeOut()" style="cursor:pointer; float:right; margin-right:10px; font-weight:bold;" href="javascript:;">X</a>
+        </div>
+        <div class="panel-body">
+            <select onchange="ajaxCity()" name="province" class="categoryI form-control tpl-category-parent" style="width:25%;margin-right:20px;display: inline-block;">
+                <option value="">省</option>
+                {loop $province $item}
+                <option value="{$item['id']}">{$item['areaname']}</option>
+                {/loop}
+            </select>
+            <select onchange="ajaxCounty()" name="city" class="categoryI form-control tpl-category-parent" style="width:25%;margin-right:20px;display: inline-block;">
+                <option value="">市</option>
+            </select>
+            <select name="county" class="categoryI form-control tpl-category-parent" style="width:25%;display: inline-block;">
+                <option value="">区</option>
+            </select>
+        </div>
+        <div class="panel-footer" style="height: 60px">
+            <input onclick="sqfh(this)" type="submit" name="submit" value="提交" class="btn btn-primary col-lg-1 sqfh"
+                   style="float: right;">
+        </div>
+    </div>
+</div>
+
+<script>
+    function ajaxCity() {
+        var id= $('select[name="province"] option:selected').val();
+        $.get(
+            "{php echo web_url('store/bdelete/county')}",
+            {
+                "opp":'city',
+                "sid":id
+            },
+            function (res) {
+                var data=JSON.parse(res).data;
+                console.log(data);
+                var html='<option value="">市</option>';
+                for(var key in data){
+                    html += "<option value='" + data[key].id + "'>" + data[key].areaname + "</option>";
+                }
+                $('select[name="city"]').html(html);
+                $('select[name="county"]').html('<option value="">区</option>');
+            }
+        )
+    }
+    function ajaxCounty() {
+        var id= $('select[name="city"] option:selected').val();
+        $.get(
+            "{php echo web_url('store/bdelete/county')}",
+            {
+                "opp":'county',
+                "cid":id
+            },
+            function (res) {
+                var data=JSON.parse(res).data;
+                console.log(data);
+                var html='<option value="">区</option>';
+                for(var key in data){
+                    html += "<option value='" + data[key].id + "'>" + data[key].areaname + "</option>";
+                }
+                $('select[name="county"]').html(html);
+            }
+        )
+    }
+    function sqfh(self) {
+        if($('select[name="county"] option:selected').val()==''){
+            util.tips('请选择区域');
+            return;
+        }
+        $.post(
+            "{php echo web_url('store/bdelete/county')}",
+            {
+                "id":$('sqfh').attr('data-id'),
+                "opp":'post',
+                "provinceid":$('select[name="province"] option:selected').val(),
+                "cityid":$('select[name="city"] option:selected').val(),
+                "countyid":$('select[name="county"] option:selected').val(),
+                "province":$('select[name="province"] option:selected').html(),
+                "city":$('select[name="city"] option:selected').html(),
+                "county":$('select[name="county"] option:selected').html()
+            },
+            function (res) {
+                util.tips(JSON.parse(res).message);
+                setTimeout(function(){
+                    location.reload();
+                },1000)
+            }
+        )
+    }
+    function openDetail() {
+        $('sqfh').attr('data-id','');
+        $('.detail').fadeIn();
+    }
+    $('.js-delete-goods').click(function(e) {
+        e.stopPropagation();
+        var id = $(this).attr('goods-id');
+        var _this = $(this).parent().parent();
+        op = 'delete';
+        html = '确认删除?';
+        util.nailConfirm(this, function(state) {
+            if(!state) return;
+            $.get(
+                "{php echo web_url('store/bdelete/county', array('opp'=>'delete'))}",
+                {"id":id},
+                function(res){
+                    util.tips(JSON.parse(res).message);
+                    setTimeout(function(){
+                        location.reload();
+                    },1000)
+                }
+            )
+        }, {html: html});
+    });
+</script>

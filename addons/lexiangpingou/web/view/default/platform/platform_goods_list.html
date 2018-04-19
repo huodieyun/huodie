@@ -1,0 +1,368 @@
+{php include wl_template('common/header');}
+<style>
+    #Choose{
+        position: fixed;
+        z-index: 100;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0,0,0,0.7);
+        display: none;
+    }
+    #Choose>div{
+        width:65%;
+        height: 68%;
+        margin-top: 5%;
+        margin-left: 20%;
+        padding: 20px;
+        background-color: #f0f0f0;
+        border-radius: 5px;
+    }
+
+    a.thumbnail{
+        width: 150px;
+        height: 200px;
+        display: inline-block;
+        border: 4px solid #aaa;
+        margin: 0 15px 20px 15px;
+        padding: 0;
+    }
+    a.thumbnail.active,a.thumbnail:hover,a.thumbnail:focus{
+        border: 4px solid #f68e3a;
+    }
+    .thumbnail>img{
+        width: 100%;
+        height: 100%;
+    }
+    @media screen  and (max-width: 1600px){
+        .thumbnail{
+            width: 90px!important;
+            height: 120px!important;
+            margin: 0 15px 10px 15px!important;
+        }
+        #Choose>div{
+            padding: 10px 20px!important;
+        }
+    }
+</style>
+<script type="text/javascript" src="resource/js/lib/jquery-ui-1.10.3.min.js"></script>
+<div class="main">
+    <form action="" method="post" class="form-horizontal form" id="form" style="position: relative">
+        <div class="tab-content">
+
+            <!--商品信息-->
+            <div class="tab-pane  active" id="tab_basic">
+                <script>
+                    sessionStorage.setItem('selltypeOld',"{$goods['selltype']}");
+                </script>
+                <?php
+				 if(empty($_GPC['selltype'])){
+				 	$_GPC['selltype']=intval($goods['selltype']);
+				 }else{
+				 	$_GPC['selltype']-=1;
+				 }
+				?>
+
+                {php include wl_template('platform/goods_basicDanMai');}
+
+                <div class="col-sm-12">
+                    <a href="##" class="btn btn-primary col-lg-1 XinXi" onclick="gotoNext(this)">下一步</a>
+                </div>
+            </div>
+
+
+            <!--规格-->
+            <div class="tab-pane" id="tab_option">
+                <div class="panel panel-default">
+                    <div class="panel-heading">规格库存
+                        <a target="_blank" style="cursor:pointer; float:right; font-weight:bold;" href="http://v.youku.com/v_show/id_XMTc0OTkwNzY2MA==.html?from=s1.8-1-1.2&spm=a2h0k.8191407.0.0">视频演示>></a>
+                        <a target="_blank" style="cursor:pointer; float:right; margin-right:10px; font-weight:bold;" href="http://doc.lexiangpingou.cn/releaseProduct.html#ggkc">图文说明>></a>
+                    </div>
+                    <div class="panel-body">
+                        <div class="panel-body">
+                            {php include wl_template('platform/goods_option');}
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-12">
+                    <a href="##" class="btn btn-primary col-lg-1" style="margin-right:20px;"  onclick="gotoPrev(this)">上一步</a>
+                    <a href="##" class="btn btn-primary col-lg-1 GuiGe" onclick="gotoNext(this)">下一步</a>
+                </div>
+            </div>
+
+
+
+        <!--商品属性-->
+        <div class="tab-pane" id="tab_param">
+
+            <!--分享设置		-->
+            <div class="tab-pane" id="tab_share">
+                <div class="panel panel-default">
+                    <div class="panel-heading">分享设置<a target="_blank" style="cursor:pointer; float:right; font-weight:bold;" href="http://doc.lexiangpingou.cn/releaseProduct.html#fxsz">图文说明>></a></div>
+                    <div class="panel-body">
+                        <div class="panel-body">
+                            {php include wl_template('goods/goods_share');}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!--简介详情-->
+            <div class="tab-pane" id="tab_detail">
+                <div class="panel panel-default">
+                    <div class="panel-heading">简介详情<a target="_blank" style="cursor:pointer; float:right; font-weight:bold;" href="http://doc.lexiangpingou.cn/releaseProduct.html#jjxq">图文说明>></a></div>
+                    <div class="panel-body">
+                        <div class="panel-body">
+                            {php include wl_template('platform/goods_detail');}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="panel panel-default">
+                <div class="panel-heading">商品属性<a target="_blank" style="cursor:pointer; float:right; font-weight:bold;" href="http://doc.lexiangpingou.cn/releaseProduct.html#spsx">图文说明>></a></div>
+                <div class="panel-body">
+                    <div class="panel-body">
+                        {php include wl_template('goods/goods_param');}
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-12">
+                <a href="##" class="btn btn-primary col-lg-1" style="margin-right:20px;"  onclick="gotoPrev(this)">上一步</a>
+                <input class="TJButtonSX" type="hidden" name="id" value="{$goods['id']}" />
+                <input type="submit" name="submit" value="提交" class="btn btn-primary col-lg-1 TJButtonSX" />
+                <input class="TJButtonSX" type="hidden" name="token" value="{$_W['token']}" />
+            </div>
+        </div>
+
+    </div>
+    <div class="form-group col-sm-12 TJButtonCom">
+        <input type="hidden" name="id" value="{$goods['id']}" />
+        <input type="submit" name="submit" value="提交" class="btn btn-primary col-lg-1" style="float: left;position: relative;top: -34px;left:245px;"/>
+        <input type="hidden" name="token" value="{$_W['token']}" />
+    </div>
+    </form>
+
+</div>
+<script>
+    if(getQueryString('selltype')){
+        if(getQueryString('selltype')=='100'){
+            $('#Choose').fadeIn();
+        }
+        $('.TJButtonCom').remove();
+
+    }else{
+        $('.TJButtonSX').remove();
+    }
+
+    //获取url参数
+    function getQueryString(name) {
+        var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
+        var r = window.location.search.substr(1).match(reg);
+        if (r != null) return decodeURI(r[2]); return null;
+    }
+    var sTYPE=getQueryString('selltype');
+    var sT=sTYPE||(sessionStorage.getItem('selltypeOld')-0+1);
+    $('#chooseMS label>input').attr('disabled','');
+    $('#chooseMS label>input[value="'+(sT-1)+'"]').attr('checked','checked').removeAttr('disabled');
+
+    $('#tab_hexiao,#tab_level,#tab_luck').remove();
+
+    function checkStoreVal() {
+        if (document.getElementById("hasoption")){
+            var option = document.getElementById("hasoption"),
+                storeNum = document.querySelector("input[name='goods[gnum]']");
+            if (document.getElementById("hasoption").checked) {
+                var optionStocks = document.getElementsByClassName("option_stock"),
+                    len = optionStocks.length,
+                    sum = 0;
+                for (var i = 0; i < len; i++) {
+                    sum += Number(optionStocks[i].value);
+                }
+                storeNum.value = sum;
+            }
+        }
+    }
+
+    $(function () {
+        window.optionchanged = false;
+        $('#myTab a').click(function (e) {
+            e.preventDefault();//阻止a链接的跳转行为
+            $(this).tab('show');//显示当前选中的链接及关联的content
+        })
+    });
+    $(function(){
+        $('#form').submit(function(self){
+            if($('input[name="goods[share_image]"]').val()==""){
+                util.message('请上传分享图片');
+                return false;
+            }
+            if($('#hasoption')[0].checked){
+                if($('#options table').length>0) {
+                    for (var i = 0; i < $('#options tbody input[type="text"]').length; i++) {
+                        if ($('#options tbody input[type="text"]')[i].value == '') {
+                            util.message('请填写规格数据');
+                            return false;
+                        }
+                    }
+                }else{
+                    util.message('请填写规格数据');
+                    return false;
+                }
+            }
+            var media_id = $("input[name=wechat-video]").attr("meadia_id");//获取mediaid
+            $("#media_id").attr("value",media_id);
+            //获取url
+            var url = $("input[name=wechat-video]").attr("url");
+            $("#video_url").attr("value",url);
+//			$('input[name="submit"]').attr('disabled','');
+            checkStoreVal();
+            return true;
+        });
+    });
+
+
+    function gotoPrev(self){//上一页
+        $('.tab-content>.tab-pane').removeClass('active');
+        $(self).parent().parent().prev().addClass('active');
+    }
+    function gotoNext(self){//下一页
+        if($(self).hasClass('XinXi')) {//商品属性页
+            //公用判断
+
+            if ($('input[name="goods[gname]"]').val() == '') {
+                util.message('请填写商品名称');
+                return false;
+            }
+            if ($('input[name="goods[goods_style]"]:checked').length==0) {
+                util.message('请选择商品性质');
+                return false;
+            }
+            if ($('input[name="goods[gname]"]').val().length > 30) {
+                util.message('为保证支付正常，商品名称字数不能大于30个字');
+                return false;
+            }
+            if ($('input[name="goods[taxrate]"]').val()==''||Number($('input[name="goods[taxrate]"]').val())<1) {
+                util.message('技术服务费必须大于等于1');
+                return false;
+            }
+            if ($('input[name="goods[ctype]"]:checked').val()=='1'&&$('input[name="goods[min_num]"]').val()=='') {
+                util.message('请填写起订量');
+                return false;
+            }
+            if ($('input[name="goods[unit]"]').val() == '') {
+                util.message('请填写商品单位');
+                return false;
+            }
+            if ($('input[name="goods[gnum]"]').val() == ''||$('input[name="goods[gnum]"]').val() == ''<0) {
+                util.message('请填写商品库存');
+                return false;
+            }
+            if ($('input[name="goods[oprice]"]').val() == ''||$('input[name="goods[oprice]"]').val()<0) {
+                util.message('请填写商品售价');
+                return false;
+            }
+            if ($('input[name="goods[mprice]"]').val() == ''||$('input[name="goods[mprice]"]').val()<0) {
+                util.message('请填写商品市场价');
+                return false;
+            }
+            if ($('input[name="goods[gimg]"]').val() == '') {
+                util.message('请上传首页图片');
+                return false;
+            }
+            if($('input[name="goods[isfree]"]')[1].checked&&$('input[name="goods[goods_freight]"]').val()==''){
+                util.message('填写邮费');
+                return false;
+            }
+
+
+            var type = getQueryString('selltype')?(getQueryString('selltype')-1):(sessionStorage.getItem('selltypeOld')-0);
+
+                $('.DJdanmai,.pic').css('display','none');
+
+        }
+        if($(self).hasClass('GuiGe')){
+            if($('#hasoption')[0].checked) {
+                for (var i = 0; i < $('.spec_title').length; i++) {
+                    var str = $($('.spec_title')[i]).val();
+                    var patt1 = new RegExp(/[\u4e00-\u9fa5_a-zA-Z]/);
+                    var result = patt1.test(str);
+                    if (!result) {
+                        util.message('规格名必须包含字母或汉字');
+                        return false;
+                    }
+                }
+
+                for (var i = 0; i < $('.spec_item_title').length; i++) {
+                    var str = $($('.spec_item_title')[i]).val();
+                    var patt1 = new RegExp(/[\u4e00-\u9fa5_a-zA-Z]/);
+                    var result = patt1.test(str);
+                    if (!result) {
+                        util.message('规格项必须包含字母或汉字');
+                        return false;
+                    }
+                }
+            }
+        }
+        if($(self).hasClass('PeiSong')){//配送方式
+            for(var i=0;i<$('#tab_hexiao .radio>input').length;i++){
+                if($('#tab_hexiao .radio>input')[i].checked){
+                    var num=Number($($('#tab_hexiao .radio>input')[i]).attr('data-val'));
+                    if(num==1||num==7){
+                        if($('#dispatch input').length<1){
+                            util.message('请选择运费模板');
+                            return false;
+                        }
+                        if($('#stores input').length<1){
+                            util.message('请选择自提门店');
+                            return false;
+                        }
+                    }else if(num==2||num==4){
+                        if($('#dispatch input').length<1){
+                            util.message('请选择运费模板');
+                            return false;
+                        }
+                    }else if(num==3||num==6){
+                        if($('#stores input').length<1){
+                            util.message('请选择自提门店');
+                            return false;
+                        }
+                    }
+                }
+            }
+        }
+        if($(self).hasClass('GuiGe')) {//规格
+            if($('#hasoption')[0].checked){
+                if($('#options table').length>0) {
+                    for (var i = 0; i < $('#options tbody input[type="text"]').length; i++) {
+                        if ($('#options tbody input[type="text"]')[i].value == '') {
+                            util.message('请填写规格数据');
+                            return false;
+                        }
+                    }
+                }else{
+                    util.message('请填写规格数据');
+                    return false;
+                }
+            }
+        }
+        if($('input[name="goods[commissiontype]"]').length>0) {
+            if ($(self).hasClass('CuXiao')) {//促销方式
+                for (var i = 0; i < 2; i++) {
+                    if ($('input[name="goods[commissiontype]"]')[i].checked && $('input[name="goods[commission]"]').val() == "") {
+                        util.message('请选填写佣金');
+                        return false;
+                    }
+                }
+            }
+        }
+        $('.tab-content>.tab-pane').removeClass('active');
+        $(self).parent().parent().next().addClass('active');
+    }
+
+    function changeMS(){
+        $('#Choose').fadeIn();
+    }
+</script>
+{php include wl_template('common/footer');}

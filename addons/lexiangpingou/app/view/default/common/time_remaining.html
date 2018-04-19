@@ -1,0 +1,125 @@
+{if $goods['spikeT']==1}
+<style>
+    .time_remaining{
+        display: flex;
+        align-items: center;
+        display: -webkit-flex;
+        -webkit-align-items: center;
+        margin: 10px 0;
+        padding: 10px;
+        background: #fff;
+    }
+    .time_type{
+        color: #e4393c;
+    }
+    .time_remaining .time_type{
+        -webkit-box-flex: 1;   /* OLD - iOS 6-, Safari 3.1-6 */
+        -moz-box-flex: 1;     /* OLD - Firefox 19- */
+        -webkit-flex: 1;      /* Chrome */
+        -ms-flex: 1;           /* IE 10 */
+        flex: 1;              /* NEW, Spec - Opera 12.1, Firefox 20+ */
+    }
+    .time_remaining .time span{
+        padding: 5px;
+        background: #e4393c;
+        color: #fff;
+        border-radius: 5px;
+    }
+    .time_remaining h5,.time_remaining h6{
+        display: inline-block;
+        margin-right: 10px;
+    }
+    .time_remaining h6{
+        font-weight: 700;
+    }
+</style>
+
+    <div class="time_remaining">
+        <div class="time_type">
+            <div class="startT"><h5>开始时间</h5><h6></h6></div>
+            <div class="endT"><h5>结束时间</h5><h6></h6></div>
+            <div class="time">
+                <!--<span>10</span>-->
+                <!--<b>:</b>-->
+                <!--<span>06</span>-->
+                <!--<b>:</b>-->
+                <!--<span>50</span>-->
+            </div>
+        </div>
+
+        <div style="padding: 0 10px;border-left: 1px solid #ddd">
+            <div>已售:{$goods['salenum']}</div>
+            <div>库存:{$goods['gnum']}</div>
+        </div>
+    </div>
+    <script>
+        //开始时间
+        var startT = "{php echo $goods['spike_start']}"*1000;
+        var time = new Date(startT);
+        var starty = time.getFullYear();
+        var startm = time.getMonth()+1;
+        var startd = time.getDate();
+        var starth = time.getHours();
+        var startmm = time.getMinutes();
+        var starts = time.getSeconds();
+        $(".startT h6").html('<span>' + add0(starty) + '/' + add0(startm) + '/' + add0(startd) + '</span><b> </b><span>' + add0(starth) + '</span><b>:</b><span>' + add0(startmm) + '</span><b>:</b><span>00</span>');
+        //结束时间
+        var endT = "{php echo $goods['spike_end']}"*1000;
+        var time = new Date(endT);
+        var endy = time.getFullYear();
+        var endm = time.getMonth()+1;
+        var endd = time.getDate();
+        var endh = time.getHours();
+        var endmm = time.getMinutes();
+        var ends = time.getSeconds();
+        $(".endT h6").html('<span>' + add0(endy) + '/' + add0(endm) + '/' + add0(endd) + '</span><b> </b><span>' + add0(endh) + '</span><b>:</b><span>' + add0(endmm) + '</span><b>:</b><span>00</span>');
+
+
+        if({$goods['spike_type']}!=0) {
+            //剩余时间
+            FreshTime();
+            setInterval(function () {
+                FreshTime();
+            }, 400);
+        }else{
+            FreshTime('weikaishi');
+            setInterval(function () {
+                FreshTime('weikaishi');
+            }, 400);
+        }
+
+        function add0(m){return m<10?'0'+m:m }
+        function FreshTime(a) {
+            var str ="{php echo date('Y-m-d H:i:s',$goods['spike_start'])}";
+            //alert('{php echo date('Y-m-d H:i:s',$tuaninfo['endtime'])}');
+            var lasttime = "{php echo $goods['spike_end']}" - "{php echo $goods['spike_start']}";
+            str = str.replace(/-/g, "/");
+            var starttime = new Date(str);//开始时间
+            var nowtime = new Date();//当前 时间
+            var now_time = nowtime.getTime();
+            var start_time = starttime.getTime();
+            if(a=='weikaishi'){//未开始状态 倒计时计算方式
+                var lefttime = -(now_time - start_time) / 1000; //计算剩余时间\
+            }else {
+                var lefttime = lasttime - ((now_time - start_time) / 1000); //计算剩余时间\
+            }
+            if (now_time >= {php echo $goods['spike_end'] * 1000}) {
+                $('.alone').css('background', '#bbb').css('padding-top', '15px').html('已售罄');
+                $('.alone').off('click');
+            }
+
+            if (lefttime > 0&&({$goods['gnum']}!=0)) {
+                hh = parseInt((lefttime / 3600));
+                mm = parseInt((lefttime / 60) % 60);
+                ss = parseInt(lefttime % 60);
+                var title = a =='weikaishi'? '距离秒杀开始' : '剩余时间';
+                $(".time_remaining .time").html('<h5>'+title+'</h5><span>' + add0(hh) + '</span><b>:</b><span>' + add0(mm) + '</span><b>:</b><span>' + add0(ss) + '</span>');
+            } else {
+                $('li.group a').removeAttr('href').removeAttr('onclick').off();
+                $('.footer .group').css('background','#aaa');
+                $('.qkt').html('已结束');
+                $(".time_remaining .time").html('<h5>剩余时间</h5><span>00</span><b>:</b><span>00</span><b>:</b><span>00</span>');
+            }
+        }
+    </script>
+{/if}

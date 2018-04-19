@@ -1,0 +1,61 @@
+{php include wl_template('common/header');}
+    <style>
+        .m-cart .empty a{color: {$_W['system_color']}}
+        .link-ding {width:96%;margin:auto;height:auto;background-color:white;border-radius:5px;margin-bottom:6px; }
+        .link-ding-header{width:90%;position:relative;left:5%;height:40px;border-bottom:1px solid #ccc;}
+        .link-ding-header div:first-child{position:absolute;top:12.5px;height:22.5px;line-height:22.5px;color:#6fbfd8;font-size:14px;}
+        .link-ding-header div:nth-child(2) {position:absolute;top:35px;height:15px;line-height:15px;color:#888;font-size:10px;}
+        .link-ding-header div:nth-child(3) {position:absolute;top:45px;height:15px;line-height:15px;color:#888;font-size:10px;}
+        .link-ding-header span{background-color:hsl(36, 100%, 49%);display:block;width:65px;height:22.5px;top:12.5px;right:0px;border-radius:5px;color:white;font-size:14px;line-height:22.5px;position:absolute;text-align:center;}
+        .link-ding-body {width:90%;margin-left:5%;margin-top:5px;font-size:12px;color:#333;}
+        .link-ding-body>div {position:relative;margin-bottom:10px;}
+        .link-ding-body>div div:last-child{position:absolute;right:5%;top:0px;color:#6fbfd8;bottom:0px;margin:auto;}
+        .link-ding-body>div div:nth-child(3) {position:absolute;right:30%;top:0px;bottom:0px;margin:auto;}
+        .link-body-feight {position:relative;margin-top:10px;color:#999;padding: 5px 0;}
+        .tabs {padding-top: 5px;margin-bottom: 70px;}
+
+    </style>
+
+<div class="page-group">
+    <div class="page page-current" id="page-order-list">
+        <div class="content infinite-scroll native-scroll" data-distance="10">
+            <div class="tabs">
+                {if count($list) == 0}
+                    <div class="text-center link-body-feight">
+                        暂无发货信息
+                    </div>
+                {/if}
+                {loop $list $item}
+                <div class="link-ding">
+                    <div class="link-ding-header">
+                        <div>订单号:{$item['orderno_child']}</div>
+                        <span>{$item['send_date']}</span>
+                    </div>
+                    <div class="link-ding-body">
+                            <!-- 1 送货上门 2快递 3自提 -->
+                        {if $item['dispatchtype'] == 1 || $item['dispatchtype'] == 2}
+                        <div>
+                            <div>快递：{$item['express']}</div>
+                            <span>快递单号：{$item['expresssn']}</span>
+                        </div>
+                        {/if}
+                        {if $item['dispatchtype'] == 3}
+                        <div>
+                            <div>核销人：{$item['hexiao_man']}</div>
+                            <span>自提地址：{$item['ziti_address']}</span>
+                        </div>
+                        {/if}
+                        <div class="link-body-feight" style="position: relative">
+                            <div style="color:#999">手机：{$item['mobile']}</div>
+                            <div class="link-total"><span class="ed5CO" style="color:#6fbfd8;font-size: 16px;">{php echo date('Y/m/d H:i', $item['delivery_date'])}</span></div>
+                        </div>
+                    </div>
+                </div>
+                {/loop}
+            </div>
+        </div>
+    </div>
+</div>
+{php include wl_template('common/footerbar');}
+
+{php include wl_template('common/footer');}

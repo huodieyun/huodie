@@ -1,0 +1,127 @@
+{php include wl_template('common/header');}
+<ul class="nav nav-tabs">
+    <li{if $status == '-11'} class="active"{/if}>
+        <a href="{php echo web_url('service/workform_list_admin', array('op' => 'display', 'status' =>'-11'))}">vip未回复</a>
+    </li>
+    <li{if $status == '11'} class="active"{/if}>
+        <a href="{php echo web_url('service/workform_list_admin', array('op' => 'display', 'status' =>'11'))}">vip已回复</a>
+    </li>
+	<li{if $status == '7'} class="active"{/if}>
+        <a href="{php echo web_url('service/workform_list_admin', array('op' => 'display', 'status' =>'7'))}">全部处理中</a>
+    </li>
+	<li{if $status == '-1'} class="active"{/if}>
+        <a href="{php echo web_url('service/workform_list_admin', array('op' => 'display', 'status' =>'-1'))}">未回复工单</a>
+    </li>
+	<li {if $status == '1'} class="active"{/if}>
+        <a href="{php echo web_url('service/workform_list_admin', array('op' => 'display', 'status' =>'1'))}">已回复工单</a>
+   </li>
+	<li {if $status == '2'} class="active"{/if}>
+        <a href="{php echo web_url('service/workform_list_admin', array('op' => 'display', 'status' =>'2'))}">已完成工单</a>
+    </li>
+	<li {if $status == '9'} class="active"{/if}>
+        <a href="{php echo web_url('service/workform_list_admin', array('op' => 'display', 'status' =>'9'))}">全部工单</a>
+    </li>
+    <li {if $status == '-3'} class="active"{/if}>
+        <a href="{php echo web_url('service/workform_list_admin', array('op' => 'display', 'status' =>'-3'))}">非vip功能</a>
+    </li>
+    <li {if $status == '-2'} class="active"{/if}>
+        <a href="{php echo web_url('service/workform_list_admin', array('op' => 'display', 'status' =>'-2'))}">不予开发</a>
+    </li>
+</ul>
+<div class="main"><a title="" style="overflow: hidden;"></a>
+	<div class="panel panel-info">
+	    <div class="panel-heading">筛选</div>
+	    <div class="panel-body">
+            <form action="{php echo web_url('agent/examine')}" method="get" class="form-horizontal" role="form" id="form1">
+            <input type="hidden" name="c" value="site" />
+            <input type="hidden" name="a" value="entry" />
+            <input type="hidden" name="m" value="lexiangpingou" />
+            <input type="hidden" name="do" value="service" />
+            <input type="hidden" name="ac" value="workform_list_admin" />
+            <input type="hidden" name="op" value="display" />
+            <input type="hidden" name="status" value="{$status}" />
+
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">工单号</label>
+                    <div class="col-sm-6 ">
+                        <input class="form-control" name="keyword_form_id" id="" type="text" value="{$_GPC['keyword_form_id']}" placeholder="可查询工单号">
+                    </div>
+                </div>
+				
+				<div class="form-group">
+                    <label class="col-sm-2 control-label">公众号</label>
+                    <div class="col-sm-6 ">
+                        <input class="form-control" name="keyword_gzname" id="" type="text" value="{$_GPC['keyword_gzname']}" placeholder="根据公众号查询">
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                	<label class="col-sm-2 control-label">工单类型</label>
+                    <div class="col-sm-6 ">
+                        <select name="type" class="form-control" >
+                            <option value="">--所有--</option>                            
+                            <option value="1" {if $_GPC['type']==1}selected="selected"{/if}>异常反馈</option>
+                            <option value="2" {if $_GPC['type']==2}selected="selected"{/if}>功能开发</option>
+                            <option value="3" {if $_GPC['type']==3}selected="selected"{/if}>模板定制</option>
+                        </select>
+                    </div>
+                </div>
+                
+                
+                <div class="form-group">
+                	<div class="col-md-offset-2 col-sm-2 col-lg-2" style="text-align: left;">
+	                	<button class="btn btn-default"><i class="fa fa-search"></i> 搜索</button>
+	                </div>
+                </div>
+            </form>
+			
+          <!--  <a href='{php echo $this->createWebUrl('grouporder', array('op' => 'output','groupstatus'=>$groupstatus,'starttime'=>$starttime,'endtime'=>$endtime))}'><button class="btn btn-info"><i class="fa fa-download"></i> 导出记录</button></a>-->
+	    </div>
+	</div>
+	<div class="panel panel-default">
+		<div class="panel-body table-responsive">
+			<table class="table table-hover">
+				<thead class="navbar-inner">
+					<tr>
+						<th style="width:18%">工单编号</th>
+						<th style="width:15%">公众号</th>
+						<th style="width:43%">工单主题</th>
+						<th style="width:15%">时间</th>
+						<th style="width:11%">状态</th>
+						<th style="width:8%;text-align: center;">操作</th>	
+					</tr>
+				</thead>
+				<tbody>
+				{loop $allform $form}
+				<tr>
+					<td>{$form['form_id']}</td>
+					<td {if $form['vip'] == 1}style="font-weight: bold;"{/if}>{$form['name']}</td>
+					<td style="text-align: left;"><span style="font-size: 12px; font-weight: bold;">{if $form['type'] == 1}(异常){elseif $form['type'] == 2}(功能){elseif $form['type'] == 3}(模板){/if}</span>{$form['title']}</td>
+					<td>{$form['create_time']}</td>
+					{if $form['type'] != 2}
+						{if $form['status'] == 1}<td><a class="label label-primary">等待回复</a></td>{/if}
+						{if $form['status'] == -1}<td><a class="label label-warning">有新信息</a></td>{/if}
+						{if $form['status'] == 2}<td><a class="label label-success">工单结束</a></td>{/if}
+					{else}
+						{if $form['status'] == -3}<td><a class="label label-primary">非vip</a></td>{else}
+						{if $form['status'] == -2}<td><a class="label label-danger">不予开发</a></td>{/if}
+						{if $form['status'] == -1}<td><a class="label label-warning">有新信息</a></td>{/if}
+						{if $form['status'] == 1}<td><a class="label label-primary">等待回复</a></td>{/if}
+						{if $form['status'] == 2}<td><a class="label label-info">允许开发</a></td>{/if}
+
+						{/if}
+					
+					
+					{/if}
+					<td style="text-align:center"><a class="btn btn-default btn-xs" href="{php echo web_url('service/workform_list_admin',array('op' => 'detail','form_id' => $form['form_id'],'status'=> $status))}">查看详情</a></td>
+				</tr>
+				{/loop}
+				</tbody>
+			</table>
+			{$pager}
+		</div>
+	</div>
+</div>
+
+
+{php include wl_template('common/footer');}

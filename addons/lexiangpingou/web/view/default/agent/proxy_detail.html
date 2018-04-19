@@ -1,0 +1,358 @@
+{php include wl_template('common/header');}
+<style>
+.table>thead>tr>td,
+.table>tbody>tr>td,
+.table>tfoot>tr>td {
+    white-space: nowrap;
+    line-height: 24px;
+    text-align: center;
+}
+
+@media screen and (min-width: 1400px) {
+    .sc .modal-dialog {
+        width: 1366px;
+        height: 95%;
+        margin-top: 2%;
+    }
+    .sc .modal-content {
+        width: 1366px;
+        height: 95%;
+    }
+}
+
+@media screen and (max-width: 1400px) {
+    .sc .modal-dialog {
+        width: 1000px;
+        height: 87%;
+        margin-top: 2%;
+    }
+    .sc .modal-content {
+        width: 1000px;
+        height: 87%;
+    }
+}
+</style>
+<ul class="nav nav-tabs">
+    <li class="active"><a>代理详情</a></li>
+</ul>
+<div class="clearfix">
+    <form>
+        <div class="panel panel-default">
+            <div class="panel-body table-responsive">
+                <div class="row">
+                    <div class="panel panel-default" style="width: 33%; float: left;">
+                        <div class="panel-body sc" style="padding: 15px 0 25px 0">
+							<div class="col-xs-8" style="padding-right: 0;">
+	                            <span>我的推荐码 ：{$agent_detail['referral']}</span>
+	                            <!--<button class="btn btn-default" type="button" onclick="popwin=$('#modal-module-rule').modal();">规则</button>-->
+	                            <a id="showurl"  onclick="popwin=$('#modal-module-url').modal();" id="copy">专属链接</a><br>
+	                            <p>地区： {$agent_detail['province']} {$agent_detail['city']} {$agent_detail['county']}</p>
+							</div>
+                            <div class="col-xs-4" onclick="$('#modal-module-contact').modal();">
+                                <span class="btn btn-info">购买套餐</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="panel panel-default" style="margin-left: 2%; width: 65%; float: left;">
+                        <div class="panel-body">
+                            <div class="row">
+                                <div class="col-xs-3 text-center">
+                                	<div>
+                                		<span class="buy-title">服务号购买套数</span>
+                                 		<span class="buy-content">{php echo intval($agent_detail['public_num'])}套</span>
+                                	</div>
+                                	<div>
+                                		<span class="buy-title">服务号已用套数</span>
+                                 		<span class="buy-content">{php echo intval($agent_detail['public_used_num'])}套</span>
+                                	</div>
+                                	<div>
+                                		<span class="buy-title">服务号剩余套数</span>
+                                 		<span class="buy-content">{php echo  intval($agent_detail['public_num']) -  intval($agent_detail['public_used_num'])}套</span>
+                                	</div>	
+                                </div>
+                                <div class="col-xs-3 text-center">
+                                	<div>
+                                		<span class="buy-title">小程序购买套数</span>
+                                    	<span class="buy-content">{php echo intval($agent_detail['applet_num'])}套</span>
+                                	</div>
+                                    <div>
+                                		<span class="buy-title">小程序已用套数</span>
+                                    	<span class="buy-content">{php echo intval($agent_detail['applet_used_num'])}套</span>
+                                	</div>
+                                	<div>
+                                		<span class="buy-title">小程序剩余套数</span>
+                                    	<span class="buy-content">{php echo intval($agent_detail['applet_num']) - intval($agent_detail['applet_used_num'])}套</span>
+                                	</div>
+                                </div>
+                                <div class="col-xs-3 text-center" style="display: none;">
+                                	<div>
+                                		<span class="buy-title">多商户购买套数</span>
+                                    	<span class="buy-content">{php echo intval($agent_detail['merchant_num'])}套</span>
+                                	</div>
+                                	<div>
+                                		<span class="buy-title">多商户已用套数</span>
+                                    	<span class="buy-content">{php echo intval($agent_detail['merchant_used_num'])}套</span>
+                                	</div>
+                                	<div>
+                                		<span class="buy-title">多商户剩余套数</span>
+                                    	<span class="buy-content">{php echo intval($agent_detail['merchant_num'])-intval($agent_detail['merchant_used_num'])}套</span>
+                                	</div>
+                                </div>
+                                <div class="col-xs-3 text-center">
+                                	<div>
+                                		<span class="buy-title">APP购买套数</span>
+                                    	<span class="buy-content">{php echo intval($agent_detail['app_num'])}套</span>
+                                	</div>
+                                	<div>
+                                		<span class="buy-title">APP已用套数</span>
+                                    	<span class="buy-content">{php echo intval($agent_detail['app_used_num'])}套</span>
+                                	</div>
+                                	<div>
+                                		<span class="buy-title">APP剩余套数</span>
+                                    	<span class="buy-content">{php echo  intval($agent_detail['app_num']) - intval($agent_detail['app_used_num'])}套</span>
+                                	</div>
+                                </div>
+                                <div class="col-xs-3 text-center" style="display: none;">
+                                	<div>
+                                		<span class="buy-title">美工包购买套数</span>
+                                    	<span class="buy-content">{php echo intval($agent_detail['art_num'])}套</span>
+                                	</div>
+                                	<div>
+                                		<span class="buy-title">美工包已用套数</span>
+                                    	<span class="buy-content">{php echo intval($agent_detail['art_used_num'])}套</span>
+                                	</div>
+                                	<div>
+                                		<span class="buy-title">美工包剩余套数</span>
+                                    	<span class="buy-content">{php echo intval($agent_detail['art_num']) - intval($agent_detail['art_used_num'])}套</span>
+                                	</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+	            <div class="main">
+				    <div class="panel panel-default">
+				        <div class="panel-body table-responsive">
+				            <ul id="" class="nav nav-tabs">
+				            	<li {if $op == 'add_agent_record'} class="active" {/if}>
+				                  <a href="{php echo web_url('agent/proxy_detail', array('op'=>'add_agent_record'))}">购买记录</a>
+				                </li>
+				                <li {if $op == 'vip_record'} class="active" {/if}>
+				                  <a href="{php echo web_url('agent/proxy_detail', array('op'=>'vip_record'))}" class="active">开通记录</a>
+				                </li>
+				                
+				            </ul>
+
+				            <div class="panel panel-info">
+				                <div class="panel-body">
+				                    <form action="" method="get" class="form-horizontal" role="form" id="form1">
+				                        <input type="hidden" name="c" value="site"/>
+				                        <input type="hidden" name="a" value="entry"/>
+				                        <input type="hidden" name="m" value="lexiangpingou"/>
+				                        <input type="hidden" name="do" value="agent"/>
+				                        <input type="hidden" name="ac" value="proxy_detail"/>
+				                        <input type="hidden" name="op" value="{$_GPC['op']}"/>
+				                        <div class="form-group" style="width: 27%;margin-bottom: 0;">
+				                            <label class="col-xs-3 control-label">时间:</label>
+				                            <div class="col-xs-5">
+				                                <label class="radio-inline">
+				                                    <input type="radio" name="type" value="0" {if intval($_GPC['type']) != 1}checked="checked"{/if} onclick="$('#wechat').show();$('#bank').hide()">关
+				                                </label>
+				                                <label class="radio radio-inline">
+				                                    <input type="radio" name="type" value="1" {if intval($_GPC['type']) == 1}checked="checked"{/if} onclick="$('#bank').show();$('#wechat').hide()">开
+				                                </label>
+				                            </div>
+				                        </div>
+
+				                        <div class="form-group col-xs-4">
+				                            <div class="col-md-12">
+				                                {php echo tpl_form_field_daterange('time', array('starttime'=>date('Y-m-d H:i:s', $starttime),'endtime'=>date('Y-m-d H:i:s', $endtime)),true);}
+				                            </div>
+				                        </div>
+
+				                        <div class="form-group col-xs-4">
+				                            <label class="col-sm-3 control-label">名称:</label>
+				                            <div class="col-sm-9">
+				                                <input class="form-control" name="keyword" type="text" value="{$_GPC['keyword']}" placeholder="可查询公众号/申请人名称">
+				                            </div>
+				                        </div>
+
+				                        <div class="" style="">
+				                            <button class="btn btn-default min-width"><i class="fa fa-search"></i> 搜索</button>
+				                        </div>
+				                    </form>
+				                </div>
+				            </div>
+				            {if $op == 'add_agent_record'}
+				            <table class="table table-hover">
+				                <thead class="navbar-inner">
+				                <tr>
+				                	<th>开通时间</th>
+				                    <th>公众号名称</th>
+				                    <th>服务号购买套数</th>
+				                    <th>小程序购买套数</th>
+				                    <th style="display: none;">多商户购买套数</th>
+				                    <th>app购买套数</th>
+				                    <th style="display:none;">美工包购买套数</th>
+				                    <th style="display:none;">erp购买套数</th>
+				                    <th style="display:none;">线下收银购买套数</th>
+				                    <th>申请人</th>
+				                </tr>
+				                </thead>
+				                <tbody>
+				                {loop $list $agent}
+								<td>
+				                    {$agent['createtime']}
+				                </td>
+				                <td>
+				                    {$agent['name']}
+				                </td>
+				                <td>
+				                    {$agent['public_num']}
+				                </td>
+				                <td>
+				                    {$agent['applet_num']}
+				                </td>
+				                <td style="display: none;">
+				                    {$agent['merchant_num']}
+				                </td>
+				                <td>
+				                    {$agent['app_num']}
+				                </td>
+				                <td style="display:none;">
+				                    {$agent['art_num']}
+				                </td>
+				                <td style="display:none;">
+				                    {$agent['erp_num']}
+				                </td>
+				                <td style="display:none;">
+				                    {$agent['offline_num']}
+				                </td>
+				                <td>
+				                    {$agent['open_name']}
+				                </td>
+				                </tr>
+				                {/loop}
+				                </tbody>
+				            </table>
+				            {$pager}
+				            {/if}
+				            {if $op == 'vip_record'}
+				            <table class="table table-hover">
+				                <thead class="navbar-inner">
+				                <tr>
+				                	<th class="col-md-3">开通时间</th>
+				                    <th class="col-md-2">公众号名称</th>
+				                    <th class="col-md-2">开通公众号名称</th>
+				                    <th class="col-md-2">服务号</th>
+				                    <th class="col-md-2">小程序</th>
+				                    <th style="display: none;">多商户</th>
+				                    <th class="col-md-2">app</th>
+				                    <th style="display:none;">美工包</th>
+				                    <th style="display:none;">erp</th>
+				                    <th style="display:none;">线下收银</th>
+				                </tr>
+				                </thead>
+				                <tbody>
+				                {loop $list $agent}
+				                <td>
+				                    {$agent['createtime']}
+				                </td>
+				                <td>
+				                    {$agent['name']}
+				                </td>
+				                <td>
+				                    {$agent['open_name']}
+				                </td>
+				                <td>
+				                    {php echo intval($agent['public'])}
+				                </td>
+				                <td>
+				                    {php echo intval($agent['applet'])}
+				                </td>
+				                <td style="display: none;">
+				                    {php echo intval($agent['merchant'])}
+				                </td>
+				                <td>
+				                    {php echo intval($agent['app'])}
+				                </td>
+				                <td style="display:none;">
+				                    {php echo intval($agent['art'])}
+				                </td>
+				                <td style="display:none;">
+				                    {php echo intval($agent['erp'])}
+				                </td>
+				                <td style="display:none;">
+				                    {php echo intval($agent['offline'])}
+				                </td>
+				                </tr>
+				                {/loop}
+				                </tbody>
+				            </table>
+				            {$pager}
+				            {/if}
+				        </div>
+				    </div>
+				</div>
+            </div>
+        </div>
+    </form>
+
+    <div id="modal-module-url" class="modal fade " tabindex="-1">
+        <div class="modal-dialog" style='width:1000px; margin-top: 10%; height:85%;font-size: 14px; text-align: left; padding: 30px; '>
+            <div class="modal-content" style=" padding: 30px; ">
+                <h4 style="text-align: center; margin-bottom: 40px;">我的专属分享链接</h4>
+                <div id="xurl" style="text-align: center; font-size: 14px; color: red;">
+                    <label>https://www.lexiangpingou.cn/web/index.php?Referral={$agent_detail['referral']}</label>
+                </div>
+                <div id="xurl" style="text-align: center; font-size: 14px; margin-top: 20px;">
+                    <label>注：用户若用此链接访问网站并注册，将自动填写您的推荐码，推荐就是这么简单！</label>
+                </div>
+                <p style="text-align: center; margin-top: 20px;">
+                    <button type="button" class="btn btn-primary" data-dismiss="modal">
+                        关闭
+                    </button>
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <div id="modal-module-contact" class="modal fade " tabindex="-1">
+        <div class="modal-dialog" style='width:700px; margin-top: 10%; height:85%;font-size: 14px; text-align: left; padding: 30px; '>
+            <div class="modal-content" style=" padding: 30px; ">
+				<div class="panel panel-info">
+			        <div class="panel-heading">
+			            <span>申请购买</span>
+			        </div>
+			       	<div class="panel-body">
+			       		<div class="form-group col-xs-12">
+		                    <label class="col-md-5 col-lg-3 control-label">火蝶联系人:</label>
+		                    <div class="col-md-9">
+		                        <input class="form-control" name="keyword_user" readonly="readonly" type="text" value="{$agent_detail['linkman']}" >
+		                    </div>
+		                </div>
+
+		                <div class="form-group col-xs-12">
+		                	<label class="col-sm-5 col-lg-3 control-label">火蝶联系电话号码:</label>
+		                    <div class="col-sm-9">
+		                        <input class="form-control" name="keyword_gzname" readonly="readonly" type="text" value="{$agent_detail['phone']}">
+		                    </div>
+		                </div>
+		                <p  class="col-xs-12" style="text-align: center; margin-top: 20px; ">
+		                    <button type="button" class="btn btn-primary" data-dismiss="modal">
+		                        关闭
+		                    </button>
+		                </p>
+		            </div>
+		    	</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+	console.log('{php echo json_encode($agent_detail)}');
+</script>
+
+{php include wl_template('common/footer');}
+

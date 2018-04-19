@@ -1,0 +1,62 @@
+{php include wl_template('common/header');}
+<div class="panel panel-default">
+    <div class="table-responsive">
+        <table class="table table-hover" style="min-width: 300px;">
+            <thead class="navbar-inner">
+            <tr>
+                <th class="col-sm-9">操作员</th>
+                <th class="col-sm-3 text-center" style="text-align: center">操作</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <!--<td></td>-->
+                <!--<td style="text-align: center;">-->
+                    <!--<a href="javascript:;"  class="btn btn-default btn-sm" onclick="goto()">编辑</a>-->
+                <!--</td>-->
+            </tr> 
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script>
+    $.get(
+        "{php echo $_W['siteroot']}shop_api.php?op=user_list",
+        {uniacid:"{$_W['uniacid']}",page:1,pagesize:30},
+        function(res){
+            var data=JSON.parse(res).list;
+            var html='';
+            var uniacid = "{$_W['uniacid']}";
+            for(var i=0;i<data.length;i++){
+                html+='<tr><td>'+data[i].username+'</td>'+
+                '<td style="text-align: center;">'+
+                '<a href="javascript:;" style="margin-right: 10px"  class="btn btn-default btn-sm" onclick="goto('+uniacid+','+data[i].uid+')">编辑</a>'+
+                '<a href="javascript:;"  class="btn btn-default btn-sm" onclick="del('+uniacid+','+data[i].uid+',event,this)">删除</a>'+
+                '</td></tr>';
+            }
+            $('.table tbody').append(html);
+            console.log(data)
+        }
+    );
+    function goto(uniacid,uid){
+        location.href="{php echo web_url('store/user_accountList')}uniacid="+uniacid+'&uid='+uid;
+    }
+    function del(uniacid,uid,e,self){
+            e.stopPropagation();
+            op = 'delete';
+            html = '确认删除?';
+            util.nailConfirm(self, function(state) {
+                if(!state) return;
+                $.get("{php echo $_W['siteroot']}shop_api.php?op=user_del&uniacid="+uniacid+'&uid='+uid,function(res){
+                    if(JSON.parse(res).status==1){
+                        window.location.reload()
+                    }else{
+                        util.tips('删除失败');
+                    }
+                });
+            }, {html: html})
+    }
+</script>
+{php include wl_template('common/footer');}
+	

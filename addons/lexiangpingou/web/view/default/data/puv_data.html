@@ -1,0 +1,295 @@
+{php include wl_template('common/header');}
+<style>
+    .container{background:#fff;height: 690px;padding: 10px;}
+    .container label{
+        width: 60px;
+        line-height: 34px;
+    }
+    #shangchengZHLTJ{height:500px;}
+    .btn-default:focus,.btn-default.active{
+        background-color: #44b549;
+        color: #fff0cc;
+        border-color: #ccc;
+        box-shadow:none;
+    }
+    .topGM{
+        margin-bottom: 20px;
+    }
+    .loading{
+        position: absolute;
+        top: 0;
+        left: 15px;
+        z-index: 10;
+        background: rgba(0,0,0,0.3);
+        width: 100%;
+        height: 100%;
+        text-align: center;
+        color: #eee;
+        padding-top: 17rem;
+        font-size: 16px;
+    }
+</style>
+
+<div class="container">
+    <div class="loading">
+        <i class="glyphicon glyphicon-refresh"></i>
+        <span>数据加载中......</span>
+    </div>
+    <div class="btn-group topGM" role="group">
+        <button type="button" class="btn btn-primary active sysdata">刷新数据</button>
+    </div>
+    <div class="btn-group topGM" role="group">
+        <button type="button" class="btn btn-default active">今天<button type="button" class="btn btn-default ">最近七天</button><button type="button" class="btn btn-default">最近20天</button><button type="button" class="btn btn-default">最近30天</button>
+    </div>
+    <div id="shangchengZHLTJ"></div>
+</div>
+
+<script type="text/javascript">
+    $('.sysdata').on('click',function () {
+
+        if(getCookie('sys_unable')){
+            util.tips('请五分钟后再尝试刷新数据');
+            return false;
+        }
+        //这是有设定过期时间的使用示例：
+        //s20是代表20秒
+        //h是指小时，如12小时则是：h12
+        //d是天数，30天则：d30
+        setCookie("sys_unable",1,"s300");
+        $.get(location.origin+'/minapi.php?op=run_data_puv&uniacid={$_W["uniacid"]}',{},function (data) {
+            console.log(data);
+            var rs = JSON.parse(data);
+            if(rs.errCode==1){
+                window.location.reload();
+            }else{
+                util.tips('刷新数据失败，请重试');
+                delCookie('sys_unable');
+            }
+
+        })
+
+    })
+    function getsec(str)
+    {
+        var str1=str.substring(1,str.length)*1;
+        var str2=str.substring(0,1);
+        if (str2=="s")
+        {
+            return str1*1000;
+        }
+        else if (str2=="h")
+        {
+            return str1*60*60*1000;
+        }
+        else if (str2=="d")
+        {
+            return str1*24*60*60*1000;
+        }
+    }
+    function getCookie(name)
+    {
+        var arr,reg=new RegExp("(^| )"+name+"=([^;]*)(;|$)");
+        if(arr=document.cookie.match(reg))
+            return unescape(arr[2]);
+        else
+            return null;
+    }
+    function delCookie(name)
+    {
+        var exp = new Date();
+        exp.setTime(exp.getTime() - 1);
+        var cval=getCookie(name);
+        if(cval!=null)
+            document.cookie= name + "="+cval+";expires="+exp.toGMTString();
+    }
+
+    function setCookie(name,value,time)
+    {
+        var strsec = getsec(time);
+        var exp = new Date();
+        exp.setTime(exp.getTime() + strsec*1);
+        document.cookie = name + "="+ escape (value) + ";expires=" + exp.toGMTString();
+    }
+    // 路径配置
+    require.config({
+        paths: {
+            echarts: "//www.lexiangpingou.cn/addons/lexiangpingou/web/resource/js/echarts/build/dist"
+        }
+    });
+
+    $('.topGM').on('click','button',function(){
+        if($(this).hasClass('active')){return false;}
+        $('.topGM button').removeClass('active');
+        $(this).addClass('active');
+        if($(this).html()=='今天'){
+            $('.loading').css('display','block');
+            ajaxZHL(getBeforeDate(0),getBeforeDate(0),24);
+        }
+        else if($(this).html()=='最近七天'){
+            $('.loading').css('display','block');
+            ajaxZHL(getBeforeDate(6),getBeforeDate(0),24);
+        }else if($(this).html()=='最近20天'){
+            $('.loading').css('display','block');
+            ajaxZHL(getBeforeDate(19),getBeforeDate(0),24);
+        }else if($(this).html()=='最近30天'){
+            $('.loading').css('display','block');
+            ajaxZHL(getBeforeDate(29),getBeforeDate(0),24);
+        }
+    });
+
+    ajaxZHL(getBeforeDate(0),getBeforeDate(0),24);
+
+
+    function ajaxZHL(a,b,c) {
+        $.get(
+                "{php echo web_url('data/puv_data/sczhl_count_data')}",
+                {
+                    stime: a,
+                    etime: b
+                },
+                function (res) {
+                    var data = JSON.parse(res).data;
+                    console.log(data);
+                    var dataTime=[];
+                    if(data.length<Number(c)){
+                        for(var j=c-1;j>=0;j--){
+                            dataTime.push(getBeforeDate(j));
+                        }
+                        console.log(dataTime);
+                    }
+                    var option = {
+                        title: {
+                            text: '用户访问时间统计(h)',
+                            subtext: ''
+                        },
+                        tooltip: {
+                            trigger: 'axis'
+                        },
+                        legend: {
+                            data: ['pv', 'uv']
+                        },
+                        toolbox: {
+                            show : true,
+                            feature : {
+                                magicType : {show: true, type: ['line', 'bar']},
+                                restore : {show: true},
+                                saveAsImage : {show: true}
+                            }
+                        },
+                        calculable : true,
+                        xAxis: [
+                            {
+                                boundaryGap : false,
+                                type: 'category',
+                                data: []
+                            }
+                        ],
+                        yAxis: [
+                            {
+                                type: 'value'
+                            }
+                        ],
+                        series: [
+                            {
+                                smooth:true,
+                                itemStyle: {normal: {areaStyle: {type: 'default'}}},
+                                "name": "pv",
+                                "type": "line",
+                                "data": []
+                            },
+                            {
+                                smooth:true,
+                                itemStyle: {normal: {areaStyle: {type: 'default'}}},
+                                "name": "uv",
+                                "type": "line",
+                                "data": []
+                            }
+
+                        ]
+                    };
+
+                    var addtime=[],sczhl=[],sczfzhl=[],zfzhl=[],xdzhl=[];
+                    for(var i= 0,ii=0;i<data.length;i++,ii++){
+                        if(dataTime.length>0&&(dataTime[ii]!=data[i]['addtime'])){
+                            addtime.push(dataTime[ii]);
+                            sczhl.push('0');
+                            sczfzhl.push('0');
+
+                            i--;
+                        }else {
+                            addtime.push(data[i]['addtime']);
+                            sczhl.push((data[i]['sczhl']).toFixed(2));
+                            sczfzhl.push((data[i]['xdzhl']).toFixed(2));
+
+                        }
+                    }
+                    if(addtime.length<dataTime.length){
+                        for(var jj=0;jj<(dataTime.length-addtime.length);jj++){
+                            addtime.push(dataTime[addtime.length-1]);
+                            sczhl.push('0');
+                            sczfzhl.push('0');
+
+                        }
+                    }
+                    option.xAxis[0].data=addtime;
+                    option.series[0].data=sczhl;
+                    option.series[1].data=sczfzhl;
+
+                    if(data.length==0) {
+                        option.series[0]=option.series[1]=option.series[2]=option.series[3] = [{
+                            name: '',
+                            type: '',
+                            radius: '',
+                            center: [],
+                            data: []
+                        }];
+                    }
+                    $('.loading').css('display','none');
+                    ajaxEh(option);
+                }
+        );
+    }
+
+    function ajaxEh(option) {
+        require(
+                [
+                    'echarts',
+                    'echarts/chart/bar', // 使用柱状图就加载bar模块，按需加载
+                    'echarts/chart/line',
+                    'echarts/chart/funnel',
+                    'echarts/chart/pie'
+                ],
+                function (ec) {
+                    // 基于准备好的dom，初始化echarts图表
+                    var myChart = ec.init(document.getElementById('shangchengZHLTJ'));
+                    myChart.setOption(option);
+                }
+        );
+    }
+
+    function getBeforeDate(n){
+        var n = n;
+        var d = new Date();
+        var year = d.getFullYear();
+        var mon=d.getMonth()+1;
+        var day=d.getDate();
+        if(day <= n){
+            if(mon>1) {
+                mon=mon-1;
+            }
+            else {
+                year = year-1;
+                mon = 12;
+            }
+        }
+        d.setDate(d.getDate()-n);
+        year = d.getFullYear();
+        mon=d.getMonth()+1;
+        day=d.getDate();
+        s = year+"-"+(mon<10?('0'+mon):mon)+"-"+(day<10?('0'+day):day);
+        return s;
+    }
+
+</script>
+
+{php include wl_template('common/footer');}

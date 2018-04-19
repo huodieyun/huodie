@@ -1,0 +1,1298 @@
+{php include wl_template('common/header');}
+{if $config['base']['meiqia']>0}
+<script type='text/javascript'>
+    (function(m, ei, q, i, a, j, s) {
+        m[a] = m[a] || function() {
+            (m[a].a = m[a].a || []).push(arguments)
+        };
+        j = ei.createElement(q),
+            s = ei.getElementsByTagName(q)[0];
+        j.async = true;
+        j.charset = 'UTF-8';
+        j.src = i + '?v=' + new Date().getUTCDate();
+        s.parentNode.insertBefore(j, s);
+    })(window, document, 'script', '//static.meiqia.com/dist/meiqia.js', '_MEIQIA');
+    _MEIQIA('entId', {$config['base']['meiqia']});
+	alert(1);
+	</script>
+	{/if}
+<style>
+  .tablerow {margin-bottom: 5px;}
+  .buyimg {display:table-cell;width:45%;}
+  .buyimg img{width:40px;height:40px;border-radius:20px;}
+  .buyprice {width: 10%;height: 100%;display: table-cell;line-height: 40px;text-align: center;padding-right: 10px;}
+  .buydes {  width: 45%;height: 100%;display: table-cell;position: relative;top: 7.5px;}
+  .buyplus {  float: left;width: 35px;text-align: center;height: 25px;border-radius: 12.5px;background-color: hsl(194, 57%, 64%);color: white;}
+  .buynum {  width: 25px;height: 25px;left: 0px;right: 0px;margin: auto;position: absolute;text-align: center;line-height: 25px;top: 0;}
+  .buyminus {  text-align: center;float: right;width: 35px;height: 25px;border-radius: 12.5px;background-color: hsl(194, 57%, 64%);color: white;}
+  .key{display:none;}
+  #guigeDetail {width: 90%;margin: auto;text-align: center;overflow: scroll;bottom: 65px;position: absolute;left: 5%;top: 65px;}
+  .guigeSelect {text-align: left;padding-left: 10px;font-size: 20px;display: block;clear: both;}
+  #guigeDetail li {margin-left: 8px;float: left;padding: 5px 5px 5px 5px;height: auto;color: #999;border: 1px solid #e4e4e4;border-radius:3px;}
+  .guigeactive {  background-color: #6fbfd8!important;color: white!important;}
+  .toast{z-index:1000000000!important;}
+  .number{display:none!important;}
+  .gli:last-child {margin-bottom:60px!important;}
+  .totalPrice {font-size:14px!important;}
+</style>
+{if $miaoxianfunction['status']}
+<div id="link-logo" style="width:100%;height:100%;transition-property:height opacity;transition-duration:0.5s;background-color:white;transition-timing-function:ease-out;position:fixed;left:0px;top:0px;z-index:100008;display:none;color:white">
+	<img src="{if !empty($acct['homeimg'])}{php echo tomedia($acct['homeimg']);}{else}{TG_URL_ARES}images/sylg2.png{/if}" alt="首页logo" style="border:1px solid black;width:100%;height:100%;">
+  <div id="link-see" style="display:none;position:absolute;left:0;right:0;bottom:60px;margin:auto;width:100px;height:35px;background-color:#6fbfd8;border-radius:5px;line-height:35px;text-align:center;">进去看看</div>
+</div>	
+ 
+<script>
+if (! sessionStorage.getItem('miao')){
+  var linklogo = document.getElementById("link-logo");
+    linklogo.style.setProperty("display","block");
+	setTimeout( function () {
+		//linklogo.style.setProperty("height","0px");
+			linklogo.style.setProperty("opacity","0");
+			setTimeout( function() {linklogo.style.setProperty("display","none");},500);
+			sessionStorage.setItem("miao","1");
+	},1500)
+}
+</script>	
+{/if}
+<div class="page-group" style="">
+	
+    <div class="page page-current" id="page-goods-list">
+		<div class="content infinite-scroll native-scroll" data-distance="10">
+		<div class="topbar"><h3 class="title">乐享拼购</h3><div class="barfn"><i class="refresh"></i><i class="share"></i></div></div>
+	    {php include wl_template('common/followed');}
+	    <div class="banner" id="banner" style="visibility: visible;">
+	        <ul class="imgs">
+	        	{loop $advs $adv}
+	        	<li {if !empty($adv['link'])} onclick="document.location = '{$adv['link']}';"{else}#{/if}>
+	        		<img src="{php echo tomedia($adv['thumb'])}";>
+	        	</li>
+	        	{/loop}
+	        </ul>
+	        <ul class="dotList" style="">
+	        	{php $slideNum = 1;} {loop $advs $adv}
+					<li{if $slideNum==1 } class="cur" {/if}></li>
+				{php $slideNum++;} {/loop}
+	        </ul>
+	    </div>
+	    <script>
+		    $(function() {
+		        new Swipe($('#banner')[0], {
+		            speed:500,
+                    auto:{$intervals},
+		            callback: function(){
+		                var lis = $(".dotList").children();
+		                lis.removeClass("cur").eq(this.index).addClass("cur");
+		            }
+		        });
+		    });
+		</script>
+	    {if $category}
+		<div class="j-rmd-types rmd-types">
+			{loop $category $itme}
+            <a href="{php echo app_url('goods/list/display', array('gid' => $itme['id']));}" onclick="saveSession();sessionStorage.removeItem('position');" class="external">
+                <img src="{php echo tomedia($itme['thumb']);}" alt="">
+                <span>{$itme['name']}</span>
+            </a>
+			
+            {/loop}
+    	</div>
+    	{/if}
+	    <div class="appCode" style="display: none;">
+	        <div class="codeBox imgShow">
+	            <img src="" alt="">
+	        </div>
+	        <div class="codeBox codeRight">
+	          <p><i></i><span class="des"></span></p>
+	          <div class="inputZone">
+	                <div style="display: inline-block;float: left;width:70%;">
+	                    <input type="text" placeholder="" id="codeInput">  
+	                </div>
+	                <div style="display: inline-block;width:30%">
+	                    <span class="codeBtn">确认</span>
+	                </div>
+	          </div>
+	        </div>
+	    </div>
+			<!--广告轮播-->
+			{php include wl_template('common/advs');}
+			<!--魔方-->
+			{php include wl_template('common/cube');}
+	    <div class="list" id="orderlist">
+	        <div class="listCon">
+	        <ul class="ul_1">
+	        </ul>
+	        </div>
+			<div class="loading_more" style="padding-top: 10px;display: none;font-size:1.2em;font-weight:bold;"><span class="loading" style="clear: both;"><i class="icon_load"></i>正在玩命的加载中......</span>
+			</div>
+			
+	        <div class="error">加载失败，点击重新加载</div>
+			
+	        <div class="noData" style="font-size:1.0em;color:#c3c3c3;">
+		{if !$banquanfunction['status']}	<div><a href="http://www.lexiangpingou.cn"><img src="{TG_URL_ARES}images/bbb.png" width="40%"></a><div>火蝶科技技术热线:400-626-1079</div></div>{/if}
+			</div>
+			
+	    </div>
+	    <div class="mask"></div>	    		
+		</div>
+	</div>
+	
+</div>
+<div id="selectGuige" style="transition-duration:0.5s;transition-property:height opacity;opacity:1;transition-timing-function:ease-out;overflow:hidden;
+position:fixed;bottom:0px;left:0px;width:100%;height:0px;background-color:rgba(0,0,0,0.5);z-index:100860;">
+	<div style="  width: 100%;height: 65%;position: absolute;bottom: 0px;background-color: white;color: #999;">
+		<div style="position:relative;width: 90%;color:#6fbfd8;height: 60px;font-size: 16px;line-height: 40px;box-sizing: border-box;text-align: center;font-weight: bold;border-bottom: 1px solid rgb(244, 236, 236);margin: auto;">
+		<img id="guigeimg" width="80px" height="80px" style="display: block;position: absolute;left: 0px;top: -30px;border-radius: 10px;">
+		价格：￥<span class="guigeprice">0.00</span>元</div>
+		<div id="guigeDetail">
+		</div>
+		<div id="confirmDetail" style="background-color: #6fbfd8;font-size: 20px;line-height: 50px;text-align: center;margin: auto;color: white;position: absolute;left: 0px;right: 0px;bottom: 0px;">确认</div>
+		<div id="forgive" style="  font-size: 14px;line-height: 12px;text-align: center;margin: auto;color: #555;position: absolute;right: 10%;top: 10px;border-radius: 50%;width: 20px;height: 20px;border:3px solid #555;font-weight:bolder">x</div>
+	</div>
+</div>
+
+<div id="cartDetails" style="transition-duration:0.5s;transition-property:height opacity;opacity:1;transition-timing-function:ease-out;overflow:hidden;
+position:fixed;top:0px;left:0px;width:100%;height:0%;background-color:rgba(0,0,0,0.5);z-index:100860;">
+  <div style="  position: absolute;width: 90%;height: 85%;background-color: white;top: 5%;left: 5%;margin-bottom: auto;margin-top: auto;border-radius: 5px;box-shadow: 2px 2px 2px black;">
+    <div style="  width: 80%;margin-left: 10%;height: 40px;font-size: 1.5em;line-height: 40px;color:#6fbfd8;text-align: center;border-bottom: 1px solid #eee;box-sizing: border-box;">您选择的商品</div>
+	<div style="  border-bottom: 1px solid #f0f0f0;overflow: auto;position: absolute;left: 10%;right: 10%;top: 50px;bottom: 50px;">
+	<div id="buycartDetails">		
+	</div>
+	</div>
+	<div style="width:100%;height:40px;position:absolute;left:0;bottom:10px;">
+	  <div id="continueBuy" style="width:30%;float:left;margin-left:2.5%;height:30px;background-color:#6fbfd8;color:white;line-height:30px;text-align:center;border-radius:3px;margin-top:10px;">继续选购</div>
+	  <div  style="width:30%;float:left;margin-left:2.5%;height:30px;background-color:#6fbfd8;color:white;line-height:30px;text-align:center;border-radius:3px;margin-top:10px;" onclick="clearBuycart();">一键清除</div>
+	  <div id="goPay" style="width:30%;float:left;margin-left:2.5%;height:30px;background-color:#6fbfd8;color:white;line-height:30px;text-align:center;border-radius:3px;margin-top:10px;" onclick="Buycart();">立即结算</div>
+	</div>
+  </div>
+</div>
+<div id="gotop" style="display:none;position:fixed;right:10px;bottom:120px;width:45px;height:45px;border-radius:50%;z-index:10086;background-color:c3c3c3;">
+  <img src="{TG_URL_ARES}images/gotop.png" width="45px" height="45px">
+</div>
+<div id="animationS" style="display:none;background-color:hsl(240, 19%, 95%);width:100%;height:100%;left:0px;bottom:0px;position:fixed;
+z-index:10000000">
+<img src="{if !empty($acct['homeimg'])}{php echo tomedia($acct['homeimg']);}{else}{/if}" style="width:100%;height:100%;">
+<div class="preloader-indicator-modal" style="position:fixed;left:0px;right:0px;bottom:50px;margin:auto;width:84px;height:84px;" >
+	<span class="preloader preloader-white"></span>
+</div>
+</div>
+<script type="text/html" id="goodslist">
+{{# for(var i = 0, len = d.list.length; i < len; i++){ }}
+<li class="gli" style="position:relative;margin: 0 1%;width: 48%;float: left;height:150px;margin-top:1em;">
+	<a href="{{ d.list[i].a }}" class="external externals" id="{{ d.list[i].id }}" onclick="sesso(this)" style="" >
+		<div class="img"><img class="goodsimg" src="{{ d.list[i].gimg }}" alt="" style="opacity: 1;height:100px;">
+		<div class="icon_position">{if $config['base']['iszhe']==0}
+		<div class="discount" style="display:none;">
+		<span style="padding-top:0px;line-height: 45px;font-size: 14px;text-align: center;">{{ Math.round((d.list[i].oprice/d.list[i].mprice)*10) }}折</span></div>{/if}
+		{{# if(d.list[i].goodstab != null && typeof(d.list[i].goodstab.length) != "undefined" && d.list[i].goodstab){ }}
+		<!--<div class="pricedown">{{ d.list[i].goodstab }}</div>-->
+		{{# } }}
+		</div>
+		{{# var lenn = d.list[i].params.length; if(lenn >= 3){ }}
+		<ul class="desPos">
+			<li class="firstLine " expos="0">{{ d.list[i].params[0].value }}</li>
+			<li class="" expos="0">{{ d.list[i].params[1].value }}</li>
+			<li class="lastLine" expos="0">{{ d.list[i].params[2].value }}</li>
+		</ul>
+		{{# } }}
+		</div>
+		<div class="isguige" style="display:none;">{{ d.list[i].hasoption }}</div>
+		<div class="txt"><h5 onclick="defaultPre(this)" style="width: 100%;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;font-size:14px;">{{ d.list[i].gname }}</h5><p style="word-break:break-all;display:none;">{{# if(d.list[i].indexdesc != null ){ }}{{ d.list[i].indexdesc }}{{# } }}</p></div>
+		<div class="fnWrap" style="background: hsl(0, 0%, 100%);" >
+		<div class="fnZone" style="{{# if(d.list[i].selltype != 0 ){ }}background-color:#6fbfd8!important;{{# } }}{{# if(d.list[i].selltype == 0 ){ }}background-color:white!important;{{# } }}display: inline-block;margin:0px;margin-left:10px;font-size: 14px;border-radius: 18px;height: 18px;line-height: 18px;width: 80%;">{{# if(d.list[i].selltype != 0 ){ }}<i></i>{{# } }}{{# if(d.list[i].selltype == 0 ){ }}{{# } }}
+	
+		<span><b class="cross" style="color:#888;display:none;">x</b>
+		<b class="price" style="font-size: 14px;display: inline-block;font-weight: normal;{{# if(d.list[i].selltype != 0 ){ }}color: white;{{# } }}{{# if(d.list[i].selltype == 0 ){ }}color: hsl(194, 57%, 64%);{{# } }}padding：0 5px;">{{# if( d.list[i].selltype==1){ }}￥{{ d.list[i].gprice }}{{# } }}{{# if( d.list[i].selltype==2){ }}￥{{ d.list[i].gprice }}{{# } }}{{# if( d.list[i].selltype==0){ }}￥{{ d.list[i].oprice }}{{# } }}</b>
+		<b class="totalPrice" style="color:#888;display:none;font-size;14px;"></b>
+		<b class="people" style="{{# if(d.list[i].selltype == 0 ){ }}display:none;{{# } }}">{{ d.list[i].groupnum }}人团</b>
+		</span>
+		
+		<span class="btn" style="display:none;background-color:{{# if(d.list[i].selltype != 0 ){ }}#6fbfd8!important;{{# } }}{{# if(d.list[i].selltype == 0 ){ }}white!important;{{# } }};color:white;padding:0 20px;">
+		
+		<span style="height:20px;border-left:1px solid white;margin-top:5px;margin-bottom:5px;padding-left: 20px;padding-right:15px;">
+		{{# if( d.list[i].selltype==1){ }}
+		随意团
+		{{# } }}
+		{{# if( d.list[i].selltype==2){ }}
+		邻购团
+		{{# } }}
+		{{# if( d.list[i].selltype==0){ }}
+		单买
+		{{# } }}
+		</span>
+			<div class="kucun" style="display:none;">{{ d.list[i].gnum }}</div>
+			<div class="weight" style="display:none;">{{ d.list[i].weight}}</div>
+		</span>
+		</div>
+		</div>
+	</a>
+	<div style="position:absolute;width:100%;top:106px;background-color:rgba(255,255,255,0);left:0px;bottom:0px;"></div>
+	<div id="plus{{i}}" style=" display:{{# if(d.list[i].selltype != 0 ){ }}none;{{# } }}{{# if(d.list[i].selltype == 0 ){ }}block;{{# } }} 
+width: 44px;
+height: 26px;
+position: absolute;
+border-radius: 13px;
+color: hsl(0, 0%, 100%);
+background-color: hsl(194, 57%, 64%);
+font-size: 20px;
+line-height: 24px;
+text-align: center;
+right: 8px;
+bottom: 10px;
+cursor: pointer;" onclick="plusNumber(this)">
+			<img id="img{{i}}" src="{{ d.list[i].gimg }}" style="width:20px;height:20px;left:0px;bottom:0px;position:absolute;transition-duration:0.5s;
+			transition-property:left bottom;opacity:1;transition-timing-function:ease-out;
+			border-radius:50%;display:none;z-index:1;">
+			<span class="pluslist">+<span></div>
+	
+	<div id="number{{i}}" class="number numbers" style=" display: none;width: 40px;height: 40px;position: absolute;border-radius: 50%;color: black;font-size: 20px;line-height: 40px;text-align: center;right: 80px;bottom: 10px;">0</div>		
+	<div id="minus{{i}}" class="minus" style="width: 44px;
+height: 26px;
+position: absolute;
+border-radius: 13px;
+color: hsl(0, 0%, 100%);
+background-color: hsl(194, 57%, 64%);
+font-size: 20px;
+line-height: 24px;
+text-align: center;
+right: 8px;
+bottom: 50px;
+cursor: pointer;
+display: none;" onclick="minusNumber(this)">-</div>
+</li>
+
+{{# } }}
+
+</script>
+
+
+<div style="height:54px;width:90%;left:5%;position:fixed;z-index:10086;background-color:transparent;bottom:10px;">
+			<a id="gohome" class="home external {if $_GPC['ac']=='list'}cur{/if}" style="position:absolute;display: block;width: 70px;height: 50px;left:-8px;line-height: 46px;text-align: center;color:white;background-color:hsl(194, 57%, 64%);z-index:2;border-radius: 25px;border:2px solid white;" href="{php echo app_url('goods/list')}" onclick=""><i></i><img src="{TG_URL_ARES}images/111.png"  width="25px" height="25px" style="margin-top:-5px;"></a>
+<div id="buycart" style="  position: absolute;height: 44px;border-radius: 15px;background-color: white;left: 0px;bottom: 10px;right: 0px;margin: auto;background-color: transparent;text-align: center;z-index: 1;">
+<span style="background-color: hsl(194, 57%, 64%);color: white;position: relative;height: 50px;line-height: 46px;display: inline-block;padding-left: 45px;border-radius: 25px;padding-right: 10px;border: 2px solid white;">
+  <img id="buycartimg" src="{TG_URL_ARES}images/buycart.jpg" width="44px" height="44px" style="  position: absolute;left: 1px;border-radius: 22px;top: 1px;">
+  <div id="totalnum" style="display:none;height: 18px;border-radius: 9px;line-height: 18px;position: absolute;text-align: center;padding-left: 5px;padding-right: 5px;left: 18px;top:5px;font-size: 14px;color: white;background-color: red;">0</div>
+  <span id="sumprice"></span>
+<span>
+</div>
+	<a style="position:absolute;display: block;width: 70px;height: 50px;right:-8px;background-color:hsl(194, 57%, 64%);line-height: 46px;text-align: center;color:white;z-index:2;border-radius: 25px;border:2px solid white;" class="myService external {if $_GPC['ac']=='home'}cur{/if}" href="{php echo app_url('member/home')}">
+	<i></i><img src="{TG_URL_ARES}images/2222.png" width="25px" height="25px" style="margin-top:-5px;"></a>
+</div>
+<img id="flycartpic" src="{TG_URL_ARES}images/buycart.jpg" width="30px" height="30px" style="
+transition-duration:position:fixed;left:0px;right:0px;bottom:-30px;z-index:100870;border-radius:15px;margin:auto;transition-duration:0.5s;
+			transition-property:bottom;opacity:1;transition-timing-function:ease-out;">
+<script>
+    var confirmDetail = document.getElementById("confirmDetail");
+	var selectGuige =document.getElementById("selectGuige");
+	var guigeDetail = document.getElementById("guigeDetail");
+	var forgive = document.getElementById("forgive");
+	var Guige = {};
+	var linshi = null;
+	var urlclear = "{php echo app_url('goods/list/clear')}";
+	var urladd = "{php echo app_url('goods/list/add')}";
+	var urlRemove = "{php echo app_url('goods/list/remove')}";
+	var urlNotice = "{php echo app_url('goods/list/notice')}";
+	var Buy = {};
+	var GuigeSelect = {};
+	var User = JSON.parse(localStorage.getItem("user"))|| {};
+	var cartDetails = document.getElementById( "cartDetails" );	
+	var goPay = document.getElementById( "goPay" );
+	var buycart = document.getElementById( "buycart" );	
+	var guige = document.getElementsByClassName("isguige");
+	var continueBuy = document.getElementById( "continueBuy" );
+	var guigeimg = document.getElementById("guigeimg");
+	var sesso;
+	var gotop = document.getElementById("gotop");
+	var orderlist = document.getElementById("orderlist");
+	var isPost = true;
+	var Guigein = JSON.parse(sessionStorage.getItem("guigein"))|| {};
+	
+	//禁用带有规格的减号，在购物车做加减的时候调用	
+	function disableMinus() {
+	  var minuses = document.getElementsByClassName("minus");
+	  var isguige = document.getElementsByClassName('isguige');
+	  var guigelen = isguige.length;
+	  for (var i = 0; i < guigelen; i++) {
+		if (Number(isguige[i].innerHTML)>0){
+		  minuses[i].classList.add("number");
+		}
+	  }
+	}
+	//在GuigeSelec中挑选数量的属性 
+	function queryGuigestr(key) {
+		var str = [];
+		for (var a in GuigeSelect[key]) {
+		  if (!(/.*Price/.test(a) || /.*Stock/.test(a) || /.*Weight/.test(a))){
+			str.push(a);
+		  }
+		}
+		return str;
+	}
+	
+	//重置清除关于小计的价格说明指示
+	function resetPrice(index, price) {
+		var cross = document.getElementsByClassName("cross")[index];
+		cross.style.display = 'none';
+		var priceu = document.getElementsByClassName('price')[index];
+		priceu.innerHTML ='￥' + Number(price).toFixed(2);
+		var totalPrice = document.getElementsByClassName('totalPrice')[index];
+		totalPrice.style.display = 'none';
+	}
+	
+	//删除购物车的条目，先ajax通知后台，后台清除成功后再清除前端数据
+	function clearBuycart(){
+	  if (isPost){
+	    isPost = false;
+		var minuses = document.getElementsByClassName('minus');		
+		var xhr = new XMLHttpRequest();
+		xhr.open('post', urlclear, true);
+		xhr.send(null);
+		xhr.onreadystatechange = function() {
+			if (xhr.readyState ==4) {
+				if ((xhr.status >=200 && xhr.status<300) || xhr.status ==304){
+					isPost = true;
+					if (Number(xhr.responseText)>0){
+						buycartDetails.innerHTML = "";
+						for (var key in Buy) {
+							if (minuses.length > Number(key)){
+							  resetPrice(Number(key),Buy[key]['price']);
+							}
+							delete Buy[key];
+						}
+						for (var a in GuigeSelect) {
+							delete GuigeSelect[a];
+						}
+						totalNum();
+					}
+					else{
+						//$.toast("清除失败");
+					}
+				}
+				else {
+					console.log("cuowu");
+				}
+			}	
+		}		  
+	  }
+	}
+	
+	//跳转结算页面
+	function Buycart(){
+	 if (document.getElementById('totalnum').innerHTML !== '0'){
+	   if (isPost) {
+		location.href = "{php echo app_url('order/shoporderconfirm')}";
+	   }
+	  }
+	}
+	
+	//更新购物车下方的总金额 
+	function updataSum(){
+		var sum = 0;
+		saveSession();
+		for (var key in Buy) {
+			if (key in GuigeSelect) {
+			  var jiage = queryGuigestr(key);
+			  for (var i = 0; i< jiage.length; i++){
+				if (GuigeSelect[key][jiage[i]] !== undefined){
+				 sum += GuigeSelect[key][jiage[i]] * GuigeSelect[key][jiage[i]+"Price"]; 
+				 }
+			  }			 
+			}
+			else {
+			  if ( Buy[key]['num'] !== undefined){
+			    sum += Number(Buy[key]['num']) * Number(Buy[key]['price']);
+				}
+			}			
+		}
+		if (sum == 0){
+			document.getElementById("sumprice").innerHTML = '￥ 0';
+			return;
+		}
+		document.getElementById("sumprice").innerHTML = '共 ' + sum.toFixed(2) + ' 元';
+	}
+	
+	//规格列表出来后点击不选放弃
+	forgive.onclick = function (ev) {
+	  selectGuige.style.setProperty("height","0px");
+	  selectGuige.style.setProperty("opacity","0");
+	}
+	
+	//选择规格，首先判断是否全被选中，然后根据规格跳转购买界面
+	confirmDetail.onclick = function (ev) {	  
+	  var uls = ev.target.parentNode.getElementsByTagName('ul');
+	  var ullen = uls.length;
+	  var select = true;
+	  var guigestr = "";
+	  for (var a = 0;a<ullen;a++) {
+		if (uls[a].getElementsByClassName('guigeactive').length>0){
+			select &=true;
+			guigestr += uls[a].getElementsByClassName('guigeactive')[0].innerHTML + "+";
+		}
+		else{
+			select &=false;
+		}
+	  }
+	  guigestr = guigestr.slice(-guigestr.length,-1);
+	  var guigestrPrice = guigestr + 'Price';
+	  var guigestrStock = guigestr + 'Stock';
+	  var guigestrWeight = guigestr + 'Weight';
+	  if (select){
+			selectGuige.style.setProperty("height","0px");
+			selectGuige.style.setProperty("opacity","0");
+		   var goods = linshi.parentNode.getElementsByTagName('a')[0];
+		  var goodsList = document.getElementsByClassName("externals");
+		  var goodslen = goodsList.length;
+		  for (var i = 0; i < goodslen; i++) {
+				if (goods === goodsList[i]) {
+					break;
+				}
+			  }	
+		goodid = goodsList[i].id;
+		for ( var key in Guige[goodid]) {
+			if (guigestr == Guige[goodid][key]['title']) {
+			    if (GuigeSelect[i] === undefined) {
+			      GuigeSelect[i] ={};
+			    }
+				if (GuigeSelect[i][guigestr] === undefined) {
+				  GuigeSelect[i][guigestr] = 0;
+				}
+				GuigeSelect[i][guigestrPrice] = Guige[goodid][key]['price'];
+				GuigeSelect[i][guigestrStock] = Guige[goodid][key]['stock'];
+				GuigeSelect[i][guigestrWeight] = Guige[goodid][key]['weight'];
+			}
+		}					
+		plusNumberOption(GuigeSelect[i][guigestrStock], linshi, guigestr);
+	  }
+	  else{
+		alert("未选择规格");
+	  }
+	}	
+	
+	//根据sesion值加载初始数据
+	function defaultLoad() {
+	  if (sessionStorage.getItem("Buy") != null){
+	    Buy = JSON.parse(sessionStorage.getItem("Buy"));
+	  }
+	  if (sessionStorage.getItem("GuigeSelect") !=null){
+	    GuigeSelect = JSON.parse(sessionStorage.getItem("GuigeSelect"));
+	  }	  
+	  totalNum();
+	}
+	
+	//下拉加在商品的时候，判断已购买有的id与下拉的id是否一致，如果一致，那么将数据整合
+	function joinSession() {
+		var externals = document.getElementsByClassName("externals");
+		var extlen = externals.length;
+		for (var key in Buy) {
+		  if (key == '999'){
+			for (var i = 0; i < extlen; i++) {
+			  if (Buy[key]['id'] == externals[i].id){
+					if (Buy[i] == undefined){						
+						Buy[i] = Buy[key];
+					}
+					else {
+						Buy[i]['num'] += Buy[key]['num'];												
+					}
+					if ( Number(i) !== Number(key)){
+						delete Buy[key];
+					}
+					if (Number(externals[i].getElementsByClassName("isguige")[0].innerHTML)<1){
+						return;
+					  }
+					  else {
+						if (GuigeSelect[i] == undefined) {
+						  GuigeSelect[i] = GuigeSelect[key]
+						  if ( Number(i) !== Number(key)){
+							delete GuigeSelect[key];
+						  }
+						  return;
+						}
+						else {
+							var asray = [];
+							for (var a in GuigeSelect[key]) {
+								asray.push[a];
+							}
+							var guigeArray = asray.filter(function(item, index, array) {
+								return !( /.*Price/.test(item) || /.*Stock/.test(item) || /.*Weight/.test(item));
+							});
+							for (var j = 0; j < guigeArray.length; j++) {
+								if (GuigeSelect[i][guigeArray[j]] == undefined) {
+									GuigeSelect[i][guigeArray[j]] = GuigeSelect[key][guigeArray[j]];
+									GuigeSelect[i][guigeArray[j] + "Stock"] = GuigeSelect[key][guigeArray[j] + "Stock"];
+									GuigeSelect[i][guigeArray[j] + "Price"] = GuigeSelect[key][guigeArray[j] + "Price"];
+									GuigeSelect[i][guigeArray[j] + "Weight"] = GuigeSelect[key][guigeArray[j] + "Weight"];							
+								}
+								else {
+									GuigeSelect[i][guigeArray[j]] += GuigeSelect[key][guigeArray[j]];
+								}						
+							}
+							if ( Number(i) !== Number(key)){
+								delete GuigeSelect[key];	
+							}
+						}
+					  }
+				}			  
+			}
+		  }
+		}
+	}
+	
+	
+    //根据规格或无规格购买	
+	function plusNumberOption( stock,ev, str) {
+	  if (isPost){
+	    isPost = false;
+	  var buynums = ev.parentNode.getElementsByClassName('number')[0];
+	  var minus = ev.parentNode.getElementsByClassName('minus')[0];
+	  var goods = ev.parentNode.getElementsByTagName('a')[0];
+	  var title = ev.parentNode.getElementsByTagName("h5")[0];
+	  var weight = ev.parentNode.getElementsByClassName("weight")[0];
+	  var kucun = ev.parentNode.getElementsByClassName("kucun")[0];
+	  var goodsList = document.getElementsByClassName("externals");
+	  var goodslen = goodsList.length;
+	  var price = ev.parentNode.getElementsByClassName('price')[0];
+	  var isguige = Number(ev.parentNode.getElementsByClassName('isguige')[0].innerHTML); 
+	  for (var i = 0; i < goodslen; i++) {
+			if (goods === goodsList[i]) {
+				break;
+			}
+		  }
+	  var cross = document.getElementsByClassName("cross")[i];
+	  var realPrice = document.getElementsByClassName("price")[i];
+	  var totalPrice = document.getElementsByClassName("totalPrice")[i];	  
+		  var img = ev.getElementsByTagName("img")[0];
+		  //初始化Buy对象
+		  if (Buy[i]===undefined){
+			Buy[i]={};
+		  }
+		  if (Buy[i]['img'] === undefined){
+			Buy[i]['img'] = img.src;	
+		  }	 
+			if (Buy[i]['price']===undefined){
+			  Buy[i]['price']=Number(price.innerHTML.slice(1));
+			}
+			if (Buy[i]['title'] === undefined) {
+			  Buy[i]['title'] = title.innerHTML;
+			}
+			if (Buy[i]['weight'] === undefined) {
+			  Buy[i]['weight'] = weight.innerHTML; 
+			}
+			if (Buy[i]['kucun'] === undefined) {
+			  Buy[i]['kucun'] = kucun.innerHTML; 
+			}
+			if (Buy[i]['id'] === undefined) {
+			  Buy[i]['id'] = goods.id; 
+			}
+			if (Buy[i]['num']== undefined){
+			Buy[i]['num'] = 0;
+		    }
+		  //根据购物车坐标获得动画路径
+		  var top = ev.getBoundingClientRect().top;
+		  var bottom = innerHeight - top;
+		  var left = ev.getBoundingClientRect().left;
+		  var buycartimg = document.getElementById("buycartimg");
+		  var buycartimgleft = buycartimg.getBoundingClientRect().left+10;
+		  var buycartimgbottom =innerHeight - buycartimg.getBoundingClientRect().top+10;
+		  var buycartbottom = Number(buycart.style.bottom.slice(-1*buycart.style.bottom.length,-2));
+		  var buycartleft = Number(innerWidth/2);		  		  
+		  cross.style.display = "inline";	      
+	      totalPrice.style.display = "inline";
+		  if (isguige <= 0){
+			minus.style.setProperty("display", "block");
+			var weight = goods.getElementsByClassName("weight")[0].innerHTML;
+			if (postAjax(goods.id, urladd, weight) || true ) {
+			  if (stock - Buy[i]['num']>=1){
+			    Buy[i]['num']++;
+				realPrice.innerHTML = Buy[i]['num'];
+	            totalPrice.innerHTML = "小计￥" + (Number(Buy[i]['num'])*Number(Buy[i]['price'])).toFixed(2);
+			  }
+			  else {
+				$.toast( "库存不足" );
+				if (Number(Buy[i]['num'])>0) {
+				  totalPrice.innerHTML = "小计￥" + (Number(Buy[i]['num'])*Number(Buy[i]['price'])).toFixed(2);
+				}
+				else {
+				  cross.style.display = "none";
+				  minus.style.display = "none";
+				}
+				return;
+			  }
+			}
+			else {
+				isPost = true;
+				console.log("error1");
+			}
+		  }
+		  else {
+			var weight = GuigeSelect[i][str+'Weight'];
+			if (postAjax(goods.id, urladd, weight, str) || true ) {				
+			  if (stock <= GuigeSelect[i][str]){			    
+				$.toast( "库存不足" );
+				if (GuigeSelect[i][str]>0) {				  
+				  totalPrice.innerHTML =  "小计￥" + singleTotalPrice(i);
+				}
+				else {
+				  cross.style.display = "none";
+				}				
+				return;
+			  }
+			  else {
+			    Buy[i]['num']++;
+				GuigeSelect[i][str]++;
+			    realPrice.innerHTML = Buy[i]['num'];
+				totalPrice.innerHTML =  "小计￥" + singleTotalPrice(i);
+			  }
+			}
+			else {
+				isPost = true;
+				console.log("error2");
+			}
+		  }
+		  img.style.setProperty("display","block");
+		  setTimeout(function(ev){
+			img.style.setProperty("left", (buycartimgleft-left)+"px");
+			img.style.setProperty("bottom", (buycartimgbottom-bottom)+"px");
+			setTimeout(function(ev) {
+			  img.style.setProperty("display","none");
+			  img.style.setProperty("left","0px");
+			  img.style.setProperty("bottom","0px");
+			},500)
+		  },1)	
+			buynums.innerHTML = Buy[i]['num'];
+			buynums.style.setProperty("display", "block");
+			totalNum();
+	  }	 
+	}
+	
+	//填充购物车html显示数据
+	function buycartHtml(imgstr, price, num, key, guige){
+		var str = '';
+		if (guige === ''){
+			if (Number(num) > 0) {
+				str = '<div class="tablerow">'
+					+ '<div class="buyimg"><img src="' + imgstr + '"><\/div>'
+					+ '<div class="buyprice">￥' + Number(price).toFixed(2) + '<\/div>'
+					+ '<div class="buydes">'
+					+ '<div class="buyplus" onclick="minuscarNumber(this)">-<\/div>'
+					+ '<span class="key">' + key + '</span>'
+					+ '<span class="cartDetailGuige">' + guige + '</span>'				
+					+ '<div class="buynum">' + num + '<\/div>'
+					+ '<div class="buyminus" onclick="pluscarNumber(this)">+<\/div>'
+					+ '<\/div>'
+					+ '<\/div>';
+				
+			}
+		}
+		else {
+			var aa = guige.split(' ');
+			var guigeArray = aa.filter(function(item, index, array) {
+				return !( /.*Price/.test(item) || /.*Stock/.test(item) || /.*Weight/.test(item));
+			});
+			var guigeLen = guigeArray.length;
+			var sum = 0;
+			for (var b = 0; b<guigeLen; b++) {
+				sum += Number(GuigeSelect[key][guigeArray[b]]);
+			}
+			if (sum > 0) {
+				str += '<div class="tablerow"><div class="buyimg"><img src="' + imgstr + '"><\/div>';
+				for ( var a = 0; a<guigeLen;a++) {
+				  if (Number(GuigeSelect[key][guigeArray[a]])>0) {
+					str += '<div class="tablerow">'
+					+ '<div class="buyimg"><span class="cartDetailGuige" style="font-size:0.8em;color:hsl(354, 90%, 73%)">' + guigeArray[a] + '</span><\/div>'
+					+ '<div class="buyprice">￥' + Number(GuigeSelect[key][guigeArray[a]+'Price']).toFixed(2) + '<\/div>'
+					+ '<div class="buydes">'
+					+ '<div class="buyplus" onclick="minuscarNumber(this)">-<\/div>'
+					+ '<span class="key">' + key + '</span>'				
+					+ '<div class="buynum">' + GuigeSelect[key][guigeArray[a]] + '<\/div>'
+					+ '<div class="buyminus" onclick="pluscarNumber(this)">+<\/div>'
+					+ '<\/div>'
+					+ '<\/div>';
+				  }
+				}
+				str += '<\/div>';
+			}
+		}			
+		return str;
+	}
+	
+	//计算买的总数量，并且更新总购买价格
+	function totalNum() {
+	  var totalnum = document.getElementById('totalnum');
+	  var num=0;
+	  for (var key in Buy) {
+	   if (Buy[key]['num'] !== undefined) {
+	    num += Buy[key]['num'];
+	   }
+	  }
+	  totalnum.innerHTML = num;
+	  if (num == 0) {
+	    totalnum.style.setProperty('display', 'none');
+	  }
+	  else if (num > 0) {
+	    totalnum.style.setProperty('display', 'block');
+	  }
+	  updataSum();
+	}
+	
+	//购物车买
+	function pluscarNumber(ev) {
+	  if (isPost){
+	    isPost = false;
+		disableMinus();
+		var buynums = ev.parentNode.getElementsByClassName('buynum')[0];
+		var key = ev.parentNode.getElementsByClassName('key')[0];
+		var index = Number(key.innerHTML);
+		if (document.getElementsByClassName('externals').length < (Number(index)+1)) {
+			$.toast("该物品未显示，请下拉后再操作");
+			isPost = true;
+			return ;
+		}
+		var id = document.getElementsByClassName('externals')[index].id;
+		var weight = document.getElementsByClassName('weight')[index].innerHTML;
+		var str = ev.parentNode.parentNode.getElementsByClassName('cartDetailGuige')[0].innerHTML;
+		var kucunNumber = Number(document.getElementsByClassName("kucun")[index].innerHTML);
+		var cross = document.getElementsByClassName("cross")[index];
+	    var realPrice = document.getElementsByClassName("price")[index];
+	    var totalPrice = document.getElementsByClassName("totalPrice")[index];
+		  if (str === ''){	
+			if (Buy[index]['num'] < kucunNumber) {
+				if (postAjax(id, urladd, weight)|| true ){
+				  Buy[index]['num']++;
+				  buynums.innerHTML = Buy[index]['num'];
+				  totalPrice.innerHTML = "小计￥" + (Number(Buy[index]['num'])*Number(Buy[index]['price'])).toFixed(2);
+				}
+			}
+			else {
+				isPost = true;
+				$.toast( "库存不足" );
+				totalPrice.innerHTML = "小计￥" + (Number(Buy[index]['num'])*Number(Buy[index]['price'])).toFixed(2);
+			  }
+		}			
+		else {
+		  weight = GuigeSelect[index][str+"Weight"];
+		  if (GuigeSelect[index][str] < GuigeSelect[index][str+'Stock']) {
+			if (postAjax(id, urladd, weight, str) || true ){
+	
+				Buy[index]['num']++;
+				GuigeSelect[index][str]++;
+				buynums.innerHTML = GuigeSelect[index][str];
+				totalPrice.innerHTML = "小计￥" + singleTotalPrice(index);
+			}
+		  }
+		  else {
+		    isPost = true;
+			$.toast( "库存不足" );
+			totalPrice.innerHTML = "小计￥" + singleTotalPrice(index);
+		  }
+		}
+	    cross.style.display = "inline";
+	    realPrice.innerHTML = Buy[index]['num'];	  
+	    totalPrice.style.display = "inline";
+	    totalNum();
+	  }
+	}
+	
+	//更新小计，有规格的计算方式
+	function singleTotalPrice(i) {
+	  var total = 0;
+	  for (var str in GuigeSelect[i]) {
+		if (!( /.*Price/.test(str) || /.*Stock/.test(str) || /.*Weight/.test(str))){
+			total += Number(GuigeSelect[i][str]) * Number(GuigeSelect[i][str+'Price']);
+		}
+	  }
+	  
+	  return total.toFixed(2);
+	}
+	
+	//购物车减
+	function minuscarNumber(ev) {
+	  if (isPost){
+	    isPost = false;
+		disableMinus();
+		var buynums = ev.parentNode.getElementsByClassName('buynum')[0];
+		var key = ev.parentNode.getElementsByClassName('key')[0];
+		var index = Number(key.innerHTML);
+		if (document.getElementsByClassName('externals').length < Number(index) ) {
+			$.toast("该物品未显示，请下拉后再操作");
+			isPost = true;
+			return ;
+		}
+		var id = document.getElementsByClassName('externals')[index].id;
+		var weight = document.getElementsByClassName('weight')[index].innerHTML;
+		var cross = document.getElementsByClassName("cross")[index];
+	    var realPrice = document.getElementsByClassName("price")[index];
+	    var totalPrice = document.getElementsByClassName("totalPrice")[index];
+		var str = ev.parentNode.parentNode.getElementsByClassName('cartDetailGuige')[0].innerHTML;
+		if (str === ''){
+			if (postAjax(id, urlRemove, weight) || true ){
+			  Buy[index]['num']--;
+			  buynums.innerHTML = Buy[index]['num'];
+			  cross.style.display = "inline";
+			  realPrice.innerHTML = Buy[index]['num'];
+			  totalPrice.innerHTML = "小计￥" + Number(Buy[index]['num'])*Number(Buy[index]['price']);
+			  totalPrice.style.display = "inline";
+			  if (Buy[index]['num']==0){
+			    cross.style.display = "none";
+				realPrice.innerHTML = '￥' + Buy[index]['price'];
+				totalPrice.style.display = "none";
+				ev.parentNode.parentNode.style.setProperty("display","none");
+				delete Buy[index];
+				buynums.innerHTML = 0;
+			  }				  
+			}
+		} 
+		else {
+			weight = GuigeSelect[index][str+"Weight"];
+			if (postAjax(id, urlRemove, weight, str) || true ){
+			  Buy[index]['num']--;
+			  GuigeSelect[index][str]--;
+			  buynums.innerHTML = Buy[index]['num'];
+			  cross.style.display = "inline";
+			  realPrice.innerHTML = Buy[index]['num'];
+			  totalPrice.innerHTML = "小计￥" + singleTotalPrice(index);
+			  buynums.innerHTML = GuigeSelect[index][str];
+			  if (GuigeSelect[index][str]==0){
+				  ev.parentNode.parentNode.style.setProperty("display","none");
+				  delete GuigeSelect[index][str];
+				  delete GuigeSelect[index][str + 'Weight'];
+				  delete GuigeSelect[index][str + 'Stock'];
+				  delete GuigeSelect[index][str + 'Price'];
+				  var n=0;
+				  for (var key in GuigeSelect[index]){
+					if (!( /.*Price/.test(key) || /.*Stock/.test(key) || /.*Weight/.test(key))){
+					  n++;
+					}					
+				  }	
+				  if (n==0) {
+					cross.style.display = "none";
+					realPrice.innerHTML = '￥' + Buy[index]['price'];
+					totalPrice.style.display = "none";
+					ev.parentNode.parentNode.parentNode.style.setProperty("display","none");
+					delete GuigeSelect[index];
+					delete Buy[index];
+				  }
+			  }
+			}
+		}
+		totalNum();
+	  }
+	}
+	
+	//加减ajax处理
+	function postAjax(id, url, weight, str){
+		var formData = new FormData();
+			formData.append('id', id);
+			if (weight !== undefined){
+			  formData.append("weight",weight);
+			}
+			else {
+				formData.append("type",1);
+			}
+			if (str !==undefined){
+			  formData.append("str",str);
+			}
+			var xhr = new XMLHttpRequest();
+			xhr.open('post', url, true);
+			xhr.send(formData);
+			console.log(id + ' ' + weight + ' ' + str);
+			xhr.onreadystatechange = function() {
+				if (xhr.readyState ==4) {
+				  if ((xhr.status >=200 && xhr.status<300) || xhr.status ==304){
+					 isPost = true;
+				     console.log(xhr.responseText);
+					 return !!xhr.responseText;					 
+				  }
+				  else {
+					isPost = true;
+					console.log("cuowu");
+				  }
+				}
+			}
+	}
+	
+	//获取规格并且填充规格栏目
+	function ajaxGuige(id, ev) {
+		var url = "{php echo app_url('goods/list/specsajax')}";
+		var formData = new FormData();
+		formData.append('id', id);
+		var xhr = new XMLHttpRequest();
+		xhr.open('post', url, true);
+		xhr.send(formData);
+		var str = '';
+		if (Guigein[id] === undefined){
+			xhr.onreadystatechange = function() {
+				if (xhr.readyState ==4) {
+					if ((xhr.status >=200 && xhr.status<300) || xhr.status ==304){
+						var responseText = JSON.parse(xhr.responseText);
+						Guigein[id] = responseText;
+						sessionStorage.setItem("guigein", JSON.stringify(Guigein));
+						var ajaxLen = responseText[0]['specs'].length;
+						var responseLength = responseText.length;
+						for (var k = 0; k < responseLength; k++) {
+							if (Guige[id] == undefined) {
+								Guige[id] = {};						
+							}
+							if (Guige[id][k] == undefined) {
+								Guige[id][k] = {};
+							}
+							Guige[id][k]['title'] = responseText[k]['title'];					  
+							Guige[id][k]['price'] = responseText[k]['productprice'];
+							Guige[id][k]['stock'] = responseText[k]['stock'];
+							Guige[id][k]['weight'] = responseText[k]['weight'];
+						}
+						for (var i = 0; i<ajaxLen;i++){	
+							var itemlen = responseText[0]['specs'][i]['items'].length;
+							str += '<div class="guigeSelect">' + responseText[0]['specs'][i]['title'] + '<\/div><ul>';
+							for (var j = 0;j<itemlen;j++){
+								str += '<li onclick="selectGuigeOption(this)" id="' + responseText[0]['specs'][i]['items'][j]['id']+ '">'+responseText[0]['specs'][i]['items'][j]['title'] +'<\/li>';
+							}
+							str += '<\/ul>';
+						}
+						guigeDetail.innerHTML = str;
+						selectGuige.style.setProperty("height","100%");
+						selectGuige.style.setProperty("opacity","1");
+						linshi=ev;
+					}else {
+						console.log("error"+xhr.status);
+					}
+				}
+			}
+		}
+		else {
+			var GuigeLen = Guigein[id][0]['specs'].length
+			for (var i = 0; i<GuigeLen;i++){	
+				var itemlen = Guigein[id][0]['specs'][i]['items'].length;
+				str += '<div class="guigeSelect">' + Guigein[id][0]['specs'][i]['title'] + '<\/div><ul>';
+				for (var j = 0;j<itemlen;j++){
+					str += '<li onclick="selectGuigeOption(this)" id="' + Guigein[id][0]['specs'][i]['items'][j]['id']+ '">'+Guigein[id][0]['specs'][i]['items'][j]['title'] +'<\/li>';
+				}
+					str += '<\/ul>';
+				}
+				guigeDetail.innerHTML = str;
+				selectGuige.style.setProperty("height","100%");
+				selectGuige.style.setProperty("opacity","1");
+				linshi=ev;
+		}
+	    document.getElementsByClassName("guigeprice")[0].innerHTML = '0.00';
+	}
+	
+	function setSealout() {
+		var buys = document.getElementsByClassName("pluslist");
+		var kuncuns = document.getElementsByClassName("kucun");
+		var ids = document.getElementsByClassName("externals");
+		for (var i = 0; i < buys.length; i++) {
+			if (Number(kuncuns[i].textContent) < 1 ){
+				buys[i].parentNode.style.lineHeight = "8px";
+				buys[i].style.fontSize = "10px";
+				if (User[ids[i].id]){
+					buys[i].parentNode.style.backgroundColor = "#fcc602"
+					buys[i].innerHTML = '等待<br/>通知';
+				}
+				else{
+					buys[i].parentNode.style.backgroundColor = "#444";				
+					buys[i].innerHTML = '上架<br/>通知';
+				}									
+			}
+		}
+	}
+
+	//点加，如果有规格跳选择规格，没有直接加减 
+	function plusNumber(ev) {
+	   var buynums = ev.parentNode.getElementsByClassName('number')[0];
+	   var minus = ev.parentNode.getElementsByClassName('minus')[0];
+	  var goods = ev.parentNode.getElementsByTagName('a')[0];
+	  var goodsList = document.getElementsByClassName("externals");
+	  var totalNum = Number(ev.parentNode.getElementsByClassName('kucun')[0]);	   
+	  var goodslen = goodsList.length;
+	  var price = ev.parentNode.getElementsByClassName('price')[0];
+	  var isguige = Number(ev.parentNode.getElementsByClassName('isguige')[0].innerHTML);
+      var goodsimg = ev.parentNode.getElementsByClassName("goodsimg")[0].src; 
+	  var kucunNumber = Number(ev.parentNode.getElementsByClassName("kucun")[0].innerHTML);
+	  var id = goods.id;
+	  if (kucunNumber >0){
+		if (isguige>0){
+			guigeimg.src=goodsimg;
+			ajaxGuige(goods.id,ev)
+		}
+		else {
+		  plusNumberOption(kucunNumber, ev);
+		}
+	  }
+	  else if (ev.style.backgroundColor !== "rgb(252, 198, 2)"){
+		if (confirm("上架通知么")){
+			ev.style.backgroundColor = "#fcc602";
+			ev.getElementsByClassName("pluslist")[0].innerHTML = '等待<br/>通知';
+			postAjax(id, urlNotice);
+			User[id] = "1";
+			localStorage.setItem("user",JSON.stringify(User));
+		}
+	  }
+	}
+	
+	//选满规格然后调处价格
+	function selectGuigeOption(ev) {
+	  var lis = ev.parentNode.getElementsByTagName('li');
+	  var lislen = lis.length;
+	  for (var i = 0; i < lislen; i++ ) {
+	    lis[i].classList.remove("guigeactive");
+	  }
+	  ev.classList.add("guigeactive");
+	  var guigeprice = ev.parentNode.parentNode.parentNode.getElementsByClassName("guigeprice")[0];	  
+	  var uls = ev.parentNode.parentNode.getElementsByTagName('ul');
+	  var ullen = uls.length;
+	  var select = true;
+	  var guigestr = "";
+	  var price;
+	  for (var a = 0;a<ullen;a++) {
+		if (uls[a].getElementsByClassName('guigeactive').length>0){
+			select &=true;
+			guigestr += uls[a].getElementsByClassName('guigeactive')[0].innerHTML + "+";
+		}
+		else{
+			select &=false;
+		}
+	  }
+	  guigestr = guigestr.slice(0,-1);
+	  var guigestrPrice = guigestr + 'Price';
+	  if (select){
+		  var goods = linshi.parentNode.getElementsByTagName('a')[0];
+		  var goodsList = document.getElementsByClassName("externals");
+		  var goodslen = goodsList.length;
+		  for (var i = 0; i < goodslen; i++) {
+				if (goods === goodsList[i]) {
+					break;
+				}
+			  }	
+		goodid = goodsList[i].id;
+		for ( var key in Guige[goodid]) {
+			if (guigestr == Guige[goodid][key]['title']) {
+				price = Guige[goodid][key]['price'];
+			}
+		}
+		guigeprice.innerHTML = Number(price).toFixed(2);
+	  }
+	  else{
+	    guigeprice.innerHTML = '0.00';
+	  }	  
+	}
+	
+    //点击界面中的减 	
+	function minusNumber(ev) {
+	  if (isPost){
+	    isPost = false;
+		var buynums = ev.parentNode.getElementsByClassName('number')[0];
+	    var minus = ev.parentNode.getElementsByClassName('minus')[0];
+		var goods = ev.parentNode.getElementsByTagName('a')[0];
+	    var goodsList = document.getElementsByClassName("externals");
+	    var goodslen = goodsList.length;
+		var weight = ev.parentNode.getElementsByClassName("weight")[0].innerHTML;
+	    for (var i = 0; i < goodslen; i++) {
+		  if (goods === goodsList[i]) {
+		 	break;
+		  }
+	    }
+		var cross = document.getElementsByClassName("cross")[i];
+	    var realPrice = document.getElementsByClassName("price")[i];
+	    var totalPrice = document.getElementsByClassName("totalPrice")[i];
+		if ( postAjax(goods.id, urlRemove, weight) || true ){
+			Buy[i]['num']--;
+		}
+		buynums.innerHTML=Buy[i]['num'];
+		cross.style.display = "inline";
+		realPrice.innerHTML = Buy[i]['num'];
+		totalPrice.innerHTML = "小计￥" + (Number(Buy[i]['num'])*Number(Buy[i]['price'])).toFixed(2);
+		totalPrice.style.display = "inline";
+		if (Buy[i]['num']==0){
+		  cross.style.display = "none";
+		  realPrice.innerHTML = '￥' + Buy[i]['price'];
+		  totalPrice.style.display = "none";
+		  buynums.style.setProperty("display", "none");
+		  minus.style.setProperty("display", "none");
+		  delete Buy[i];	  
+		}			
+		totalNum();
+	  }
+	}
+	
+	//点击购物车中的继续购买
+	continueBuy.onclick = function () {
+	  var minuses = document.getElementsByClassName("minus");
+	  var number = document.getElementsByClassName("numbers");	
+	  cartDetails.style.setProperty( "height", "0px" );
+	  cartDetails.style.setProperty( "opacity", "0" );
+	  var len = number.length;
+	  for (var i = 0;i<len; i ++ ) {
+	    number[i].style.setProperty("display","none");
+		minuses[i].style.setProperty("display","none");
+	  }
+	  for (var key in Buy) {
+	    if (Number(key) < number.length){
+			number[key].innerHTML = Buy[key]['num'];
+			number[key].style.setProperty("display","block");
+			if (Number(Buy[key]['num'])>0){
+			  if(GuigeSelect[key]===undefined){
+				minuses[key].style.setProperty("display","block");
+			  }
+			}
+		}
+	  }
+	}
+	
+	//点击购物车出来购物车条目，调用html
+	buycart.onclick = function () {
+	  cartDetails.style.setProperty( "height", "100%" );
+	  cartDetails.style.setProperty( "opacity", "1" );
+	  var str="";
+      for (var key in Buy) {
+	    if (GuigeSelect[key] ===undefined) {
+		  if (Buy[key]['num'] !=undefined){
+		    str += buycartHtml(Buy[key]['img'], Buy[key]['price'], Buy[key]['num'], key, "");
+		  }
+	    }
+		else{
+		  var numArray =[];
+		  var guigeArray = [];
+		  for (var li in GuigeSelect[key]) {
+			 numArray.push(GuigeSelect[key][li]);
+			 guigeArray.push(li);			
+		  }
+		  if (Buy[key]['num'] !=undefined){
+			
+			str += buycartHtml(Buy[key]['img'], Buy[key]['price'],numArray, key,guigeArray.join(' '));
+		  }
+		}
+	  }
+	  buycartDetails.innerHTML =str;
+	}
+	
+	//回到顶部 
+	gotop.onclick = function ( ev ) {
+		document.getElementById("banner").scrollIntoView();		
+	}		
+	defaultLoad();
+	
+	function saveSession() {
+		sessionStorage.setItem("Buy", JSON.stringify(Buy));
+		sessionStorage.setItem("GuigeSelect", JSON.stringify(GuigeSelect));
+	}
+	
+	
+	$(function() {
+		'use strict';
+		//商品列表页
+		$(document).on("pageInit", "#page-goods-list", function(e, id, page) {
+			var loading = false;
+			var thispagesize = 4;
+			var thispagesizemax = 100;
+			var thispage = 1;
+
+			function addItems(thispage, thispagesize) {
+				var ajaxurl = "{php echo app_url('goods/list/shopajax',array('cid' => $cid))}" + "&page=" + thispage + "&pagesize=" + thispagesize;
+				$.ajax({
+					type: "POST",
+					url: ajaxurl,
+					dataType: 'json',
+					beforeSend: function(XMLHttpRequest) {},
+					success: function(data) {
+						thispagesizemax = data.total;
+						if (data.list.length > 0) {
+							var gettpl = document.getElementById('goodslist').innerHTML;
+							laytpl(gettpl).render(data, function(html){
+							    $(".ul_1").append(html);
+							});
+						} else {
+							$(".loading_more").remove();
+							$('.noData').show();
+						}
+						joinSession();
+						setSealout();
+					},
+					error: function() {
+						$('.error').show();
+					}
+				});
+			}
+			addItems(thispage, thispagesize);
+			$(page).on('infinite', function() {
+				if (loading) return;
+				loading = true;
+				$(".loading_more").show();
+				if (orderlist.getBoundingClientRect().top < -500){
+					gotop.style.setProperty("display", "block");					
+				} 
+				else {
+					gotop.style.setProperty("display", "none");
+				}
+				setTimeout(function() {
+					loading = false;
+					thispage++;
+					addItems(thispage, thispagesize);
+//					$(".loading_more").hide();
+					$.refreshScroller();
+				}, 1000);
+			});
+			sesso=function sessionProcess(elem) {
+				var externals = document.getElementsByClassName("externals");
+				var len = externals.length;
+				for ( var i = 0; i < len; i++ ) {
+				  if ( elem === externals[i] ) {
+					var classclassname = elem.className.slice(9);
+					sessionStorage.setItem("position", classclassname+i.toString());
+					sessionStorage.setItem("id", externals[i].id);
+					sessionStorage.setItem("weight", externals[i].getElementsByClassName('weight')[0].innerHTML);
+					sessionStorage.setItem("kucun", externals[i].getElementsByClassName('kucun')[0].innerHTML);
+					sessionStorage.setItem("isGuige", externals[i].getElementsByClassName("isguige")[0].innerHTML);
+					sessionStorage.setItem("price", externals[i].getElementsByClassName("price")[0].innerHTML.slice(1));
+					sessionStorage.setItem("img", externals[i].getElementsByTagName("img")[0].src);
+					sessionStorage.setItem("title", externals[i].getElementsByTagName("h5")[0].innerHTML);
+					saveSession();
+				  }
+				}
+				
+			}
+			if (sessionStorage.getItem("position") !== null){
+				document.getElementById("animationS").style.setProperty("display","block");
+				setTimeout(function() {
+					  var classname = sessionStorage.getItem("position").slice(-1*sessionStorage.getItem("position").length,-1*sessionStorage.getItem("position").length+9);
+					  var index = parseInt(sessionStorage.getItem("position").slice(-1*sessionStorage.getItem("position").length+9));
+					  var i = index;
+					  var n = ( i /4 +2 )* 500;
+					  setTimeout(function(){
+						loadData(i);
+						  setTimeout(function(){			
+							document.getElementsByClassName(classname)[index].scrollIntoView();
+							
+							setTimeout(function(){
+								document.getElementById("animationS").style.setProperty("display","none");
+							},0)
+						  },n)
+					  },500)					  
+				},0);
+			}
+			function loadData(i) {
+				if (i<3) return;
+				thispage++;
+				addItems(thispage,thispagesize);
+				setTimeout(function(){
+					loadData(i-4);
+				},500)
+				
+			}
+		});
+		$.init();
+		
+	});
+	if (sessionStorage.getItem("Buy") === '{}') {
+		clearBuycart();
+	}
+
+</script>
+
+					<script>
+			var gohome = document.getElementById("gohome");
+			gohome.onclick = function() {
+			  sessionStorage.removeItem("position");
+			}
+		</script>
+		
+{php include wl_template('common/footer');}
+	

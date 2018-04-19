@@ -1,0 +1,117 @@
+{php include wl_template('common/header');}
+
+<style type="text/css">
+    .page-trade-order h4{font-size:14px; font-weight:700;}
+    .page-trade-order .form-group{margin-bottom:0;}
+    .page-trade-order .form-group .control-label {
+        font-weight: normal;
+        color: #999;
+        width: 120px;
+        padding: 0 0 0 20px;
+    }
+    .page-trade-order .order-infos{border-right:1px solid #ddd;}
+    .page-trade-order .parting-line{height:1px;border-top:1px dashed #e5e5e5; margin:3px 0;}
+    .page-trade-order .order-state{padding-left:40px; position:relative; margin:20px 0 40px;}
+
+</style>
+
+<!--订单概况 start-->
+<div class="page-trade-order">
+    <div class="order-list">
+        <div class="freight-content">
+            <div class="freight-template-item panel panel-default">
+                <div class="panel-body clearfix">
+                {loop $list $key $item}
+                    <div class="row">
+                        <div class="col-xs-12 col-sm-12">
+                            <h4>{php echo $key+1}订单信息</h4>
+                            <div class="form-group clearfix">
+                                <label class="col-md-3 control-label">配送方式：</label>
+                                <div class="col-md-9">
+                                    {if $item['order_status'] == 1}
+                                        送货上门
+                                    {elseif $item['order_status'] == 2}
+                                        快递
+                                    {else}
+                                        自提
+                                    {/if}
+                                </div>
+                            </div>
+
+                            <div class="form-group clearfix">
+                                <label class="col-md-3 control-label">配送时间：</label>
+                                <div class="col-md-9">
+                                    {$item['send_date']}
+                                </div>
+                            </div>
+                    {if $item['order_status'] == 3}
+                            <div class="form-group clearfix">
+                                <label class="col-md-3 control-label">核销时间：</label>
+                                <div class="col-md-9">
+                                    {php echo date('Y/m/d H:i:s', $item['hexiao_date'])}
+                                </div>
+                            </div>
+
+                            <div class="form-group clearfix">
+                                <label class="col-md-3 control-label">核销员：</label>
+                                <div class="col-md-9">
+                                    {$item['hexiao_man']}
+                                </div>
+                            </div>
+
+                            <div class="form-group clearfix">
+                                <label class="col-md-3 control-label">自提信息地址：</label>
+                                <div class="col-md-9">
+                                    {$item['ziti_address']}
+                                </div>
+                            </div>
+                    {else}
+
+                            <div class="form-group clearfix">
+                                <label class="col-md-3 control-label">发货时间：</label>
+                                <div class="col-md-9">
+                                    {php echo date('Y/m/d H:i:s', $item['delivery_date'])}
+                                </div>
+                            </div>
+                        {if $item['order_status'] == 2}
+                            <div class="form-group clearfix">
+                                <label class="col-md-3 control-label">物流公司：</label>
+                                <div class="col-md-9">
+                                    {$item['express']}
+                                </div>
+                            </div>
+
+                            <div class="form-group clearfix">
+                                <label class="col-md-3 control-label">物流单号：</label>
+                                <div class="col-md-9">
+                                    {$item['expresssn']}
+                                </div>
+                            </div>
+                        {/if}
+                    {/if}
+                            <div class="form-group clearfix">
+                                <label class="col-md-3 control-label">收货信息：</label>
+                                <div class="col-md-9">
+                                    {$item['province']},{$item['city']},{$item['county']},{$item['detailed_address']}
+                                </div>
+                            </div>
+
+                            <div class="form-group clearfix">
+                                <label class="col-md-3 control-label">签收时间：</label>
+                                <div class="col-md-9">
+                                    {php echo is_null($item['sign_date']) ? '未签收' : date('Y/m/d H:i:s', $item['sign_date'])}
+                                </div>
+                            </div>
+
+                            <div class="parting-line"></div>
+                        </div>
+                    </div>
+                {/loop}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+{php include wl_template('common/footer');}

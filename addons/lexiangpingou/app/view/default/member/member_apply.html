@@ -1,0 +1,277 @@
+{php include wl_template('common/header');}
+<style>
+    .tit > i {
+        font-size: 16px;
+        margin-right: 10px;
+    }
+</style>
+
+<link rel="stylesheet" href="{TG_URL_ARES}weiui/weui.min.css">
+<script src="{TG_URL_ARES}weiui/jquery-weui.min.css"></script>
+
+<form name='form' method="post" onsubmit="return toVaild()">
+    <div class="mod_container">
+        <div class="wx_bar">
+
+            <!--<div class="wx_bar_back" style="text-align:center;margin-top:30px;">-->
+                <!--<img src="{$member['avatar']}" style='width:80px;height:80px;padding1px;border:1px solid #ccc'/>-->
+            <!--</div>-->
+            <!--<span style="font-size:16px;display:block;width:200px;margin:auto;text-align:center;margin-top:20px;">-->
+
+                <!--{if $member['member_status'] == 0}-->
+                <!--您好,{$member['name']},您提交的申请已经在审批中,请耐心等候!-->
+                <!--{elseif $member['member_status'] == -1}-->
+                <!--非常抱歉！{$member['name']},您提交的申请已被拒绝,请联系管理员!-->
+                <!--{/if}-->
+            <!--</span>-->
+            <!--<a style="display:block;width:200px;height:40px;background-color:#6fbfd8;color:white;font-weight:700;font-size:1.5em;line-height:40px;text-align:center;margin:auto;border-radius:5px;margin-top:80px;" id="closewindow">确定</a>-->
+        </div>
+
+        <div class="wx_wrap">
+            <div class="address_new" style="text-align:center;margin-top:30px;">
+                <input id="address_regionId" type="hidden">
+                <p class="row">
+                    <label for="name">
+                        <span class="tit"><i class="icon icon-me"></i>姓 名</span>
+                        <input name="name" id="name" type="text" placeholder="名字" value="{$member['name']}">
+
+                    </label>
+                </p>
+                <p class="row">
+                    <label for="name">
+                        <span class="tit"><i class="icon icon-gift"></i>生 日</span>
+                        <input name="birthday" value="{$member['birthday']}" type="text" placeholder="生日" id="birthday" readonly="">
+                    </label>
+                </p>
+                <p class="row">
+                    <label for="mobile">
+                        <span class="tit"><i class="icon icon-phone"></i>手机号</span>
+                        <input required="" id="mobile" placeholder="手机号码" name="mobile" maxlength="11" minlength="11"
+                               class="block input" tabindex="2" type="tel" value="{$member['addmobile']}"/>
+                    </label>
+                </p>
+
+                {if $setting['member_smscode'] == 1}
+                <p class="row">
+                    <label for="code">
+                        <span class="tit"><i class="icon icon-message"></i>验证码</span>
+                        <input id="code" class="weui-input code" type="text"
+                               placeholder="短信验证码">
+                        <input onclick="getCorda(this)" type="button" value="点击获得验证码" id="getCord"
+                               class="weui-btn weui-btn_primary getCord"/>
+                    </label>
+                </p>
+                {/if}
+                {if $member['member_apply'] == 0}
+                <p class="action">
+                    <button name="submit" value="yes" id='submit1' class="pay2_btn">申请会员</button>
+                    <input type="hidden" name="token" value="{$_W['token']}"/>
+                </p>
+                {/if}
+                <!--<img style="width: 40%;height:auto;margin:auto;margin-top: 50px;" src="{$slogo}" alt=""-->
+                     <!--class="img-rounded">-->
+            </div>
+            <style>
+                .wx_wrap .imgby2wm {
+                    position: absolute;
+                    top: 50%;
+                    left: 35%;
+                    width: 30%
+                }
+
+                .address_new .row {
+                    box-sizing: border-box;
+                }
+
+                .address_new .row label {
+                    display: flex;
+                    display: -webkit-flex;
+                    box-sizing: border-box;
+                    padding: 0 20px;
+                    flex-direction: row;
+                    -webkit-flex-direction: row;
+                    justify-content: space-between;
+                    -webkit-justify-content: space-between;
+                    align-items: center;
+                    -webkit-align-items: center;
+                    height: 40px;
+                    background-color: #fff;
+                    border-bottom: 1px solid #ccc;
+                }
+
+                .address_new .row label span {
+                    width: 90px;
+
+                }
+
+                .address_new .row label input {
+                    flex: 1;
+                    -webkit-box-flex: 1; /* OLD - iOS 6-, Safari 3.1-6 */
+                    -moz-box-flex: 1; /* OLD - Firefox 19- */
+                    width: 20%; /* For old syntax, otherwise collapses. */
+                    -webkit-flex: 1; /* Chrome */
+                    -ms-flex: 1; /* IE 10 */
+                    border: none;
+                }
+
+                .address_new .row .code {
+                    display: inline-block
+                    width: 60%;
+                }
+
+                .address_new .row .getCord {
+                    float: right;
+                    height: 35px;
+                    width: 40%;
+                    font-size: 12px;
+                    background-color: #6fbfd8;
+                }
+
+                .address_new .action .pay2_btn {
+                    margin: 0 auto;
+                    margin-top: 60px;
+                    box-shadow: 0 0 5px #aaa;
+                    width: 90%;
+                    border-radius: 5px;
+                    background-color: #6fbfd8;
+                    color: #fff;
+                }
+            </style>
+            <div style="position: fixed;bottom: 0;width: 100%;left: 0;padding: 10px;border-top: 1px solid #ddd;background: #fff;max-height: 350px;overflow-y: auto">
+                <span style="font-size: 16px">会员规则:</span><br>
+                <div class="member_rules"></div>
+            </div>
+        </div>
+
+    </div>
+</form>
+{if $setting['member_smscode'] == 1}
+<script>
+
+    var url = "{php echo $_W['siteroot']}/minapi.php?op=code&uniacid={$_W['uniacid']}";
+    var getCord = document.getElementById("getCord");
+    getCord.onclick = function (ev) {
+        if (getCord.value == '点击获得验证码' || getCord.value == '发送失败' || getCord.value == '重新发送验证码') {
+            ajaxData(0, url);
+        } else {
+            $.toast('倒计时还未结束', 1000);
+            return;
+        }
+
+    };
+
+    function ajaxData(num, url) {
+
+        var mobile = $("#mobile").val();
+
+        if (!(/^1[34578]\d{9}$/.test(mobile))) {
+            $.toast('手机号码不正确');
+            return false;
+        }
+        //去除单击事件，防止多次点击
+        $('#getCord').attr('onclick', '');
+        var xhr = new XMLHttpRequest();
+        var formData = new FormData();
+
+        formData.append('num', num);
+        if (num == 0) {
+            formData.append("mobile", mobile);
+            formData.append('retrieve', 1);
+        }
+        else if (num.length == 6) {
+            formData.append('retrieve', 2);
+        }
+        else {
+            $.toast("验证码不正确");
+//            alert("验证码不正确");
+            return false;
+        }
+        xhr.open('post', url, true);
+        xhr.send(formData);
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState == 4) {
+                if ((xhr.status >= 200 && xhr.status < 300) || xhr.status == 304) {
+                    var res = JSON.parse(xhr.responseText);
+                    if (res.result) {
+                        $.toast(res.result);
+                        return false;
+                    }
+                    if (res['status'] == 1) {
+                        window.sessionStorage.setItem('applycode', res['code'])
+//                        $.toast(res['code']);
+                        var a = 60;
+                        var timp = setInterval(function () {
+                            a--;
+                            getCord.value = a + '秒';
+                            if (a == 0) {
+                                $('#getCord').attr('onclick', 'getCorda(this)');
+                                getCord.value = '重新发送验证码';
+                                clearInterval(timp);
+                            }
+                        }, 1000);
+                    } else if (res['status'] == -1) {
+                        $.toast(res.result);
+                    } else if (res['status'] == 2) {
+                        $.toast(res.result);
+                        window.history(-1);
+                    }
+                }
+            }
+        }
+    }
+
+</script>
+{/if}
+<script>
+    $("#birthday").calendar({
+        monthNames: ['1月','2月','3月','4月','5月','6月','7月','8月','9月','10月','11月','12月'],
+        dayNames:['周一','周二','周三','周四','周五','周六','周日']
+    });
+    wx.ready(function () {
+        $('#closewindow').click(function () {
+            location.href = "{php echo app_url('member/home')}";
+//            location.href = history.go(-1);
+//            location.reload();
+//            wx.closeWindow();
+        });
+    });
+    $('#submit1').click(function () {
+        if ($('#name').val() == '') {
+            $.toast('请输入姓名');
+            return false;
+        }
+        if ($('#mobile').val() == '') {
+            $.toast('请输电话号码');
+            return false;
+        }
+        if ($('#birthday').val() == '') {
+            $.toast('请输生日');
+            return false;
+        }
+        var mobile = $("#mobile").val();
+        if (!(/^1[34578]\d{9}$/.test(mobile))) {
+            $.toast('手机号码不正确');
+            return false;
+        }
+        {if $setting['member_smscode'] == 1}
+        if ($('#code').val() == '') {
+            $.toast('请输入短信验证码');
+            return false;
+        }
+
+        if(sessionStorage.getItem('applycode')!=$('#code').val()){
+            $.toast('短信验证码有误');
+            return false;
+        }
+        {/if}
+    });
+
+
+    function escape2Html(str){
+        var arrEntities={'lt':'<','gt':'>','nbsp':' ','amp':'&','quot':'"'};
+        return str.replace(/&(lt|gt|nbsp|amp|quot);/ig,function(all,t){return arrEntities[t];});
+    }
+    $(".member_rules").html(escape2Html("{$member_rules['member_rules']}"));
+</script>
+
+{php include wl_template('common/footer');}

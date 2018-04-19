@@ -1,0 +1,68 @@
+{php include wl_template('common/header');}
+<ul class="nav nav-tabs">
+    <li {if $_GPC['op'] == '' || $_GPC['op'] == 'display'}class="active"{/if}><a href="{php echo web_url('platform/history_record/display');}">历史打款记录</a></li>
+
+    {if $_GPC['op'] == 'detail'}<li class="active"><a href="{php echo web_url('platform/history_record/detail',array('id'=>$_GPC['id']));}">订单详情</a></li>{/if}
+</ul>
+<div class="order-list">
+    <div class="panel-body table-responsive collapse in" id="order-template-item-4" style="padding: 0;">
+        <button id="module-judgment" style="display:none" class="btn btn-default" type="button"
+                onclick="popwin = $('#modal-module-judgment').modal();">隐藏点击
+        </button>
+
+    </div>
+
+    <div class="panel panel-default">
+
+        <table class="table" style="background-color:#888">
+            <thead style="">
+            <tr>
+                <!--<th style="width:60px;" class="text-center"><input type="checkbox" onclick="var ck = this.checked;$(':checkbox').each(function(){this.checked = ck});" />全选</th>-->
+                <!--<th style="width: 100px">批次号</th>-->
+                <th style="width: 180px">极限单品单号/名称/平台打款单号</th>
+
+                <th style="text-align:center;">订单总价</th>
+                <!--<th style="text-align:center;">打款时间</th>-->
+                <th style="text-align:center;">处理状态/时间</th>
+                <th style="width:180px;text-align:center;">支付单号/价格</th>
+                <th style="text-align:center;">支付银行流水图</th>
+
+            </tr>
+            </thead>
+
+            <!--</table>-->
+
+            <div class="panel-body table-responsive" style="padding: 0px;">
+                <!--<table class="table table-bordered">-->
+                <tbody style="background-color: #fff;">
+                {loop $list $item}
+                <tr>
+                    <!--<td class="goods-info line-feed" style="padding-left: 10px;width: 100px">{$item['pici']}</td>-->
+                    <td class="goods-info line-feed" style="width: 180px">{if $_W['uniacid'] == 33 }{$item['uni_name']}<br>{/if}{$item['goodsname']}<br>{$item['singleno']}<br>{$pay_supply['singleno']}</td>
+                    <td class="goods-info line-feed" style="padding-left: 10px;">{$item['price']}</td>
+                    <td class="text-left">
+                        <!--支付方式:<span class="label label-primary"> {$item['paytype']}</span><br>-->
+
+                        <p style="text-align: center">
+                            <span class="label label-success">已打款</span><br>
+                            {php echo date('Y-m-d H:i:s', $pay_supply['paytime'])}
+                        </p>
+
+                    </td>
+                    <td class="text-center" style="width: 180px">
+                        <!--<p>{if $item['uni_paytype']==0}微信支付{/if}{if $item['uni_paytype']==1}银行卡支付{/if}</p>-->
+                        <p>{$pay_supply['uni_payno']}</p>
+                        <p>￥{$pay_supply['price']}</p>
+                    </td>
+                    <td class="text-center" style="text-align:center;position: relative">
+                        {if !empty($pay_supply['uni_payimg'])}
+                        <img class="payimg" style="width: 50px;height: 50px" src="{$pay_supply['uni_payimg']}" alt="">
+                        {/if}
+                    </td>
+                </tr>
+                {/loop}
+                </tbody>
+        </table>
+    </div>
+</div>
+{php include wl_template('common/footer');}

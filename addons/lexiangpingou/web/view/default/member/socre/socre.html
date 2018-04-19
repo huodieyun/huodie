@@ -1,0 +1,704 @@
+{php include wl_template('common/header');}
+
+<ul class="nav nav-tabs">
+    <li {if $op=='base'}class="active"{/if}>
+        <a href="{php echo web_url('member/card', array('op' => 'base'))}">基本设置</a>
+    </li>
+
+    <li {if $op == 'display'}class="active"{/if}>
+        <a href="{php echo web_url('member/card', array('op' => 'display'))}">全部记录</a>
+    </li>
+    <!--{if $setting['member_apply'] != 1}-->
+
+    <!--{else}-->
+        <!--<li {if $op == 'display' && $status == 0} class="active"{/if}>-->
+            <!--<a href="{php echo web_url('member/card', array('op' => 'display', 'status' => '0'))}">待审核</a>-->
+        <!--</li>-->
+        <!--<li {if $op == 'display' && $status == 1} class="active"{/if}>-->
+            <!--<a href="{php echo web_url('member/card', array('op' => 'display', 'status' => '1'))}">已审核</a>-->
+        <!--</li>-->
+        <!--<li {if $op == 'display' && $status == -1} class="active"{/if}>-->
+            <!--<a href="{php echo web_url('member/card', array('op' => 'display', 'status' => '-1'))}">审核失败</a>-->
+        <!--</li>-->
+    <!--{/if}-->
+
+    <li  {if $op == 'member_add'}class="active"{/if}>
+        <a href="{php echo web_url('member/card', array('op' => 'member_add'))}">添加会员</a>
+    </li>
+
+    <li {if $op == 'recharge'} class="active"{/if}>
+        <a href="{php echo web_url('member/card', array('op' => 'recharge'))}">在线充值</a>
+    </li>
+    {if $op == 'expenses_record'}
+        <li class="active">
+            <a href="{php echo web_url('member/card', array('op' => 'expenses_record' , 'id' => $_GPC['id']))}">消费记录</a>
+        </li>
+    {/if}
+    {if $op == 'recharge_record'}
+        <li class="active">
+            <a href="{php echo web_url('member/card', array('op' => 'recharge_record' , 'id' => $_GPC['id']))}">充值记录</a>
+        </li>
+    {/if}
+
+</ul>
+{if $op == 'base'}
+
+<div class="panel panel-default">
+    <div class="panel-body table-responsive" style="padding: 0px;">
+        <div class="main_bd">
+            <div class="plugins_wrp">
+                <dl>
+                    <dd>
+                        <ul id="js_plugins1">
+                            <li class="item_wrp" style="width: 100%;">
+                                <div class="plugin_item">
+                                    <div class="plugin_icon"><img src="{TG_URL_WRES}images/function/helpbuy.png"></div>
+                                    <div class="plugin_status">
+                                        <i class="access"></i>
+                                        <span class="status_txt">
+                                        <input class="flag1" type="checkbox" name="member_apply" value="{$setting['member_apply']}" {if $setting['member_apply'] == 1}checked{/if} />
+                                    </span>
+                                    </div>
+                                    <div class="plugin_content">
+                                        <h3 class="title">会员申请</h3>
+                                        <p class="desc" style="width: 100%;">
+                                            启用会员申请后，粉丝可通过手机端申请会员。
+                                        </p>
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
+                    </dd>
+                </dl>
+            </div>
+        </div>
+        <div class="main_bd">
+            <div class="plugins_wrp">
+                <dl>
+                    <dd>
+                        <ul id="js_plugins2">
+                            <li class="item_wrp" style="width: 100%;">
+                                <div class="plugin_item">
+                                    <div class="plugin_icon"><img src="{TG_URL_WRES}images/function/fans/duanxin.png"></div>
+                                    <div class="plugin_status">
+                                        <i class="access"></i>
+                                        <span class="status_txt">
+                                        <input class="flag2" type="checkbox" name="member_smscode" value="{$setting['member_smscode']}" {if $setting['member_smscode'] == 1}checked{/if} />
+                                    </span>
+                                    </div>
+                                    <div class="plugin_content">
+                                        <h3 class="title">短信验证</h3>
+                                        <p class="desc" style="width: 100%;">
+                                            启用短信验证功能后，粉丝申请时，需要通过短信验证码来申请。短信需要商家购买数量，当数量不足时，将无法获取短信验证码。
+                                        </p>
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
+                    </dd>
+                </dl>
+            </div>
+        </div>
+        <div class="main_bd">
+            <form action="{php echo web_url('member/card',array('op'=>'base'))}" method="post">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        会员规则说明
+                    </div>
+                    <div class="panel-body">
+                        <div class="form-group">
+                            <div class="col-sm-12 col-xs-12">
+                                {php echo tpl_ueditor('member_rules', $member['member_rules']);}
+                            </div>
+                        </div>
+                        <div style="margin-top: 20px" class="form-group col-sm-12">
+                            <input type="submit" name="submit" value="提交" class="btn btn-primary col-lg-1" style="float: right"/>
+                            <input type="hidden" name="token" value="{$_W['token']}"/>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<script>
+    $(function () {
+        require(['bootstrap.switch'], function ($) {
+            $('.flag1:checkbox').bootstrapSwitch({onText: '启用', offText: '禁用'});
+            $('#js_plugins1 .bootstrap-switch-wrapper').click(function (e) {
+                e.stopPropagation();
+                $.post("{php echo web_url('member/card/ajax' , array('member_apply' => 1))}", function (d) {
+                    if (!d.errno) {
+                        util.tips(d.message);
+                        setTimeout(function(){location.href = "{php echo web_url('member/card/base');}";},1000);
+                    }
+                }, "json");
+            });
+        });
+    });
+    $(function () {
+        require(['bootstrap.switch'], function ($) {
+            $('.flag2:checkbox').bootstrapSwitch({onText: '启用', offText: '禁用'});
+            $('#js_plugins2 .bootstrap-switch-wrapper').click(function (e) {
+                e.stopPropagation();
+                $.post("{php echo web_url('member/card/ajax' , array('member_smscode' => 1))}", function (d) {
+                    if (!d.errno) {
+                        util.tips(d.message);
+                        setTimeout(function(){location.href = "{php echo web_url('member/card/base');}";},1000);
+                    }
+                }, "json");
+            });
+        });
+    });
+</script>
+{/if}
+{if $op=='display'}
+<div class="main">
+
+    <div class="panel panel-info">
+        <div class="panel-heading">筛选</div>
+        <div class="panel-body">
+            <form action="{php echo web_url('member/card', array('op' => 'display'))}" method="post" class="form-horizontal" role="form" id="form1">
+                <input type="hidden" name="status" value="{$status}"/>
+                <div class="form-group">
+                    <label class="col-xs-12 col-sm-2 col-md-2 col-lg-2 control-label">姓名</label>
+                    <div class="col-sm-7 col-lg-7 col-xs-12">
+                        <input class="form-control" name="keyword" id="" type="text" value="{$_GPC['keyword']}" placeholder="可查询姓名">
+                    </div>
+                    <div class="col-sm-3 col-lg-2" style="text-align:right;">
+                        <button class="btn btn-default"><i class="fa fa-search"></i> 搜索</button>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    {if ($setting['member_apply'] == 1)}
+                    <label class="col-xs-12 col-sm-2 col-md-2 col-lg-2 control-label">申请时间</label>
+                    <div class="col-sm-5 col-lg-7 col-xs-12">
+                        {php echo tpl_form_field_daterange('time',array('starttime'=>date('Y-m-d',$starttime),'endtime'=>date('Y-m-d', $endtime)));}
+                    </div>
+                    {/if}
+                </div>
+                <div class="form-group">
+                </div>
+            </form>
+
+        </div>
+    </div>
+
+    <div class="panel panel-default">
+        <div class="panel-body table-responsive">
+            <table class="table table-hover">
+                <thead class="navbar-inner">
+                    <tr>
+                        <th style="width:5%;"></th>
+                        <th style="width:10%;">昵称／姓名</th>
+                        <th style="width:10%;">状态</th>
+                        <th style="width:12%;">手机号</th>
+                        <th style="width:15%;">{if $setting['member_apply'] == 1}申请/审核{else}添加{/if}时间</th>
+                        <th style="width:10%;">生日</th>
+                        <th style="width:10%;">总额</th>
+                        <th style="width:10%;">消费金额</th>
+                        <th style="width:10%;">余额</th>
+                        <th style="width:20%; text-align:right;">操作</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {loop $members $key $item}
+
+                    <tr>
+                    <td>
+                        <img src="{$item['avatar']}" style='width:30px;height:30px;padding1px;border:1px solid #ccc' />
+                    </td>
+                    <td>{$item['nickname']}<br>{$item['name']}</td>
+                    <td>
+                        {if $setting['member_apply'] == 1}
+                            {if $item['member_status'] == 0}
+                                <span class="label label-warning">申请中</span>
+                            {/if}
+                            {if $item['member_status']==1}
+                                <span class="label label-success">已审核</span>
+                            {/if}
+                            {if $item['member_status']== -1}
+                                <span class="label label-success">审核失败</span>
+                            {/if}
+                        {/if}
+
+                    </td>
+                    <td>
+                        <span class="label label-success">{if !empty($item['addmobile'])}{$item['addmobile']}{else}{$item['mobile']}{/if}</span>
+                    </td>
+                    <td>
+                        {if $setting['member_apply'] == 1}
+                            {if $item['member_apply_time']}
+                                {php echo date('Y-m-d H:i', $item['member_apply_time'])}<br>
+                            {/if}
+                        {/if}
+                        {if $item['member_check_time']}
+                            {php echo date('Y-m-d H:i', $item['member_check_time'])}
+                        {/if}
+                    </td>
+                    <td>
+                        {if $item['birthday']}
+                            {php echo date('Y-m-d ', $item['birthday'])}
+                        {/if}
+                    </td>
+                    <td>￥{php echo number_format($item['member_amount'],2)}</td>
+                    <td>￥{php echo number_format($item['member_amount'] - $item['member_balance'],2)}</td>
+                    <td>￥{php echo number_format($item['member_balance'],2)}</td>
+                    <td style="text-align:right;">
+
+                        {if $item['member_status'] == 0 && $setting['member_apply'] == 1}
+                            <a class="btn btn-default" href="{php echo web_url('member/card', array('op' => 'checked','id'=>$item['id']))}" style="margin-bottom:5px"> 审核通过</a>
+                            <a class="btn btn-default cancelJ" href="{php echo web_url('member/card', array('op' => 'unchecked','id'=>$item['id']))}" style="margin-bottom:5px"> 拒绝审核</a>
+                        {/if}
+                        {if ($item['member_status'] == 1 && $setting['member_apply'] == 1) || $setting['member_apply'] != 1}
+                            <a class="btn btn-default" href="{php echo web_url('member/card', array('op' => 'expenses_record','id'=>$item['id']))}" style="margin-bottom:5px"> 消费记录</a>
+                            <a class="btn btn-default" href="{php echo web_url('member/card', array('op' => 'recharge_record','id'=>$item['id']))}" style="margin-bottom:5px"> 充值记录</a>
+                        {/if}
+
+                    </td>
+                </tr>
+                {/loop}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{$pager}
+<script type="text/javascript">
+    require(['daterangepicker'], function ($) {
+        $('.daterange').on('apply.daterangepicker', function (ev, picker) {
+            $('#form1')[0].submit();
+        });
+    });
+</script>
+{/if}
+{if $op=='recharge'}
+<div class="clearfix">
+    <div class="panel panel-default">
+        <div class="panel-body table-responsive">
+            <table class="table table-hover" ng-controller="advAPI" style="width:100%;" cellspacing="0" cellpadding="0">
+                <thead class="navbar-inner">
+                <tr>
+                    <th width="20%">面值</th>
+                    <th width="20%">售价</th>
+                    <th width="20%">状态</th>
+                    <th width="20%">操作</th>
+                </tr>
+                </thead>
+                <tbody>
+                {loop $list $item}
+                <tr>
+                    <td>{$item['member_amount']}</td>
+                    <td>{$item['member_selling']}</td>
+                    <td><span class="label label-info">{$item['status']}</span></td>
+                    <td>
+                        <a data-obj='{php echo json_encode($item)}' href="javascript:;" class="btn btn-default btn-sm" onclick="edit(this)"><i class="fa fa-edit"></i></a>&nbsp;&nbsp;
+                        <a data-id="{$item['id']}" href="javascript:;" class="btn btn-default btn-sm js-delete-goods"><i class="fa fa-times"></i></a>
+                    </td>
+                </tr>
+                {/loop}
+                <tr id="position">
+                    <td colspan="4"><a href="javascript:;" onclick="openDetail()"><i class="fa fa-plus-circle"></i>添加新分组</a></td>
+                </tr>
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<div class="page-trade-order detail" style="background-color: rgba(0,0,0,0.7);z-index:10;position: fixed;top: 0;left: 0;width: 100%;height: 100%;display: none">
+    <div class="panel panel-default" style="position: absolute;top: 15%;left: 30%;width: 40%;max-height: 90%;overflow-y: auto">
+        <div class="panel-heading">在线充值
+            <a onclick="$('.detail').fadeOut()" style="cursor:pointer; float:right; margin-right:10px; font-weight:bold;" href="javascript:;">X</a>
+        </div>
+        <div class="panel-body">
+            <div class="form-group">
+                <label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label">面额</label>
+                <div class="col-md-6">
+                    <input type="number" name="member_amount" value="" class="form-control"/>
+                </div>
+                <div style="clear: both"></div>
+            </div>
+            <div class="form-group">
+                <label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label">售价</label>
+                <div class="col-md-6">
+                    <input type="number" name="member_selling" value="" class="form-control"/>
+                </div>
+                <div style="clear: both"></div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-12" style="padding-left:0;">
+                    <label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label">是否上架</label>
+                    <div class="col-md-6">
+                        <label style="margin-right: 30px"><input type="radio" name="status" value="1">是</label>
+                        <label><input type="radio" name="status" value="2">否</label>
+                    </div>
+                    <div style="clear: both"></div>
+                </div>
+            </div>
+        </div>
+        <div class="panel-footer">
+            <input style="float: right" type="submit" readonly value="提交" class="add btn btn-primary col-lg-1">
+            <div style="clear: both"></div>
+        </div>
+    </div>
+</div>
+<script>
+    function openDetail() {
+        $('[name="member_amount"]').val('');
+        $('[name="member_selling"]').val('');
+        $('[name="member_amount"],[name="member_selling"]').removeAttr('readonly');
+        $('.detail').attr('data-id','');
+        $('.detail').fadeIn();
+        $($('[name="status"]')[0]).click();
+    }
+
+    $('.add').click(function(){
+
+        var member_amount=$('[name="member_amount"]').val();
+        var member_selling=$('[name="member_selling"]').val();
+        var status=$('[name="status"]:checked').val();
+        if(member_amount==''){
+            util.tips('请填写面额');
+            return;
+        }
+        if(member_selling==''){
+            util.tips('请填写售价');
+            return;
+        }
+        $.post(
+            "{php echo web_url('member/card', array('op' => 'recharge_post'))}",
+            {
+                "id":$('.detail').attr('data-id'),
+                "member_amount":member_amount,
+                "member_selling":member_selling,
+                "status":status
+            },
+            function(res){
+                var data=JSON.parse(res);
+                if(data.status>0){
+                    util.tips(data.message);
+                    setTimeout(function(){
+                        location.reload();
+                    },1000)
+                }else{
+                    util.tips(data.message);
+                }
+            }
+        )
+    });
+
+    function edit(self) {
+        var obj=JSON.parse($(self).attr('data-obj'));
+        $('[name="member_amount"]').val(obj.member_amount).attr('readonly','readonly');
+        $('[name="member_selling"]').val(obj.member_selling).attr('readonly','readonly');
+        $('.detail').attr('data-id',obj.id);
+        if(obj.status=='上架'){
+            $($('[name="status"]')[0]).click();
+        }else{
+            $($('[name="status"]')[1]).click();
+        }
+        $('.detail').fadeIn();
+    }
+
+    $('.js-delete-goods').click(function(e) {
+        e.stopPropagation();
+        var id = $(this).attr('data-id');
+        html = '确认删除?';
+        util.nailConfirm(this, function(state) {
+            if(!state) return;
+            $.post("{php echo web_url('member/card/recharge_delete')}", {"id" : id}, function(res){
+                var data=JSON.parse(res);
+                if(data.status>0){
+                    util.tips(data.message);
+                    setTimeout(function(){
+                        location.reload();
+                    },1000)
+                }else{
+                    util.tips(data.message);
+                }
+            });
+        }, {html: html});
+    });
+</script>
+{/if}
+{if $op=='recharge_record'}
+<div class="main">
+    <div class="panel panel-info">
+        <div class="panel-heading">筛选</div>
+        <div class="panel-body">
+            <form action="{php echo web_url('member/card', array('op' => 'recharge_record' , 'id' => $_GPC['id']))}" method="post" class="form-horizontal" role="form" id="form1">
+
+                <div class="form-group">
+                    <label class="col-xs-12 col-sm-2 col-md-2 col-lg-2 control-label">单号</label>
+                    <div class="col-sm-8 col-lg-9 col-xs-12">
+                        <input class="form-control" name="keyword" id="" type="text" value="{$_GPC['keyword']}">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-xs-12 col-sm-2 col-md-2 col-lg-2 control-label">支付时间</label>
+                    <div class="col-sm-5 col-lg-7 col-xs-12">
+                        {php echo tpl_form_field_daterange('time',array('starttime'=>date('Y-m-d',$starttime),'endtime'=>date('Y-m-d', $endtime)));}
+                    </div>
+                    <div class="col-sm-3 col-lg-2" style="text-align:right;">
+                        <button class="btn btn-default"><i class="fa fa-search"></i> 搜索</button>
+                    </div>
+                </div>
+                <div class="form-group">
+                </div>
+            </form>
+
+        </div>
+    </div>
+
+    <div class="panel panel-default">
+        <div class="panel-body table-responsive">
+            <table class="table table-hover">
+                <thead class="navbar-inner">
+                <tr>
+                    <th>订单号</th>
+                    <th>姓名</th>
+                    <th>支付时间</th>
+                    <th>面值</th>
+                    <th>售价</th>
+                </tr>
+                </thead>
+                <tbody>
+                {loop $list $item}
+                <tr>
+                    <td>{$item['orderno']}</td>
+                    <td>{$item['name']}</td>
+                    <td>{$item['createtime']}</td>
+                    <td>{$item['member_amount']}</td>
+                    <td>{$item['member_selling']}</td>
+                </tr>
+                {/loop}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{$pager}
+{/if}
+{if $op=='expenses_record'}
+<div class="main">
+    <div class="panel panel-info">
+        <div class="panel-heading">筛选</div>
+        <div class="panel-body">
+            <form action="{php echo web_url('member/card', array('op' => 'expenses_record' , 'id' => $_GPC['id']))}" method="post" class="form-horizontal" role="form" id="form1">
+
+                <div class="form-group">
+                    <label class="col-xs-12 col-sm-2 col-md-2 col-lg-2 control-label">单号</label>
+                    <div class="col-sm-8 col-lg-9 col-xs-12">
+                        <input class="form-control" name="keyword" id="" type="text" value="{$_GPC['keyword']}">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-xs-12 col-sm-2 col-md-2 col-lg-2 control-label">消费时间</label>
+                    <div class="col-sm-5 col-lg-7 col-xs-12">
+                        {php echo tpl_form_field_daterange('time',array('starttime'=>date('Y-m-d',$starttime),'endtime'=>date('Y-m-d', $endtime)));}
+                    </div>
+                    <div class="col-sm-3 col-lg-2" style="text-align:right;">
+                        <button class="btn btn-default"><i class="fa fa-search"></i> 搜索</button>
+                    </div>
+                </div>
+                <div class="form-group">
+                </div>
+            </form>
+
+        </div>
+    </div>
+
+    <div class="panel panel-default">
+        <div class="panel-body table-responsive">
+            <table class="table table-hover">
+                <thead class="navbar-inner">
+                <tr>
+                    <th>订单号</th>
+                    <th>姓名</th>
+                    <th>消费时间</th>
+                    <th>消费金额</th>
+                    <th>消费方式</th>
+                </tr>
+                </thead>
+                <tbody>
+                {loop $list $item}
+                <tr>
+                    <td>{$item['orderno']}</td>
+                    <td>{$item['name']}</td>
+                    <td>{$item['createtime']}</td>
+                    <td>{$item['price']}</td>
+                    <td>
+                        {$item['type']} <br>
+                        {if $item['type']=="线下交易" && $item['status'] == 0}
+                        <a data-id="{$item['id']}" class="btn btn-danger btn-sm js-tk-goods" href="javascript:;">退款</a>
+                        {/if}
+                        {if $item['status'] == 1}
+                        <span class="label label-danger">全额退款</span>
+                        {elseif $item['status'] == 2}
+                        <span class="label label-danger">部分退款</span>
+                        {/if}
+                    </td>
+                </tr>
+                {/loop}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{$pager}
+<script>
+    $('.js-tk-goods').click(function(e) {
+        e.stopPropagation();
+        var id = $(this).attr('data-id');
+        html = '确认退款?';
+        util.nailConfirm(this, function(state) {
+            if(!state) return;
+            $.post("{php echo web_url('member/card/refund')}", {"id" : id}, function(res){
+                var data=JSON.parse(res);
+                if(data.status>0){
+                    util.tips(data.message);
+                    setTimeout(function(){
+                        location.reload();
+                    },1000)
+                }else{
+                    util.tips(data.message);
+                }
+            });
+        }, {html: html});
+    });
+</script>
+{/if}
+{if $op=='member_add'}
+
+    <div class="main">
+        <div class="panel panel-default">
+            <div class="panel-body table-responsive">
+                <div class="form-group">
+                    <label class="col-xs-12 col-sm-3 col-md-2 control-label">选择会员</label>
+                    <div class="col-sm-8 col-xs-12">
+                        <input type='hidden' id='openid' name='openid' value="{$saler['openid']}" />
+                        <div class='input-group'>
+                            <input type="text" name="openid" maxlength="30" value="{if !empty($saler)}{$saler['nickname']}{/if}" id="saler" class="form-control" readonly />
+                            <div class='input-group-btn'>
+                                <button class="btn btn-default" type="button" onclick="popwin = $('#modal-module-menus').modal();">选择会员</button>
+                            </div>
+                        </div>
+                        {if !empty($saler)}
+                        <span class='help-block'><img style="width:100px;height:100px;border:1px solid #ccc;padding:1px" src="{$saler['avatar']}" id="avatar" /></span>
+                        {/if}
+                        <div id="modal-module-menus"  class="modal fade" tabindex="-1">
+                            <div class="modal-dialog" style='width: 660px;'>
+                                <div class="modal-content">
+                                    <div class="modal-header"><button aria-hidden="true" data-dismiss="modal" class="close" type="button">×</button><h3>选择会员</h3></div>
+                                    <div class="modal-body" >
+                                        <div class="row">
+                                            <div class="input-group">
+                                                <input type="text" class="form-control" name="keyword" value="" id="search-kwd" placeholder="请输入粉丝昵称" />
+                                                <span class='input-group-btn'><button type="button" class="btn btn-default" onclick="search_members();">搜索</button></span>
+                                            </div>
+                                        </div>
+                                        <div id="module-menus" style="padding-top:5px;"></div>
+                                    </div>
+                                    <div class="modal-footer"><a href="#" class="btn btn-default" data-dismiss="modal" aria-hidden="true">关闭</a></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div style="clear: both"></div>
+                </div>
+                <div class="form-group" >
+                    <label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label">姓名</label>
+                    <div class="col-xs-12 col-sm-8">
+                        <input type="text" name="name" class="form-control" />
+                    </div>
+                    <div style="clear: both"></div>
+                </div>
+                <div class="form-group" >
+                    <label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label">手机号</label>
+                    <div class="col-xs-12 col-sm-8">
+                        <input type="tel" name="mobile" maxlength="11" class="form-control" />
+                    </div>
+                    <div style="clear: both"></div>
+                </div>
+                <div class="form-group" >
+                    <label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label">生日</label>
+                    <div class="col-xs-12 col-sm-8">
+                        <input type="date" name="birthday" class="form-control" />
+                    </div>
+                    <div style="clear: both"></div>
+                </div>
+                <div class="form-group">
+                    <label class="col-xs-12 col-sm-3 col-md-2 control-label"></label>
+                    <div class="col-sm-8 col-xs-12">
+                        <input type="submit" value="提交" class="btn btn-primary col-lg-1 js-tj-btn" style="float:right;"/>
+                        <input type="hidden" name="token" value="{$_W['token']}" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+<script>
+    function search_members() {
+        if( $.trim($('#search-kwd').val())==''){
+            Tip.focus('#search-kwd','请输入关键词');
+            return;
+        }
+
+        $("#module-menus").html("正在搜索....")
+        $.get('{php echo web_url('store/bdelete/display',array('op'=>'selectsaler'))}', {
+            keyword: $.trim($('#search-kwd').val())
+        }, function(dat){
+            $('#module-menus').html(dat);
+        });
+    }
+    function select_member(o) {
+        $("#openid").val(o.openid);
+        $("#saler").val(o.nickname);
+        $("#avatar").attr('src', o.avatar);
+        $(".close").click();
+    }
+
+    $('.js-tj-btn').click(function(){
+        if($('[name="openid"]').val()==''){
+            util.tips('请选择会员');
+            return false;
+        }
+        if($('[name="name"]').val()==''){
+            util.tips('请填写会员姓名');
+            return false;
+        }
+        if($('[name="mobile"]').val()==''){
+            util.tips('请填写会员手机号');
+            return false;
+        }
+        if($('[name="birthday"]').val()==''){
+            util.tips('请填写会员生日');
+            return false;
+        }
+        $.post(
+            "{php echo web_url('member/card/member_add' , array('opp' => 'submit'))}",
+            {
+                "openid":$('[name="openid"]').val(),
+                "name":$('[name="name"]').val(),
+                "mobile":$('[name="mobile"]').val(),
+                "birthday":$('[name="birthday"]').val()
+            },
+            function(res){
+                var data = JSON.parse(res);
+                if (data.status > 0) {
+                    util.tips(data.message);
+                    setTimeout(function () {
+                        location.href = "{php echo web_url('member/card/display')}";
+                    },2000)
+                } else {
+                    util.tips(data.message);
+                }
+            }
+        )
+    })
+</script>
+{/if}
+{php include wl_template('common/footer');}

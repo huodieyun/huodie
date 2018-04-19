@@ -1,0 +1,238 @@
+{php include wl_template('common/header');}
+<LINK href="../addons/feng_fightgroups/template/css/style_366c9ef.css" rel="stylesheet">
+<LINK href="../addons/feng_fightgroups/template/css/font-awesome-4.3.0/css/font-awesome.min.css" rel="stylesheet">
+<link rel="stylesheet" href="{TG_URL_ARES}weiui/weui.min.css">
+        <style>
+            .iconEWM{
+                display: none!important;
+            }
+            .main-view {
+                font-size: 14px;
+            }
+
+            .avalonHide {
+                display: none !important
+            }
+
+            .nav_item i ,.iconal-wodefankui{
+                background: #2e8ded;
+                width: 20px;
+                height: 20px;
+                border-radius: 50%;
+                line-height: 20px;
+                text-align: center;
+                color: #fff;
+                display: inline-block;
+                margin-right: 5px;
+                font-size: 12px;
+            }
+
+            .nav_item {
+                padding: 10px !important;
+            }
+            .weui-grid__icon{
+                text-align: center;
+                width: initial;
+                height: initial;
+            }
+            .order_goods_info{
+                top: 0;
+                left: 25px;
+                width: 88%;
+            }
+            .order_goods_img.next img{
+                border-radius: 50%;
+            }
+            span.gname{
+                max-width: 90px;
+                display: inline-block;
+                overflow: hidden;
+                white-space: nowrap;
+            }
+            .weui-input {
+                width: 88%;
+                height: 2.411765em;
+                border: 1px solid #ddd;
+                border-radius: 5px;
+                padding: 5px;
+            }
+        </style>
+    <!--<title>{if empty($_Session['btitle'])}{$pagetitle}{else}{$_Session['btitle']}{/if}</title>-->
+
+<body>
+<div style="background: #fff">
+    <div class="weui-panel__bd" style="">
+        <div class="weui-media-box weui-media-box_small-appmsg">
+            <div class="weui-cells">
+                <a class="weui-cell weui-cell_access" href="javascript:;">
+                    <div class="weui-cell__bd weui-cell_primary">
+                        <p><i class="iconal-wodefankui" style="background-color: #af7070"></i>佣金明细</p>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+    <div class="weui-grids" style="">
+        <a href="{php echo app_url('order/commission' , array('op' => 0))}" class="weui-grid js_grid">
+            <div class="weui-grid__icon">
+                全部订单
+            </div>
+            <p class="weui-grid__label">
+                ￥<?php echo number_format($comp,2)?>
+            </p>
+        </a>
+        <a href="{php echo app_url('order/commission' , array('op' => 1))}" class="weui-grid js_grid">
+            <div class="weui-grid__icon">
+                未结算
+            </div>
+            <p class="weui-grid__label">
+                ￥<?php echo number_format($nobillnum,2)?>
+            </p>
+        </a>
+        <a href="{php echo app_url('order/commission' , array('op' => 2))}" class="weui-grid js_grid">
+            <div class="weui-grid__icon">
+                已结算
+            </div>
+            <p class="weui-grid__label">
+                ￥<?php echo number_format($billnum,2)?>
+            </p>
+        </a>
+    </div>
+    <form action="{php echo app_url('order/commission' , array('op' => $_GPC['op']));}" method="get" class="form-horizontal" role="form" id="form1">
+        <input type="hidden" name="i" value="{$_GPC['i']}" />
+        <input type="hidden" name="c" value="entry" />
+        <input type="hidden" name="m" value="lexiangpingou" />
+        <input type="hidden" name="do" value="order" />
+        <input type="hidden" name="ac" value="commission" />
+        <input type="hidden" name="op" value="{$_GPC['op']}"/>
+        <div class="weui-cell">
+            <div class="weui-cell__hd">
+                <label for="time1" class="weui-label">开始时间：</label>
+            </div>
+            <div class="weui-cell__bd">
+                <input name="starttime" class="weui-input" id="time1" type="text" value="{$_GPC['starttime']}" readonly="">
+            </div>
+        </div>
+        <div class="weui-cell">
+            <div class="weui-cell__hd">
+                <label for="time2" class="weui-label">结束时间：</label>
+            </div>
+            <div class="weui-cell__bd">
+                <input name="endtime" class="weui-input" id="time2" type="text" value="{$_GPC['endtime']}" readonly="">
+            </div>
+        </div>
+        <input class="weui-btn weui-btn weui-btn_default" type="submit" name="submit" value="搜索" style="font-size: 14px"/>
+    </form>
+    <section class="main-view">
+        <!--<div>-->
+            <!--<div class="nav">-->
+                <!--<ul class="nav_list">-->
+                    <!--<li class="nav_item nav_cart">-->
+                        <!--<div style="padding: 10px 0 "><i class="iconal-wodefankui" style="background-color: #af7070"></i>佣金明细</div>-->
+                        <!--<div class="nav_item_bd">-->
+
+                            <!--<a href="{php echo app_url('order/commission' , array('op' => 0))}">-->
+                                <!--<span class="nav_item_txt">全部订单<br>￥<?php echo number_format(($member['billing'] + $comp),3)?></span>-->
+                            <!--</a>-->
+                            <!--<a href="{php echo app_url('order/commission' , array('op' => 1))}">-->
+                                <!--<span class="nav_item_txt">未结算<br>￥<?php echo number_format($comp,3)?></span>-->
+                            <!--</a>-->
+                            <!--<a href="{php echo app_url('order/commission' , array('op' => 2))}">-->
+                                <!--<span class="nav_item_txt">已结算<br>￥<?php echo number_format($member['billing'],2)?></span>-->
+                            <!--</a>-->
+                            <!--&lt;!&ndash;<a>&ndash;&gt;-->
+                                <!--&lt;!&ndash;<span class="nav_item_txt">已提现<br>￥<?php echo number_format($member['cash'],2)?></span>&ndash;&gt;-->
+                            <!--&lt;!&ndash;</a>&ndash;&gt;-->
+                        <!--</div>-->
+                    <!--</li>-->
+                    <!--&lt;!&ndash;<li class="nav_item nav_green">&ndash;&gt;-->
+                        <!--&lt;!&ndash;<div><i class="iconal-friendfill" style="background-color: #039702"></i><a href="{php echo app_url('order/commission' , array('op' => 0))}"> 全部订单</a></div>&ndash;&gt;-->
+                    <!--&lt;!&ndash;</li>&ndash;&gt;-->
+                    <!--&lt;!&ndash;<li class="nav_item nav_green">&ndash;&gt;-->
+                        <!--&lt;!&ndash;<div><i class="iconal-friendfill" style="background-color: #039702"></i><a href="{php echo app_url('order/commission' , array('op' => 0))}"> 未结算</a></div>&ndash;&gt;-->
+                    <!--&lt;!&ndash;</li>&ndash;&gt;-->
+                    <!--&lt;!&ndash;<li class="nav_item nav_red">&ndash;&gt;-->
+                        <!--&lt;!&ndash;<div><i class="iconal-lianjie" style="background-color:#e38d13"></i><a href="{php echo app_url('order/commission' , array('op' => 0))}"> 已结算</a></div>&ndash;&gt;-->
+                    <!--&lt;!&ndash;</li>&ndash;&gt;-->
+                    <!--&lt;!&ndash;<li class="nav_item nav_gold">&ndash;&gt;-->
+                        <!--&lt;!&ndash;<div><i class="iconal-wodehongbao" style="background-color: #006699"></i><a href="{php echo app_url('order/my_cash')}"> 立即提现 </a></div>&ndash;&gt;-->
+                    <!--&lt;!&ndash;</li>&ndash;&gt;-->
+
+                <!--</ul>-->
+            <!--</div>-->
+        <!--</div>-->
+
+        {loop $list $order}
+        {if $op != 3}
+        <div class="order" ms-repeat-order="orders">
+            <div class="order_hd">
+
+                {php echo date('Y-m-d H:i:s', $order['createtime']);}
+                {if $order['is_tuan']=='1'}
+                团单号：{$order['tuan_id']}
+                {else}
+                订单号：<?php echo substr($order['orderno'],-10);?>
+                {/if}
+            </div>
+            <div class="order_bd">
+                <div class="order_glist">
+                    <!--获得商品的id-->
+                    <!--end获得商品的id-->
+
+                    <a href="{php echo app_url('goods/detail' , array('id' => $order['goods'][0]['id']))}">
+                        <div class="order_goods" data-url="">
+                            <div class="order_goods_img">
+                                {loop $order['goods'] $o}
+                                <span class="gname">{$o['gname']}</span> <br>
+                                <img src="{$o['gimg']}" style="width:60px;height:60px" alt="" title="">
+                                {/loop}
+                            </div>
+                            <div class="order_goods_info">
+                                <div class="order_goods_name">
+                                    下级昵称：{$order['nickname']}<br>
+                                    <div class="order_goods_img next">
+                                        <img src="{$order['avatar']}" width="60px" height="60px"/>
+                                    </div>
+                                </div>
+                                <div class="order_goods_attr">
+                                    <div class="order_goods_attr_item">
+                                        <div class="order_goods_price">
+                                            {if $order['commissiontype'] == 1}提成比例：{$order['commission']}%
+                                            {elseif $order['commissiontype'] == 2}单件提成：￥{$order['commission']}{/if}
+                                            <i></i></div>
+                                    </div>
+                                    <div class="order_goods_attr_item">
+                                        <span class="order_price">商品金额：<b>￥{$order['price']}</b></span><br>
+                                        {if $order['commissiontype']==1}<span class="order_price" style="display:none;">提成比例：<b>{$order['commission']}%</b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>{/if}
+                                    </div>
+                                    <div class="order_goods_attr_item">
+                                        <span class="order_price">佣金：<b>￥{$order['comprice']}</b></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </div>
+        {/if}
+        {/loop}
+    </section>
+
+</div>
+</body>
+<script>
+
+    $("#time1,#time2").datetimePicker(
+        {
+            times: function () {
+                return [
+                    {
+
+                    }
+                ];
+            }
+        }
+    );
+</script>
+{php include wl_template('common/footer');}

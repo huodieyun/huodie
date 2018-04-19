@@ -1,0 +1,112 @@
+{php include wl_template('common/header');}
+<style>
+    .container{
+        background:#fff;
+    }
+    #chengtuanrsdbt{
+        height: 690px;
+    }
+    .container label{
+        width: 60px;
+        line-height: 34px;
+    }
+</style>
+<div class="container">
+    <div id="chengtuanrsdbt"></div>
+</div>
+<script>
+    // 路径配置
+    require.config({
+        paths: {
+            echarts: "//www.lexiangpingou.cn/addons/lexiangpingou/web/resource/js/echarts/build/dist"
+        }
+    });
+    var option={};
+    $.get(location.origin+'/minapi.php?op=store_check_data&uniacid={$_W["uniacid"]}',function(res){
+        var data=JSON.parse(res);
+        console.log(data);
+        var legendData=[];
+        var seriesData=[];
+        for(var i=0;i<data.data.length;i++){
+            if(data.data[i].storename){
+                var obj={
+                    value:data.data[i].total,
+                    name:data.data[i].storename
+                };
+                legendData.push(data.data[i].storename);
+                seriesData.push(obj);
+            }
+        }
+        console.log(legendData);
+        console.log(seriesData);
+        option= {
+            title : {
+                text: '门店核销对比图',
+                subtext: '门店核销数占比数',
+                x:'center'
+            },
+            tooltip : {
+                trigger: 'item',
+                formatter: "{a} <br/>{b} : {c} ({d}%)"
+            },
+            legend: {
+                orient : 'vertical',
+                x : 'left',
+                data:legendData
+            },
+            toolbox: {
+                show : true,
+                feature : {
+                    magicType : {
+                        show: true,
+                        type: ['pie', 'funnel'],
+                        option: {
+                            funnel: {
+                                x: '25%',
+                                width: '50%',
+                                funnelAlign: 'left',
+                                max: 1548
+                            }
+                        }
+                    },
+                    restore : {show: true},
+                    saveAsImage : {show: true}
+                }
+            },
+            calculable : true,
+            series : [
+                {
+                    name:'门店核销数量',
+                    type:'pie',
+                    radius : '55%',
+                    center: ['50%', '60%'],
+                    data:seriesData
+                }
+            ]
+        };
+        console.log(option);
+        RCHARTS(option);
+    });
+
+    function RCHARTS(optionCommon){
+        require(
+                [
+                    'echarts',
+                    'echarts/chart/bar', // 使用柱状图就加载bar模块，按需加载
+                    'echarts/chart/line',
+                    'echarts/chart/funnel',
+                    'echarts/chart/pie'
+                ],
+                function (ec) {
+                    // 基于准备好的dom，初始化echarts图表
+                    var myChart = ec.init(document.getElementById('chengtuanrsdbt'));
+                    // 为echarts对象加载数据
+                    myChart.setOption(optionCommon);
+                }
+        );
+    }
+
+
+
+</script>
+{php include wl_template('common/footer');}

@@ -1,0 +1,38 @@
+/*导航栏*/
+.bottombarr .home i,.bottombarr .myGroup i,.bottombarr .myOrder i,.bottombarr .myService i{
+    background: url(../../../../../addons/lexiangpingou/app/resource/images/bottomimgnew.png) no-repeat;
+    background-size: 180px 20px;
+}
+.bottombarr .home.cur i,.bottombarr .myGroup.cur i,.bottombarr .myOrder.cur i,.bottombarr .myService.cur i{
+    background: url(../../../../../addons/lexiangpingou/app/resource/images/bottomimgnew.png) no-repeat;
+    background-size: 180px 20px;
+}
+.bottombarr .home i{background-position:-44px 0px}
+.bottombarr .myGroup i{background-position:-158px 0px}
+.bottombarr .myOrder i{background-position:-113px 0px}
+.bottombarr .myService i{background-position:1px 0px}
+.bottombarr .home.cur i{background-position:-90px 0px}
+.bottombarr .myGroup.cur i{background-position:-67px 0px}
+.bottombarr .myOrder.cur i{background-position:-135px 0px}
+.bottombarr .myService.cur i{background-position:-21px 0px}
+/*个人中心
+.my{
+    background-color: #e4393c !important;
+}*/
+.my_head_name{
+    color:#000;
+}
+/*详情页*/
+.footer .group,.good_choose .sub,.footer .group{
+    background: #e4393c !important;
+}
+.good_choose .info .right .price{
+    color:#e4393c !important;
+}
+/*我的订单*/
+.link-ding-header div:first-child{
+    color: #e4393c !important;
+}
+.link-ding-footer>a{
+    background-color: #e4393c !important;
+}

@@ -1,0 +1,37 @@
+{php include wl_template('common/header');}
+<script type="text/javascript">
+window.onload=function(){
+var hval=$("#img1").height();
+$(".promote-card").css("cssText","position:relative;width:100%;height:"+hval+"px;");
+}
+</script>
+
+<style type="text/css">
+#casebar{width:100%;position:absolute;top:46.5%;left:0;height:1.8rem;}
+#casebar #caseValue{width:100%;height:100%;font-size:1.8rem;color:red;text-align:center;display:block;}
+#casebar #caseValue:before{content:"￥";color:#b4700f;font-size:1rem;}
+</style>
+<div class="page-group">
+    <div class="page page-current" id="page-coupon-get">
+		<div class="content native-scroll app">
+			<div class="app-coupon">
+				<div class="promote-card">
+				<img src='../addons/lexiangpingou/app/resource/images/coupon.png' width="100%" id="img1"/>
+					
+					<div class="text-center promote-value" id="casebar">
+						<span class="js-value" id="caseValue">{$cash} </span>
+					</div>
+					
+					
+					<div class="dot"></div>
+				</div>
+				
+				<div class="weui_btn_area" style="margin-top:50px">
+		        	<a class="weui_btn weui_btn_primary" href="{php echo app_url('member/coupon')}" >查看优惠券</a>
+					<a class="weui_btn weui_btn_primary" href="{php echo app_url('goods/list')}" >立即选购</a>
+		    	</div>
+			</div>
+		</div>
+	</div>
+</div>
+{php include wl_template('common/footer');}

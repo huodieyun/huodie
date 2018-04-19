@@ -1,0 +1,661 @@
+{php include wl_template('common/header');}
+
+<ul class="nav nav-tabs">
+    <li {if $op=='base'}class="active"{/if}><a href="{php echo web_url('member/partjob', array('op' => 'base'))}">基本设置</a></li>
+    {if $checkfunction['status']}
+    <li {if $op=='display'&&$groupstatus == ''}class="active"{/if}>
+    <a href="{php echo web_url('member/partjob', array('op' => 'display', 'groupstatus' =>''))}">全部记录</a>
+    </li>
+    <li {if $op=='display'&&$groupstatus == 2} class="active"{/if}>
+    <a href="{php echo web_url('member/partjob', array('op' => 'display', 'groupstatus' =>'2'))}">待审核</a>
+    </li>
+    <li {if $op=='display'&&$groupstatus == 1} class="active"{/if}>
+    <a href="{php echo web_url('member/partjob', array('op' => 'display', 'groupstatus' =>'1'))}">已审核</a>
+    </li>
+
+
+    <!--<li>
+        <a href="{php echo $this->createWebUrl('grouporder', array('reload' =>'reload','groupstatus'=>$groupstatus))}"><button class="btn btn-success">刷新</button></a>
+    </li>-->
+    {if $op == 'group_detail'}
+    <li class="active">
+        <a href="#">订单明细</a>
+    </li>
+    {/if}
+    {if $op == 'member_detail'}
+    <li class="active">
+        <a href="#">团队成员</a>
+    </li>
+    {/if}
+    {if $op == 'upd'}
+    <li class="active">
+        <a href="#">店铺设置</a>
+    </li>
+    {/if}
+    {/if}
+</ul>
+{if $op == 'base'}
+
+<div class="panel panel-default">
+    <div class="panel-body table-responsive" style="padding: 0px;">
+        <div class="main_bd">
+            <div class="plugins_wrp">
+                <dl>
+                    <dd>
+                        <ul id="js_plugins">
+                            <li class="item_wrp" style="width: 100%;">
+                                <div class="plugin_item">
+                                    <div id="link-icon1" class="plugin_icon">
+                                        <div id="link-icon" style="display:none;width:100%;height:100%;position:absolute;background-color:rgba(0,0,0,0.3);cursor:pointer;">
+                                            <img src="{TG_URL_WRES}images/3.svg" style="position:absolute;width:60%;left:20%;">
+                                        </div>
+                                        <img src="https://res.wx.qq.com/mpres/zh_CN/htmledition/comm_htmledition/images/icon/service/scan.png" style="cursor:pointer;">
+                                    </div>
+                                    <div class="plugin_status">
+                                        <i class="access"></i>
+                                        <span class="status_txt">
+										{if $checkfunction['status']}	
+											
+										<div id="renewal" style="font-size:20px;margin-top:-30px;width: 60px;height:60px;border-radius:50%;font-weight:900;background-color:#ff5466;color:white;margin-right: -25px;text-align:center;line-height:60px;cursor:pointer;">续费</div>
+								
+										<span style="display:block;margin-left:-70px;color:#888;font-size:14px;">截止日期：{php echo date('Y-m-d', $checkfunction['endtime'])}</span>
+										
+										{else}
+										
+										<div id="buyDaifu" style="font-size:20px;margin-top:-20px;width: 60px;height:60px;border-radius:50%;font-weight:900;background-color:#ff5466;color:white;margin-right: -25px;text-align:center;line-height:60px;cursor:pointer;">购买</div>
+										{/if}
+									</span>
+                                    </div>
+                                    <div class="plugin_content">
+                                        <h3 class="title">{$_W['page']['title']}</h3>
+                                        <p class="desc" style="    width: 100%;">
+                                            启用全民兼职后，可以去招募兼职人员，去帮助商城进行推广，配合商品设置自定义佣金，具体流程点击功能图片预览。
+                                        </p>
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
+                    </dd>
+                </dl>
+            </div>
+        </div>
+        <div class="main_bd">
+            <div class="plugins_wrp">
+                <dl>
+                    <dd>
+                        <ul id="js_plugins1">
+                            <li class="item_wrp" style="width: 100%;">
+                                <div class="plugin_item">
+                                    <div class="plugin_icon"><img src="{TG_URL_WRES}images/function/fans/duanxin.png"></div>
+                                    <div class="plugin_status">
+                                        <i class="access"></i>
+                                        <span class="status_txt">
+										<input class="flag1" type="checkbox" name="shop_switch" value="{$setting['shop_switch']}" {if $setting['shop_switch'] == 1}checked{/if} />
+									</span>
+                                    </div>
+                                    <div class="plugin_content">
+                                        <h3 class="title">兼职店铺名</h3>
+                                        <p class="desc" style="width: 100%;">
+                                            开启兼职店铺名功能后，兼职人员申请时，需要填写自身的店铺名，且兼职人员的下级进入商城默认显示兼职人员的店铺名。
+                                        </p>
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
+                    </dd>
+                </dl>
+            </div>
+        </div>
+        <div class="main_bd">
+            <div class="plugins_wrp">
+                <dl>
+                    <dd>
+                        <ul id="js_plugins2">
+                            <li class="item_wrp" style="width: 100%;">
+                                <div class="plugin_item">
+                                    <div class="plugin_icon"><img src="{TG_URL_WRES}images/function/fans/duanxin.png"></div>
+                                    <div class="plugin_status">
+                                        <i class="access"></i>
+                                        <span class="status_txt">
+										<input class="flag2" type="checkbox" name="jobsmscode" value="{$setting['jobsmscode']}" {if $setting['jobsmscode'] == 1}checked{/if} />
+									</span>
+                                    </div>
+                                    <div class="plugin_content">
+                                        <h3 class="title">短信验证</h3>
+                                        <p class="desc" style="width: 100%;">
+                                            启用短信验证功能后，兼职人员申请时，需要通过短信验证码来申请。短信需要商家购买数量，当数量不足时，将无法获取短信验证码。
+                                        </p>
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
+                    </dd>
+                </dl>
+            </div>
+        </div>
+        <div class="main_bd">
+            <form action="" method="post" class="form-horizontal form" id="form" style="overflow: hidden; padding: 10px">
+            <div class="plugins_wrp">
+                <dl>
+                    <dd>
+                        <ul id="js_commission">
+                            <li class="item_wrp" style="width: 100%;">
+                                <div class="plugin_item">
+
+                                    <div class="plugin_icon"><img src="{TG_URL_WRES}images/function/helpbuy.png"></div>
+                                    <!--<div class="plugin_status">-->
+                                        <!--<i class="access"></i>-->
+                                        <!--<span class="status_txt input-group col-sm-8">-->
+                                            <!--<input type="number" name="commission_time" class="form-control" value="{$acc['commission_time']}" />-->
+                                            <!--<span class="input-group-addon">天</span>-->
+									    <!--</span>-->
+                                    <!--</div>-->
+                                    <!--<div class="plugin_content">-->
+                                        <!--<h3 class="title">提现周期</h3>-->
+                                        <!--<p class="desc" style="width: 100%;">-->
+                                            <!--兼职人员下级确认收货多少天可申请提现-->
+                                        <!--</p>-->
+                                    <!--</div>-->
+                                    <!--<div class="col-sm-4">-->
+                                        <!--<div class="input-group">-->
+                                            <!--<input type="number" name="commission_time" class="form-control" value="{$acc['commission_time']}" />-->
+                                            <!--<span class="input-group-addon">天</span>-->
+                                        <!--</div>-->
+                                        <!--<input type="submit" name="submit" value="提交" class="btn btn-primary col-lg-10"/>-->
+                                        <!--<input type="hidden" name="token" value="{$_W['token']}"/>-->
+                                    <!--</div>-->
+
+                                    <div class="plugin_status" style="width: 14%;padding-right: 0px;">
+                                        <input type="submit" name="submit" value="提交" class="btn btn-primary col-lg-10"/>
+                                        <input type="hidden" name="token" value="{$_W['token']}"/>
+									</span>
+                                    </div>
+                                    <div class="plugin_content" style="width: 50%;margin-top: 18px;">
+                                        <label>兼职人员下级、佣金、积分确认收货多少天后可结算并提现</label>
+                                        <div class="input-group">
+
+                                            <input type="number" name="commission_time" class="form-control" value="{$acc['commission_time']}" />
+                                            <span class="input-group-addon">天</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
+                    </dd>
+                </dl>
+            </div>
+            </form>
+        </div>
+    </div>
+</div>
+<script>
+    $(function () {
+        require(['bootstrap.switch'], function ($) {
+            $('.flag1:checkbox').bootstrapSwitch({onText: '启用', offText: '禁用'});
+            $('#js_plugins1 .bootstrap-switch-wrapper').click(function (e) {
+                e.stopPropagation();
+                $.post("{php echo web_url('member/partjob/ajax' , array('shop_switch' => 1))}", function (d) {
+                    if (!d.errno) {
+                        util.tips(d.message);
+                    }
+                }, "json");
+            });
+        });
+    });
+    $(function () {
+        require(['bootstrap.switch'], function ($) {
+            $('.flag2:checkbox').bootstrapSwitch({onText: '启用', offText: '禁用'});
+            $('#js_plugins2 .bootstrap-switch-wrapper').click(function (e) {
+                e.stopPropagation();
+                $.post("{php echo web_url('member/partjob/ajax' , array('jobsmscode' => 1))}", function (d) {
+                    if (!d.errno) {
+                        util.tips(d.message);
+                    }
+                }, "json");
+            });
+        });
+    });
+</script>
+{/if}
+{if $op=='display'}
+<div class="main">
+    {if $op!='group_detail'&&$op!='member_detail'&&$op!='upd'}
+    <div class="panel panel-info">
+        <div class="panel-heading">筛选</div>
+        <div class="panel-body">
+            <form action="{php echo web_url('member/partjob', array('op' => 'display'))}" method="post" class="form-horizontal" role="form" id="form1">
+                <input type="hidden" name="groupstatus" value="{$groupstatus}"/>
+                <input type="hidden" name="selltype" value="{$selltype}"/>
+                <div class="form-group">
+                    <label class="col-xs-12 col-sm-2 col-md-2 col-lg-2 control-label">昵称</label>
+                    <div class="col-sm-8 col-lg-9 col-xs-12">
+                        <input class="form-control" name="keyword" id="" type="text" value="{$_GPC['keyword']}" placeholder="可查询昵称">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-xs-12 col-sm-2 col-md-2 col-lg-2 control-label">申请时间</label>
+                    <div class="col-sm-5 col-lg-7 col-xs-12">
+                        {php echo tpl_form_field_daterange('time', array('starttime'=>date('Y-m-d',$starttime),'endtime'=>date('Y-m-d', $endtime)));}
+                    </div>
+                    <div class="col-sm-3 col-lg-2" style="text-align:right;">
+                        <button class="btn btn-default"><i class="fa fa-search"></i> 搜索</button>
+                    </div>
+                </div>
+                <div class="form-group">
+                </div>
+            </form>
+
+            <!--  <a href='{php echo $this->createWebUrl('grouporder', array('op' => 'output','groupstatus'=>$groupstatus,'starttime'=>$starttime,'endtime'=>$endtime))}'><button class="btn btn-info"><i class="fa fa-download"></i> 导出记录</button></a>-->
+        </div>
+    </div>
+    {/if}
+    <div class="panel panel-default">
+        <div class="panel-body table-responsive">
+            <table class="table table-hover">
+                <thead class="navbar-inner">
+                <tr>
+                    <th style="width:10%;"></th>
+                    <th style="width:10%;">姓名</th>
+                    <th style="width:10%;">状态</th>
+                    <th style="width:10%;">手机号</th>
+                    <th style="width:20%;">申请时间</th>
+                    <th style="width:10%;">上级</th>
+                    <th style="width:10%;">待提现</th>
+                    <th style="width:20%; text-align:right;">操作</th>
+                </tr>
+                </thead>
+                <tbody>
+                {loop $members $key $item}
+                <?php
+                        $fee=0;
+						if(empty($item['total'])){
+						$sql="SELECT * FROM ".tablename('tg_order')." WHERE openid=:from_user and status not in (0,4,5,9)";
+						$params = array(':from_user'=>$item['from_user']);
+                $order = pdo_fetchall($sql, $params);
+                $arr = array();
+                foreach ($order as $key => $value) {
+                $fee+=$value['card_fee'];
+                }
+                pdo_update('tg_member', array('total' => $fee), array('id' => $item['id']));
+                }else{$fee=$item['total'];}
+
+                $sql1 = "SELECT * FROM ".tablename('tg_address')." WHERE id=:addressid";
+                $params1 = array(':addressid' => $arr['addressid']);
+                $address = pdo_fetch($sql1,$params1);
+                $sql="SELECT * FROM ".tablename('tg_member')." WHERE id=:id";
+                $params = array(':id'=>$item['parentid']);
+                $parentmember = pdo_fetch($sql, $params);
+                $url=$_W['siteroot']."app/index.php?i=".$_W['uniacid']."&c=entry&do=index&m=lexiangpingou&sharenum=".$item['id'];
+                ?>
+                <tr>
+                    <td>
+                        <img src='{$item['avatar']}' style='width:30px;height:30px;padding1px;border:1px solid #ccc' />
+                    </td>
+                    <td>{$item['nickname']}</td>
+                    <td>
+                        {if $item['type']==1&& $item['enable']==0}
+                        <span class="label label-warning">申请中</span>
+                        {/if}
+                        {if $item['enable']==1 }
+                        <span class="label label-success">已审核</span>
+                        {/if}
+
+                    </td>
+                    <td>
+                        <span class="label label-success">{if !empty($item['addmobile'])}{$item['addmobile']}{else}{$item['mobile']}{/if}</span>
+                    </td>
+                    <td>{php echo date('Y-m-d ', $item['addtime'])}<br>{php echo date('H:i:s', $item['addtime'])}</td>
+                    <td>{$parentmember['nickname']}</td>
+                    <td>{php echo number_format($item['wallet'],2)}</td>
+                    <td style="text-align:right;">
+                        {if checkstr($_W['user']['perms'],'partjob.upd')}
+                        <a class="btn btn-default" href="{php echo web_url('member/partjob', array('op' => 'upd','id'=>$item['id']))}" style="margin-bottom:5px">店铺设置</a>
+                        {/if}
+
+                        {if $item['enable']==0}
+                        {if checkstr($_W['user']['perms'],'partjob.checked')}
+                        <a class="btn btn-default" href="{php echo web_url('member/partjob', array('op' => 'checked','id'=>$item['id']))}" style="margin-bottom:5px"> 审核通过</a>
+                        {/if}
+                        {/if}
+                        {if $item['enable']==1}
+                        {if checkstr($_W['user']['perms'],'partjob.member_detail')}
+                        <a class="btn btn-default" href="{php echo web_url('member/partjob', array('op' => 'member_detail','id'=>$item['id']))}" style="margin-bottom:5px">我的下级</a><br>
+                        {/if}
+                        {if checkstr($_W['user']['perms'],'partjob.group_detail')}
+                        <a class="btn btn-default" href="{php echo web_url('member/partjob', array('op' => 'group_detail','id'=>$item['id']))}" style="margin-bottom:5px"> 佣金明细</a>
+                        {/if}
+                        {if checkstr($_W['user']['perms'],'partjob.unchecked')}
+                        <a class="btn btn-default cancelJ" href="{php echo web_url('member/partjob', array('op' => 'unchecked','id'=>$item['id']))}" style="margin-bottom:5px"> 取消兼职</a>
+                        {/if}
+                        {/if}
+
+                        <!--  <a class="btn btn-default" href="{php echo $this->createWebUrl('member', array('op'=>'modify','id'=>$item['id']))}"><i class="fa fa-edit"></i> 编辑</a>-->
+                        <!--  <a class="btn btn-default" href="{php echo $this->createWebUrl('member', array('op'=>'payment','id'=>$item['id']))}"><i class="fa fa-edit"></i> 佣金发放</a>-->
+                        <!--	    <a href="javascript:;" class="btn btn-default" onclick="displayQr('{php echo $this->createWebUrl('qr', array('raw' => base64_encode($url)))}');"><i class="fa fa-qrcode fa-fw"></i> 查看二维码</a>-->
+                        <!-- <div class="btn-group btn-group-sm">
+                             <a class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-expanded="false" href="javascript:;">宣传地址 <span class="caret"></span></a>
+                             <ul class="dropdown-menu dropdown-menu-right" role="menu">
+                                 <li>
+                                     <a href="{$url}" target="_blank"><i class="fa fa-external-link fa-fw"></i> 直接访问</a>
+                                 </li>
+                                 <li role="presentation">
+                                     <a href="javascript:;" onclick="displayUrl('{$url}'}');"><i class="fa fa-link fa-fw"></i> 查看链接</a>
+                                 </li>
+                                 <li role="presentation">
+                                     <a href="javascript:;" onclick="displayQr('{php echo $this->createWebUrl('qr', array('raw' => base64_encode($url)))}');"><i class="fa fa-qrcode fa-fw"></i> 查看二维码</a>
+                                 </li>
+                             </ul>
+                         </div>-->
+                    </td>
+                </tr>
+                {/loop}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{$pager}
+<script type="text/javascript">
+    require(['daterangepicker'], function ($) {
+        $('.daterange').on('apply.daterangepicker', function (ev, picker) {
+            $('#form1')[0].submit();
+        });
+    });
+</script>
+{/if}
+
+
+{if $op=='group_detail'}
+<style type="text/css">
+    .main .form-horizontal .form-group {
+        margin-bottom: 0;
+    }
+
+    .main .form-horizontal .modal .form-group {
+        margin-bottom: 15px;
+    }
+
+    #modal-confirmsend .control-label {
+        margin-top: 0;
+    }
+</style>
+<div class="main">
+    <form class="form-horizontal form" action="" method="post" enctype="multipart/form-data" onsubmit="return formcheck(this)">
+        <input type="hidden" name="dispatchid" value="{$dispatch['id']}"/>
+
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                订单明细
+            </div>
+            <div class="panel-body table-responsive">
+                <table class="table table-hover">
+                    <thead class="navbar-inner">
+                    <tr>
+                        <th style="width:150px;">订单号</th>
+                        <th style="width:70px;">昵称</th>
+                        <th style="width:100px;">订单金额/商品金额</th>
+                        <th style="width:100px;">提成方式</th>
+                        <th style="width:100px;">订单状态</th>
+                        <th style="width:100px;">数值</th>
+                        <th style="width:80px;">佣金</th>
+                        <th style="width:80px;">是否结算</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {loop $orderlist $item}
+                    <?php
+					 $comprice = 0;
+                    $price = floatval($item['price']) - floatval($item['cost_fee']) - floatval($item['freight']);
+                    if ($item['g_id'] > 0) {
+                    if ($item['commissiontype'] == 2) {
+                    $comprice = $item['commission'] * $item['gnum'];
+                    } else {
+                    $comprice = $price * $item['commission'] / 100;
+                    }
+
+                    } else {
+                    $sql3 = 'SELECT sid,oprice,num,commission,type FROM ' . tablename('tg_collect') . ' WHERE uniacid=:uniacid AND orderno=:orderno';
+                    $params3 = array(':uniacid' => $_W['uniacid'], 'orderno' => $item['orderno']);
+                    $favoriteqqq = pdo_fetchall($sql3, $params3);
+
+                    foreach ($favoriteqqq as $key => $orderss1) {
+
+                    if ($orderss1['type'] == 2) {
+                    $comprice += $orderss1['commission'] * $orderss1['num'];
+                    } else {
+
+                    $comprice = $comprice + $orderss1['oprice'] * $orderss1['num'] * $orderss1['commission'] / 100;//佣金计算
+                    }
+                    }
+                    }
+                    if ($item['comtype'] == 1) {
+                    $billnum += $comprice;
+                    }
+                    if ($item['comtype'] == 0) {
+                    $nobillnum += $comprice;
+                    }
+                    ?>
+
+                    <tr>
+                        <td>{$item['orderno']}</td>
+                        <td>{$item['addname']}</td>
+                        <td>{$item['price']} / {$price}</td>
+                        <td>{if $item['commissiontype']==2}固定金额{/if}{if $item['commissiontype']==1}百分比{/if}{if $item['g_id']==0}购物车汇总{/if}
+                        </td>
+                        <td>{if $item['status']==3}已签收{else}待签收{/if}</td>
+                        <td>{if $item['g_id']>0}{$item['commission']}{else}-{/if}</td>
+                        <td>
+                            {php echo number_format($comprice,3)}
+                        </td>
+                        <td>{if $item['comtype']==1}已结算{/if}{if $item['comtype']==0}未结算{/if}</td>
+                    </tr>
+
+                    {/loop}
+                    <tr>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td>已结算:{php echo number_format($billnum,3)}</td>
+                        <td>未结算:{php echo number_format($nobillnum,3)}</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        {$total}
+    </form>
+</div>
+{/if}
+{if $op=='upd'}
+<style type="text/css">
+    .main .form-horizontal .form-group {
+        margin-bottom: 0;
+    }
+
+    .main .form-horizontal .modal .form-group {
+        margin-bottom: 15px;
+    }
+
+    #modal-confirmsend .control-label {
+        margin-top: 0;
+    }
+</style>
+<div class="main">
+    <form action="./index.php" method="get" class="form-horizontal" role="form" id="form2">
+        <input type="hidden" name="c" value="site"/>
+        <input type="hidden" name="a" value="entry"/>
+        <input type="hidden" name="m" value="lexiangpingou"/>
+        <input type="hidden" name="do" value="member"/>
+        <input type="hidden" name="ac" value="partjob"/>
+        <input type="hidden" name="op" value="upd"/>
+        <input type="hidden" name="b" value="1"/>
+        <input type="hidden" name="id" value="{$id}"/>
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                店铺设置
+            </div>
+            <div class="panel-body table-responsive">
+                <div class="form-group">
+                    <label class="col-xs-10 col-sm-3 col-md-3 control-label">店铺名称</label>
+                    <div class="col-xs-12 col-sm-9 col-md-8 col-lg-8">
+                        <input type="text" name="shopname" class="form-control" value="{$member['shopname']}"/>
+                    </div>
+                </div>
+
+            </div>
+            <!--	<div class="form-group">
+                            <label class="col-xs-12 col-sm-2 col-md-2 col-lg-2 control-label">管理员</label>
+                            <div class="col-sm-8 col-lg-9 col-xs-12">
+                                <select name="tuan" class="form-control">
+                                    <option value="">不限</option>
+                                  {loop $mems $item}
+                                  <option value="{$item['id']}" >{$item['nickname']}</option>
+                                {/loop}
+                                </select>
+                            </div>
+                        </div>
+                <div class="panel-body table-responsive">
+                        <div class="form-group">
+                                    <label class="col-xs-10 col-sm-3 col-md-3 control-label">管理员{$_W['role']}</label>
+                                    <div class="col-xs-12 col-sm-9 col-md-8 col-lg-8">
+                                    {if $_W['role']=='manage'}
+                                        <input type="text" name="shopname" class="form-control"  value="{$member['shopname']}"/>
+                                        {else}
+                                        {/if}
+                                    </div>
+                                </div>
+
+                   </div>-->
+        </div>
+        <button type="submit" class="btn btn-primary span2" name="confirmsend" value="yes">确认提交</button>
+
+    </form>
+</div>
+
+{/if}
+{if $op=='member_detail'}
+
+<style type="text/css">
+    .main .form-horizontal .form-group {
+        margin-bottom: 0;
+    }
+
+    .main .form-horizontal .modal .form-group {
+        margin-bottom: 15px;
+    }
+
+    #modal-confirmsend .control-label {
+        margin-top: 0;
+    }
+</style>
+<div class="main">
+    <form class="form-horizontal form" action="" method="post" enctype="multipart/form-data"
+          onsubmit="return formcheck(this)">
+        <input type="hidden" name="dispatchid" value="{$dispatch['id']}"/>
+
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                团队成员
+            </div>
+            <div class="panel-body table-responsive">
+                <table class="table table-hover">
+                    <thead class="navbar-inner">
+                    <tr>
+
+                        <th style="width:70px;">昵称</th>
+                        <th style="width:70px;">加入时间</th>
+                        <th style="width:100px;">消费金额</th>
+
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {loop $orders $item}
+
+                    <tr>
+                        <td>{$item['nickname']}</td>
+                        <td>{php echo date('Y-m-d H:i:s', $item['intertime'])}</td>
+                        <td>{$item['total']}</td>
+
+                    </tr>
+                    {/loop}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </form>
+</div>
+{/if}
+
+<script>
+    if (document.getElementsByClassName("cancelJ").length > 0) {
+        var cancelJs = document.getElementsByClassName("cancelJ");
+        for (var i = 0; i < cancelJs.length; i++) {
+            cancelJs[i].onclick = function (event) {
+                event.preventDefault();
+                if (confirm("取消兼职后该兼职人员将清除所有层级关系，确定取消吗？")) {
+                    location.href = event.target.href;
+                }
+            }
+
+        }
+    }
+    if (document.getElementById("link-icon1")) {
+        var linkicon = document.getElementById("link-icon");
+        var linkicon2 = document.getElementById("link-icon1");
+
+        linkicon2.onmouseleave = function () {
+            linkicon.style.setProperty('display', 'none');
+        }
+
+        linkicon2.onmouseover = function () {
+            linkicon.style.setProperty('display', 'block');
+        }
+
+        linkicon.onclick = function (ev) {
+            document.getElementById('detailimg').src = '{TG_URL_WRES}images/function/sqjz.jpg';
+            document.getElementById("detailshow").style.setProperty("display", "block");
+        }
+    }
+
+    function displayUrl(lurl, surl) {
+        require(['jquery', 'util'], function ($, u) {
+            var content = '<p class="form-control-static" style="word-break:break-all">菜单使用链接(需要oAuth): <br>' + lurl + '</p>';
+            content += '<p class="form-control-static" style="word-break:break-all">自动回复使用链接: <br>' + surl + '</p>';
+            var footer =
+                '<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>' +
+                '<button type="button" class="btn btn-primary">复制菜单链接</button>' +
+                '<button type="button" class="btn btn-success">复制自动回复链接</button>';
+            var diaobj = u.dialog('查看URL', content, footer);
+            diaobj.find('.btn-default').click(function () {
+                diaobj.modal('hide');
+            });
+            diaobj.on('shown.bs.modal', function () {
+                u.clip(diaobj.find('.btn-primary')[0], lurl);
+                u.clip(diaobj.find('.btn-success')[0], surl);
+            });
+            diaobj.modal('show');
+        });
+    }
+
+    function displayQr(url) {
+        require(['jquery', 'util'], function ($, u) {
+            var content = '<div class="panel panel-default text-center"><img src="' + url + '" alt="文章地址二维码" class="img-rounded"></div>';
+            var footer = '<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>';
+            var diaobj = u.dialog('查看URL二维码', content, footer);
+            diaobj.find('.btn-default').click(function () {
+                diaobj.modal('hide');
+            });
+            diaobj.modal('show');
+        });
+    }
+
+    $('#form1 .col-lg-2 button').click(function () {
+//			setTimeout(function(){console.log(1);},1000)
+    })
+</script>
+
+{php include wl_template('common/footer');}

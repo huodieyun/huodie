@@ -1,0 +1,57 @@
+{php include wl_template('common/header');}
+<style>
+    .ewm{
+        position: fixed;
+        top:0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: #fff;
+    }
+    .ewm img{
+        position: absolute;
+        width: 80%;
+        top:15%;
+        left:10%;
+    }
+</style>
+<div class="page-group">
+    {if $fans['follow']==1}
+    <div class="page page-current" id="page-member">
+        <header class="bar bar-nav">
+            <h1 class="title">扫码结果</h1>
+        </header>
+        <div class="content" style="background-color: #fff;">
+            <div class="payicons">
+                <div class="bd spacing">
+                    <i class="weui_icon_msg weui_icon_success"></i>
+                    <h2 style="font-size: 20px;">绑定成功<h2>
+                    {if $errno==2}<i class="weui_icon_msg weui_icon_warn"></i>{/if}
+                </div>
+            </div>
+
+            <div class="content-block">
+                <div class="row" style="margin: 0 auto">
+                    <a id="closewindow" class="weui_btn weui_btn_default" style="background: #09BB07;color: #fff">返回微信</a>
+                    <!--<div class="col-100"><a href="{php echo app_url('goods/list')}" class="weui_btn weui_btn_warn">确定</a></div>-->
+                </div>
+            </div>
+        </div>
+    </div>
+    {else}
+    <div class="ewm">
+        <header class="bar bar-nav">
+            <h1 class="title">您未关注，请扫码关注</h1>
+        </header>
+        <img src="https://www.lexiangpingou.cn/attachment/qrcode_921.jpg?time=1508570313" alt="">
+    </div>
+    {/if}
+</div>
+<script>
+    wx.ready(function(){
+        $('#closewindow').click(function(){
+            wx.closeWindow();
+        });
+    });
+</script>
+{php include wl_template('common/footer');}

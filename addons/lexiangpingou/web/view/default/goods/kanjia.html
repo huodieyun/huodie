@@ -1,0 +1,1140 @@
+{php include wl_template('common/header');}
+<ul class="nav nav-tabs">
+	{if checkstr($_W['user']['perms'],'goods.ddd')&&$_W['user']['merchant_id']==0}<li {if $_GPC['op'] == 'display'}class="active"{/if}><a href="{php echo web_url('goods/kanjia/display/')}">基本设置</a></li>{/if}
+	<li {if intval($_GPC['status']) == 1}class="active"{/if}><a href="{php echo web_url('goods/kanjia/list/',array('status' => '1'));}">上架的砍价商品</a></li>
+	<li {if intval($_GPC['status']) == 3}class="active"{/if}><a href="{php echo web_url('goods/kanjia/list/',array('status' => '3'));}">已售罄砍价商品</a></li>
+	<li {if intval($_GPC['status']) == 2}class="active"{/if}><a href="{php echo web_url('goods/kanjia/list/',array('status' => '2'));}">下架的砍价商品</a></li>
+	<li {if intval($_GPC['status']) == 4}class="active"{/if}><a href="{php echo web_url('goods/kanjia/list/',array('status' => '4'));}">砍价商品回收站</a></li>
+	<li><a href="{php echo web_url('goods/kanjia/post/');}">发布商品</a></li>
+</ul>
+{if $_GPC["op"] == "display"}
+<div class="main">
+    <form action="" method="post" class="form-horizontal form">
+
+        <div class="panel panel-default">
+
+            <div class="panel-heading">
+
+                炫酷微首页设置
+
+            </div>
+
+            <div class="panel-body">
+
+                <div class="form-group">
+
+                    <label class="col-xs-12 col-sm-3 col-md-2 control-label">公告</label>
+
+                    <div class="col-sm-9 col-xs-12">
+
+                        <input type="text" name="announcement" class="form-control" value="{$kangoods['title']}" />
+
+                    </div>
+
+                </div>
+
+                <div class="form-group">
+
+                    <label class="col-xs-12 col-sm-3 col-md-2 control-label"><span class='red'>*</span>顶部banner图：</label>
+
+
+
+                    <div class="col-sm-9 col-xs-12">
+                        建议宽*高(640*70)
+                        {php echo tpl_form_field_image('img',tomedia($kangoods["banner"]));}
+                    </div>
+
+                </div>
+
+                <div class="form-group">
+
+                    <label class="col-xs-12 col-sm-3 col-md-2 control-label"><span class='red'>*</span>顶部banner链接：</label>
+
+                    <div class="col-sm-9 col-xs-12">
+
+                        <input type="text" id="banner_url" class="form-control span7"
+
+                               placeholder="" name="banner_url" value="{$kangoods['banner_url']}">
+
+                    </div>
+
+                </div>
+
+                <div class="form-group">
+
+                    <label class="col-xs-12 col-sm-3 col-md-2 control-label"><span class='red'>*</span>首页分享标题：</label>
+
+
+
+                    <div class="col-sm-9 col-xs-12">
+
+                        <input type="text" id="share_title" class="form-control span7" placeholder="" name="share_title"
+
+                               value="{$kangoods['share_title']}">
+
+                        <div class="help-block"></div>
+
+                    </div>
+
+                </div>
+
+                <div class="form-group">
+
+                    <label class="col-xs-12 col-sm-3 col-md-2 control-label"><span class='red'>*</span>列表页分享图标：</label>
+
+
+
+                    <div class="col-sm-9 col-xs-12">
+
+                        {php echo tpl_form_field_image('share_icon',tomedia($kangoods["share_img"]));}
+
+                    </div>
+
+                </div>
+
+                <div class="form-group">
+
+                    <label class="col-xs-12 col-sm-3 col-md-2 control-label"><span class='red'>*</span>列表页分享描述：</label>
+
+                    <div class="col-sm-9 col-xs-12">
+
+                        <textarea style="height: 60px;" name="share_content" class="form-control span7" cols="60">{$kangoods['share_content']}</textarea>
+
+                        <div class="help-block"></div>
+
+                    </div>
+
+                </div>
+
+                <div class="form-group">
+
+                    <label class="col-xs-12 col-sm-3 col-md-2 control-label"></label>
+
+                    <div class="col-sm-9 col-xs-12">
+
+                        <p/>
+
+                        <input name="submit" type="submit" value="提交" class="btn btn-primary span3" />
+
+                        <input type="hidden" name="token" value="{$_W['token']}" />
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+    </form>
+</div>
+{/if}
+
+{if $_GPC["op"] == "list"}
+<div style="background-color: #fff">
+    <div class="panel-heading">筛选</div>
+    <div class="panel-body">
+        <form action="./index.php" method="get" class="form-horizontal" role="form"  style="background-color: #fff">
+            <input type="hidden" name="c" value="site" />
+            <input type="hidden" name="a" value="entry" />
+            <input type="hidden" name="m" value="lexiangpingou" />
+            <input type="hidden" name="do" value="goods" />
+            <input type="hidden" name="ac" value="kanjia" />
+            <input type="hidden" name="op" value="list" />
+            <input type="hidden" name="status" value="{$_GPC['status']}">
+            {if $_W['user']['merchant_id'] == 0}
+            <div class="form-group">
+                <label class="col-md-1 control-label">商品分类</label>
+                <div class="col-md-8">
+                    <select name="category[parentid]" onchange="categoryIC(this)" class="categoryI form-control tpl-category-parent" style="margin-right:20px;display: inline-block;width: 48%;">
+
+                    </select>
+
+                    <select name="category[childid]" class="categoryII form-control tpl-category-parent" style="display: inline-block;width: 48%;">
+                        <option value="">请选择二级分类</option>
+                    </select>
+                </div>
+
+            </div>
+            {/if}
+            <div class="form-group">
+
+                <label class="col-xs-12 col-sm-2 col-md-2 col-lg-1 control-label">商品名称</label>
+                <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
+                    <input class="form-control" name="keyword" id="" type="text" value="{$_GPC['keyword']}" placeholder="可模糊查询商品名称">
+                </div>
+                <div class="col-md-2" style="float: right">
+                    <button class="btn btn-default min-width"><i class="fa fa-search"></i> 搜索</button>
+                </div>
+            </div>
+
+
+        </form>
+    </div>
+</div>
+{php $i=0;}
+<table class="table table-hover" style="background: #fff;margin-top: 20px;">
+	<thead>
+	    <tr>
+		<th style="width:40px;">
+			<input type="checkbox" name="checkall" value="" id="checkall" onclick="var ck = this.checked; $(':checkbox').each(function(){this.checked = ck});"/>
+		</th>
+		<th class="text-center" style="width:70px;"><a href='{php echo web_url('goods/kanjia/list/', array('status'=>$_GPC['status'],'keyword'=>$_GPC['keyword'],'transid'=>$transid,'member'=>$member,'pay_type'=>$pay_type,'starttime'=>$starttime,'endtime'=>$endtime,'time'=>$time,'goodsid'=>$_GPC['goodsid'],'goodsid2'=>$_GPC['goodsid2'],'saler'=>$_GPC['saler'],'merchantid'=>$_GPC['merchantid'],'dispatchtype'=>$dispatchtype,'sortname'=>'displayorder','sortasc'=>$sortasc))}'>排序</a></th>
+		<th style="width:80px;">商品图</th>
+		<th style="width:180px;"><a href='{php echo web_url('goods/kanjia/list/', array('status'=>$_GPC['status'],'keyword'=>$_GPC['keyword'],'transid'=>$transid,'member'=>$member,'pay_type'=>$pay_type,'starttime'=>$starttime,'endtime'=>$endtime,'time'=>$time,'goodsid'=>$_GPC['goodsid'],'goodsid2'=>$_GPC['goodsid2'],'saler'=>$_GPC['saler'],'merchantid'=>$_GPC['merchantid'],'dispatchtype'=>$dispatchtype,'sortname'=>'gname','sortasc'=>$sortasc))}'>商品名</a></th>
+		<th class="text-center" style="width:140px;">方式/分类</th>
+		<th class="text-center" style="width:140px;">库存</th>
+		<th class="text-center" style="width:160px;">操作</th>
+	</tr>
+	</thead>
+    {loop $klist $goods}
+        <tr data-toggle="popover" data-trigger="hover" data-placement="left" class="js-goods-img" >
+	<td><input type="checkbox" id="gid"  name="items[{php echo $i}]" value="{$goods['id']}" class="items" /></td>
+	<td class="text-center"><input {if $_W['user']['merchant_id'] > 0}readonly{/if} id="gorder" onchange="showUser(this.value,{$goods['id']})" type="text" class="form-control js-displayorder" value="{php echo $goods['displayorder'];}" data-id="{$goods['id']}"/> </td>
+	<td><img class="scrollLoading" src="{php echo tomedia($goods['gimg'])}" data-url="{php echo tomedia($goods['gimg'])}" onerror="this.src='{IMAGE_NOPIC_SMALL}'" height="50" width="70"/></td> 
+	<td class="line-feed" style="word-wrap:break-word;">
+		<span class="label label-info">{$goods['gname']}</span><br>
+		<span class="label label-success" style="display: none">状态：{if $goods['shenhe']==1}待审核{elseif $goods['shenhe']==2}
+			<a onclick="alert('{$goods['reason']}');"  class="label label-danger">强制下架</a>
+			<!--<a href="#"></a>-->
+			{elseif $goods['shenhe']==0}审核通过{/if}</span>
+		<!--<br />
+		<label data='{$goods['isnew']}' class='label label-default {if $goods['isnew']==1}label-info{else}{/if}' onclick="setProperty(this,{$goods['id']},'new')">{if $this->module['config']['tag1']}{php echo $this->module['config']['tag1'];}{else}上新{/if}</label>
+		<label data='{$goods['ishot']}' class='label label-default {if $goods['ishot']==1}label-info{/if}' onclick="setProperty(this,{$goods['id']},'hot')">{if $this->module['config']['tag2']}{php echo $this->module['config']['tag2'];}{else}疯抢{/if}</label>
+		<label data='{$goods['isrecommand']}' class='label label-default {if $goods['isrecommand']==1}label-info{/if}' onclick="setProperty(this,{$goods['id']},'recommand')">{if $this->module['config']['tag3']}{php echo $this->module['config']['tag3'];}{else}推荐{/if}</label>
+		<label data='{$goods['isdiscount']}' class='label label-default {if $goods['isdiscount']==1}label-info{/if}' onclick="setProperty(this,{$goods['id']},'discount')">{if $this->module['config']['tag4']}{php echo $this->module['config']['tag4'];}{else}优惠{/if}</label>-->
+	</td>
+	<td class="text-left" style="line-height:25px;">
+		<span class="label label-warning">方式：{if $goods['selltype']==0}单买{else if $goods['selltype']==1}随意团{else if $goods['selltype']==2}邻购团{else if $goods['selltype']==3}自主团{else if $goods['selltype']==4}阶梯团{else if $goods['selltype']==5}抽奖团{else if $goods['selltype']==6}新专团{else if $goods['selltype']==7}订金团{else if $goods['selltype']==10}砍价{/if}</span><br>
+		<span class="label label-info">分类：{php echo cutstr($goods['typename'], 30, true);}</span>
+
+	</td>
+	<!--<td class="text-left" style="line-height:25px;">-->
+
+		<!--<span class="label label-warning" style="{if $goods['selltype']==7}display:none{/if};">起团人数：{$goods['groupnum']}人</span><br>-->
+		<!--<span class="label label-info">团购时限：{$goods['endtime']}小时</span>-->
+
+	<!--</td>-->
+	<!--<td class="text-left" style="line-height:25px;">-->
+		<!--{if $goods['selltype']==7}-->
+		<!--<span class="label label-warning">定金价：￥{php echo number_format($goods['preprice'], 2)}</span><br>-->
+		<!--{else}-->
+		<!--<span class="label label-warning">拼团价：￥{php echo number_format($goods['gprice'], 2)}</span><br>-->
+		<!--{/if}-->
+		<!--<span class="label label-info">单买价：￥{php echo number_format($goods['oprice'], 2)}</span>-->
+	<!--</td>-->
+	<td class="text-left" style="line-height:25px;">
+		<span class="label label-warning">库存：{$goods['gnum']}</span><br>
+		<span class="label label-info">销量：{$goods['salenum']}</span>
+
+	</td>
+
+	<td class="text-center" style="position:relative;">
+		<!--<a href="javascript:;" class="js-goods-copy" goods-id="{$goods['id']}" >复制商品</a>-->
+		<a href="javascript:;" data-id="{$goods['id']}"  data-url="{php echo web_app_url('goods/detail',array('id'=>$goods['id']))}" id="js-copy{$goods['id']}" class="js-copy">复制链接</a><br>
+		<a href="{php echo web_url('goods/kanjia', array('op' => 'post','id' => $goods['id']))}" class="">编辑</a>
+
+		{if intval($_GPC['status']) == 1}
+		-<a href="javascript:;" class="js-sellout-goods" goods-id="{$goods['id']}">售罄</a>
+		- <a href="javascript:;" class="js-off-shelves-goods" goods-id="{$goods['id']}">下架</a>
+		{/if}
+		{if intval($_GPC['status']) == 2}
+		- <a href="javascript:;" class="js-on-shelves-goods" goods-id="{$goods['id']}">上架</a>
+		- <a href="javascript:;" class="js-delete-goods" goods-id="{$goods['id']}">删除</a>
+		{/if}
+		{if intval($_GPC['status']) == 4}
+		- <a href="javascript:;" class="js-on-shelves-goods" goods-id="{$goods['id']}">上架</a>
+		- <a href="javascript:;" class="js-remove-goods" goods-id="{$goods['id']}">彻底删除</a>
+		{/if}
+		<br>
+
+		<a href="{php echo web_url('goods/goods', array('op' => 'sendnotice','id' => $goods['id'],'type'=>1))}" class="upjia" {if $goods['isupjia']==0} style="display:none" {/if}>上架通知</a>
+		<a href="{php echo web_url('goods/goods', array('op' => 'sendnotice','id' => $goods['id'],'type'=>2))}" class="downjia"{if $goods['isdownjia']==0} style="display:none" {/if}>降价通知</a>
+	</td>
+</tr>
+        {php $i++;}
+    {/loop}
+    <tr>
+        <td colspan="7">{$pager}</td>
+    </tr>
+
+</table>
+<script>
+    //复制商品
+    $(".js-goods-copy").click(function (e) {
+
+        e.stopPropagation();
+        var html = "复制本商品,将保存在【砍价活动】中！";
+        var id = $(this).attr('goods-id');
+        util.nailConfirm(this, function (state) {
+            if (!state) return;
+            $.post("{php echo web_url('goods/kanjia/copy');}", {id: id}, function (data) {
+                if (!data.errno) {
+                    util.tips("复制成功");
+                    location.href = "{php echo web_url('goods/kanjia/list');}";
+                }
+                ;
+            }, 'json');
+        }, {html: html});
+    });
+    //复制链接
+    require(['jquery', 'util'], function($, util){
+        $('.js-copy').each(function(){
+            var id=$(this).attr('data-id');
+            util.clip($("#js-copy"+id), $(this).attr('data-url'));
+        });
+    });
+</script>
+<script>
+
+
+    //加载一级分类
+    $.get("{php echo web_url('goods/kanjia/parent')}",{},function(res){
+
+        var html="<option value=''>请选择一级分类</option>";
+        var category=JSON.parse(res).category;
+        for(var ij=0;ij<category.length;ij++){
+            html+='<option value="'+category[ij].id+'">'+category[ij].name+'</option>';
+        }
+        $('.categoryI').html(html);
+    });
+    function categoryIC(e){
+        if(!$('.categoryI option:selected').val()){
+            $('.categoryII').html("<option value=''>请选择二级分类</option>");
+            return false;
+        }
+        console.log($(e).find('option:selected').val());
+        $.get("{php echo web_url('goods/kanjia/child')}",{id:$(e).find('option:selected').val()},function(res){
+            var html="<option value=''>请选择二级分类</option>";
+            var category=JSON.parse(res).child;
+            for(var ij=0;ij<category.length;ij++){
+                html+='<option value="'+category[ij].id+'">'+category[ij].name+'</option>';
+            }
+
+            $('.categoryII').html(html);
+        });
+    }
+
+    if("{$_GPC['category']['parentid']}") {
+        setTimeout(function () {
+            var parentV = "{$_GPC['category']['parentid']}";
+            var childV = "{$_GPC['category']['childid']}";
+            $('option[value="' + parentV + '"]').attr('selected', 'selected');
+            $('option[value="' + childV + '"]').attr('selected', 'selected');
+        }, 700);
+    }
+
+
+    if (document.getElementsByClassName("upjia").length > 0) {
+        var upjias = document.getElementsByClassName("upjia");
+        var downjias = document.getElementsByClassName("downjia");
+        var len = upjias.length;
+        for (var i = 0; i < len; i++) {
+            upjias[i].onclick = function(ev) {
+                ev.preventDefault();
+                if (confirm("是否发送上架通知")){
+                    location.href = ev.target.href;
+                }
+            }
+            downjias[i].onclick = function(ev) {
+                ev.preventDefault();
+                if (confirm("是否发送降价通知")){
+                    location.href = ev.target.href;
+                }
+            }
+        }
+    }
+    function setProperty(obj,id,type){
+        $(obj).html($(obj).html() + "...");
+        $.post("{php echo web_url('goods/goods/setgoodsproperty')}"
+            ,{id:id,type:type, data: obj.getAttribute("data")}
+            ,function(d){
+
+                $(obj).html($(obj).html().replace("...",""));
+                if(type=='isshow'){
+                    $(obj).html( d.data=='1'?'上架':'下架');
+                }
+                $(obj).attr("data",d.data);
+                if(d.result==1){
+                    $(obj).toggleClass("label-info");
+                }
+            }
+            ,"json"
+        );
+    }
+    $(function(){
+        $(".scrollLoading").scrollLoading();
+        $(".js-displayorder").blur(function(e){
+            e.stopPropagation();
+            var $this = $(this);
+            var good_id = $this.data("id");
+            var displayorder = parseInt($this.val());
+            if (isNaN(displayorder)) {
+                $this.parent().addClass('has-error');
+                util.tips('必须为数字', 2000);
+                return false;
+            };
+            $.post("{php echo url('goods/kanjia/list/displayorder');}", {good_id : good_id, displayorder : displayorder}, function(data){
+                $this.parent().removeClass('has-error');
+                util.tips(data.message, 2000);
+            },'json');
+        });
+
+        $('.js-batch').click(function(e){
+            e.stopPropagation();
+            var goods_ids = [];
+            var $checkboxes = $('.items:checkbox:checked');
+            $checkboxes.each(function() {
+                if (this.checked) {
+                    goods_ids.push(this.value);
+                };
+            });
+
+            if (goods_ids.length == 0) {
+                util.tips('请选择要操作的商品!', 2000);
+                return false;
+            }
+            var op = '';
+            var html = '';
+            if ($(this).hasClass('js-on-shelves')) {
+                op = 'on_shelves';
+                html = '确认上架?';
+            } else if ($(this).hasClass('js-off-shelves')) {
+                op = 'off_shelves';
+                html = '确认下架?';
+            } else if ($(this).hasClass('js-delete')) {
+                op = 'delete';
+                html = '确认删除?';
+            } else if ($(this).hasClass('js-remove')) {
+                op = 'remove';
+                html = '确认选中彻底删除?';
+            }
+            else if ($(this).hasClass('js-shenhe')) {
+                op = 'shenhe';
+                html = '确认审核选中商品?';
+            }
+            var $this = $(this);
+            util.nailConfirm(this, function(state) {
+                if(!state) return;
+                $.post("{php echo web_url('goods/goods/batch');}", {funcop : op, goods_ids : goods_ids}, function(data){
+                    if(!data.errno){
+                        $checkboxes.each(function() {
+                            $(this).parent().parent().remove();
+                        });
+                    };
+                    util.tips(data.message, 2000);
+                }, 'json');
+            }, {html: html});
+        });
+
+        $('.js-delete-goods, .js-off-shelves-goods, .js-on-shelves-goods, .js-remove-goods,.js-sellout-goods').click(function(e) {
+            e.stopPropagation();
+            var id = $(this).attr('goods-id');
+            var _this = $(this).parent().parent();
+            if ($(this).hasClass('js-on-shelves-goods')) {
+                op = 'on_shelves';
+                html = '确认上架?';
+            } else if ($(this).hasClass('js-off-shelves-goods')) {
+                op = 'off_shelves';
+                html = '确认下架?';
+            } else if ($(this).hasClass('js-delete-goods')) {
+                op = 'delete';
+                html = '确认删除?';
+            } else if ($(this).hasClass('js-remove-goods')) {
+                op = 'remove';
+                html = '确认选中彻底删除?';
+            } else if ($(this).hasClass('js-sellout-goods')) {
+                op = 'sellout';
+                html = '确认设置售罄?';
+            }
+            util.nailConfirm(this, function(state) {
+                if(!state) return;
+                $.post("{php echo web_url('goods/goods/single_op')}", {funcop : op, id : id}, function(data){
+                    if(!data.errno){
+                        _this.remove();
+                    };
+                    util.tips(data.message, 2000);
+                }, 'json');
+            }, {html: html});
+        });
+        var $pop = null;
+        $('.scrollLoading').hover(function(){
+            var img = $(this).attr('src');
+            var obj = this;
+            var $pop = util.popover(obj, function($popover, obj){
+                obj.$popover = $popover;
+            }, '<div><img src="'+img+'" style="max-width:200px; max-height:200px;"></div>');
+        }, function(){
+            this.$popover.remove();
+        });
+    });
+</script>
+<script>
+    $(function() {
+        $(".scrollLoading").scrollLoading();
+        $(".js-displayorder").blur(function (e) {
+            e.stopPropagation();
+            var $this = $(this);
+            var good_id = $this.data("id");
+            var displayorder = parseInt($this.val());
+            if (isNaN(displayorder)) {
+                $this.parent().addClass('has-error');
+                util.tips('必须为数字', 2000);
+                return false;
+            }
+            $.post("{php echo url('goods/kanjia/list/displayorder');}", {
+                good_id: good_id,
+                displayorder: displayorder
+            }, function (data) {
+                $this.parent().removeClass('has-error');
+                util.tips(data.message, 2000);
+            }, 'json');
+        });
+    });
+    function showUser(str,gid)
+    {
+        var paixv = str;
+        var orid = gid;
+        $.post("{php echo web_url('goods/goods/numx')}",{oridd:orid,paixvv:paixv}
+            ,function(data){
+                util.tips('新的排序已保存！', 2000);
+
+            },'json'
+        );
+    }
+</script>
+{/if}
+
+{if $_GPC["op"] == "post"}
+
+<style>
+	#Choose{
+		position: fixed;
+		z-index: 100;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 100%;
+		background-color: rgba(0,0,0,0.7);
+		display: none;
+	}
+	#Choose>div{
+		width:65%;
+		height: 68%;
+		margin-top: 5%;
+		margin-left: 20%;
+		padding: 20px;
+		background-color: #f0f0f0;
+		border-radius: 5px;
+	}
+
+	a.thumbnail{
+		width: 150px;
+		height: 200px;
+		display: inline-block;
+		border: 4px solid #aaa;
+		margin: 0 15px 20px 15px;
+		padding: 0;
+	}
+	a.thumbnail.active,a.thumbnail:hover,a.thumbnail:focus{
+		border: 4px solid #f68e3a;
+	}
+	.thumbnail>img{
+		width: 100%;
+		height: 100%;
+	}
+	@media screen  and (max-width: 1600px){
+		.thumbnail{
+			width: 90px!important;
+			height: 120px!important;
+			margin: 0 15px 10px 15px!important;
+		}
+		#Choose>div{
+			padding: 10px 20px!important;
+		}
+	}
+</style>
+<script type="text/javascript" src="resource/js/lib/jquery-ui-1.10.3.min.js"></script>
+<!--<ul class="nav nav-tabs" id="myTab">-->
+<!--<li class="active" ><a href="#tab_basic">基本信息</a></li>-->
+<!--<li><a href="#tab_detail">简介详情</a></li>-->
+<!--<li><a href="#tab_concessions">促销方式</a></li>-->
+<!--<li><a href="#tab_hexiao">配送方式</a></li>-->
+<!--<li {if !$isoption['status']} style="display:none"{/if}><a href="#tab_option">规格库存</a></li>-->
+<!--<li><a href="#tab_share">分享设置</a></li>-->
+<!--<li><a href="#tab_param">商品属性</a></li>-->
+<!--<li {if !$isjieti['status']} style="display:none"{/if}><a href="#tab_level">阶梯/自选团</a></li>-->
+<!--<li><a href="#tab_luck">奖项设置</a></li>-->
+<!--</ul>-->
+<div class="main">
+	<div id="Choose">
+		<div>
+			<div style="text-align: center;margin-bottom: 20px">
+				<h2>选择销售模式</h2>
+			</div>
+			<div>
+				<div class="row" style="text-align: center">
+					<div>
+						{if $isshop==1}
+						<a data-val="0" href="#" class="thumbnail">
+							<img src="../../../../../../addons/lexiangpingou/web/resource/images/dm.png" alt="...">
+						</a>
+						{/if}
+						<a data-val="1" href="#" class="thumbnail">
+							<img src="../../../../../../addons/lexiangpingou/web/resource/images/sy.png" alt="...">
+						</a>
+						{if $islin['status']}
+						<a data-val="2" href="#" class="thumbnail">
+							<img src="../../../../../../addons/lexiangpingou/web/resource/images/lg.png" alt="...">
+						</a>
+						{/if}
+						{if $isjieti['status']}
+						<a data-val="3" href="#" class="thumbnail">
+							<img src="../../../../../../addons/lexiangpingou/web/resource/images/zx.png" alt="...">
+						</a>
+						{/if}
+					</div>
+				</div>
+				<div class="row" style="text-align: center">
+					<div>
+						{if $isjieti['status']}
+						<a data-val="4" href="#" class="thumbnail">
+							<img src="../../../../../../addons/lexiangpingou/web/resource/images/jt.png" alt="...">
+						</a>
+						{/if}
+						{if $ischoujian['status']}
+						<a data-val="5" href="#" class="thumbnail">
+							<img src="../../../../../../addons/lexiangpingou/web/resource/images/cj.png" alt="...">
+						</a>
+						<a data-val="6" href="#" class="thumbnail">
+							<img src="../../../../../../addons/lexiangpingou/web/resource/images/xz.png" alt="...">
+						</a>
+						{/if}
+						{if $isjieti2['status']}
+						<a data-val="7" href="#" class="thumbnail">
+							<img src="../../../../../../addons/lexiangpingou/web/resource/images/dj.png" alt="...">
+						</a>
+						{/if}
+					</div>
+				</div>
+			</div>
+			<div style="text-align: center;margin-top: 10px">
+				<a style="width: 150px" href="##" class="btn btn-primary chooseType">确定</a>
+			</div>
+		</div>
+	</div>
+	<form action="" method="post" class="form-horizontal form" id="form" style="position: relative">
+		<div class="tab-content">
+
+			<!--商品信息-->
+			<div class="tab-pane  active" id="tab_basic">
+				<script>
+                    sessionStorage.setItem('selltypeOld',"{$goods['selltype']}");
+				</script>
+				<?php
+				 if(empty($_GPC['selltype'])){
+				 	$_GPC['selltype']=intval($goods['selltype']);
+				 }else{
+				 	$_GPC['selltype']-=1;
+				 }
+				?>	
+				{php include wl_template('goods/goods_basicDingJinT');}
+				<div class="col-sm-12">
+					<a href="##" class="btn btn-primary col-lg-1 XinXi" onclick="gotoNext(this)">下一步</a>
+				</div>
+			</div>
+
+			<!--奖项设置-->
+			<div class="tab-pane" id="tab_luck">
+				<div class="panel panel-default">
+					<div class="panel-heading">奖项设置</div>
+					<div class="panel-body">
+						<div class="panel-body">
+							{php include wl_template('goods/goods_luck');}
+						</div>
+					</div>
+				</div>
+				<div class="col-sm-12">
+					<a href="##" class="btn btn-primary col-lg-1" style="margin-right:20px;"  onclick="gotoPrev(this)">上一步</a>
+					<a href="##" class="btn btn-primary col-lg-1" onclick="gotoNext(this)">下一步</a>
+				</div>
+			</div>
+
+			<!--规格-->{if $isoption['status']}
+			<div class="tab-pane" id="tab_option">
+				<div class="panel panel-default">
+					<div class="panel-heading">规格库存
+						<a target="_blank" style="cursor:pointer; float:right; font-weight:bold;" href="http://v.youku.com/v_show/id_XMTc0OTkwNzY2MA==.html?from=s1.8-1-1.2&spm=a2h0k.8191407.0.0">视频演示>></a>
+						<a target="_blank" style="cursor:pointer; float:right; margin-right:10px; font-weight:bold;" href="http://doc.lexiangpingou.cn/releaseProduct.html#ggkc">图文说明>></a>
+					</div>
+					<div class="panel-body">
+						<div class="panel-body">
+							{php include wl_template('goods/goods_option');}
+						</div>
+					</div>
+				</div>
+				<div class="col-sm-12">
+					<a href="##" class="btn btn-primary col-lg-1" style="margin-right:20px;"  onclick="gotoPrev(this)">上一步</a>
+					<a href="##" class="btn btn-primary col-lg-1 GuiGe" onclick="gotoNext(this)">下一步</a>
+				</div>
+			</div>
+			{/if}
+
+			<!--配送方式		-->
+			<div class="tab-pane" id="tab_hexiao">
+				<div class="panel panel-default">
+					<div class="panel-heading">配送方式<a target="_blank" style="cursor:pointer; float:right; font-weight:bold;" href="http://doc.lexiangpingou.cn/releaseProduct.html#psfs">图文说明>></a></div>
+					<div class="panel-body">
+						<div class="panel-body">
+							{php include wl_template('goods/goods_hexiao');}
+						</div>
+					</div>
+				</div>
+				<div class="col-sm-12">
+					<a href="##" class="btn btn-primary col-lg-1" style="margin-right:20px;"  onclick="gotoPrev(this)">上一步</a>
+					<a href="##" class="btn btn-primary col-lg-1 PeiSong" onclick="gotoNext(this)">下一步</a>
+				</div>
+			</div>
+
+			<!--促销方式		-->
+			<div class="tab-pane" id="tab_concessions">
+				<div class="panel panel-default">
+					<div class="panel-heading">促销方式<a target="_blank" style="cursor:pointer; float:right; font-weight:bold;" href="http://doc.lexiangpingou.cn/releaseProduct.html#cxfs">图文说明>></a></div>
+					<div class="panel-body">
+						<div class="panel-body">
+							{php include wl_template('goods/goods_concessions');}
+						</div>
+					</div>
+				</div>
+				<div class="col-sm-12">
+					<a href="##" class="btn btn-primary col-lg-1" style="margin-right:20px;"  onclick="gotoPrev(this)">上一步</a>
+					<a href="##" class="btn btn-primary col-lg-1 CuXiao" onclick="gotoNext(this)">下一步</a>
+				</div>
+			</div>
+
+
+			<!--阶梯团-->
+			<div class="tab-pane" id="tab_level" {if !$isjieti['status']} style="display:none"{/if}>
+			<div class="panel panel-default">
+				<div class="panel-heading">阶梯团<a target="_blank" style="cursor:pointer; float:right; font-weight:bold;" href="http://doc.lexiangpingou.cn/releaseProduct.html#jtt">图文说明>></a></div>
+				<div class="panel-body">
+					<div class="panel-body">
+						{php include wl_template('goods/goods_level');}
+					</div>
+				</div>
+			</div>
+			<div class="col-sm-12">
+				<a href="##" class="btn btn-primary col-lg-1" style="margin-right:20px;"  onclick="gotoPrev(this)">上一步</a>
+				<a href="##" class="btn btn-primary col-lg-1" onclick="gotoNext(this)">下一步</a>
+			</div>
+			<div class="col-sm-12">
+				<a href="##" class="btn btn-primary col-lg-1" style="margin-right:20px;"  onclick="gotoPrev(this)">上一步</a>
+				<a href="##" class="btn btn-primary col-lg-1" onclick="gotoNext(this)">下一步</a>
+			</div>
+		</div>
+
+		<!--商品属性-->
+		<div class="tab-pane" id="tab_param">
+
+			<!--分享设置		-->
+			<div class="tab-pane" id="tab_share">
+				<div class="panel panel-default">
+					<div class="panel-heading">分享设置<a target="_blank" style="cursor:pointer; float:right; font-weight:bold;" href="http://doc.lexiangpingou.cn/releaseProduct.html#fxsz">图文说明>></a></div>
+					<div class="panel-body">
+						<div class="panel-body">
+							{php include wl_template('goods/goods_share');}
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<!--简介详情-->
+			<div class="tab-pane" id="tab_detail">
+				<div class="panel panel-default">
+					<div class="panel-heading">简介详情<a target="_blank" style="cursor:pointer; float:right; font-weight:bold;" href="http://doc.lexiangpingou.cn/releaseProduct.html#jjxq">图文说明>></a></div>
+					<div class="panel-body">
+						<div class="panel-body">
+							{php include wl_template('goods/goods_detail');}
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="panel panel-default">
+				<div class="panel-heading">商品属性<a target="_blank" style="cursor:pointer; float:right; font-weight:bold;" href="http://doc.lexiangpingou.cn/releaseProduct.html#spsx">图文说明>></a></div>
+				<div class="panel-body">
+					<div class="panel-body">
+						{php include wl_template('goods/goods_param');}
+					</div>
+				</div>
+			</div>
+			<div class="col-sm-12">
+				<a href="##" class="btn btn-primary col-lg-1" style="margin-right:20px;"  onclick="gotoPrev(this)">上一步</a>
+				<input class="TJButtonSX" type="hidden" name="id" value="{$goods['id']}" />
+				<input type="submit" name="submit" value="提交" class="btn btn-primary col-lg-1 TJButtonSX" />
+				<input class="TJButtonSX" type="hidden" name="token" value="{$_W['token']}" />
+			</div>
+		</div>
+
+</div>
+<div class="form-group col-sm-12 TJButtonCom">
+	<input type="hidden" name="id" value="{$goods['id']}" />
+	<input type="submit" name="submit" value="提交" class="btn btn-primary col-lg-1" style="float: left;position: relative;top: -34px;left:245px;"/>
+	<input type="hidden" name="token" value="{$_W['token']}" />
+</div>
+</form>
+
+</div>
+<script>
+    if(getQueryString('selltype')){
+        if(getQueryString('selltype')=='100'){
+            $('#Choose').fadeIn();
+        }
+        $('.TJButtonCom').remove();
+//		$('#Choose').fadeIn();
+
+    }else{
+        $('.TJButtonSX').remove();
+    }
+    $('#Choose a[data-val="'+sessionStorage.getItem('selltypeOld')+'"]').addClass('active');
+    $('#Choose').on('click','.thumbnail',function(){
+        $('#Choose .thumbnail').removeClass('active');
+        $(this).addClass('active');
+    });
+    $('.chooseType').click(function(){
+        var raInput=$('#Choose .thumbnail');
+        var j= 0,ij;
+        for(var i=0;i<raInput.length;i++){
+            if($(raInput[i]).hasClass('active')){
+                j++;
+                ij=$(raInput[i]).attr('data-val');
+            }
+        }
+        if(j==0){
+            util.tips("请选择购买模式");
+            return false;
+        }
+        location.href="{php echo web_url('goods/goods', array('op' => 'post','id' => $goods['id']))}"+'&selltype='+(ij-0+1);
+    });
+    //获取url参数
+    function getQueryString(name) {
+        var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
+        var r = window.location.search.substr(1).match(reg);
+        if (r != null) return decodeURI(r[2]); return null;
+    }
+    var sTYPE=getQueryString('selltype');
+    var sT=sTYPE||(sessionStorage.getItem('selltypeOld')-0+1);
+    $('#chooseMS label>input').attr('disabled','');
+    $('#chooseMS label>input[value="'+(sT-1)+'"]').attr('checked','checked').removeAttr('disabled');
+    var switchType=sTYPE?(sTYPE-1):Number({$goods['selltype']});
+    switch (switchType)
+    {
+        case 0://单买
+            $('#tab_hexiao,#tab_level,#tab_luck').remove();
+            break;
+        case 1://随意
+            $('#tab_level,#tab_luck').remove();
+            break;
+        case 2://邻购
+            $('#tab_level,#tab_luck').remove();
+            break;
+        case 3://自选
+            $('#tab_option,#tab_level,#tab_luck').remove();
+            break;
+        case 4://阶梯
+            $('#tab_option,#tab_level,#tab_luck').remove();
+            break;
+        case 5://抽奖
+            $('#tab_level').remove();
+            break;
+        case 6://新专
+            $('#tab_level,#tab_luck').remove();
+            break;
+        case 7://订金
+            $('#tab_option,#tab_level,#tab_luck').remove();
+            break;
+        default:
+            $('#tab_level,#tab_luck').remove();
+            break;
+    }
+    function checkStoreVal() {
+        if (document.getElementById("hasoption")){
+            var option = document.getElementById("hasoption"),
+                storeNum = document.querySelector("input[name='goods[gnum]']");
+            if (document.getElementById("hasoption").checked) {
+                var optionStocks = document.getElementsByClassName("option_stock"),
+                    len = optionStocks.length,
+                    sum = 0;
+                for (var i = 0; i < len; i++) {
+                    sum += Number(optionStocks[i].value);
+                }
+                storeNum.value = sum;
+            }
+        }
+    }
+    function checkJttValue() {
+        var price = document.querySelector('[name="goods[gprice]"]').value;
+        var groupNum = document.querySelector('[name="goods[groupnum]"]').value;
+        if (document.querySelector('input[value="2"][name="goods[group_level_status]"]').checked) {
+            var gprice = document.querySelector(".param_value").value;
+            var gnums = document.querySelectorAll(".param_title");
+            var groupnum = gnums[gnums.length - 1].value;
+            if (Number(price) == Number(gprice) && Number(groupNum) == Number(groupnum)) {
+                return true;
+            }
+            else {
+                return false;
+            }
+        }
+        else {
+            return true;
+        }
+    }
+    $(function () {
+        window.optionchanged = false;
+        $('#myTab a').click(function (e) {
+            e.preventDefault();//阻止a链接的跳转行为
+            $(this).tab('show');//显示当前选中的链接及关联的content
+        })
+    });
+    $(function(){
+        $('#form').submit(function(self){
+			if($('input[name="goods[share_image]"]').val()==""){
+				util.message('请上传分享图片');
+				return false;
+			}
+            if($('#hasoption')[0].checked){
+                if($('#options table').length>0) {
+                    for (var i = 0; i < $('#options tbody input[type="text"]').length; i++) {
+                        if ($('#options tbody input[type="text"]')[i].value == '') {
+                            util.message('请填写规格数据');
+                            return false;
+                        }
+                    }
+                }else{
+                    util.message('请填写规格数据');
+                    return false;
+                }
+            }
+
+            var media_id = $("input[name=wechat-video]").attr("meadia_id");//获取mediaid
+            $("#media_id").attr("value",media_id);
+            //获取url
+            var url = $("input[name=wechat-video]").attr("url");
+            $("#video_url").attr("value",url);
+//			$('input[name="submit"]').attr('disabled','');
+            checkStoreVal();
+            return true;
+        });
+    });
+
+
+    function gotoPrev(self){//上一页
+        $('.tab-content>.tab-pane').removeClass('active');
+        $(self).parent().parent().prev().addClass('active');
+    }
+    function gotoNext(self){//下一页
+        if($(self).hasClass('XinXi')) {//商品属性页
+            //公用判断
+            if(!$('select[name="goods[fk_typeid]"]').val()){
+                util.message('请填写商品分类');
+                return false;
+            }
+            if ($('input[name="goods[gname]"]').val() == '') {
+                util.message('请填写商品名称');
+                return false;
+            }
+            if ($('input[name="goods[gname]"]').val().length > 30) {
+                util.message('为保证支付正常，商品名称字数不能大于30个字');
+                return false;
+            }
+            if ($('input[name="goods[unit]"]').val() == '') {
+                util.message('请填写商品单位');
+                return false;
+            }
+            if ($('input[name="goods[gnum]"]').val() == ''||$('input[name="goods[gnum]"]').val() == ''<0) {
+                util.message('请填写商品库存');
+                return false;
+            }
+            if ($('input[name="goods[oprice]"]').val() == ''||$('input[name="goods[oprice]"]').val()<0) {
+                util.message('请填写商品单买价');
+                return false;
+            }
+            if ($('input[name="goods[mprice]"]').val() == ''||$('input[name="goods[mprice]"]').val()<0) {
+                util.message('请填写商品市场价');
+                return false;
+            }
+            if ($('input[name="goods[gimg]"]').val() == '') {
+                util.message('请上传首页图片');
+                return false;
+            }
+
+
+            var type = getQueryString('selltype')?(getQueryString('selltype')-1):(sessionStorage.getItem('selltypeOld')-0);
+            if (type == 0) {//单买
+                $('.DJdanmai,.pic').css('display','none');
+            } else if (type == 1 || type == 2 || type == 5 || type == 6) {
+                if ($('input[name="goods[gprice]"]').val() == ''||$('input[name="goods[gprice]"]').val()<=0) {
+                    util.message('请填写团购价');
+                    return false;
+                }
+                if ($('input[name="goods[groupnum]"]').val() == ''||$('input[name="goods[groupnum]"]').val()<1) {
+                    util.message('请填写起团人数');
+                    return false;
+                }
+                if ($('input[name="endtime"]').val() == ''||$('input[name="endtime"]').val()<1) {
+                    util.message('请填写组团限时');
+                    return false;
+                }
+            } else if (type == 3 ||type == 4) {//阶梯
+                if(type == 4){$('.DJdanmai,.pic').css('display','none');}
+                if ($('#param-items-level tr').length < 1) {
+                    util.message('请添加阶梯数据');
+                    return false;
+                }
+                if ($('#param-items-level input[name="param_groupnum[]"]').val() == '' || $('#param-items-level input[name="param_groupprice[]"]').val() == '') {
+                    util.message('阶梯数据不能为空');
+                    return false;
+                }
+                if ($('input[name="endtime"]').val() == ''||$('input[name="endtime"]').val()<1) {
+                    util.message('请填写组团限时');
+                    return false;
+                }
+            }else if (type == 7) {//订金
+                //$('.DJdanmai,.DMdanmai,.pic').css('display','none');
+                $('.pic').css('display','none');
+                if ($('input[name="goods[preprice]"]').val() == ''||Number($('input[name="goods[preprice]"]').val())<0.01) {
+                    util.message('请填写订金金额');
+                    return false;
+                }
+                if ($('#param-items-level tr').length < 1) {
+                    util.message('请添加阶梯数据');
+                    return false;
+                }
+                if ($('#param-items-level input[name="param_groupnum[]"]').val() == '' || $('#param-items-level input[name="param_groupprice[]"]').val() == '') {
+                    util.message('阶梯数据不能为空');
+                    return false;
+                }
+                if (Number($('input[name="goods[oprice]"]').val())<Number($('input[name="goods[preprice]"]').val())) {
+                    util.message('商品价格逻辑设置错误，订金金额不能大于单买价，请重新设置！');
+                    return false;
+                }
+                for(var i=0;i<$('input[name="param_groupprice[]"]').length;i++){
+                    if(Number($('input[name="param_groupprice[]"]')[i].value)<Number($('input[name="goods[preprice]"]').val())){
+                        util.message('商品价格逻辑设置错误，订金金额不能大于团购价，请重新设置！');
+                        return false;
+                    }
+                }
+                if ($('input[name="endtime"]').val() == ''||$('input[name="endtime"]').val()<1) {
+                    util.message('请填写组团限时');
+                    return false;
+                }
+            }
+        }
+		if($(self).hasClass('GuiGe')){
+			for(var i=0;i<$('.spec_title').length;i++){
+				var str = $($('.spec_title')[i]).val();
+				var patt1 = new RegExp(/[\u4e00-\u9fa5_a-zA-Z]/);
+				var result = patt1.test(str);
+				if(!result){
+					util.message('规格名必须包含字母或汉字');
+					return false;
+				}
+			}
+			for(var i=0;i<$('.spec_item_title').length;i++){
+				var str = $($('.spec_item_title')[i]).val();
+				var patt1 = new RegExp(/[\u4e00-\u9fa5_a-zA-Z]/);
+				var result = patt1.test(str);
+				if(!result){
+					util.message('规格项必须包含字母或汉字');
+					return false;
+				}
+			}
+			if($('[name="last_price"]').val()==''){
+                util.message('请填写最低价');
+                return false;
+			}
+            if($('[name="rule_pice[]"]')[0].value==''||$('[name="rule_start[]"]')[0].value==''||$('[name="rule_end[]"]')[0].value==''){
+                util.message('请填写砍价规格');
+                return false;
+            }
+			//判断单买价比最大值大
+			var oprice=$('[name="goods[oprice]"]').val();
+            var tmp = [];
+            for (var j=0;j<$('[name="rule_pice[]"]').length;j++){
+				tmp.push($('[name="rule_pice[]"]')[j].value);
+			}
+            tmp.sort(function(a,b){return b-a});
+            var max = tmp[0];
+            if(max<oprice){
+                util.message('设定最大金额必须大于单买价');
+                return false;
+			}
+		}
+        if($(self).hasClass('PeiSong')){//配送方式
+            for(var i=0;i<$('#tab_hexiao .radio>input').length;i++){
+                if($('#tab_hexiao .radio>input')[i].checked){
+                    var num=Number($($('#tab_hexiao .radio>input')[i]).attr('data-val'));
+                    if(num==1||num==7){
+                        if($('#dispatch input').length<1){
+                            util.message('请选择运费模板');
+                            return false;
+                        }
+                        if($('#stores input').length<1){
+                            util.message('请选择自提门店');
+                            return false;
+                        }
+                    }else if(num==2||num==4){
+                        if($('#dispatch input').length<1){
+                            util.message('请选择运费模板');
+                            return false;
+                        }
+                    }else if(num==3||num==6){
+                        if($('#stores input').length<1){
+                            util.message('请选择自提门店');
+                            return false;
+                        }
+                    }
+                }
+            }
+        }
+        if($(self).hasClass('GuiGe')) {//规格
+            if($('#hasoption')[0].checked){
+                if($('#options table').length>0) {
+                    for (var i = 0; i < $('#options tbody input[type="text"]').length; i++) {
+                        if ($('#options tbody input[type="text"]')[i].value == '') {
+                            util.message('请填写规格数据');
+                            return false;
+                        }
+                    }
+                }else{
+                    util.message('请填写规格数据');
+                    return false;
+                }
+            }
+        }
+        if($('input[name="goods[commissiontype]"]').length>0) {
+            if ($(self).hasClass('CuXiao')) {//促销方式
+                for (var i = 0; i < 2; i++) {
+                    if ($('input[name="goods[commissiontype]"]')[i].checked && $('input[name="goods[commission]"]').val() == "") {
+                        util.message('请选填写佣金');
+                        return false;
+                    }
+                }
+            }
+        }
+        $('.tab-content>.tab-pane').removeClass('active');
+        $(self).parent().parent().next().addClass('active');
+    }
+
+    function changeMS(){
+        $('#Choose').fadeIn();
+    }
+</script>
+
+{/if}
+
+
+
+
+
+{php include wl_template('common/footer');}

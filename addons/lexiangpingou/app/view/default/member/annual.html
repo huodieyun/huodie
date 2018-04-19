@@ -1,0 +1,101 @@
+{php include wl_template('common/header');}
+<style type="text/css">
+    @font-face {
+        font-family: 'yuanti';
+        src: url('{TG_URL_ARES}images/member/yt.TTF');
+    }
+    #page-annual {
+        background-size: cover;
+        background-position: center;
+        background-image: url({php echo $fans['fans_data_image'] ? tomedia($fans['fans_data_image']) : TG_URL_ARES.'images/member/long.png'});
+    }
+    #page-annual .msg {
+        color: #fff;
+        padding: 20px 30px;
+        /*font-family: 'yuanti';*/
+        line-height: 25px;
+    }
+/*    #page-annual .msg span {
+        color: red;
+    }*/
+    .ma {
+        width: 100px;
+        position: absolute;
+        bottom: 10px;
+        left: 37%;
+    }
+    .ma img {
+        width: 100%;
+    }
+    @media screen and (max-width: 320px) {
+        #page-annual .msg {
+            padding-bottom: 5px;
+            font-size: 12px;
+            line-height: 16px;
+        }
+        .ma {
+            width: 80px;
+        }
+    }
+</style>
+<div class="page-group" id="view">
+    <div class="page page-current" id="page-annual">
+        <div class="content infinite-scroll" >
+            <div class="msg">
+                <p>亲爱的<span>{$member['nickname']}</span></p>
+
+                <p>这一年里</p>
+
+                <p>您一共在<span>“{$uniacname}”</span>消费了<span>{php echo $data['total_pay']=="" ? '0' : $data['total_pay']}</span>元，支付了<span>{php echo $data['total_order'] == "" ? '0':$data['total_order']}</span>次订单</p>
+
+                <p>您热衷<span>{php echo $data['eager_type'] == 0 ? '单买' : '拼团'}</span>消费</p>
+
+                <p>您喜欢在<span>
+                    {if $data['consumption_time'] == 'am'}
+                        上午
+                    {elseif $data['consumption_time'] == 'pm'}
+                        下午
+                    {elseif $data['consumption_time'] == 'nm'}
+                        晚上
+                    {elseif $data['consumption_time'] == 'aam'}
+                        凌晨
+                    {else}
+                        什么时间
+                    {/if}
+                </span>消费</p>
+
+                <!-- <p>您最喜欢购买<span></span>元的产品，</p> -->
+                <!-- <p>并把这个好消息转发您的朋友</p> -->
+
+                <p>2017年，您在<span>“{$uniacname}”</span>参与最多的团人数是<span>{php echo $data['eager_tuan_num'] == '' ? '0': $data['eager_tuan_num']}</span>人</p>
+
+                <p>2017年，您在<span>“{$uniacname}”</span>参与过最大的团</p>
+                <p>团号：<span>{php echo $data['big_tuan']=='' ? '0' : $data['big_tuan']}</span>，<span>{php echo $data['big_tuan_num']=='' ? '0' : $data['big_tuan_num']} </span>人</p>
+
+                <p>2017年，您参与的团共计<span>{php echo $data['tuan'] == '' ? '0' : $data['tuan']}</span>次，其中成功<span>{php echo $data['success_tuan'] == '' ? '0' : $data['success_tuan']}</span>次</p>
+
+                <!-- <p>2017年，您参与的团成功的数量<span>{php echo $data['success_tuan'] == '' ? '0' : $data['success_tuan']}</span>次</p> -->
+
+                <p>2017年，您在<span>“{$uniacname}”</span>的排行是第<span>{php echo $data['sort'] == "" ? '0' : $data['sort']}</span>名</p>
+
+                <p>超越<span>{php echo $data['sort_part'] == "" ? '0' : $data['sort_part']*100 }%</span>人</p>
+
+
+<!--                 <p>2017年，您在<span>2017.12.09</span>日均消费金额</p>
+                <p><span>23</span>元</p> -->
+
+                <p>2017年已过去</p>
+                <p>2018年<span>“{$uniacname}”</span>继续为您服务</p>
+            </div>
+            <div class="ma">
+                <img src="{php echo $setting['followed_image']=='' ? '' : tomedia($setting['followed_image'])}">
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    console.log({$fans['fans_data_image']});
+    $('title').text('{$uniacname}');
+</script>
+
+{php include wl_template('common/footer');}

@@ -1,0 +1,64 @@
+{php include wl_template('common/header');}
+<style>
+    .form_submit{
+        display: -webkit-box;
+        display: -webkit-flex;
+        display: -ms-flexbox;
+        display: flex;
+        -webkit-box-pack: justify;
+        -webkit-justify-content: space-between;
+        -ms-flex-pack: justify;
+        justify-content: space-between;
+        -webkit-box-align: center;
+        -webkit-align-items: center; 
+        -ms-flex-align: center;
+        align-items: center;
+    }
+    .form_submit input[name ='file'] {
+        border:none; 
+    }
+    .table th {
+        text-align: center; 
+    }
+    table thead tr th:last-child, table tbody tr td:last-child {
+        text-align: center;
+    }
+</style>
+<div class="panel panel-info">
+    <div class="panel-heading">上传视频</div>
+    <div class="panel-body">
+        <form action="{php echo web_url('goods/upload_video',array('op'=>'upload'))}" method="post" enctype="multipart/form-data" class="form_submit">
+            <input type="file" name="file" class="btn btn-default">
+            <input type="text" name="title" id="title" class="form-control" placeholder="请输入备注">
+            <input type="submit" class="btn btn-default" >  
+        </form>
+    </div>
+</div>
+<div class="panel panel-default">
+    <div class="panel-heading">审核状态</div>
+    <table class="table table-hover" >
+        <tr>
+        <th>视频id</th>
+        <th>视频链接</th>
+        <th>审核状态</th>
+            <th>复制链接</th>
+        <th>备注</th>
+        </tr>
+        {loop $list $item}
+        <tr>
+
+        <td>{$item['id']}</td>
+        <td>{if empty($item["media_url"])}还未审核成功{else}{$item["media_url"]}{/if}</td>
+        <td>{if $item['status'] == 1}审核成功{else if $item['status'] == 2}审核失败{else}审核中{/if}</td>
+            <td><a href="{$item['media_url']}" target="_blank">复制链接</a></td>
+            <td>{$item["title"]}</td>
+        </tr>
+        {/loop}
+    </table>
+</div>
+
+    <script type="text/javascript" charset="utf-8" async="" data-requirecontext="_" data-requiremodule="jquery.zclip" src="../addons/lexiangpingou/web/resource/js/app/../../components/zclip/jquery.zclip.min.js"></script>
+<script>
+    require(['jquery', 'util'], function($, util){ $('.js-copy').each(function(){ var id=$(this).attr('data-id'); util.clip($("#js-copy"+id), $(this).attr('data-url')); }); });
+</script>
+{php include wl_template('common/footer');}

@@ -1,0 +1,135 @@
+<!-- 次卡start -->
+<div class="form-group">
+    <label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label">次卡</label>
+    <div class="col-xs-12 col-sm-8">
+        <div class="input-group">
+            <label class="radio radio-inline">
+                <input type="radio" name="goods[is_once_card]" value="1" {if $goods["is_once_card"] == 1}checked="checked"{/if}> 开
+            </label>
+            <label class="radio radio-inline">
+                <input type="radio" name="goods[is_once_card]" value="0" {if $goods["is_once_card"] == 0}checked="checked"{/if}> 关
+            </label>
+        </div>
+    </div>
+</div>
+<div id="one-card" {if $goods["is_once_card"] != 1}hidden{/if}>
+    <div class="form-group">
+        <label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label">时长</label>
+        <div class="col-xs-12 col-sm-8">
+            <div class="input-group">
+                <input type="number" name="goods[once_card_day]" class="form-control" value="{$goods['once_card_day']}">
+                <span class="input-group-addon">天</span>
+            </div>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label">发货／核销次数</label>
+        <div class="col-xs-12 col-sm-8">
+            <div class="input-group">
+                <input type="number" name="goods[once_card_num]" class="form-control" value="{$goods['once_card_num']}">
+            </div>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label">发货／核销时间表</label>
+        <div class="col-xs-12 col-sm-8">
+            <div class="form-group">
+                星期一   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <label class="radio radio-inline">
+                    <input type="radio" name="goods[once_card_mon]" value="1" {if $goods["once_card_mon"] == 1}checked="checked"{/if}> 显示
+                </label>
+                <label class="radio radio-inline">
+                    <input type="radio" name="goods[once_card_mon]" value="0" {if $goods["once_card_mon"] == 0}checked="checked"{/if}> 不显示
+                </label>
+            </div>
+            <div class="form-group">
+                星期二   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <label class="radio radio-inline">
+                    <input type="radio" name="goods[once_card_tues]" value="1" {if $goods["once_card_tues"] == 1}checked="checked"{/if}> 显示
+                </label>
+                <label class="radio radio-inline">
+                    <input type="radio" name="goods[once_card_tues]" value="0" {if $goods["once_card_tues"] == 0}checked="checked"{/if}> 不显示
+                </label>
+            </div>
+            <div class="form-group">
+                星期三   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <label class="radio radio-inline">
+                    <input type="radio" name="goods[once_card_wed]" value="1" {if $goods["once_card_wed"] == 1}checked="checked"{/if}> 显示
+                </label>
+                <label class="radio radio-inline">
+                    <input type="radio" name="goods[once_card_wed]" value="0" {if $goods["once_card_wed"] == 0}checked="checked"{/if}> 不显示
+                </label>
+            </div>
+            <div class="form-group">
+                星期四   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <label class="radio radio-inline">
+                    <input type="radio" name="goods[once_card_thur]" value="1" {if $goods["once_card_thur"] == 1}checked="checked"{/if}> 显示
+                </label>
+                <label class="radio radio-inline">
+                    <input type="radio" name="goods[once_card_thur]" value="0" {if $goods["once_card_thur"] == 0}checked="checked"{/if}> 不显示
+                </label>
+            </div>
+            <div class="form-group">
+                星期五   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <label class="radio radio-inline">
+                    <input type="radio" name="goods[once_card_fir]" value="1" {if $goods["once_card_fir"] == 1}checked="checked"{/if}> 显示
+                </label>
+                <label class="radio radio-inline">
+                    <input type="radio" name="goods[once_card_fir]" value="0" {if $goods["once_card_fir"] == 0}checked="checked"{/if}> 不显示
+                </label>
+            </div>
+            <div class="form-group">
+                星期六  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <label class="radio radio-inline">
+                    <input type="radio" name="goods[once_card_sat]" value="1" {if $goods["once_card_sat"] == 1}checked="checked"{/if}> 显示
+                </label>
+                <label class="radio radio-inline">
+                    <input type="radio" name="goods[once_card_sat]" value="0" {if $goods["once_card_sat"] == 0}checked="checked"{/if}> 不显示
+                </label>
+            </div>
+            <div class="form-group">
+                星期日   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <label class="radio radio-inline">
+                    <input type="radio" name="goods[once_card_sun]" value="1" {if $goods["once_card_sun"] == 1}checked="checked"{/if}> 显示
+                </label>
+                <label class="radio radio-inline">
+                    <input type="radio" name="goods[once_card_sun]" value="0" {if $goods["once_card_sun"] == 0}checked="checked"{/if}> 不显示
+                </label>
+            </div>
+
+            <div class="form-group">
+                半个月   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <label class="radio radio-inline">
+                    <input type="radio" name="goods[once_card_half_month]" value="1" {if $goods["once_card_half_month"] == 1}checked="checked"{/if}> 显示
+                </label>
+                <label class="radio radio-inline">
+                    <input type="radio" name="goods[once_card_half_month]" value="0" {if $goods["once_card_half_month"] == 0}checked="checked"{/if}> 不显示
+                </label>
+            </div>
+
+            <div class="form-group">
+                一个月   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <label class="radio radio-inline">
+                    <input type="radio" name="goods[once_card_month]" value="1" {if $goods["once_card_month"] == 1}checked="checked"{/if}> 显示
+                </label>
+                <label class="radio radio-inline">
+                    <input type="radio" name="goods[once_card_month]" value="0" {if $goods["once_card_month"] == 0}checked="checked"{/if}> 不显示
+                </label>
+            </div>
+
+        </div>
+    </div>
+</div>
+<!-- 次卡end -->
+<script type="text/javascript">
+    /* 次卡 */
+    $("input[name='goods[is_once_card]']").click(function () {
+        var is_true = $(this).val();
+        console.log(is_true);
+        if (is_true == 1){
+            $("#one-card").show();
+        }else {
+            $("#one-card").hide();
+        }
+    });
+</script>

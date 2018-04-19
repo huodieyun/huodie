@@ -1,0 +1,37 @@
+body{height:100%;font:14px "微软雅黑";line-height:2.0;background-color:#e7e8eb;}
+.container{background: #fff; padding:20px 20px 20px 20px ;}
+
+@media all and (min-width: 750px) {
+		.btn-col{margin-top:40px;}
+    }
+.container{margin-top:50px!important;border-radius:10px;-webkit-transition:all .3s linear;}
+.container:hover{box-shadow:0px 1px 40px #666;}
+#mytab{border:none;margin-top:30px;}
+.tishi{color: #777777; margin-left: 3%;}
+.list-head{padding:35px 0;}
+#ddNum{background-color:brown;color:#fff}
+.table th, .table td { text-align:center;border:1px solid #ccc; }
+.ddlist table tr td{ height: 37px;}
+.ddlist table thead tr td{letter-spacing:6px;font-weight:bold;background-color:#efefef;color:#882e2e}
+.ddlist table thead tr td{border-bottom:none;}
+#telNumber[type="text"]{width:150px;height:37px;line-height:37px\9;border:1px solid #ccc;border-radius:5px;padding:0 10px;}
+#telNumber[type="text"]:hover{border:1px solid skyblue;box-shadow:0px 0px 1px skyblue;}
+#telNumber:focus{outline:none;}
+#seekTel{height:37px!important;margin-top:-3px!important}
+.orderWinpop{width:100%;height:auto;padding:5%;background-color:#fff;display:none;}
+.orderWinpop table thead tr td{background-color:#efefef;border-bottom:none;}
+.orderWinpop table tr td:first-child(0){background-color:skyblue;}
+.orderWinpop table tr:hover{background-color:#b1d8f9;box-shadow:0px 0px 2px #333;}
+.orderWinpop table tr td{height:36px;text-align:center;}
+.orderWinpop table tr td input[type="radio"]{width:14px;height:14px;}
+.orderWinpop .ordersubmit{display:none;}
+.layui-layer-content{min-height:100%!important;}
+#checkboxajax{display:block!important;width:18px;height:18px;float:left!important;margin-top:8px!important;}
+.text-danger{display:block;font-size:16px;float:left!important;margin-left:6px;font-weight:normal}
+.text-danger:hover{text-shadow:0px 1px 1px #333;}
+#ddIDtext:focus{border:1px solid #af7070;}
+#tolNum{font-size:18px;color:#c56202;}
+
+
+
+ 

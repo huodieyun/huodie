@@ -1,0 +1,439 @@
+{php include wl_template('common/header');}
+<style>
+	.my{
+		height:inherit;
+		background: inherit;
+		/*//margin-bottom: 90px;*/
+	}
+	.my_head_name{
+		color: #fff;
+	}
+	.my_head{
+		background:{$_W['system_color']} url({TG_URL_ARES}/images/template-top.png) 50% no-repeat;
+	}
+	{if $uniacid_tpl['tpl']==8199||$uniacid_tpl['tpl']==8200||$uniacid_tpl['tpl']==8206||$uniacid_tpl['tpl']==8207}
+	.wode i{
+		background-position: -195px 0!important;
+	}
+	.bottombarr a:last-child span{
+		color: #e4393c;
+		opacity: 0.9;
+	}
+	{/if}
+	.vip{
+		display: flex;
+		display: -webkit-flex;
+		justify-content: center;
+		-webkit-justify-content: center;
+		color: #fff;
+		margin-top: 10px;
+	}
+	.my_transaction{
+		position: relative;
+		z-index: 2;
+	}
+	.my_transaction3 li{
+		float: inherit;
+		display: inline-block;
+		width: 32%;
+	}
+	.vip>div{
+		margin: 0 10px;
+		padding: 10px;
+		border: 1px solid #fff;
+		border-bottom: none;
+		border-top-left-radius: 10px;
+		border-top-right-radius: 10px;
+		-webkit-box-flex: 1;      /* OLD - iOS 6-, Safari 3.1-6 */
+		-moz-box-flex: 1;         /* OLD - Firefox 19- */
+		-webkit-flex: 1;          /* Chrome */
+		-ms-flex: 1;              /* IE 10 */
+		flex: 1;                  /* NEW, Spec - Opera 12.1, Firefox 20+ */
+		font-size: 12px;
+	}
+	.rightY{
+		content: " ";
+		display: inline-block;
+		-webkit-transform: rotate(45deg);
+		transform: rotate(45deg);
+		height: 6px;
+		width: 6px;
+		border-width: 2px 2px 0 0;
+		border-color: #fff;
+		border-style: solid;
+		position: relative;
+		top: -1px;
+		margin-left: .3em;
+	}
+	#vip_detail,.member_leave{
+		position: fixed;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 100%;
+		box-sizing: border-box;
+		background: rgba(0,0,0,0.7);
+		z-index: 9999;
+		display: none;
+	}
+	#vip_detail>div,.member_leave>div{
+		top: 13%;
+		left: 5%;
+		width: 90%;
+		height: 80%;
+		box-sizing: border-box;
+		background: #fff;
+		z-index: 10;
+		padding: 10px;
+		position: absolute;
+		overflow-y: auto;
+	}
+	#vip_detail>span,.member_leave>span{
+		position: fixed;
+		top: 3%;
+		right: 3%;
+		color: #fff;
+		padding: 10px;
+	}
+	#vip_detail>span>i:first-child,.member_leave>span>i:first-child{
+		font-size: 20px;
+	}
+	#vip_detail>span>i:last-child,.member_leave>span>i:last-child{
+		height: 25px;
+		width: 2px;
+		display: block;
+		background: #fff;
+		position: relative;
+		top: -9px;
+		left: 10px;
+	}
+	#vip_detail .detail_HY{
+		display: flex;
+		display: -webkit-flex;
+		align-items: center;
+		-webkit-align-items: center;
+	}
+	.detail_HY img{
+		width: 25px;
+		height: 25px;
+	}
+	.detail_HY>div{
+		margin: 0 10px;
+		position: relative;
+	}
+	.detail_HY>div>span{
+		display: block;
+		height: 15px;
+		border-radius: 5px;
+		background:#ddd;
+	}
+	.detail_HY>div>i{
+		position: absolute;
+		text-align: center;
+		right: 5px;
+		font-size: 12px;
+		top: -2px;
+	}
+	.detail_HY.active>div>span{
+		background:#0894ec;
+	}
+	.detail_HY.active h5,.detail_HY.active>span{
+		color:#0894ec;
+	}
+	.detail_xian{
+		height: 25px;
+		width: 1px;
+		margin-left: 33%;
+		background:#ddd;
+	}
+	#vip_detail .detail_xian:last-child{
+		display: none!important;
+	}
+	.weui_cells{
+		margin-top: 0.5em;
+		/*position: inherit;*/
+	}
+</style>
+<div class="page-group">
+    <div class="page page-current" id="page-member">
+		<div class="content">
+			<div class="my">
+                <div class="my_head">
+                    <div class="my_head_pic">
+                        <img id="uinLogo" class="my_head_img" width="130" height="130" alt="" src="{$member['avatar']}">
+                    </div>
+                    <div class="my_head_info">
+                        <h4 id="nickname" class="my_head_name ">{$member['nickname']}</h4>
+                    </div>
+                    {if $level_set["status"] == 0 }
+					<div class="vip" onclick="$('#vip_detail').fadeIn()" style="display:none">
+						<div style="margin-right:10px;">会员等级: <span>{$level_rights['name']}</span><div class="rightY"></div></div>
+						<div>享受<span>{$level_rights['rights']}</span>折优惠</div>
+					</div>
+                    {else}
+                    <div class="vip" onclick="$('#vip_detail').fadeIn()" style="{if $level==0 || $level =='0'}display:none{/if}">
+                            <div style="margin-right:10px;">会员等级: <span>{$level_rights['name']}</span><div class="rightY"></div></div>
+                            <div>享受<span>{$level_rights['rights']}</span>折优惠</div>
+                        </div>
+                </div>
+                    {/if}
+
+
+                <ul class="my_transaction my_transaction3">
+            	<li>
+					<a href="javascript:;">
+						<div class="my_transaction_txt"><i class="icon iconfont" style="color: #00AAFF;position: static;display: inline-block;">&#xe6ed;</i> &nbsp;余额</div>
+						<div class="my_transaction_num" id="fav_shop_total_count"><span>{$member['member_balance']}</span> 元</div>
+					</a>
+				</li>
+				<li>
+					<a href="{php echo $score['score_apply'] == 1 ? app_url('member/score/index') : '#'}">
+						<div class="my_transaction_txt"><i class="icon iconfont" style="color: #FF5D4F;position: static;display: inline-block;">&#xe673;</i> &nbsp;我的积分</div>
+						<div class="my_transaction_num" id="fav_shop_total_count"><span>{$member['score_balance']}</span> 分</div>
+					</a>
+				</li>
+				<li>
+					<a href="{php echo app_url('member/coupon')}">
+						<div class="my_transaction_txt"><i class="icon iconfont" style="color: #FFB900;position: static;display: inline-block;">&#xe6e0;</i> &nbsp;优惠券</div>
+						<div class="my_transaction_num" id="fav_item_total_count"><span>{$tatal}</span> 张</div>
+					</a>
+				</li>
+				</ul>
+            </div>
+			<div class="weui_cells weui_cells_access">
+				{if $fans['fans_data_apply'] == '1'}
+				<a class="weui_cell external" href="{php echo app_url('member/annual')}">
+					<div class="weui_cell_hd"><i class="icon iconfont iconal-likefill"></i></div>
+					<div class="weui_cell_bd weui_cell_primary">
+						<p>2017年终报告</p>
+					</div>
+					<div class="weui_cell_ft"></div>
+				</a>
+				{/if}
+                {if $member['member_status'] == 1}
+				<a class="weui_cell external" href="{php echo app_url('member/member/payment_code')}">
+					<div class="weui_cell_hd"><span class="icon icon-code"></span></div>
+					<div class="weui_cell_bd weui_cell_primary">
+						<p>付款码</p>
+					</div>
+					<div class="weui_cell_ft"></div>
+				</a>
+				<a class="weui_cell external" href="{php echo app_url('member/member_charge')}">
+					<div class="weui_cell_hd"><i class="icon iconfont iconal-test"></i></div>
+					<div class="weui_cell_bd weui_cell_primary">
+						<p>在线充值</p>
+					</div>
+					<div class="weui_cell_ft"></div>
+				</a>
+                {/if}
+                {if $kaiguan['member_apply'] == 1 || $member['member_status'] == 1}
+				<a class="weui_cell external" href="{php echo app_url('member/member')}">
+					<div class="weui_cell_hd"><i class="icon icon-friends"></i></div>
+					<div class="weui_cell_bd weui_cell_primary">
+						<p>会员信息</p>
+					</div>
+					<div class="weui_cell_ft"></div>
+				</a>
+                {/if}
+                {if $score['score_apply'] == 1}
+                <a class="weui_cell external" href="{php echo app_url('member/score/market')}">
+                	<div class="weui_cell_hd"><i class="icon iconfont iconal-test"></i></div>
+                	<div class="weui_cell_bd weui_cell_primary">
+                		<p>积分兑换</p>
+                	</div>
+                	<div class="weui_cell_ft"></div>
+                </a>
+                {/if}
+			</div>
+			<div class="weui_cells weui_cells_access">
+	            <a class="weui_cell external" href="{php echo app_url('order/order/list')}">
+	                <div class="weui_cell_hd"><i class="icon iconfont">&#xe791;</i></div>
+	                <div class="weui_cell_bd weui_cell_primary">
+	                    <p>我的订单</p>
+	                </div>
+	                <div class="weui_cell_ft"></div>
+	            </a>
+	            <a class="weui_cell external" href="{php echo app_url('order/mygroup/0')}">
+	                <div class="weui_cell_hd"><i class="icon iconfont">&#xe753;</i></div>
+	                <div class="weui_cell_bd weui_cell_primary">
+	                    <p>我的团</p>
+	                </div>
+	                <div class="weui_cell_ft"></div>
+	            </a>
+				<a class="weui_cell external" href="{php echo app_url('goods/kanjia/list')}">
+					<div class="weui_cell_hd"><i class="icon iconfont">&#xe753;</i></div>
+					<div class="weui_cell_bd weui_cell_primary">
+						<p>我的砍价</p>
+					</div>
+					<div class="weui_cell_ft"></div>
+				</a>
+	        </div>
+	        <div class="weui_cells weui_cells_access" style="margin-bottom: 50px;">
+	            <a class="weui_cell external" href="{php echo app_url('address/addmanage')}">
+	                <div class="weui_cell_hd"><i class="icon iconfont">&#xe651;</i></div>
+	                <div class="weui_cell_bd weui_cell_primary">
+	                    <p>我的地址</p>
+	                </div>
+	                <div class="weui_cell_ft"></div>
+	            </a>
+                {if $hexiao['saler'] == 1 && $saler}
+                <a class="weui_cell external" href="{php echo app_url('order/saler')}">
+                    <div class="weui_cell_hd"><i class="icon icon-friends"></i></div>
+                    <div class="weui_cell_bd weui_cell_primary">
+                        <p>核销佣金</p>
+                    </div>
+                    <div class="weui_cell_ft"></div>
+                </a>
+                {/if}
+                {if $hexiao['delivery'] == 1 && $delivery}
+                <a class="weui_cell external" href="{php echo app_url('order/delivery')}">
+                    <div class="weui_cell_hd"><i class="icon icon-friends"></i></div>
+                    <div class="weui_cell_bd weui_cell_primary">
+                        <p>派送佣金</p>
+                    </div>
+                    <div class="weui_cell_ft"></div>
+                </a>
+                {/if}
+                {if $setting['apply'] == 1 && $member['apply_status'] != 1}
+                <a class="weui_cell external" href="{php echo app_url('order/comjob')}">
+                    <div class="weui_cell_hd"><i class="icon icon-friends"></i></div>
+                    <div class="weui_cell_bd weui_cell_primary">
+                        <p>团长申请</p>
+                    </div>
+                    <div class="weui_cell_ft"></div>
+                </a>
+                {/if}
+                {if $commander}
+                <a class="weui_cell external" href="{php echo app_url('order/commander')}">
+                    <div class="weui_cell_hd"><i class="icon icon-friends"></i></div>
+                    <div class="weui_cell_bd weui_cell_primary">
+                        <p>团长佣金</p>
+                    </div>
+                    <div class="weui_cell_ft"></div>
+                </a>
+                {/if}
+				{if $partjobfunction['status']&&$config['base']['job']==1}
+				<a class="weui_cell external" href="{php echo app_url('order/mycashorder')}">
+	                <div class="weui_cell_hd"><i class="icon icon-friends"></i></div>
+	                <div class="weui_cell_bd weui_cell_primary">
+	                    <p>全民兼职</p>
+	                </div>
+	                <div class="weui_cell_ft"></div>
+	            </a>
+				{/if}
+				{if $wholesale['apply'] == 1}
+				<a class="weui_cell external" href="{php echo app_url('member/wholesale')}">
+	                <div class="weui_cell_hd"><i class="icon icon-friends"></i></div>
+	                <div class="weui_cell_bd weui_cell_primary">
+	                    <p>批发管理</p>
+	                </div>
+	                <div class="weui_cell_ft"></div>
+	            </a>
+				{/if}
+				{if $partjobfunction['status'] && $config['base']['job'] == 1 && !empty($leader)}
+				<a class="weui_cell external" href="{php echo app_url('member/leader')}">
+					<div class="weui_cell_hd"><i class="icon icon-friends"></i></div>
+					<div class="weui_cell_bd weui_cell_primary">
+						<p>组长管理</p>
+					</div>
+					<div class="weui_cell_ft"></div>
+				</a>
+				{/if}
+				{if $uniacid_tpl['tpl']==8200||$uniacid_tpl['tpl']==8206}
+				<a class="weui_cell external" href="{php echo app_url('goods/settled')}">
+					<div class="weui_cell_hd"><i class="icon icon-me"></i></div>
+					<div class="weui_cell_bd weui_cell_primary">
+						<p>商家入驻</p>
+					</div>
+					<div class="weui_cell_ft"></div>
+				</a>
+				{/if}
+                {if $level_set["status"] == 0 }
+				<a class="weui_cell external" href="javascript:;" onclick="$('.member_leave').fadeIn()" style="display: none">
+					<div class="weui_cell_hd"><i class="icon icon-card"></i></div>
+					<div class="weui_cell_bd weui_cell_primary">
+						<p>会员等级介绍</p>
+					</div>
+					<div class="weui_cell_ft"></div>
+				</a>
+                {else}
+                <a class="weui_cell external" href="javascript:;" onclick="$('.member_leave').fadeIn()">
+                    <div class="weui_cell_hd"><i class="icon icon-card"></i></div>
+                    <div class="weui_cell_bd weui_cell_primary">
+                        <p>会员等级介绍</p>
+                    </div>
+                    <div class="weui_cell_ft"></div>
+                </a>
+				{/if}
+
+
+	            <!--<a class="weui_cell external" href="{php echo app_url('member/coupon')}">-->
+	                <!--<div class="weui_cell_hd"><i class="icon iconfont">&#xe677;</i></div>-->
+	                <!--<div class="weui_cell_bd weui_cell_primary">-->
+	                    <!--<p>我的优惠券</p>-->
+	                <!--</div>-->
+	                <!--<div class="weui_cell_ft"></div>-->
+	            <!--</a>-->
+
+	        </div>
+			{if !$banquanfunction['status']}
+			<div style="text-align: center;font-size: 18px;color: #aaa" >
+				<a href="http://www.lexiangpingou.cn"><img src="{TG_URL_ARES}images/bbb.png" width="40%"></a><div>火蝶科技技术热线:400-626-1079</div>
+			</div>
+			{/if}
+		</div>
+
+
+
+	</div>
+</div>
+<div class="member_leave">
+					<span onclick="$(this).parent().fadeOut()">
+						<i class="iconal-roundclose"></i>
+						<i></i>
+					</span>
+	<div>
+		<h1 style="margin: 5px 0;text-align: center">会员等级说明</h1>
+		<div></div>
+	</div>
+</div>
+<div id="vip_detail">
+
+	<span onclick="$(this).parent().fadeOut()">
+		<i class="iconal-roundclose"></i>
+		<i></i>
+	</span>
+	<div>
+		{loop $resall $item}
+		<div class="detail_HY {if $level_rights['name']==$item['name']}active{/if}">
+			<h5 style="width: 30%">{$item['name']}</h5>
+			<img style="width: 10%" src="{$item['img']}" alt=""/>
+			<div style="width: 50%"><span style="width:{php echo $item['money']/$moneyMax['money']*100;}%"></span><i>满￥{$item['money']}</i></div>
+			<span style="width: 10%">{$item['rights']}折</span>
+		</div>
+		<div class="detail_xian"></div>
+
+		{/loop}
+	</div>
+</div>
+
+{php include wl_template('common/footerbar');}
+<script type="text/javascript">
+	$(function () {
+	  'use strict';
+		$(document).on("pageInit", "#page-member", function(e, id, page) {
+
+		});
+	  $.init();
+	});
+
+
+	function escapeHtml(text) {
+		var a=text.replace(/(\&lt;)/g,"<");
+		var b=a.replace(/(\&gt;)/g,">");
+		var c=b.replace(/(\&amp;)/g,"\&");
+		var d=c.replace(/(\&quot;)/g,"\"");
+		return d;
+	}
+	$('.member_leave>div>div').html(escapeHtml("{$member_level['member_leave']}"));
+</script>

@@ -1,0 +1,129 @@
+{php include wl_template('common/header');}
+
+<ul class="nav nav-tabs">
+    <li {if $op == 'display'} class="active" {/if}><a href="{php echo web_url('goods/hot_word/display');}">商品热词管理</a></li>
+    {if checkstr($_W['user']['perms'],'category.add')}
+    <li {if $op == 'post' && empty($id)}class="active"{/if}><a href="{php echo web_url('goods/hot_word/post');}">添加商品热词</a></li>
+    {/if}
+	{if $op == 'post' && !empty($id)}
+	<li class="active"><a href="{php echo web_url('goods/hot_word/post');}">编辑商品热词</a></li>
+	{/if}
+</ul>
+
+{if $op == 'display'}
+<style>
+	td>i{cursor:pointer; display:inline-block; width:100%; height:100%; color:#428bca;}
+	.category-caret{display:inline-block; width:20px; margin: 0 10px; text-align:center; cursor:pointer; color:#d9534f;}
+	.add.add_level0{cursor:pointer;}
+</style>
+<form action="" method="post">
+	<div class="panel panel-default">
+		<div class="panel-heading clearfix">顺序号越大排列越靠前<span class="pull-right"><a href="javascript:;" class="js-category-all js-collapse"><!--全部折叠--> </a></span></div>
+		<div class="panel-body table-responsive">
+			<table class="table table-hover">
+				<thead>
+					<tr>
+						<th style="width:50px;">热词id</th>
+                        <th style="width:250px;">热词名称</th>
+                        <th style="width:120px; text-align:center;">热词搜索次数</th>
+						<th style="width:100px; text-align:center;">显示顺序</th>
+                        <th style="width:100px; text-align:right">操作</th>
+					</tr>
+				</thead>
+				<tbody>
+					{loop $list $pcate}
+					<tr>
+						<td class="text-center">
+							{$pcate['id']}
+							<!--<input type="text" class="form-control" maxlength="2" name="{$pcate['id']}" value="{$pcate['id']}" />-->
+						</td>
+						<td class="text-center">
+							{$pcate['hot_word']}
+							<!--<input type="text" class="form-control" maxlength="2" name="hot_word" value="{$pcate['hot_word']}" />-->
+						</td>
+						<td class="text-center">
+							{$pcate['times']}
+							<!--<input type="text" class="form-control" maxlength="2" name="times" value="{$pcate['times']}" />-->
+						</td>
+						<td class="text-center">
+							{$pcate['sort']}
+							<!--<input type="text" class="form-control" maxlength="2" name="sort" value="{$pcate['sort']}" />-->
+						</td>
+						<td class="text-right">
+                            <a href="{php echo web_url('goods/hot_word/post', array('id' => $pcate['id']));}" title="编辑">编辑</a> -
+                            <a href="javascript:;" cate-id="{$pcate['id']}" parentid="{$pcate['id']}" title="删除" class="js-delete">删除</a>
+						</td>
+					</tr>
+					{/loop}
+				</tbody>
+			</table>
+		</div>
+	</div>
+	<div class="form-group col-md-12">
+		<input name="submit" type="submit" class="btn btn-primary min-width" value="保存">
+		<input type="hidden" name="token" value="{$_W['token']}" />
+	</div>
+</form>
+<script>
+	$(function(){
+		$('.js-delete').click(function(e) {
+			e.stopPropagation();
+			var cateid = $(this).attr('cate-id');
+			var parentid = $(this).attr('parentid');
+			var $this = $(this);
+			util.nailConfirm(this, function(state) {
+				if (!state) {
+					return;
+				}
+				$.post("{php echo web_url('goods/hot_word/delete')}", {cateid : cateid, parentid : parentid}, function(data) {
+					if(!data.errno){
+						$this.parent().parent().remove();
+					};
+					util.tips(data.message);
+				}, 'json');
+			});
+		});
+	});
+</script>
+
+{elseif $op == 'post'}
+
+<div class="clearfix">
+	<form action="" method="post" class="form-horizontal form" enctype="multipart/form-data" id="form1">
+		<div class="panel panel-default" id="step1">
+			<div class="panel-heading">
+				热词管理
+			</div>
+			<div class="panel-body">
+				<div class="form-group">
+					<label class="col-md-2 control-label"><span style="color:red;">*</span>热词名：</label>
+					<div class="col-md-9">
+						<input class="form-control" type="text" maxlength="11" name="hot_word" value="{$list['hot_word']}" />
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-md-2 control-label">热词搜索次数：</label>
+					<div class="col-md-9">
+						<input placeholder="" class="form-control" type="text"  name="times" value="{$list['times']}" />
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-md-2 control-label">热词排序：</label>
+					<div class="col-md-9">
+						<input class="form-control" type="text" maxlength="2" name="sort" value="{if empty($list['sort'])}0{else}{$list['sort']}{/if}" />
+						<span class="help-block">排序号越大排列越靠前。</span>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-md-2 control-label"></label>
+					<div class="col-md-9">
+						<input name="submit" id="submit" type="submit" value="保存" class="btn btn-primary min-width">
+						<input type="hidden" name="token" value="{$_W['token']}" />
+					</div>
+				</div>
+			</div>
+		</div>
+	</form>
+</div>
+{/if}
+{php include wl_template('common/footer');}
