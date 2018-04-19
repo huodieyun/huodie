@@ -159,6 +159,16 @@ console.log({$goods['spikeT']});
 		width: 100%!important;
 		height: auto!important;
 	}
+	.footer .group a {
+		line-height: 40px;
+		font-size: 16px;
+	}
+	.loading_more{
+		text-align: center;
+		height: 24px;
+		line-height: 24px;
+		padding: 0!important;
+	}
 </style>
 <span id="tuanPre">666,777</span>
 <span id="numPerson">10,20,50,100</span>
@@ -178,7 +188,7 @@ console.log({$goods['spikeT']});
 		<div class="content">
 			<div class="dt_detail" >
 				<section class="detail_main" style="position:relative">
-
+					{if !empty($advs)||!empty($goods["index_video"])}
 					<div class="sliderImage">
 						<div class="images" id="sliderImg" style="visibility: visible;">
 							<ul>
@@ -196,7 +206,7 @@ console.log({$goods['spikeT']});
 							{/loop}
 						</div>
 					</div>
-
+					{/if}
 					<div class="productInfo" >
 						<h2 style="padding-top: 10px;">{$goods['gname']}</h2>
 						<span id="pricedown"  {if $goods['isdownjia']==0}style="display:none;"{/if}>降价<br/>通知</span>
@@ -312,13 +322,7 @@ console.log({$goods['spikeT']});
 					<div class="ht">
 						<div class="ht_tit">附近的小伙伴正在发起团购，您可以直接参与</div>
 						<div class="ht_list">
-							{loop $thistuan $tuan}
-							<div class="ht_item">
-								<div class="ht_avatar"><img src="{$tuan['avatar']}" alt="团长头像"></div>
-								<div class="ht_info"><div class="ht_name">{$tuan['nickname']}</div><div class="ht_time">发起时间：{php echo date('Y-m-d H:i:s', $tuan['starttime']);}</div></div>
-								<a href="{php echo app_url('order/group',array('tuan_id'=>$tuan['groupnumber']));}" class="ht_btn" ptag="20400.7.1"><span class="ht_price"><i>￥</i>{$goods['gprice']} / {$goods['unit']}</span><span class="ht_btn_go">差{$tuan['lacknum']}人成团，火速参团 》</span></a>
-							</div>
-							{/loop}
+
 
 						</div>
 					</div>
@@ -526,8 +530,54 @@ console.log({$goods['spikeT']});
 <script>console.log(1111)</script>
 <script>
 	console.log('随意团  goods_detail');
+    var page = 1;
+    var shareGroupList = [];
+    {if !empty($thistuan)}
+    {if ($share_data['share_type']==1 || $share_data['share_type']=='')}
+    $(function () {
+        requestShareTuan(page);
+    })
+    {/if}
+        {/if}
 
+            function renderShareTuan (share_tuan, pageLength) {
+                var html = '';
+                Date.prototype.toLocaleString = function () {
+                    return this.getFullYear() + "/" + (this.getMonth() + 1) + "/" + this.getDate() + "/ " + this.getHours() + ":" + this.getMinutes() + ":" + this.getSeconds();
+                }
+                var startTime = '';
+                var price = '';
+                var endingText = pageLength < 30 ? '没有更多' : '加载更多';
+                for(var i =0 ; i < share_tuan.length; i++ ) {
+                    startTime = new Date(share_tuan[i].starttime * 1000).toLocaleString();
+                    price = share_tuan[i].price == '' ? "{$goods['gprice']}" : share_tuan[i].price;
+                    html += '<div class="ht_item">'+
+                        '<div class="ht_avatar"><img src='+share_tuan[i].avatar+' alt="团长头像"></div>'+
+                        '<div class="ht_info">'+
+                        '<div class="ht_name">'+share_tuan[i].nickname+'</div>'+
+                        '<div class="ht_time">发起时间：'+startTime+'</div>'+
+                        '</div>'+
+                        '<a href="{php echo app_url('order/group');}&tuan_id='+share_tuan[i].groupnumber+'" class="ht_btn" ptag="20400.7.1">'+
+                    '<span class="ht_price"><i>￥</i> '+price+'/ {$goods['unit']}</span>'+
+                    '<span class="ht_btn_go">差'+share_tuan[i].lacknum+'人成团，火速参团 》</span>'+
+                    '</a>'+
+                    '</div>';
+                }
+                $('.ht_list').html(html).append('<div class="loading_more" onclick="loadingMore()">'+endingText+'</div>');
+            }
 
+            function requestShareTuan(page) {
+                $.get("{php echo app_url('goods/detail/ajaxlist', array('id'=>$goods['id']))}&page="+page,function(res) {
+                    res = JSON.parse(res);
+                    shareGroupList = [].concat(shareGroupList, res.list)
+                    renderShareTuan(shareGroupList, res.list.length)
+                })
+            }
+
+            function loadingMore() {
+                page++;
+                requestShareTuan(page);
+            }
 
 	var options = {php echo json_encode($options)};  //2017年8月9日12:58:40     
 
