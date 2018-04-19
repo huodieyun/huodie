@@ -686,12 +686,12 @@ function getorderFrames()
         $frames['order']['items']['wholesale']['title'] = '批发订单';
         $frames['order']['items']['wholesale']['actions'] = array();
         $frames['order']['items']['wholesale']['active'] = '';
-
-        $frames['order']['items']['once_card']['url'] = web_url('order/order/received', array('is_once_card' => 1));
-        $frames['order']['items']['once_card']['title'] = '次卡订单';
-        $frames['order']['items']['once_card']['actions'] = array();
-        $frames['order']['items']['once_card']['active'] = '';
-
+        if ($shop['vip'] >= 1) {
+            $frames['order']['items']['once_card']['url'] = web_url('order/order/received', array('is_once_card' => 1));
+            $frames['order']['items']['once_card']['title'] = '次卡订单';
+            $frames['order']['items']['once_card']['actions'] = array();
+            $frames['order']['items']['once_card']['active'] = '';
+        }
         $frames['order']['items']['fetch4']['url'] = web_url('order/fetch');
         $frames['order']['items']['fetch4']['title'] = '售后订单';
         $frames['order']['items']['fetch4']['actions'] = array();
