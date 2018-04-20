@@ -2416,7 +2416,58 @@ if ($op == 'update_spring_fans_data') {
 }
 
 
+//定时自提提醒
+if ($op == 'websendmes') {
+    //自提日期提醒
+    $id = $_GPC['id'];
+    $order = pdo_fetchall("SELECT id,uniacid,openid,orderno,comadd,self_time FROM  " . tablename('tg_order') . " where `status`=8 and dispatchtype=3 and self_time<UNIX_TIMESTAMP()-86399 and self_time>UNIX_TIMESTAMP()-172801");
+    $num=0;
+    foreach($order as $value){
+        $col = pdo_fetch("select id,remind_times from " . tablename('tg_order_collect') . " where  uniacid = '{$value['uniacid']}'and  orderno = '{$value['orderno']}'  ");
+        if ($col) {
+                if($col['remind_times']== 0){
+                        $dat['remind_times'] = $col['remind_times'] + 1;
+                        $dat['remind_time'] = TIMESTAMP;
+                        $res = pdo_update('tg_order_collect', $dat, array('id' => $col['id']));
+                        $store = pdo_fetch("SELECT storename FROM " . tablename('tg_store') . " WHERE id = " . $value['comadd']);
+                        $postData['openid'] = $value['openid'];
+                        $postData['orderid'] = $value['id'];
+                        $postData['title'] = "您有一个自提订单未取货";
+                        $postData['message'] = "自提地址：【" . $store['storename'] . "】";
+                        $postData['remark'] = '自提提醒';
+                        $postData_res = serialize($postData);
+                        $xc["content"] = $postData_res;
+                        $xc["uniacid"] = $value['uniacid'];
+                        $xc["openid"] = $value['openid'];
+                        $xc["mess_tpl"] = 'result_remind';
+                        pdo_insert("tg_message_log", $xc);
+                        $num=$num+1;
+            }
+        } else {
+            $dat['uniacid'] = $order['uniacid'];
+            $dat['openid'] = $order['openid'];
+            $dat['orderno'] = $order['orderno'];
+            $dat['remind_times'] = 1;
+            $dat['remind_time'] = TIMESTAMP;
+            $res = pdo_insert('tg_order_collect', $dat);
+            $store = pdo_fetch("SELECT storename FROM " . tablename('tg_store') . " WHERE id = " . $value['comadd']);
+            $postData['openid'] = $value['openid'];
+            $postData['orderid'] = $value['id'];
+            $postData['title'] = "您有一个自提订单未取货";
+            $postData['message'] = "自提地址：【" . $store['storename'] . "】";
+            $postData['remark'] = '自提提醒';
+            $postData_res = serialize($postData);
+            $xc["content"] = $postData_res;
+            $xc["uniacid"] = $value['uniacid'];
+            $xc["openid"] = $value['openid'];
+            $xc["mess_tpl"] = 'result_remind';
+            pdo_insert("tg_message_log", $xc);
+            $num=$num+1;
+        }
+    }
+    die(json_encode(['自提提醒' => $num]));
 
+}
 
 
 if ($op == 'order_recive_update') {
