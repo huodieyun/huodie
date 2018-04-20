@@ -103,11 +103,11 @@ function group_delete($id)
 function updategourp()
 {
     global $_W, $_GPC;
-
-
+    wl_load()->model('goods');
     $now = time();
     $allgroups = pdo_fetchall("select * from " . tablename('tg_group') . " where uniacid={$_W['uniacid']} and groupstatus = 3 and endtime < {$now} and lacknum > 0 order by endtime limit 3 ");
     if ($allgroups) {
+
         foreach ($allgroups as $key => $value) {
 
             if ($value['on_success'] == 0) {
@@ -121,7 +121,7 @@ function updategourp()
                 } else {
 
                     ///统计数量 阶梯团
-                    $orders = pdo_fetchall("SELECT id,g_id,orderno,gnum,freight,price,optionname,couponid FROM " . tablename('tg_order') . " WHERE tuan_id = :tuan_id AND uniacid = :uniacid AND ptime > 0 ", array(':tuan_id' => $value['groupnumber'], ':uniacid' => $value['uniacid']));
+                    $orders = pdo_fetchall("SELECT * FROM " . tablename('tg_order') . " WHERE tuan_id = :tuan_id AND uniacid = :uniacid AND ptime > 0 ", array(':tuan_id' => $value['groupnumber'], ':uniacid' => $value['uniacid']));
 
                     $g = pdo_fetch("select is_amount from " . tablename('tg_goods') . " where id = '{$value['goodsid']}'");
                     if ($g['is_amount'] == 1) {
@@ -176,6 +176,7 @@ function updategourp()
                             }
 
                         }
+
                         $goods = pdo_fetch("select * from " . tablename('tg_goods') . " where id=:goodsid ", array(':goodsid' => $v['g_id']));
                         /*更改规格库存*/
                         if (!empty($v['optionname'])) {
@@ -184,12 +185,27 @@ function updategourp()
                         } else {
                             pdo_update('tg_goods', array('gnum' => $goods['gnum'] - $v['gnum']), array('id' => $v['g_id']));
                         }
+
+                        $v_goods = goods_get_by_params(" id = {$v['g_id']}");
+
+                        if($v_goods['has_store_stock'] == 1){
+                            if (!empty($v['optionname'])) {
+                                $store_stock = pdo_fetch("select * from " . tablename('tg_goods_store_stock') . " where goodsid=:goodsid and storeid=:storeid and optionid=:optionid and uniacid=:uniacid", array(':goodsid' => $v['g_id'], ':storeid' => $v['comadd'],':optionid'=>$v['optionid'],':uniacid'=>$v['uniacid']));
+                                pdo_update('tg_goods_store_stock',array('stock'=>$store_stock['stock'] - $v['gnum']),array('id'=>$store_stock['id']));
+                            }else{
+                                $store_stock = pdo_fetch("select * from " . tablename('tg_goods_store_stock') . " where goodsid=:goodsid and storeid=:storeid and uniacid=:uniacid", array(':goodsid' => $v['g_id'], ':storeid' => $v['comadd'],':uniacid'=>$v['uniacid']));
+                                pdo_update('tg_goods_store_stock',array('stock'=>$store_stock['stock'] - $v['gnum']),array('id'=>$store_stock['id']));
+                            }
+
+
+                        }
                         pdo_update('tg_goods', array('salenum' => $goods['salenum'] + $v['gnum']), array('id' => $v['g_id']));
 
 
                     }
                     pdo_update('tg_order', array('status' => 8, 'successtime' => TIMESTAMP), array('tuan_id' => $value['groupnumber'], 'status' => 1));
                     pdo_update('tg_group', array('groupstatus' => 2,'successtime' => TIMESTAMP), array('groupnumber' => $value['groupnumber']));
+
                     if ($value['groupnumber'] != 532601) {
                         group_success($value['groupnumber'], '');
                         wl_load()->func('print');
@@ -221,6 +237,18 @@ function updategourp()
                         pdo_update('tg_goods_option', array('stock' => $stock['stock'] - $order['gnum']), array('goodsid' => $order['g_id'], 'title' => $order['optionname']));
                     } else {
                         pdo_update('tg_goods', array('gnum' => $goods['gnum'] - $order['gnum']), array('id' => $order['g_id']));
+                    }
+                    $v_goods = goods_get_by_params(" id = {$order['g_id']}");
+                    if($v_goods['has_store_stock'] == 1){
+                        if (!empty($order['optionname'])) {
+                            $store_stock = pdo_fetch("select * from " . tablename('tg_goods_store_stock') . " where goodsid=:goodsid and storeid=:storeid and optionid=:optionid and uniacid=:uniacid", array(':goodsid' => $order['g_id'], ':storeid' => $order['comadd'],':optionid'=>$order['optionid'],':uniacid'=>$order['uniacid']));
+                            pdo_update('tg_goods_store_stock',array('stock'=>$store_stock['stock'] - $order['gnum']),array('id'=>$store_stock['id']));
+                        }else{
+                            $store_stock = pdo_fetch("select * from " . tablename('tg_goods_store_stock') . " where goodsid=:goodsid and storeid=:storeid and uniacid=:uniacid", array(':goodsid' => $order['g_id'], ':storeid' => $order['comadd'],':uniacid'=>$order['uniacid']));
+                            pdo_update('tg_goods_store_stock',array('stock'=>$store_stock['stock'] - $order['gnum']),array('id'=>$store_stock['id']));
+                        }
+
+
                     }
                     pdo_update('tg_goods', array('salenum' => $goods['salenum'] + $order['gnum']), array('id' => $order['g_id']));
                 }
@@ -307,8 +335,7 @@ function updategourp()
         }
     } else {
 
-        $sql = "SELECT a.id,a.tuan_id,a.`status`,a.ptime,a.g_id,a.orderno,a.uniacid,a.selltype
-            from cm_tg_order a left join cm_tg_group b on a.tuan_id=b.groupnumber where a.`status`=1 and b.groupstatus=2 and a.ptime>0 and a.selltype<>7 ";
+        $sql = "SELECT a.id,a.tuan_id,a.`status`,a.ptime,a.g_id,a.orderno,a.uniacid,a.selltype from cm_tg_order a left join cm_tg_group b on a.tuan_id=b.groupnumber where a.`status`=1 and b.groupstatus=2 and a.ptime>0 and a.selltype<>7";
         $allorder = pdo_fetchall($sql);
 
         if ($allorder) {

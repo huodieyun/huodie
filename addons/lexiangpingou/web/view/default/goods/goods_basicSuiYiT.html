@@ -492,6 +492,22 @@
         </div>
     </div>
     {/if}
+     {if $acct['vip'] == 1}
+    <div class="form-group">
+        <label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label">启用多门店库存</label>
+        <div class="col-xs-12 col-sm-8">
+            <div class="input-group">
+                <label class="radio radio-inline">
+                    <input type="radio" name="goods[has_store_stock]" value="1" {if intval($goods['has_store_stock']) ==1 }checked="checked"{/if}>启用
+                </label>
+                <label class="radio radio-inline">
+                    <input type="radio" name="goods[has_store_stock]" value="0" {if intval($goods['has_store_stock']) ==0}checked="checked"{/if}> 不启用
+                </label>
+
+            </div>
+        </div>
+    </div>
+ {/if}
     {if $isjudgment['status']}
     <div class="form-group">
         <label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label">商品评价</label>

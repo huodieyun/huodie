@@ -878,14 +878,29 @@
                 var html="";
                 var kaiguan  = {php echo intval($kaiguan['zitidingwei'])};
 				var html_child = '';
+				var html_store_stock='';
+				var store_stock = 0;
 				if(status == 'fail') $.toast('定位失败')
                 for(var i=0;i<data.length;i++){
-                	if (data[i].status == '1') {
-	                	html_child = kaiguan == 1 && (status == 'success') ? '<p> 距'+ data[i].distance +'</p>' : '';
-
-	                    html+="<li data-id="+data[i].id+"><i onclick='chooseI(this)' class='weui-icon-success'></i>" +
-							"<p class='kuan1'>"+data[i].storename+"</p><p class='kuan2'>"+data[i].address+"</p>"+html_child+"</li>"
-                	}
+					if (data[i].status == '1') {
+						html_child = kaiguan == 1 && (status == 'success') ? '<p> 距'+ data[i].distance +'</p>' : '';
+						for(var k=0; k < data[i].stock.length; k++) {
+							if(data[i].stock[k].optionid == '0' ||data[i].stock[k].optionid == "{$goods[optionid]}") {
+								html_store_stock = '<p>库存：'+data[i].stock[k].stock+'<p>'
+								store_stock = data[i].stock[k].stock;
+							}
+						}
+						var isSoldOut = Number(store_stock) == 0 ? "none" : '';
+						{if !$goods['has_store_stock']} //开启了多门店库存
+						isSoldOut = '';
+						{/if}
+						html+="<li data-id="+data[i].id+" style=display:"+isSoldOut+">"+
+								"<i onclick='chooseI(this)' class='weui-icon-success'></i>"+
+								"<p class='kuan1'>"+data[i].storename+"</p>"+
+								"<p class='kuan2'>"+data[i].address+"</p>"+
+								"<div>"+html_child+html_store_stock+"</div>"+
+								"</li>";
+					}
                 }
                 $('#zitiMendian>ul').html(html);
                 $('#zitiMendian').slideDown();

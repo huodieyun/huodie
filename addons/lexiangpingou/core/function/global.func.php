@@ -740,6 +740,14 @@ function refund($orderno, $type)
     $path_key = IA_ROOT . '/attachment/lexiangpingou/cert/' . $_W['uniacid'] . '/apiclient_key.pem';
     $account_info = pdo_fetch("select * from" . tablename('account_wechats') . "where uniacid={$_W['uniacid']}");
     $refund_order = pdo_fetch("select * from" . tablename('tg_order') . "where orderno ='{$orderno}'");
+
+    if($refund_order['g_id'] >0){
+//        $goods = pdo_fetch("select gname from" . tablename('tg_goods') . "where id='{$refund_order['g_id']}'");
+    }else{
+        $ss = pdo_fetch("select * from cm_tg_order a left join cm_tg_collect b on a.orderno=b.orderno");
+        $refund_order['g_id'] = $ss['sid'];
+        $refund_order['gnum'] = $ss['num'];
+    }
     $goods = pdo_fetch("select gname from" . tablename('tg_goods') . "where id='{$refund_order['g_id']}'");
     $settings = setting_get_by_name('refund');
     if ($refund_order['paytype'] == 0) {
@@ -797,17 +805,36 @@ function refund($orderno, $type)
             pdo_update('tg_order', array('status' => 7), array('id' => $refund_order['id']));
         }
         //
-        if ($refund_order['tuan_id'] > 0 && $refund_order['tuan_first'] == 1) {
+        if ($refund_order['tuan_id'] > 0 ) {
             //message(1);
             $groups = pdo_fetch("select * from " . tableName('tg_group') . " where groupnumber=" . $refund_order['tuan_id']);
             $gnum = $groups['neednum'] - $groups['lacknum'];
             if ($gnum == 1) {
                 pdo_update('tg_group', array('groupstatus' => 1), array('groupnumber' => $refund_order['tuan_id']));
             }
-            if ($groups['groupstatus'] == 2) {
-                pdo_query("update" . tablename('tg_goods') . " set gnum=gnum+1 where id = '{$refund_order['g_id']}'");
-            }
             $goodsInfo = pdo_fetch('SELECT * FROM ' . tablename('tg_goods') . ' WHERE id=:id', array(':id' => $refund_order['g_id']));
+
+            if ($groups['groupstatus'] == 2) {
+                pdo_query("update" . tablename('tg_goods') . " set gnum=gnum+{$refund_order['gnum']} where id = '{$refund_order['g_id']}'");
+                /*更改规格库存*/
+                if (!empty($refund_order['optionname'])) {
+                    $stock = pdo_fetch("select * from " . tablename('tg_goods_option') . " where goodsid=:goodsid and title=:title", array(':goodsid' => $refund_order['g_id'], ':title' => $refund_order['optionname']));
+                    pdo_update('tg_goods_option', array('stock' => $stock['stock'] + $refund_order['gnum']), array('goodsid' => $refund_order['g_id'], 'title' => $refund_order['optionname']));
+                }
+                //更新门店库存
+                if($goodsInfo['has_store_stock'] == 1){
+
+                    if (!empty($refund_order['optionname'])) {
+                        $store_stock = pdo_fetch("select * from " . tablename('tg_goods_store_stock') . " where goodsid=:goodsid and storeid=:storeid and optionid=:optionid and uniacid=:uniacid", array(':goodsid' => $refund_order['g_id'], ':storeid' => $refund_order['comadd'],':optionid'=>$refund_order['optionid'],':uniacid'=>$refund_order['uniacid']));
+                        pdo_update('tg_goods_store_stock',array('stock'=>$store_stock['stock'] + $refund_order['gnum']),array('id'=>$store_stock['id']));
+                    }else{
+                        $store_stock = pdo_fetch("select * from " . tablename('tg_goods_store_stock') . " where goodsid=:goodsid and storeid=:storeid  and uniacid=:uniacid", array(':goodsid' => $refund_order['g_id'], ':storeid' => $refund_order['comadd'],':uniacid'=>$refund_order['uniacid']));
+                        pdo_update('tg_goods_store_stock',array('stock'=>$store_stock['stock'] + $refund_order['gnum']),array('id'=>$store_stock['id']));
+                    }
+
+
+                }
+            }
             //极限单品减库存加销量
             if ($goodsInfo['supply_goodsid'] > 0) {
                 $go = pdo_fetch("SELECT * FROM " . tablename('tg_supply_goods') . " WHERE id = " . $goodsInfo['supply_goodsid']);
@@ -820,11 +847,48 @@ function refund($orderno, $type)
                 }
             }
 
+
         }
+
         //
         pdo_update('tg_refund_record', array('status' => 1), array('transid' => $refund_order['transid']));
         if ($refund_order['tuan_id'] == 0) {
-            pdo_query("update" . tablename('tg_goods') . " set gnum=gnum+1 where id = '{$refund_order['g_id']}'");
+            if($refund_order['g_id'] == 0){
+                //单买购物车
+                $sende = "select  * from " . tablename('tg_collect') . " where   orderno= '" . $refund_order['orderno'] . "'  ";
+                $sendelist = pdo_fetchall($sende);
+                foreach ($sendelist as $key => $value) {
+                    $goodsInfos = pdo_fetch("select id,gnum,salenum,openid from" . tablename('tg_goods') . " where id=" . $value['sid']);
+                    pdo_update('tg_goods', array('gnum' => $goodsInfos['gnum'] + $value['num'], 'salenum' => $goodsInfos['salenum'] - $value['num']), array('id' => $value['sid']));
+
+                    /*更改规格库存*/
+                    if (!empty($value['item'])) {
+                        $stocks = pdo_fetch("select * from " . tablename('tg_goods_option') . " where goodsid=:goodsid and title=:title", array(':goodsid' => $value['sid'], ':title' => $value['item']));
+                        pdo_update('tg_goods_option', array('stock' => $stocks['stock'] + $value['num']), array('goodsid' => $value['sid'], 'title' => $value['item']));
+
+                    }
+                }
+            }else{
+                //团商品单买
+                pdo_query("update" . tablename('tg_goods') . " set gnum=gnum+{$refund_order['gnum']} where id = '{$refund_order['g_id']}'");
+                $goodsInfo = pdo_fetch('SELECT * FROM ' . tablename('tg_goods') . ' WHERE id=:id', array(':id' => $refund_order['g_id']));
+                /*更改规格库存*/
+                if (!empty($refund_order['optionname'])) {
+                    $stock = pdo_fetch("select * from " . tablename('tg_goods_option') . " where goodsid=:goodsid and title=:title", array(':goodsid' => $refund_order['g_id'], ':title' => $refund_order['optionname']));
+                    pdo_update('tg_goods_option', array('stock' => $stock['stock'] + $refund_order['gnum']), array('goodsid' => $refund_order['g_id'], 'title' => $refund_order['optionname']));
+                }
+                //更新门店库存
+                if($goodsInfo['has_store_stock'] == 1){
+
+                    if (!empty($refund_order['optionname'])) {
+                        $store_stock = pdo_fetch("select * from " . tablename('tg_goods_store_stock') . " where goodsid=:goodsid and storeid=:storeid and optionid=:optionid and uniacid=:uniacid", array(':goodsid' => $refund_order['g_id'], ':storeid' => $refund_order['comadd'],':optionid'=>$refund_order['optionid'],':uniacid'=>$refund_order['uniacid']));
+                        pdo_update('tg_goods_store_stock',array('stock'=>$store_stock['stock'] + $refund_order['gnum']),array('id'=>$store_stock['id']));
+                    }else{
+                        $store_stock = pdo_fetch("select * from " . tablename('tg_goods_store_stock') . " where goodsid=:goodsid and storeid=:storeid  and uniacid=:uniacid", array(':goodsid' => $refund_order['g_id'], ':storeid' => $refund_order['comadd'],':uniacid'=>$refund_order['uniacid']));
+                        pdo_update('tg_goods_store_stock',array('stock'=>$store_stock['stock'] + $refund_order['gnum']),array('id'=>$store_stock['id']));
+                    }
+                }
+            }
         }
         pdo_update('account_wechats', array('refund_type' => 0, 'last_refund_time' => TIMESTAMP), array('uniacid' => $account_info['uniacid']));
         return 'success';
@@ -859,21 +923,71 @@ function refund($orderno, $type)
                 pdo_update('tg_order', array('status' => 7), array('id' => $refund_order['id']));
             }
             //
-            if ($refund_order['tuan_id'] > 0 && $refund_order['tuan_first'] == 1) {
+            if ($refund_order['tuan_id'] > 0 ) {
                 //message(1);
-                $groups = pdo_fetch("select * from " . tableName('tg_group') . " where groupnumber=" . $refund_order['tuan_id']);
+                $groups = pdo_fetch("SELECT * FROM " . tableName('tg_group') . " WHERE groupnumber=" . $refund_order['tuan_id']);
                 $gnum = $groups['neednum'] - $groups['lacknum'];
                 if ($gnum == 1) {
                     pdo_update('tg_group', array('groupstatus' => 1), array('groupnumber' => $refund_order['tuan_id']));
                 }
+                $goodsInfo = pdo_fetch('SELECT * FROM ' . tablename('tg_goods') . ' WHERE id=:id', array(':id' => $refund_order['g_id']));
+
                 if ($groups['groupstatus'] == 2) {
-                    pdo_query("update" . tablename('tg_goods') . " set gnum=gnum+1 where id = '{$refund_order['g_id']}'");
+                    pdo_query("update" . tablename('tg_goods') . " set gnum=gnum+{$refund_order['gnum']} where id = '{$refund_order['g_id']}'");
+                    /*更改规格库存*/
+                    if (!empty($refund_order['optionname'])) {
+                        $stock = pdo_fetch("select * from " . tablename('tg_goods_option') . " where goodsid=:goodsid and title=:title", array(':goodsid' => $refund_order['g_id'], ':title' => $refund_order['optionname']));
+                        pdo_update('tg_goods_option', array('stock' => $stock['stock'] + $refund_order['gnum']), array('goodsid' => $refund_order['g_id'], 'title' => $refund_order['optionname']));
+                    }
+                    //更新门店库存
+                    if($goodsInfo['has_store_stock'] == 1){
+
+                        if (!empty($refund_order['optionname'])) {
+                            $store_stock = pdo_fetch("select * from " . tablename('tg_goods_store_stock') . " where goodsid=:goodsid and storeid=:storeid and optionid=:optionid and uniacid=:uniacid", array(':goodsid' => $refund_order['g_id'], ':storeid' => $refund_order['comadd'],':optionid'=>$refund_order['optionid'],':uniacid'=>$refund_order['uniacid']));
+                            pdo_update('tg_goods_store_stock',array('stock'=>$store_stock['stock'] + $refund_order['gnum']),array('id'=>$store_stock['id']));
+                        }else{
+                            $store_stock = pdo_fetch("select * from " . tablename('tg_goods_store_stock') . " where goodsid=:goodsid and storeid=:storeid  and uniacid=:uniacid", array(':goodsid' => $refund_order['g_id'], ':storeid' => $refund_order['comadd'],':uniacid'=>$refund_order['uniacid']));
+                            pdo_update('tg_goods_store_stock',array('stock'=>$store_stock['stock'] + $refund_order['gnum']),array('id'=>$store_stock['id']));
+                        }
+
+
+                    }
                 }
+                //极限单品减库存加销量
+                if ($goodsInfo['supply_goodsid'] > 0) {
+                    $go = pdo_fetch("SELECT * FROM " . tablename('tg_supply_goods') . " WHERE id = " . $goodsInfo['supply_goodsid']);
+                    if ($go['stock'] >= $refund_order['gnum']) {
+                        pdo_update('tg_supply_goods', array('stock' => $go['stock'] + $refund_order['gnum'], 'salenum' => $go['salenum'] - $refund_order['gnum']), array('id' => $goodsInfo['supply_goodsid']));
+                    }
+                    if (!empty($go['optionname'])) {
+                        $option = pdo_fetch("SELECT * FROM " . tablename('tg_goods_supply_option') . " WHERE goodsid = :goodsid AND title = :title", array(':goodsid' => $goodsInfo['supply_goodsid'], ':title' => $refund_order['optionname']));
+                        pdo_update('tg_goods_supply_option', array('stock' => $option['stock'] + $refund_order['gnum']), array('goodsid' => $goodsInfo['supply_goodsid'], 'title' => $refund_order['optionname']));
+                    }
+                }
+
+
             }
             //
             pdo_update('tg_refund_record', array('status' => 1), array('transid' => $refund_order['transid']));
             if ($refund_order['tuan_id'] == 0) {
-                pdo_query("update" . tablename('tg_goods') . " set gnum=gnum+1 where id = '{$refund_order['g_id']}'");
+                pdo_query("update" . tablename('tg_goods') . " set gnum=gnum+{$refund_order['gnum']} where id = '{$refund_order['g_id']}'");
+                $goodsInfo = pdo_fetch('SELECT * FROM ' . tablename('tg_goods') . ' WHERE id=:id', array(':id' => $refund_order['g_id']));
+                /*更改规格库存*/
+                if (!empty($refund_order['optionname'])) {
+                    $stock = pdo_fetch("select * from " . tablename('tg_goods_option') . " where goodsid=:goodsid and title=:title", array(':goodsid' => $refund_order['g_id'], ':title' => $refund_order['optionname']));
+                    pdo_update('tg_goods_option', array('stock' => $stock['stock'] + $refund_order['gnum']), array('goodsid' => $refund_order['g_id'], 'title' => $refund_order['optionname']));
+                }
+                //更新门店库存
+                if($goodsInfo['has_store_stock'] == 1){
+
+                    if (!empty($refund_order['optionname'])) {
+                        $store_stock = pdo_fetch("select * from " . tablename('tg_goods_store_stock') . " where goodsid=:goodsid and storeid=:storeid and optionid=:optionid and uniacid=:uniacid", array(':goodsid' => $refund_order['g_id'], ':storeid' => $refund_order['comadd'],':optionid'=>$refund_order['optionid'],':uniacid'=>$refund_order['uniacid']));
+                        pdo_update('tg_goods_store_stock',array('stock'=>$store_stock['stock'] + $refund_order['gnum']),array('id'=>$store_stock['id']));
+                    }else{
+                        $store_stock = pdo_fetch("select * from " . tablename('tg_goods_store_stock') . " where goodsid=:goodsid and storeid=:storeid  and uniacid=:uniacid", array(':goodsid' => $refund_order['g_id'], ':storeid' => $refund_order['comadd'],':uniacid'=>$refund_order['uniacid']));
+                        pdo_update('tg_goods_store_stock',array('stock'=>$store_stock['stock'] + $refund_order['gnum']),array('id'=>$store_stock['id']));
+                    }
+                }
             }
             pdo_update('account_wechats', array('refund_type' => 0, 'last_refund_time' => TIMESTAMP), array('uniacid' => $account_info['uniacid']));
             return 'success';
@@ -1180,9 +1294,7 @@ function partrefundlevel($orderno, $money)
     $input->SetRefund_fee($fee);
     $input->SetTotal_fee($refund_order['price'] * 100);
     $input->SetTransaction_id($refundid);
-
     $input->SetOut_refund_no($orderno);
-
 
     $result = $WxPayApi->refund($input, 6, $path_cert, $path_key, $key);
 
@@ -1626,7 +1738,7 @@ function checkpaygroup($groupnumber)
                 $group = pdo_fetch("select * from " . tableName('tg_group') . " where groupnumber=:groupnumber", array(':groupnumber' => $value['tuan_id']));
 
                 if (count($allorders) >= $group['neednum']) {
-                    pdo_update('tg_group', array('groupstatus' => 2, 'lacknum' => 0), array('groupnumber' => $value['tuan_id']));
+                    pdo_update('tg_group', array('groupstatus' => 2, 'lacknum' => 0,'successtime' => TIMESTAMP), array('groupnumber' => $value['tuan_id']));
                     pdo_update('tg_order', array('status' => 8), array('tuan_id' => $value['tuan_id'], 'status' => 1));
                     /*团成功通知*/
                     $url = app_url('order/group', array('tuan_id' => $value['tuan_id']));
@@ -1678,7 +1790,7 @@ function checkpay($openid)
                 $group = pdo_fetch("select * from " . tableName('tg_group') . " where groupnumber=:groupnumber", array(':groupnumber' => $value['tuan_id']));
 
                 if (count($allorders) >= $group['neednum']) {
-                    pdo_update('tg_group', array('groupstatus' => 2, 'lacknum' => 0), array('groupnumber' => $value['tuan_id']));
+                    pdo_update('tg_group', array('groupstatus' => 2, 'lacknum' => 0, 'successtime' => TIMESTAMP), array('groupnumber' => $value['tuan_id']));
                     pdo_update('tg_order', array('status' => 8), array('tuan_id' => $value['tuan_id'], 'status' => 1));
                 }
             }
@@ -2190,6 +2302,95 @@ function balance_payment_refund($id, $type, $order, $reason = '', $price = 0)
         $remark = "";
         result_type($bill['openid'], $title, $content, $remark, $url);
         $message = '退款成功';
+        //库存更新
+        $goodsInfo = pdo_fetch('SELECT * FROM ' . tablename('tg_goods') . ' WHERE id=:id', array(':id' => $goodsid));
+        if ($order['tuan_id'] > 0 ) {
+            //message(1);
+            $groups = pdo_fetch("SELECT * FROM " . tableName('tg_group') . " WHERE groupnumber=" . $order['tuan_id']);
+            $gnum = $groups['neednum'] - $groups['lacknum'];
+            if ($gnum == 1) {
+                pdo_update('tg_group', array('groupstatus' => 1), array('groupnumber' => $order['tuan_id']));
+            }
+
+            if ($groups['groupstatus'] == 2) {
+                pdo_query("update" . tablename('tg_goods') . " set gnum=gnum+{$order['gnum']} where id = '{$order['g_id']}'");
+                /*更改规格库存*/
+                if (!empty($order['optionname'])) {
+                    $stock = pdo_fetch("select * from " . tablename('tg_goods_option') . " where goodsid=:goodsid and title=:title", array(':goodsid' => $order['g_id'], ':title' => $order['optionname']));
+                    pdo_update('tg_goods_option', array('stock' => $stock['stock'] + $order['gnum']), array('goodsid' => $order['g_id'], 'title' => $order['optionname']));
+                }
+                //更新门店库存
+                if($goodsInfo['has_store_stock'] == 1){
+
+                    if (!empty($order['optionname'])) {
+                        $store_stock = pdo_fetch("select * from " . tablename('tg_goods_store_stock') . " where goodsid=:goodsid and storeid=:storeid and optionid=:optionid and uniacid=:uniacid", array(':goodsid' => $order['g_id'], ':storeid' => $order['comadd'],':optionid'=>$order['optionid'],':uniacid'=>$order['uniacid']));
+                        pdo_update('tg_goods_store_stock',array('stock'=>$store_stock['stock'] + $order['gnum']),array('id'=>$store_stock['id']));
+                    }else{
+                        $store_stock = pdo_fetch("select * from " . tablename('tg_goods_store_stock') . " where goodsid=:goodsid and storeid=:storeid  and uniacid=:uniacid", array(':goodsid' => $order['g_id'], ':storeid' => $order['comadd'],':uniacid'=>$order['uniacid']));
+                        pdo_update('tg_goods_store_stock',array('stock'=>$store_stock['stock'] + $order['gnum']),array('id'=>$store_stock['id']));
+                    }
+
+
+                }
+            }
+            //极限单品减库存加销量
+            if ($goodsInfo['supply_goodsid'] > 0) {
+                $go = pdo_fetch("SELECT * FROM " . tablename('tg_supply_goods') . " WHERE id = " . $goodsInfo['supply_goodsid']);
+                if ($go['stock'] >= $order['gnum']) {
+                    pdo_update('tg_supply_goods', array('stock' => $go['stock'] + $order['gnum'], 'salenum' => $go['salenum'] - $order['gnum']), array('id' => $goodsInfo['supply_goodsid']));
+                }
+                if (!empty($go['optionname'])) {
+                    $option = pdo_fetch("SELECT * FROM " . tablename('tg_goods_supply_option') . " WHERE goodsid = :goodsid AND title = :title", array(':goodsid' => $goodsInfo['supply_goodsid'], ':title' => $order['optionname']));
+                    pdo_update('tg_goods_supply_option', array('stock' => $option['stock'] + $order['gnum']), array('goodsid' => $goodsInfo['supply_goodsid'], 'title' => $order['optionname']));
+                }
+            }
+
+
+        }
+
+        //
+        if ($order['tuan_id'] == 0) {
+            if($order['g_id'] == 0){
+                //单买购物车
+                $sende = "select  * from " . tablename('tg_collect') . " where   orderno= '" . $order['orderno'] . "'  ";
+                $sendelist = pdo_fetchall($sende);
+                foreach ($sendelist as $key => $value) {
+                    $goodsInfos = pdo_fetch("select id,gnum,salenum,openid from" . tablename('tg_goods') . " where id=" . $value['sid']);
+                    pdo_update('tg_goods', array('gnum' => $goodsInfos['gnum'] + $value['num'], 'salenum' => $goodsInfos['salenum'] - $value['num']), array('id' => $value['sid']));
+
+                    /*更改规格库存*/
+                    if (!empty($value['item'])) {
+                        $stocks = pdo_fetch("select * from " . tablename('tg_goods_option') . " where goodsid=:goodsid and title=:title", array(':goodsid' => $value['sid'], ':title' => $value['item']));
+
+                        pdo_update('tg_goods_option', array('stock' => $stocks['stock'] + $value['num']), array('goodsid' => $value['sid'], 'title' => $value['item']));
+
+                    }
+                }
+            }else{
+                //团商品单买
+                pdo_query("update" . tablename('tg_goods') . " set gnum=gnum+{$order['gnum']} where id = '{$order['g_id']}'");
+                $goodsInfo = pdo_fetch('SELECT * FROM ' . tablename('tg_goods') . ' WHERE id=:id', array(':id' => $order['g_id']));
+                /*更改规格库存*/
+                if (!empty($order['optionname'])) {
+                    $stock = pdo_fetch("select * from " . tablename('tg_goods_option') . " where goodsid=:goodsid and title=:title", array(':goodsid' => $order['g_id'], ':title' => $order['optionname']));
+                    pdo_update('tg_goods_option', array('stock' => $stock['stock'] + $order['gnum']), array('goodsid' => $order['g_id'], 'title' => $order['optionname']));
+                }
+                //更新门店库存
+                if($goodsInfo['has_store_stock'] == 1){
+
+                    if (!empty($order['optionname'])) {
+                        $store_stock = pdo_fetch("select * from " . tablename('tg_goods_store_stock') . " where goodsid=:goodsid and storeid=:storeid and optionid=:optionid and uniacid=:uniacid", array(':goodsid' => $order['g_id'], ':storeid' => $order['comadd'],':optionid'=>$order['optionid'],':uniacid'=>$order['uniacid']));
+                        pdo_update('tg_goods_store_stock',array('stock'=>$store_stock['stock'] + $order['gnum']),array('id'=>$store_stock['id']));
+                    }else{
+                        $store_stock = pdo_fetch("select * from " . tablename('tg_goods_store_stock') . " where goodsid=:goodsid and storeid=:storeid  and uniacid=:uniacid", array(':goodsid' => $order['g_id'], ':storeid' => $order['comadd'],':uniacid'=>$order['uniacid']));
+                        pdo_update('tg_goods_store_stock',array('stock'=>$store_stock['stock'] + $order['gnum']),array('id'=>$store_stock['id']));
+                    }
+                }
+            }
+        }
+
+
+
     } else {
         $message = '非常抱歉！退款失败';
     }

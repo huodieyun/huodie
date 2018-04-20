@@ -287,7 +287,9 @@ if ($op == 'storelist') {
                 $lng = $_GPC['lng'];
 
                 $dis = $distance = getDistance($lat, $lng, $store['lat'], $store['lng']);
+                $stock = pdo_fetchall("select * from cm_tg_goods_store_stock where uniacid={$uniacid} and goodsid={$g_id} and storeid={$v1}");
                 $stores[$k1] = $store;
+                $stores[$k1]['stock'] = $stock;
                 $stores[$k1]['distance'] = $distance;
 
                 if ($distance / 10000 > 1) {
@@ -304,7 +306,10 @@ if ($op == 'storelist') {
         } else {
             foreach ($store_ids as $k2 => $v2) {
                 $store = pdo_fetch('SELECT * FROM ' . tablename('tg_store') . ' WHERE id=:id', array(':id' => $v2));
+                $stock = pdo_fetchall("select * from cm_tg_goods_store_stock where uniacid={$uniacid} and goodsid={$g_id} and storeid={$v2}");
                 $storelist[$k2] = $store;
+                $storelist[$k2]['stock'] = $stock;
+
             }
         }
         die(json_encode($storelist));

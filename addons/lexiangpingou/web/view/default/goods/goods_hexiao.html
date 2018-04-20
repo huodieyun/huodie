@@ -109,8 +109,9 @@
 			{loop $stores $store}
 			<div style="height: 40px; position:relative; float: left; margin-right: 18px;" class="multi-audio-item" storeid="{$store['id']}">
 				<div class="input-group">
-					<input type="hidden" value="{$store['id']}" name="storeids[]">
-					<input type="text" value="{$store['storename']}" readonly="" class="form-control">
+					<input type="hidden" value="{$store['id']}" name="storeids[]" data-name="{$store['storename']}">
+					<input type="text" value="{$store['storename']}" readonly="" class="form-control" style="width:inherit;">
+					<input type="number" value="{$store['gnum']}" name="store[{$store['id']}][gnum]" class="form-control col-xs-6 store_gnum" placeholder="库存" style="width:inherit;">
 					<div class="input-group-btn">
 						<button type="button" onclick="remove_store(this)" class="btn btn-default"><i class="fa fa-remove"></i></button>
 					</div>
@@ -215,17 +216,22 @@
 	        	$('.multi-audio-item[storeid="' + storeid +'"]').remove();
 	    }
 	function select_store(o) {
-	                        if($('.multi-audio-item[storeid="' + o.id +'"]').length>0){
-	                            return;
-	                        }
-	                        var html ='<div style="height: 40px; position:relative; float: left; margin-right: 18px;" class="multi-audio-item" storeid="' + o.id +'">';
-	                html+='<div class="input-group">';
-	                    html+='<input type="hidden" value="' + o.id +'" name="storeids[]">';
-	                    html+='<input type="text" value="' + o.storename +'" readonly="" class="form-control">';
-	                    html+='<div class="input-group-btn"><button type="button" onclick="remove_store(this)" class="btn btn-default"><i class="fa fa-remove"></i></button></div>';
-	             html+='</div></div>';
-	                        $('#stores').append(html);
-	 	}
+		if($('.multi-audio-item[storeid="' + o.id +'"]').length>0){
+		    return;
+		}
+		var html ='<div style="height: 40px; position:relative; float: left; margin-right: 18px;" class="multi-audio-item" storeid="' + o.id +'">';
+		html+='<div class="input-group">';
+		html+='<input type="hidden" value="' + o.id +'" name="storeids[]" data-name="'+o.storename+'">';
+		html+='<input type="text" value="' + o.storename +'" readonly="" class="form-control col-xs-6" style="width:inherit;">';
+		if (document.getElementById("hasoption")){
+			if(!$('#hasoption')[0].checked && $('input[name="goods[has_store_stock]"]:checked').val() == '1'){
+				html+='<input type="number" value="" name="store['+o.id+'][gnum]" class="form-control col-xs-6 store_gnum" placeholder="库存" style="width:inherit;">';
+			}
+		}
+		html+='<div class="input-group-btn"><button type="button" onclick="remove_store(this)" class="btn btn-default"><i class="fa fa-remove"></i></button></div>';
+		html+='</div></div>';
+		$('#stores').append(html);
+ 	}
 </script>
 <script language='javascript'>
 	function search_dispatch() {

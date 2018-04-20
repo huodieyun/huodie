@@ -318,13 +318,13 @@ if ($op == 'all') {
         unlink("../addons/lexiangpingou/lxapi/share_tuan/".$groupnumber.'.jpeg');
         //$orders3 = pdo_fetchall("SELECT id FROM " . tablename('tg_order') . " WHERE tuan_id = '{$groupnumber}' and uniacid='{$_W['uniacid']}' and status=1 and mobile<>'虚拟' ");
 
-        pdo_update('tg_order', array('status' => 8), array('tuan_id' => $groupnumber, 'status' => 1));
+        pdo_update('tg_order', array('status' => 8,'successtime' => TIMESTAMP), array('tuan_id' => $groupnumber, 'status' => 1));
 
 
         /*团成功通知*/
         $url = app_url('order/group', array('tuan_id' => $groupnumber));
         group_success($groupnumber, $url);
-        $all = pdo_fetchall("select id,g_id,gnum,orderno,optionname,mobile,price,freight,couponid from " . tablename('tg_order') . " where tuan_id='{$groupnumber}' and status in (3,8,1,6,7,10)");
+        $all = pdo_fetchall("select * from " . tablename('tg_order') . " where tuan_id='{$groupnumber}' and status in (3,8,1,6,7,10)");
         $g = pdo_fetch("select is_amount,selltype from " . tablename('tg_goods') . " where id = '{$nowthistuan['goodsid']}'");
         if ($g['is_amount'] == 1 && ($g['selltype'] == 4 || $g['selltype'] == 7)) {
             $auto_orders = pdo_fetchcolumn("select SUM(gnum) from " . tablename('tg_order') . " where tuan_id=:tuan_id and uniacid=:uniacid and status in (3,8,1,6,7,10)", array(':tuan_id' => $groupnumber, ':uniacid' => $_W['uniacid']));
@@ -388,6 +388,18 @@ if ($op == 'all') {
             if (!empty($row['optionname'])) {
                 $stock = pdo_fetch("SELECT * FROM " . tablename('tg_goods_option') . " WHERE goodsid=:goodsid AND title=:title", array(':goodsid' => $row['g_id'], ':title' => $row['optionname']));
                 pdo_update('tg_goods_option', array('stock' => $stock['stock'] - $row['gnum']), array('goodsid' => $row['g_id'], 'title' => $row['optionname']));
+            }
+            $v_goods = goods_get_by_params(" id = {$row['g_id']}");
+            if($v_goods['has_store_stock'] == 1){
+                if (!empty($row['optionname'])) {
+                    $store_stock = pdo_fetch("select * from " . tablename('tg_goods_store_stock') . " where goodsid=:goodsid and storeid=:storeid and optionid=:optionid and uniacid=:uniacid", array(':goodsid' => $row['g_id'], ':storeid' => $row['comadd'],':optionid'=>$row['optionid'],':uniacid'=>$row['uniacid']));
+                    pdo_update('tg_goods_store_stock',array('stock'=>$store_stock['stock'] - $row['gnum']),array('id'=>$store_stock['id']));
+                }else{
+                    $store_stock = pdo_fetch("select * from " . tablename('tg_goods_store_stock') . " where goodsid=:goodsid and storeid=:storeid and uniacid=:uniacid", array(':goodsid' => $row['g_id'], ':storeid' => $row['comadd'],':uniacid'=>$row['uniacid']));
+                    pdo_update('tg_goods_store_stock',array('stock'=>$store_stock['stock'] - $row['gnum']),array('id'=>$store_stock['id']));
+                }
+
+
             }
         }
     }

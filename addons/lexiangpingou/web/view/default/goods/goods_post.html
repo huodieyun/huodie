@@ -248,7 +248,22 @@
 
 		<!--商品属性-->
 		<div class="tab-pane" id="tab_param">
-
+			<!-- 多门店规格库存设置-->
+			{if $goods['selltype']!=4 && $goods['selltype']!=7}
+			<div class="tab-pane" id="stores_stock_setting">
+				<div class="panel panel-default">
+					<div class="panel-heading">多门店规格库存设置<a target="_blank" style="cursor:pointer; float:right; font-weight:bold;" href="https://doc.lexiangpingou.cn/releaseProduct.html#fxsz">图文说明>></a></div>
+					<div class="panel-body">
+						<a href="javascript:;" onclick="renderStock()" class="btn btn-primary"><i class="fa fa-refresh"></i>多门店库存设置</a>
+						<div class="table-responsive" id="store_stock" style="padding: 0;">
+							{if $goods['hasoption'] == 1}
+							{$store_html}
+							{/if}
+						</div>
+					</div>
+				</div>
+			</div>
+			{/if}
 			<!--分享设置		-->
 			<div class="tab-pane" id="tab_share">
 				<div class="panel panel-default">
@@ -314,6 +329,149 @@
 
 </div>
 <script>
+	function renderStock() {
+		var storeList = [];
+		if($('input[name="goods[selltype]"]:checked').val() > 0) {
+			$('input[name="storeids[]"]').each(function() {
+				var onSeletedStoreName = $(this).attr('data-name');
+				var storeId = $(this).val();
+				storeList.push({storename: onSeletedStoreName, id: storeId})
+			})
+		} else {
+		  storeList = {php echo json_encode($store_list)}
+		}
+
+		window.optionchanged = false;
+		var html = '<table class="table table-bordered table-condensed"><thead><tr class="active">';
+		var specs = [];
+		$(".spec_item").each(function(i){
+			var _this = $(this);
+
+			var spec = {
+				id: _this.find(".spec_id").val(),
+				title: _this.find(".spec_title").val()
+			};
+
+			var items = [];
+			_this.find(".spec_item_item").each(function(){
+				var __this = $(this);
+				var item = {
+					id: __this.find(".spec_item_id").val(),
+					title: __this.find(".spec_item_title").val(),
+					show:__this.find(".spec_item_show").get(0).checked?"1":"0"
+				};
+				items.push(item);
+			});
+			spec.items = items;
+			specs.push(spec);
+		});
+		specs.sort(function(x,y){
+			if (x.items.length > y.items.length){
+				return 1;
+			}
+			if (x.items.length < y.items.length) {
+				return -1;
+			}
+		});
+		specs.unshift(storeJoinSpecs(storeList));
+		var len = specs.length;
+		var newlen = 1; //多少种组合
+		var h = new Array(len); //显示表格二维数组
+		var rowspans = new Array(len); //每个列的rowspan
+		for(var i=0;i<len;i++){
+			//表头
+			html+="<th style='width:80px;'>" + specs[i].title + "</th>";
+
+			//计算多种组合
+			var itemlen = specs[i].items.length;
+			if(itemlen<=0) { itemlen = 1 };
+			newlen*=itemlen;
+
+			//初始化 二维数组
+			h[i] = new Array(newlen);
+			for(var j=0;j<newlen;j++){
+				h[i][j] = new Array();
+			}
+			//计算rowspan
+			var l = specs[i].items.length;
+			rowspans[i] = 1;
+			for(j=i+1;j<len;j++){
+				rowspans[i]*= specs[j].items.length;
+			}
+		}
+
+		html += '<th class="info" style="width:130px;"><div class=""><div style="padding-bottom:10px;text-align:center;font-size:16px;">库存</div><div class="input-group"><input type="text" class="form-control store_stock_all"VALUE=""/><span class="input-group-addon"><a href="javascript:;" class="fa fa-hand-o-down" title="批量设置" onclick="setCol(\'store_stock\');"></a></span></div></div></th>';
+		html+='</tr></thead>';
+
+		for(var m=0;m<len;m++){
+			var k = 0,kid = 0,n=0;
+			for(var j=0;j<newlen;j++){
+				var rowspan = rowspans[m]; //9
+				if( j % rowspan==0){
+					h[m][j]={title: specs[m].items[kid].title, html: "<td rowspan='" +rowspan + "'>"+ specs[m].items[kid].title+"</td>\r\n",id: specs[m].items[kid].id};
+				//	k++; if(k>specs[m].items.length-1) { k=0; }
+				}
+				else{
+					h[m][j]={title:specs[m].items[kid].title, html: "",id: specs[m].items[kid].id};
+				}
+				n++;
+				if(n==rowspan){
+				kid++; if(kid>specs[m].items.length-1) { kid=0; }
+				n=0;
+				}
+			}
+		}
+
+
+		var hh = "";
+		for(var i=0;i<newlen;i++){
+			hh+="<tr>";
+			var ids = [];
+			var titles = [];
+			for(var j=0;j<len;j++){
+				hh+=h[j][i].html; //每一行的每个规格项列
+				ids.push( h[j][i].id);
+				titles.push( h[j][i].title);
+			}
+			ids =ids.join('_');
+			titles= titles.join('+');
+
+			var val ={ id : "",title:titles, stock : ""};
+			if( $(".store_id_" + ids).length>0){
+				val ={
+					id : $(".store_id_" + ids+":eq(0)").val(),
+					title: titles,
+					stock : $(".store_stock_id_" + ids+":eq(0)").val(),
+				}
+			}
+			hh += '<td class="info">'
+			hh += '<input {if $goods['supply_goodsid']}readonly{/if} name="store_stock_id_' + ids +'[]"type="text" class="form-control store_stock store_stock_id_' + ids +'" value="' +(val.stock=='undefined'?'':val.stock )+'"/></td>';
+			hh += '<input name="store_id[]" type="hidden" class="form-control option_id store_id_' + ids +'" value="'+ids+'"/>';
+		}
+		html+=hh;
+		html+="</table>";
+		$('#store_stock').html(html);
+	}
+
+
+	function storeJoinSpecs(arr) {
+		var spec = {
+				id: 112122121212,
+				title: '门店'
+			};
+		var items = [];
+		arr.forEach(function (item) {
+			var item = {
+				id: item.id,
+				title: item.storename,
+				show: '1'
+			};
+			items.push(item);
+		})
+		spec.items = items;
+		return spec;
+	}
+
 	$('.glyphicon-question-sign').mouseover(function () {
 	    $(this).next().show();
     });
@@ -412,6 +570,10 @@
                     sum += Number(optionStocks[i].value);
                 }
                 storeNum.value = sum;
+
+                if(document.getElementById("collapseOne")) {
+                	document.getElementById("collapseOne").remove();
+                }
             }
         }
     }
@@ -446,19 +608,31 @@
                 util.message('请上传分享图片');
                 return false;
             }
-            if($('#hasoption')[0].checked){
-                if($('#options table').length>0) {
-                    for (var i = 0; i < $('#options tbody input[type="text"]').length; i++) {
-                        if ($('#options tbody input[type="text"]')[i].value == '') {
-                            util.message('请填写规格数据');
-                            return false;
-                        }
-                    }
-                }else{
-                    util.message('请填写规格数据');
-                    return false;
-                }
+            if ($('input[name="goods[community]"]:checked').val() == '0') {
+            	$('input[name="goods[is_daiqian]"]').eq(1).attr('checked','checked');
             }
+            if (document.getElementById("hasoption")){
+	            if($('#hasoption')[0].checked){
+	                if($('#options table').length>0) {
+	                    for (var i = 0; i < $('#options tbody input[type="text"]').length; i++) {
+	                        if ($('#options tbody input[type="text"]')[i].value == '') {
+	                            util.message('请填写规格数据');
+	                            return false;
+	                        }
+	                    }
+	                    $('.store_gnum').remove();
+	                    if ($('input[name="goods[has_store_stock]"]:checked').val() == '1' && $('input[name="store_id[]"]').length == 0) {
+	                    	util.message('开启多门店库存设置后，要填写具体的门店库存，在商品编辑的最后一步，点击多门店库存设置');
+	                        return false;
+	        			}
+	                }else{
+	                    util.message('请填写规格数据');
+	                    return false;
+	                }
+	            } else {
+	            	$('#stores_stock_setting').remove();
+	            }
+        	}
             if (Number($('input[name="goods[gnum]"]').val())<Number($('input[name="goods[groupnum]"]').val())) {
                 util.message('库存数不能少于起团人数');
                 return false;
@@ -503,9 +677,30 @@
 
     function gotoPrev(self){//上一页
         $('.tab-content>.tab-pane').removeClass('active');
-        $(self).parent().parent().prev().addClass('active');
+        var tab = $("input[name='goods[is_wholesale]']:checked").val();
+        var activeTab = $(self).parents('.tab-pane').attr('id');
+        if (tab == "1" && activeTab == "tab_concessions") {
+            $(self).parent().parent().prev().prev().addClass('active');
+        } else {
+            $(self).parent().parent().prev().addClass('active');
+        }
     }
     function gotoNext(self){//下一页
+    	if($('input[name="goods[has_store_stock]"]:checked').val() == '0') {  //多门店库存
+        	$('input.store_gnum').css("display","none");
+        	$('#stores_stock_setting').css("display", "none");
+        }else {
+        	$('input.store_gnum').css("display","block");
+        	if (document.getElementById("hasoption")){
+	        	if($('#hasoption')[0].checked) {
+	        		$('input.store_gnum').css("display","none");
+	        		$('#stores_stock_setting').css("display", "block");
+	        	}else {
+	        		$('#stores_stock_setting').css("display", "none");
+	        	}
+        	}
+        }
+
         if($(self).hasClass('XinXi')) {//商品属性页
             //公用判断
             if(!$('select[name="goods[fk_typeid]"]').val()){
@@ -639,6 +834,11 @@
 			}
 		}
         if($(self).hasClass('PeiSong')){//配送方式
+        	if (switchType == 0){
+				if ("{php echo $_W['account']['vip']}" != '1' || $('input[name="spike"]:checked').val() != '1') {
+					return false;
+				}
+			}
             for(var i=0;i<$('#tab_hexiao .radio>input').length;i++){
                 if($('#tab_hexiao .radio>input')[i].checked){
                     var num=Number($($('#tab_hexiao .radio>input')[i]).attr('data-val'));
