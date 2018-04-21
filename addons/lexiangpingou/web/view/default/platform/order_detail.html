@@ -383,6 +383,8 @@
                 $('.fare').html('￥'+(Number(data.freight)).toFixed(2));
                 $('.uni_payno').html(data.order.uni_payno);
                 $('.uni_payprice').html(data.order.uni_payprice);
+                $('.detail .remark').html(data.remark);
+                $('.detail .adminremark').html(data.adminremark);
                 $('.shop_accountname').html(data.shop_accountname)
                 if(Number(data.order.uni_pay)>0 && data.order.uni_paytype=='1'){
                     $('.uni_payimg img').attr('src',data.order.uni_payimg);
@@ -645,6 +647,18 @@
 
                     </div>
                 </div>
+                <div class="form-group clearfix">
+                    <label class="col-md-3 control-label"> 粉丝备注：</label>
+                    <div class="col-md-9 remark">
+
+                    </div>
+                </div>
+                <div class="form-group clearfix">
+                    <label class="col-md-3 control-label"> 商家备注：</label>
+                    <div class="col-md-9 adminremark">
+
+                    </div>
+                </div>
                 {if $_GPC['ac'] != 'supply_order'}
                 <div class="form-group clearfix">
                     <label class="col-md-3 control-label">商家：</label>
@@ -848,31 +862,53 @@
                     </div>
                 </div>
                 <div class="card">
-                    <div class="form-group" style="height: 60px;">
+                    <div class="form-group" style="height: 30px;">
                         <label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label">总金额</label>
                         <div class="col-md-8">
                             <input type="number" name="total_price" class="form-control" value="" readonly/>
                         </div>
                     </div>
-                    <div class="form-group" style="height: 60px;">
+                    <div class="form-group" style="height: 30px;">
                         <label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label">技术服务费</label>
                         <div class="col-md-8">
                             <input type="number" name="service_price" class="form-control" value="" readonly/>
                         </div>
                     </div>
-                    <div class="form-group" style="height: 60px;">
+                    <div class="form-group" style="height: 30px;">
                         <label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label">支付金额</label>
                         <div class="col-md-8">
                             <input type="number" name="uni_payprice" class="form-control" value="" readonly/>
                         </div>
                     </div>
-                    <div class="form-group" style="height: 60px;">
+
+                    <div class="form-group" style="height: 30px;">
+                        <label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label">开户名称</label>
+                        <div class="col-md-8">
+                            <input type="text" name="bank_name" class="form-control" value="" readonly/>
+                        </div>
+                    </div>
+
+                    <div class="form-group" style="height: 30px;">
+                        <label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label">开户银行</label>
+                        <div class="col-md-8">
+                            <input type="text" name="bank" class="form-control" value="" readonly/>
+                        </div>
+                    </div>
+
+                    <div class="form-group" style="height: 30px;">
+                        <label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label">银行账号</label>
+                        <div class="col-md-8">
+                            <input type="text" name="bank_num" class="form-control" value="" readonly/>
+                        </div>
+                    </div>
+
+                    <div class="form-group" style="height: 30px;">
                         <label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label">银行流水单号</label>
                         <div class="col-md-8">
                             <input type="text" name="uni_payno" class="form-control" value=""/>
                         </div>
                     </div>
-                    <div class="form-group" style="height: 60px;">
+                    <div class="form-group" style="height: 30px;">
                         <label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label">打款时间</label>
                         <div class="col-md-8">
                             <?php if(!$paytime) $paytime = TIMESTAMP ?>
@@ -922,6 +958,9 @@
                 $('input[name="uni_payprice"]').attr('data-money',data.price).val(data.price);
                 $('input[name="total_price"]').attr('data-money',data.total_price).val(data.total_price);
                 $('input[name="service_price"]').attr('data-money',data.service_price).val(data.service_price);
+                $('input[name="bank_name"]').val(data.bank_name);
+                $('input[name="bank"]').val(data.bank);
+                $('input[name="bank_num"]').val(data.bank_num);
             }else{
                 util.tips('无可打款项目');
                 return;

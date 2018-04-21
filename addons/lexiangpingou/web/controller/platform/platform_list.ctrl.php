@@ -25,7 +25,7 @@ if ($op == 'display') {
 
     if (!empty($_GPC['keyword'])) {
         $key = $_GPC['keyword'];
-        $condition .= " and ( id = '{$key}' or uniacid = '{$key}' or uniname like '%{$key}%' ) ";
+        $condition .= " and ( id = '{$key}' or uniacid = '{$key}' or uniname like '%{$key}%' or name like '%{$key}%') ";
     }
     if ($_W['uniacid'] != 33) {
         $condition .= " and uniacid={$_W['uniacid']}";

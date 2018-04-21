@@ -542,9 +542,9 @@ if ($op == 'platform_submit') {
         unset($item);
         unset($goods);
     }
+    $supplier = pdo_get('tg_platform_supplier', array('uniacid' => $_GPC['id']));
     if (count($list) > 0) {
-
-        die(json_encode(array('status' => 1, 'price' => number_format($price, 2), 'total_price' => number_format($total_price, 2), 'service_price' => number_format($service_price, 2))));
+        die(json_encode(array('status' => 1, 'price' => number_format($price, 2), 'total_price' => number_format($total_price, 2), 'service_price' => number_format($service_price, 2), 'bank_name' => $supplier['bank_name'], 'bank' => $supplier['bank_type'], 'bank_num' => $supplier['bank_account'])));
     } else {
         die(json_encode(array('status' => 0, 'price' => 0)));
     }
@@ -601,7 +601,7 @@ if ($op == 'detail') {
             $con .= " and gname like '%{$keyword}%' ";
         }
         $list = pdo_fetch("select * from " . tablename('tg_supply_collect') . " where id = '{$id}' ");
-        $o = pdo_fetch("select orderno,uniacid from " . tablename('tg_order') . " where id = '{$list['orderid']}'");
+        $o = pdo_fetch("select orderno,uniacid,remark,adminremark from " . tablename('tg_order') . " where id = '{$list['orderid']}'");
         $order = pdo_fetch("select * from " . tablename('tg_supply_order') . " where singleno = '{$list['singleno']}'");
         $account = pdo_fetch("select * from " . tablename('account_wechats') . " where uniacid = {$order['uniacid']}");
         if (!empty($order['uni_payimg'])) {
@@ -615,6 +615,8 @@ if ($op == 'detail') {
         $list['shop_accountname'] = $account['name'];
         if ($o) {
             $list['orderno'] = $o['orderno'];
+            $list['remark'] = $o['remark'];
+            $list['adminremark'] = $o['adminremark'];
         } else {
             $list['orderno'] = $list['singleno'];
         }

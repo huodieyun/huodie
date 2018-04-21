@@ -2,9 +2,14 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="0ead4f90-2849-49df-9ac8-0b89d0103b5d" name="默认的" comment="">
-      <change type="DELETED" beforePath="$PROJECT_DIR$/test.html" afterPath="" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.gitignore" afterPath="$PROJECT_DIR$/.gitignore" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/addons/lexiangpingou/web/controller/platform/platform_list.ctrl.php" afterPath="$PROJECT_DIR$/addons/lexiangpingou/web/controller/platform/platform_list.ctrl.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/addons/lexiangpingou/web/controller/platform/platform_order.ctrl.php" afterPath="$PROJECT_DIR$/addons/lexiangpingou/web/controller/platform/platform_order.ctrl.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/addons/lexiangpingou/web/view/default/platform/order_detail.html" afterPath="$PROJECT_DIR$/addons/lexiangpingou/web/view/default/platform/order_detail.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/addons/lexiangpingou/web/view/default/service/APP.html" afterPath="$PROJECT_DIR$/addons/lexiangpingou/web/view/default/service/APP.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/addons/lexiangpingou/web/view/default/service/meigong.html" afterPath="$PROJECT_DIR$/addons/lexiangpingou/web/view/default/service/meigong.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/addons/lexiangpingou/web/view/default/service/vip_service.html" afterPath="$PROJECT_DIR$/addons/lexiangpingou/web/view/default/service/vip_service.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/addons/lexiangpingou/web/view/default/service/xiaochengxu.html" afterPath="$PROJECT_DIR$/addons/lexiangpingou/web/view/default/service/xiaochengxu.html" />
     </list>
     <ignored path="huodieupdate.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -32,253 +37,62 @@
     <favorites_list name="huodieupdate" />
   </component>
   <component name="FileEditorManager">
-    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="minapi.php" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/minapi.php">
+    <leaf>
+      <file leaf-file-name="meigong.html" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/addons/lexiangpingou/web/view/default/service/meigong.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-9.035714">
-              <caret line="2468" column="0" selection-start-line="2468" selection-start-column="0" selection-end-line="2468" selection-end-column="0" />
-              <folding>
-                <marker date="1524275171924" expanded="true" signature="443:627" placeholder="SELECT id,gn... ${tablename('tg_goods')}" />
-                <marker date="1524275171924" expanded="true" signature="1240:1302" placeholder="SELECT * FRO... cm_tg_setting" />
-                <marker date="1524275171924" expanded="true" signature="2766:2855" placeholder="select tpl f... ${tablename('account_wechats')}" />
-                <marker date="1524275171924" expanded="true" signature="2882:2959" placeholder="select * fro... ${tablename('tg_function')}" />
-                <marker date="1524275171924" expanded="true" signature="3377:3491" placeholder="SELECT * FRO... ${tablename('tg_goods')}" />
-                <marker date="1524275171924" expanded="true" signature="3578:3636" placeholder="SELECT COUNT... ${tablename('tg_goods')}" />
-                <marker date="1524275171924" expanded="true" signature="4141:4218" placeholder="select * fro... ${tablename('tg_goods_atlas')}" />
-                <marker date="1524275171924" expanded="true" signature="4591:4736" placeholder="select id,ti... ${tablename('tg_goods_option')}" />
-                <marker date="1524275171924" expanded="true" signature="4859:4966" placeholder="select * fro... ${tablename('tg_goods_openid')}" />
-                <marker date="1524275171924" expanded="true" signature="5271:5410" placeholder="select * fro... ${tablename('tg_adv')}" />
-                <marker date="1524275171924" expanded="true" signature="5705:5858" placeholder="SELECT * FRO... ${tablename('tg_category')}" />
-                <marker date="1524275171924" expanded="true" signature="6188:6248" placeholder="select * fro... ${tablename('tg_goods')}" />
-                <marker date="1524275171924" expanded="true" signature="6529:6597" placeholder="select * fro... ${tablename('tg_goods_atlas')}" />
-                <marker date="1524275171924" expanded="true" signature="7517:7577" placeholder="select * fro... ${tablename('tg_goods')}" />
-                <marker date="1524275171924" expanded="true" signature="7862:7969" placeholder="select `valu... ${tablename('tg_setting')}" />
-                <marker date="1524275171924" expanded="true" signature="8129:8197" placeholder="select * fro... ${tablename('tg_goods_atlas')}" />
-                <marker date="1524275171924" expanded="true" signature="8822:8943" placeholder="SELECT produ... ${tablename('tg_goods_option')}" />
-                <marker date="1524275171924" expanded="true" signature="9141:9297" placeholder="select * fro... ${tablename('tg_group')}" />
-                <marker date="1524275171924" expanded="true" signature="11255:11299" placeholder="SELECT * FRO... ${tablename('tg_order')}" />
-                <marker date="1524275171924" expanded="true" signature="11490:11504" placeholder="SELECT * FRO... ${tablename('tg_member')}" />
-                <marker date="1524275171924" expanded="true" signature="11977:12050" placeholder="select uid f... ${tablename('tg_member')}" />
-                <marker date="1524275171924" expanded="true" signature="12513:12624" placeholder="SELECT * FRO... ${tablename('tg_sendtime')}" />
-                <marker date="1524275171924" expanded="true" signature="13042:13193" placeholder="SELECT id FR... ${tablename('tg_order')}" />
-                <marker date="1524275171924" expanded="true" signature="13547:13658" placeholder="SELECT * FRO... ${tablename('tg_sendtime')}" />
-                <marker date="1524275171924" expanded="true" signature="14076:14227" placeholder="SELECT id FR... ${tablename('tg_order')}" />
-                <marker date="1524275171924" expanded="true" signature="14506:14689" placeholder="SELECT Deliv... ${tablename('tg_dispatch')}" />
-                <marker date="1524275171924" expanded="true" signature="16065:16191" placeholder="select num,o... ${tablename('tg_collect')}" />
-                <marker date="1524275171924" expanded="true" signature="17091:17176" placeholder="select hexia... ${tablename('tg_goods')}" />
-                <marker date="1524275171924" expanded="true" signature="17638:17738" placeholder="select * fro... ${tablename('tg_address')}" />
-                <marker date="1524275171924" expanded="true" signature="17950:18037" placeholder="select * fro... ${tablename('tg_address')}" />
-                <marker date="1524275171924" expanded="true" signature="18445:18524" placeholder="select * fro... ${tablename('tg_address')}" />
-                <marker date="1524275171924" expanded="true" signature="19401:19456" placeholder="select * fro... ${tablename('tg_goods')}" />
-                <marker date="1524275171924" expanded="true" signature="23809:23875" placeholder="select * fro... ${tablename('tg_order')}" />
-                <marker date="1524275171924" expanded="true" signature="24396:24471" placeholder="select * fro... ${tablename('account_wechats')}" />
-                <marker date="1524275171924" expanded="true" signature="24994:25064" placeholder="select * fro... ${tablename('tg_group')}" />
-                <marker date="1524275171924" expanded="true" signature="25155:25252" placeholder="select count... ${tablename('tg_order')}" />
-                <marker date="1524275171924" expanded="true" signature="26049:26228" placeholder="select id,g_... ${tablename('tg_order')}" />
-                <marker date="1524275171924" expanded="true" signature="26383:26503" placeholder="select SUM(g... ${tablename('tg_order')}" />
-                <marker date="1524275171924" expanded="true" signature="29100:29139" placeholder="SELECT cash cm_tg_coupon" />
-                <marker date="1524275171924" expanded="true" signature="30529:30584" placeholder="select * fro... ${tablename('tg_goods')}" />
-                <marker date="1524275171924" expanded="true" signature="31629:31736" placeholder="select * fro... ${tablename('tg_goods_openid')}" />
-                <marker date="1524275171924" expanded="true" signature="32662:32709" placeholder="SELECT * FRO... cm_account_wechats" />
-                <marker date="1524275171924" expanded="true" signature="34119:34295" placeholder="SELECT `coup... ${tablename('tg_coupon')}" />
-                <marker date="1524275171924" expanded="true" signature="34735:34820" placeholder="select id fr... ${tablename('tg_coupon')}" />
-                <marker date="1524275171924" expanded="true" signature="34904:34974" placeholder="select id fr... ${tablename('tg_coupon')}" />
-                <marker date="1524275171924" expanded="true" signature="35705:35772" placeholder="SELECT * FRO... cm_tg_coupon_qrcode" />
-                <marker date="1524275171924" expanded="true" signature="40003:40132" placeholder="SELECT COUNT... cm_" />
-                <marker date="1524275171924" expanded="true" signature="41263:41356" placeholder="UPDATE cm_tg... " />
-                <marker date="1524275171924" expanded="true" signature="43650:43761" placeholder="SELECT * FRO... ${tablename('tg_coupon')}" />
-                <marker date="1524275171924" expanded="true" signature="44054:44129" placeholder="select * fro... ${tablename('tg_order')}" />
-                <marker date="1524275171924" expanded="true" signature="44646:44710" placeholder="select * fro... ${tablename('tg_saler')}" />
-                <marker date="1524275171924" expanded="true" signature="44837:44893" placeholder="select * fro... ${tablename('tg_store')}" />
-                <marker date="1524275171924" expanded="true" signature="45062:45145" placeholder="select * fro... ${tablename('tg_collect')}" />
-                <marker date="1524275171924" expanded="true" signature="45364:45497" placeholder="select openi... ${tablename('tg_order')}" />
-                <marker date="1524275171924" expanded="true" signature="46161:46255" placeholder="select avata... ${tablename('tg_member')}" />
-                <marker date="1524275171924" expanded="true" signature="46544:46617" placeholder="select * fro... ${tablename('tg_group')}" />
-                <marker date="1524275171924" expanded="true" signature="46787:46863" placeholder="select gimg,... ${tablename('tg_goods')}" />
-                <marker date="1524275171924" expanded="true" signature="47104:47177" placeholder="SELECT * FRO... ${tableName('account_wechats')}" />
-                <marker date="1524275171924" expanded="true" signature="48162:48276" placeholder="SELECT * FRO... ${tablename('tg_order')}" />
-                <marker date="1524275171924" expanded="true" signature="48363:48421" placeholder="SELECT COUNT... ${tablename('tg_order')}" />
-                <marker date="1524275171924" expanded="true" signature="49291:49405" placeholder="SELECT * FRO... ${tablename('tg_order')}" />
-                <marker date="1524275171924" expanded="true" signature="49492:49550" placeholder="SELECT COUNT... ${tablename('tg_order')}" />
-                <marker date="1524275171924" expanded="true" signature="49642:49714" placeholder="SELECT * FRO... ${tablename('tg_goods')}" />
-                <marker date="1524275171924" expanded="true" signature="49749:49834" placeholder="SELECT * FRO... ${tablename('tg_group')}" />
-                <marker date="1524275171924" expanded="true" signature="51151:51228" placeholder="SELECT openi... cm_tg_order" />
-                <marker date="1524275171924" expanded="true" signature="51814:51908" placeholder="select * fro... ${tablename(&quot;tg_delivery_price&quot;)}" />
-                <marker date="1524275171924" expanded="true" signature="51945:52059" placeholder="select * fro... ${tablename(&quot;tg_delivery_price&quot;)}" />
-                <marker date="1524275171924" expanded="true" signature="52100:52233" placeholder="select * fro... ${tablename(&quot;tg_delivery_price&quot;)}" />
-                <marker date="1524275171924" expanded="true" signature="53880:53951" placeholder="select uniac... ${tablename('tg_goods')}" />
-                <marker date="1524275171924" expanded="true" signature="54990:55104" placeholder="SELECT id,av... ${tablename('tg_member')}" />
-                <marker date="1524275171924" expanded="true" signature="55204:55299" placeholder="SELECT * FRO... ${tablename('tg_member')}" />
-                <marker date="1524275171924" expanded="true" signature="56164:56257" placeholder="SELECT * FRO... ${tablename('tg_member')}" />
-                <marker date="1524275171924" expanded="true" signature="57436:57529" placeholder="select title... ${tablename('tg_spec')}" />
-                <marker date="1524275171924" expanded="true" signature="57623:57741" placeholder="select title... ${tablename('tg_spec_item')}" />
-                <marker date="1524275171924" expanded="true" signature="57967:58118" placeholder="select id,ti... ${tablename('tg_goods_option')}" />
-                <marker date="1524275171924" expanded="true" signature="58515:58608" placeholder="SELECT title... ${tablename('tg_spec')}" />
-                <marker date="1524275171924" expanded="true" signature="58724:58842" placeholder="SELECT title... ${tablename('tg_spec_item')}" />
-                <marker date="1524275171924" expanded="true" signature="59328:59479" placeholder="SELECT id,ti... ${tablename('tg_goods_option')}" />
-                <marker date="1524275171924" expanded="true" signature="60107:60163" placeholder="select * fro... ${tablename('tg_store')}" />
-                <marker date="1524275171924" expanded="true" signature="60932:61016" placeholder="select * fro... ${tablename('tg_member')}" />
-                <marker date="1524275171924" expanded="true" signature="64575:64641" placeholder="SELECT * FRO... ${tablename('tg_order')}" />
-                <marker date="1524275171924" expanded="true" signature="65769:65839" placeholder="SELECT * FRO... ${tablename('tg_group')}" />
-                <marker date="1524275171924" expanded="true" signature="65930:66027" placeholder="SELECT count... ${tablename('tg_order')}" />
-                <marker date="1524275171924" expanded="true" signature="67244:67302" placeholder="SELECT * FRO... ${tablename('tg_goods')}" />
-                <marker date="1524275171924" expanded="true" signature="69666:69808" placeholder="SELECT COUNT... cm_tg_puv_record" />
-                <marker date="1524275171924" expanded="true" signature="69918:70036" placeholder="select id fr... ${tablename('tg_data_base')}" />
-                <marker date="1524275171924" expanded="true" signature="70102:70317" placeholder="SELECT SUM(p... cm_tg_order" />
-                <marker date="1524275171924" expanded="true" signature="70429:70577" placeholder="SELECT COUNT... cm_tg_order" />
-                <marker date="1524275171924" expanded="true" signature="70710:70872" placeholder="SELECT COUNT... cm_tg_order" />
-                <marker date="1524275171924" expanded="true" signature="70987:71118" placeholder="SELECT COUNT... cm_tg_group" />
-                <marker date="1524275171924" expanded="true" signature="71217:71368" placeholder="SELECT COUNT... cm_tg_group" />
-                <marker date="1524275171924" expanded="true" signature="71469:71616" placeholder="SELECT COUNT... cm_tg_group" />
-                <marker date="1524275171924" expanded="true" signature="71731:71898" placeholder="SELECT SUM(p... cm_tg_order" />
-                <marker date="1524275171924" expanded="true" signature="72013:72188" placeholder="SELECT SUM(r... cm_tg_refund_record" />
-                <marker date="1524275171924" expanded="true" signature="72360:72496" placeholder="select disti... cm_tg_order" />
-                <marker date="1524275171924" expanded="true" signature="72591:72739" placeholder="select sum(p... cm_tg_order" />
-                <marker date="1524275171924" expanded="true" signature="72831:72979" placeholder="select disti... cm_tg_order" />
-                <marker date="1524275171924" expanded="true" signature="73068:73216" placeholder="select disti... cm_tg_order" />
-                <marker date="1524275171924" expanded="true" signature="73314:73493" placeholder="select count... cm_tg_order" />
-                <marker date="1524275171924" expanded="true" signature="73828:73958" placeholder="SELECT count... cm_tg_puv_record" />
-                <marker date="1524275171924" expanded="true" signature="74064:74208" placeholder="SELECT count... cm_tg_puv_record" />
-                <marker date="1524275171924" expanded="true" signature="74318:74446" placeholder="SELECT COUNT... cm_mc_mapping_fans" />
-                <marker date="1524275171924" expanded="true" signature="76621:76753" placeholder="SELECT uniac... cm_tg_puv_record" />
-                <marker date="1524275171924" expanded="true" signature="76901:77017" placeholder="select id fr... ${tablename('tg_data_uv')}" />
-                <marker date="1524275171924" expanded="true" signature="77085:77314" placeholder="SELECT count... " />
-                <marker date="1524275171924" expanded="true" signature="77933:78049" placeholder="select id fr... ${tablename('tg_data_pv')}" />
-                <marker date="1524275171924" expanded="true" signature="78117:78331" placeholder="SELECT count... " />
-                <marker date="1524275171924" expanded="true" signature="79418:79556" placeholder="SELECT uniac... cm_tg_order" />
-                <marker date="1524275171924" expanded="true" signature="79687:79740" placeholder="select id fr... cm_tg_store" />
-                <marker date="1524275171924" expanded="true" signature="79888:80031" placeholder="select id fr... ${tablename('tg_since_data')}" />
-                <marker date="1524275171924" expanded="true" signature="80108:80324" placeholder="SELECT SUM(p... cm_tg_order" />
-                <marker date="1524275171924" expanded="true" signature="80446:80643" placeholder="SELECT COUNT... cm_tg_order" />
-                <marker date="1524275171924" expanded="true" signature="80768:80985" placeholder="SELECT SUM(p... cm_tg_order" />
-                <marker date="1524275171924" expanded="true" signature="81114:81291" placeholder="SELECT SUM(r... cm_tg_refund_record" />
-                <marker date="1524275171924" expanded="true" signature="82551:82903" placeholder="SELECT a.g_i... cm_tg_order" />
-                <marker date="1524275171924" expanded="true" signature="83070:83244" placeholder="select id fr... ${tablename('tg_since_data_info')}" />
-                <marker date="1524275171924" expanded="true" signature="83345:83699" placeholder="SELECT sum(i... cm_tg_order" />
-                <marker date="1524275171924" expanded="true" signature="83846:84225" placeholder="SELECT sum(i... cm_tg_order" />
-                <marker date="1524275171924" expanded="true" signature="85777:85915" placeholder="SELECT uniac... cm_tg_order" />
-                <marker date="1524275171924" expanded="true" signature="86046:86109" placeholder="select id,st... cm_tg_store" />
-                <marker date="1524275171924" expanded="true" signature="86241:86876" placeholder="SELECT a.com... cm_tg_order" />
-                <marker date="1524275171924" expanded="true" signature="87086:87264" placeholder="select id fr... ${tablename('tg_new_since_data_info')}" />
-                <marker date="1524275171924" expanded="true" signature="87374:87708" placeholder="SELECT sum(i... cm_tg_order" />
-                <marker date="1524275171924" expanded="true" signature="87865:88161" placeholder="SELECT COUNT... cm_tg_order" />
-                <marker date="1524275171924" expanded="true" signature="88341:88407" placeholder="SELECT * FRO... cm_tg_goods" />
-                <marker date="1524275171924" expanded="true" signature="90144:90207" placeholder="SELECT uniac... cm_tg_order" />
-                <marker date="1524275171924" expanded="true" signature="90883:91049" placeholder="select max(n... ${tablename('tg_group')}" />
-                <marker date="1524275171924" expanded="true" signature="91118:91235" placeholder="select * fro... ${tablename('tg_data_base')}" />
-                <marker date="1524275171924" expanded="true" signature="91308:91760" placeholder="SELECT max(o... ${tablename('tg_data_base')}" />
-                <marker date="1524275171924" expanded="true" signature="91857:92035" placeholder="SELECT sum(p... cm_tg_order" />
-                <marker date="1524275171924" expanded="true" signature="92104:92362" placeholder="SELECT sum(p... " />
-                <marker date="1524275171924" expanded="true" signature="92427:92691" placeholder="SELECT sum(p... cm_tg_order" />
-                <marker date="1524275171924" expanded="true" signature="92779:92927" placeholder="SELECT COUNT... cm_mc_mapping_fans" />
-                <marker date="1524275171924" expanded="true" signature="92996:93217" placeholder="SELECT COUNT... " />
-                <marker date="1524275171924" expanded="true" signature="93283:93510" placeholder="SELECT COUNT... cm_mc_mapping_fans" />
-                <marker date="1524275171924" expanded="true" signature="93609:93781" placeholder="SELECT SUM(p... cm_tg_order" />
-                <marker date="1524275171924" expanded="true" signature="93860:94116" placeholder="SELECT SUM(p... " />
-                <marker date="1524275171924" expanded="true" signature="94192:94454" placeholder="SELECT SUM(p... cm_tg_order" />
-                <marker date="1524275171924" expanded="true" signature="94549:94804" placeholder="SELECT uniac... cm_tg_puv_record" />
-                <marker date="1524275171924" expanded="true" signature="94868:95134" placeholder="SELECT uniac... cm_tg_puv_record" />
-                <marker date="1524275171924" expanded="true" signature="95204:95352" placeholder="select disti... cm_tg_order" />
-                <marker date="1524275171924" expanded="true" signature="95438:95671" placeholder="SELECT (orde... cm_tg_data_base" />
-                <marker date="1524275171924" expanded="true" signature="95849:96241" placeholder="SELECT a.g_i... cm_tg_order" />
-                <marker date="1524275171924" expanded="true" signature="96329:96717" placeholder="SELECT a.g_i... cm_tg_order" />
-                <marker date="1524275171924" expanded="true" signature="97953:98027" placeholder="select id fr... ${tablename('annual_data')}" />
-                <marker date="1524275171924" expanded="true" signature="98581:98671" placeholder="select id fr... ${tablename('annual_data_order')}" />
-                <marker date="1524275171924" expanded="true" signature="99238:99327" placeholder="select id fr... ${tablename('annual_data_fans')}" />
-                <marker date="1524275171924" expanded="true" signature="99918:100017" placeholder="select id fr... ${tablename('annual_data_customer_price')}" />
-                <marker date="1524275171924" expanded="true" signature="101721:101899" placeholder="SELECT openi... cm_tg_order" />
-                <marker date="1524275171924" expanded="true" signature="101992:102169" placeholder="SELECT sum(p... cm_tg_order" />
-                <marker date="1524275171924" expanded="true" signature="102242:102463" placeholder="SELECT COUNT... cm_tg_order" />
-                <marker date="1524275171924" expanded="true" signature="102504:102810" placeholder="SELECT COUNT... cm_tg_order" />
-                <marker date="1524275171924" expanded="true" signature="102841:103124" placeholder="SELECT (b.ne... cm_tg_order" />
-                <marker date="1524275171924" expanded="true" signature="103158:103395" placeholder="SELECT COUNT... cm_tg_order" />
-                <marker date="1524275171924" expanded="true" signature="103434:103696" placeholder="SELECT COUNT... cm_tg_order" />
-                <marker date="1524275171924" expanded="true" signature="103756:103974" placeholder="SELECT COUNT... cm_tg_order" />
-                <marker date="1524275171924" expanded="true" signature="104033:104251" placeholder="SELECT COUNT... cm_tg_order" />
-                <marker date="1524275171924" expanded="true" signature="104592:104810" placeholder="SELECT COUNT... cm_tg_order" />
-                <marker date="1524275171924" expanded="true" signature="105024:105242" placeholder="SELECT COUNT... cm_tg_order" />
-                <marker date="1524275171924" expanded="true" signature="105990:106094" placeholder="select id fr... ${tablename('fans_data')}" />
-                <marker date="1524275171924" expanded="true" signature="106504:106590" placeholder="SELECT uniac... cm_fans_data" />
-                <marker date="1524275171924" expanded="true" signature="106659:106745" placeholder="SELECT * FRO... cm_fans_data" />
-                <marker date="1524275171924" expanded="true" signature="107293:107325" placeholder="SELECT * FRO... cm_fans_data_limit" />
-                <marker date="1524275171924" expanded="true" signature="107602:107759" placeholder="SELECT openi... cm_tg_order" />
-                <marker date="1524275171924" expanded="true" signature="107822:107978" placeholder="SELECT openi... cm_tg_order" />
-                <marker date="1524275171924" expanded="true" signature="108069:108206" placeholder="SELECT uniac... cm_tg_order" />
-                <marker date="1524275171924" expanded="true" signature="108449:108591" placeholder="SELECT uniac... cm_tg_order" />
-                <marker date="1524275171924" expanded="true" signature="108736:108809" placeholder="SELECT uniac... cm_tg_order" />
-                <marker date="1524275171924" expanded="true" signature="108957:109113" placeholder="SELECT openi... cm_tg_order" />
-                <marker date="1524275171924" expanded="true" signature="109214:109391" placeholder="SELECT sum(p... cm_tg_order" />
-                <marker date="1524275171924" expanded="true" signature="109466:109687" placeholder="SELECT COUNT... cm_tg_order" />
-                <marker date="1524275171924" expanded="true" signature="109728:110034" placeholder="SELECT COUNT... cm_tg_order" />
-                <marker date="1524275171924" expanded="true" signature="110065:110348" placeholder="SELECT (b.ne... cm_tg_order" />
-                <marker date="1524275171924" expanded="true" signature="110382:110619" placeholder="SELECT COUNT... cm_tg_order" />
-                <marker date="1524275171924" expanded="true" signature="110658:110920" placeholder="SELECT COUNT... cm_tg_order" />
-                <marker date="1524275171924" expanded="true" signature="110980:111198" placeholder="SELECT COUNT... cm_tg_order" />
-                <marker date="1524275171924" expanded="true" signature="111257:111475" placeholder="SELECT COUNT... cm_tg_order" />
-                <marker date="1524275171924" expanded="true" signature="111822:112040" placeholder="SELECT COUNT... cm_tg_order" />
-                <marker date="1524275171924" expanded="true" signature="112258:112476" placeholder="SELECT COUNT... cm_tg_order" />
-                <marker date="1524275171924" expanded="true" signature="113270:113381" placeholder="select id fr... ${tablename('fans_data_spring')}" />
-                <marker date="1524275171924" expanded="true" signature="113803:113887" placeholder="SELECT * FRO... cm_fans_data_spring" />
-                <marker date="1524275171924" expanded="true" signature="114319:114412" placeholder="SELECT uniac... cm_fans_data_spring" />
-                <marker date="1524275171924" expanded="true" signature="114490:114583" placeholder="SELECT * FRO... cm_fans_data_spring" />
-                <marker date="1524275171924" expanded="true" signature="115038:115234" placeholder="SELECT id,un... ${tablename('tg_order')}" />
-                <marker date="1524275171924" expanded="true" signature="115307:115447" placeholder="select id,re... ${tablename('tg_order_collect')}" />
-                <marker date="1524275171924" expanded="true" signature="115789:115852" placeholder="SELECT store... ${tablename('tg_store')}" />
-                <marker date="1524275171924" expanded="true" signature="116938:117001" placeholder="SELECT store... ${tablename('tg_store')}" />
-                <marker date="1524275171924" expanded="true" signature="132624:132726" placeholder="select * fro... cm_tg_group" />
-                <marker date="1524275171924" expanded="true" signature="132835:132900" placeholder="select openi... cm_tg_order" />
-                <marker date="1524275171924" expanded="true" signature="132975:133026" placeholder="select no_nu... cm_tg_goods" />
-                <marker date="1524275171924" expanded="true" signature="134189:134297" placeholder="SELECT count... cm_tg_group" />
-                <marker date="1524275171924" expanded="true" signature="134947:135122" placeholder="SELECT count... cm_tg_order" />
-                <marker date="1524275171924" expanded="true" signature="136428:136603" placeholder="SELECT count... cm_tg_order" />
-                <marker date="1524275171924" expanded="true" signature="136719:136765" placeholder="select store... cm_tg_store" />
-                <marker date="1524275171924" expanded="true" signature="137300:137442" placeholder="SELECT count... cm_tg_order" />
-                <marker date="1524275171924" expanded="true" signature="138456:138517" placeholder="SELECT id,st... cm_tg_store" />
-                <marker date="1524275171924" expanded="true" signature="138637:138762" placeholder="SELECT comad... cm_tg_order" />
-                <marker date="1524275171924" expanded="true" signature="140040:140157" placeholder="select * fro... ${tablename('tg_data_base')}" />
-                <marker date="1524275171924" expanded="true" signature="140281:140396" placeholder="select * fro... ${tablename('tg_data_base')}" />
-                <marker date="1524275171924" expanded="true" signature="140523:141030" placeholder="select sum(o... ${tablename('tg_data_base')}" />
-                <marker date="1524275171924" expanded="true" signature="141156:141664" placeholder="select sum(o... ${tablename('tg_data_base')}" />
-                <marker date="1524275171924" expanded="true" signature="141733:142185" placeholder="SELECT max(o... ${tablename('tg_data_base')}" />
-                <marker date="1524275171924" expanded="true" signature="142621:142970" placeholder="select sum(o... ${tablename('tg_since_data')}" />
-                <marker date="1524275171924" expanded="true" signature="143075:143110" placeholder="select * fro... cm_tg_store" />
-                <marker date="1524275171924" expanded="true" signature="143543:143606" placeholder="select id,st... cm_tg_store" />
-                <marker date="1524275171924" expanded="true" signature="143676:144003" placeholder="SELECT uniac... cm_tg_new_since_data_info" />
-                <marker date="1524275171924" expanded="true" signature="144739:145256" placeholder="SELECT a.uni... cm_tg_commander" />
-                <marker date="1524275171924" expanded="true" signature="145327:145471" placeholder="SELECT count... cm_tg_order" />
-                <marker date="1524275171924" expanded="true" signature="145505:145677" placeholder="SELECT sum(g... cm_tg_order" />
-                <marker date="1524275171924" expanded="true" signature="146348:146411" placeholder="select id,st... cm_tg_store" />
-                <marker date="1524275171924" expanded="true" signature="146480:146685" placeholder="SELECT *,sum... cm_tg_new_since_data_info" />
-                <marker date="1524275171924" expanded="true" signature="147079:147459" placeholder="select sum(o... ${tablename('tg_since_data_info')}" />
-                <marker date="1524275171924" expanded="true" signature="147564:147599" placeholder="select * fro... cm_tg_goods" />
-                <marker date="1524275171924" expanded="true" signature="148085:148807" placeholder="select sum(o... ${tablename('tg_data_base')}" />
-                <marker date="1524275171924" expanded="true" signature="152567:152712" placeholder="select * fro... ${tablename('tg_data_base')}" />
-                <marker date="1524275171924" expanded="true" signature="152977:153124" placeholder="select sum(p... cm_tg_order" />
-                <marker date="1524275171924" expanded="true" signature="153291:153430" placeholder="select openi... cm_tg_order" />
-                <marker date="1524275171924" expanded="true" signature="154049:154206" placeholder="select pv,uv... ${tablename('tg_data_base')}" />
-                <marker date="1524275171924" expanded="true" signature="154813:154974" placeholder="select id, p... ${tablename('tg_data_base')}" />
-                <marker date="1524275171924" expanded="true" signature="155244:155404" placeholder="select openi... cm_tg_order" />
-                <marker date="1524275171924" expanded="true" signature="155553:155701" placeholder="select openi... cm_tg_order" />
-                <marker date="1524275171924" expanded="true" signature="155841:155979" placeholder="select openi... cm_tg_order" />
-                <marker date="1524275171924" expanded="true" signature="156945:157064" placeholder="SELECT count... cm_tg_address" />
-                <marker date="1524275171924" expanded="true" signature="157171:157278" placeholder="SELECT count... cm_tg_address" />
-                <marker date="1524275171924" expanded="true" signature="157387:157500" placeholder="SELECT count... cm_tg_address" />
-                <marker date="1524275171924" expanded="true" signature="157941:158104" placeholder="SELECT verop... cm_tg_order" />
-                <marker date="1524275171924" expanded="true" signature="158206:158293" placeholder="SELECT nickn... cm_tg_member" />
-                <marker date="1524275171924" expanded="true" signature="159412:159500" placeholder="select * fro... ${tablename('tg_merchant')}" />
-                <marker date="1524275171924" expanded="true" signature="164623:164704" placeholder="DELETE FROM " />
-                <marker date="1524275171924" expanded="true" signature="165067:165151" placeholder="SELECT smsnu... ${tablename('account_wechats')}" />
-              </folding>
+            <state vertical-scroll-proportion="-6.107143">
+              <caret line="9" column="30" selection-start-line="9" selection-start-column="30" selection-end-line="9" selection-end-column="30" />
+              <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name=".gitignore" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/.gitignore">
+      <file leaf-file-name="meigong.html" pinned="true" current-in-tab="false">
+        <entry file="REMOTE_DEPLOYMENT_FS://&lt;24e1f11d-bac3-4387-95fb-7ce2f6616629&gt;/addons/lexiangpingou/web/view/default/service/meigong.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.033043478">
-              <caret line="1" column="5" selection-start-line="1" selection-start-column="5" selection-end-line="1" selection-end-column="5" />
+            <state vertical-scroll-proportion="-1.7538462">
+              <caret line="6" column="29" selection-start-line="0" selection-start-column="0" selection-end-line="223" selection-end-column="0" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="xiaochengxu.html" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/addons/lexiangpingou/web/view/default/service/xiaochengxu.html">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="-6.107143">
+              <caret line="9" column="37" selection-start-line="9" selection-start-column="37" selection-end-line="9" selection-end-column="37" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="xiaochengxu.html" pinned="true" current-in-tab="false">
+        <entry file="REMOTE_DEPLOYMENT_FS://&lt;24e1f11d-bac3-4387-95fb-7ce2f6616629&gt;/addons/lexiangpingou/web/view/default/service/xiaochengxu.html">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="-2.6307693">
+              <caret line="9" column="37" selection-start-line="0" selection-start-column="0" selection-end-line="246" selection-end-column="0" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="vip_service.html" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/addons/lexiangpingou/web/view/default/service/vip_service.html">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.61071426">
+              <caret line="27" column="77" selection-start-line="27" selection-start-column="77" selection-end-line="27" selection-end-column="77" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="vip_service.html" pinned="true" current-in-tab="false">
+        <entry file="REMOTE_DEPLOYMENT_FS://&lt;24e1f11d-bac3-4387-95fb-7ce2f6616629&gt;/addons/lexiangpingou/web/view/default/service/vip_service.html">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="-2.9230769">
+              <caret line="10" column="30" selection-start-line="0" selection-start-column="0" selection-end-line="826" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -292,12 +106,6 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/addons/lexiangpingou/web/view/default/order/order_detail.html" />
-        <option value="$PROJECT_DIR$/addons/lexiangpingou/core/function/print.func.php" />
-        <option value="$PROJECT_DIR$/addons/lexiangpingou/web/view/default/service/meigong.html" />
-        <option value="$PROJECT_DIR$/addons/lexiangpingou/web/view/default/service/vip_service.html" />
-        <option value="$PROJECT_DIR$/addons/lexiangpingou/web/view/default/service/xiaochengxu.html" />
-        <option value="$PROJECT_DIR$/addons/lexiangpingou/web/view/default/service/APP.html" />
         <option value="$PROJECT_DIR$/testgit.php" />
         <option value="$PROJECT_DIR$/addons/lexiangpingou/web/view/default/store/setting.html" />
         <option value="$PROJECT_DIR$/addons/lexiangpingou/core/function/template.func.php" />
@@ -338,11 +146,17 @@
         <option value="$PROJECT_DIR$/addons/lexiangpingou/web/view/default/goods/goods_hexiao.html" />
         <option value="$PROJECT_DIR$/addons/lexiangpingou/web/view/default/goods/goods_post.html" />
         <option value="&lt;24e1f11d-bac3-4387-95fb-7ce2f6616629&gt;/minapi.php" />
-        <option value="$PROJECT_DIR$/addons/lexiangpingou/web/controller/platform/platform_order.ctrl.php" />
-        <option value="$PROJECT_DIR$/addons/lexiangpingou/web/controller/platform/platform_list.ctrl.php" />
         <option value="$PROJECT_DIR$/addons/lexiangpingou/web/view/default/order/order.html" />
-        <option value="$PROJECT_DIR$/minapi.php" />
         <option value="$PROJECT_DIR$/.gitignore" />
+        <option value="$PROJECT_DIR$/minapi.php" />
+        <option value="$PROJECT_DIR$/test.php" />
+        <option value="$PROJECT_DIR$/addons/lexiangpingou/web/controller/platform/platform_list.ctrl.php" />
+        <option value="$PROJECT_DIR$/addons/lexiangpingou/web/view/default/platform/order_detail.html" />
+        <option value="$PROJECT_DIR$/addons/lexiangpingou/web/controller/platform/platform_order.ctrl.php" />
+        <option value="$PROJECT_DIR$/addons/lexiangpingou/web/view/default/service/APP.html" />
+        <option value="$PROJECT_DIR$/addons/lexiangpingou/web/view/default/service/meigong.html" />
+        <option value="$PROJECT_DIR$/addons/lexiangpingou/web/view/default/service/xiaochengxu.html" />
+        <option value="$PROJECT_DIR$/addons/lexiangpingou/web/view/default/service/vip_service.html" />
       </list>
     </option>
   </component>
@@ -466,14 +280,14 @@
     </panes>
   </component>
   <component name="PropertiesComponent">
-    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="WebServerToolWindowFactoryState" value="true" />
     <property name="WebServerToolWindowPanel.toolwindow.show.size" value="false" />
     <property name="WebServerToolWindowPanel.toolwindow.show.date" value="false" />
     <property name="WebServerToolWindowPanel.toolwindow.show.permissions" value="false" />
     <property name="WebServerToolWindowPanel.toolwindow.highlight.symlinks" value="true" />
     <property name="WebServerToolWindowPanel.toolwindow.highlight.mappings" value="true" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
-    <property name="SearchEverywhereHistoryKey" value="lexiangpingou/web/view/default/order/order.html&#9;FILE&#9;file://D:/huodieupdate/addons/lexiangpingou/web/view/default/order/order.html&#10;lexiangpingou/web/view/default/platform/order_detail.html&#9;FILE&#9;file://D:/huodieupdate/addons/lexiangpingou/web/view/default/platform/order_detail.html&#10;lexiangpingou/web/controller/platform/platform_order.ctrl.php&#9;FILE&#9;file://D:/huodieupdate/addons/lexiangpingou/web/controller/platform/platform_order.ctrl.php&#10;lexiangpingou/web/controller/platform/platform_list.ctrl.php&#9;FILE&#9;file://D:/huodieupdate/addons/lexiangpingou/web/controller/platform/platform_list.ctrl.php&#10;addons/lexiangpingou/web/view/default/goods/goods_post.html&#9;FILE&#9;file://D:/huodieupdate/addons/lexiangpingou/web/view/default/goods/goods_post.html&#10;addons/lexiangpingou/web/view/default/goods/goods_hexiao.htm&#9;FILE&#9;file://D:/huodieupdate/addons/lexiangpingou/web/view/default/goods/goods_hexiao.html&#10;addons/lexiangpingou/app/view/default/goods/goods_detail.html&#9;FILE&#9;file://D:/huodieupdate/addons/lexiangpingou/app/view/default/goods/goods_detail.html&#10;addons/lexiangpingou/web/view/default/goods/goods_hexiao.html&#9;FILE&#9;file://D:/huodieupdate/addons/lexiangpingou/web/view/default/goods/goods_hexiao.html&#10;addons/lexiangpingou/app/view/default/order/group.html&#9;FILE&#9;file://D:/huodieupdate/addons/lexiangpingou/app/view/default/order/group.html&#10;addons/lexiangpingou/app/view/default/order/order_confirm.html&#9;FILE&#9;file://D:/huodieupdate/addons/lexiangpingou/app/view/default/order/order_confirm.html&#10;addons/lexiangpingou/web/view/default/goods/goods_basicSuiYiT.html&#9;FILE&#9;file://D:/huodieupdate/addons/lexiangpingou/web/view/default/goods/goods_basicSuiYiT.html&#10;addons/lexiangpingou/app/controller/order/orderconfirm.ctrl.php&#9;FILE&#9;file://D:/huodieupdate/addons/lexiangpingou/app/controller/order/orderconfirm.ctrl.php&#10;addons/lexiangpingou/app/controller/goods/ajaxlist.ctrl.php&#9;FILE&#9;file://D:/huodieupdate/addons/lexiangpingou/app/controller/goods/ajaxlist.ctrl.php&#10;addons/lexiangpingou/core/function/global.func.php&#9;FILE&#9;file://D:/huodieupdate/addons/lexiangpingou/core/function/global.func.php&#10;addons/lexiangpingou/web/controller/order/group.ctrl.php&#9;FILE&#9;file://D:/huodieupdate/addons/lexiangpingou/web/controller/order/group.ctrl.php&#10;addons/lexiangpingou/core/model/group.mod.php&#9;FILE&#9;file://D:/huodieupdate/addons/lexiangpingou/core/model/group.mod.php&#10;addons/lexiangpingou/site.php&#9;FILE&#9;file://D:/huodieupdate/addons/lexiangpingou/site.php&#10;addons/lexiangpingou/web/controller/goods/goods.ctrl.php&#9;FILE&#9;file://D:/huodieupdate/addons/lexiangpingou/web/controller/goods/goods.ctrl.php&#10;addons/lexiangpingou/app/view/default/goods/goods_lindetail.html&#9;FILE&#9;file://D:/huodieupdate/addons/lexiangpingou/app/view/default/goods/goods_lindetail.html&#10;lexiangpingou/web/view/default/goods/goods_basic_param/one_card.html&#9;FILE&#9;file://D:/huodieupdate/addons/lexiangpingou/web/view/default/goods/goods_basic_param/one_card.html&#10;lexiangpingou/web/view/default/goods/goods_basic_param/self_time.html&#9;FILE&#9;file://D:/huodieupdate/addons/lexiangpingou/web/view/default/goods/goods_basic_param/self_time.html&#10;lexiangpingou/core/function/template.func.php&#9;FILE&#9;file://D:/huodieupdate/addons/lexiangpingou/core/function/template.func.php&#10;lexiangpingou/web/view/default/store/setting.html&#9;FILE&#9;file://D:/huodieupdate/addons/lexiangpingou/web/view/default/store/setting.html&#10;lexiangpingou/web/view/default/service/xiaochengxu.html&#9;FILE&#9;file://D:/huodieupdate/addons/lexiangpingou/web/view/default/service/xiaochengxu.html&#10;lexiangpingou/web/view/default/service/vip_service.html&#9;FILE&#9;file://D:/huodieupdate/addons/lexiangpingou/web/view/default/service/vip_service.html&#10;lexiangpingou/web/view/default/service/meigong.html&#9;FILE&#9;file://D:/huodieupdate/addons/lexiangpingou/web/view/default/service/meigong.html&#10;lexiangpingou/web/view/default/service/APP.html&#9;FILE&#9;file://D:/huodieupdate/addons/lexiangpingou/web/view/default/service/APP.html&#10;lexiangpingou/web/view/default/order/order_detail.html&#9;FILE&#9;file://D:/huodieupdate/addons/lexiangpingou/web/view/default/order/order_detail.html&#10;app/view/default/order/shoporder_confirm.html&#9;FILE&#9;file://D:/huodieupdate/addons/lexiangpingou/app/view/default/order/shoporder_confirm.html&#10;lexiangpingou/app/view/default/order/order_confirm.html&#9;FILE&#9;file://D:/huodieupdate/addons/lexiangpingou/app/view/default/order/order_confirm.html&#10;web/view/default/store/setting.html&#9;FILE&#9;file://D:/huodieupdate/addons/lexiangpingou/web/view/default/store/setting.html&#10;web/view/default/goods/goods_basic_param/self_time.html&#9;FILE&#9;file://D:/huodieupdate/addons/lexiangpingou/web/view/default/goods/goods_basic_param/self_time.html&#10;/web/view/default/goods/goods_basicZiXuanT.html&#9;FILE&#9;file://D:/huodieupdate/addons/lexiangpingou/web/view/default/goods/goods_basicZiXuanT.html&#10;lexiangpingou/web/view/default/goods/goods_basicXinZhuanT.html&#9;FILE&#9;file://D:/huodieupdate/addons/lexiangpingou/web/view/default/goods/goods_basicXinZhuanT.html&#10;web/view/default/goods/goods_basicSuiYiT.html&#9;FILE&#9;file://D:/huodieupdate/addons/lexiangpingou/web/view/default/goods/goods_basicSuiYiT.html&#10;web/view/default/goods/goods_basicLinGouT.html&#9;FILE&#9;file://D:/huodieupdate/addons/lexiangpingou/web/view/default/goods/goods_basicLinGouT.html&#10;web/view/default/goods/goods_basicJieTiT.html&#9;FILE&#9;file://D:/huodieupdate/addons/lexiangpingou/web/view/default/goods/goods_basicJieTiT.html&#10;web/view/default/goods/goods_basicDingJinT.html&#9;FILE&#9;file://D:/huodieupdate/addons/lexiangpingou/web/view/default/goods/goods_basicDingJinT.html&#10;lexiangpingou/web/view/default/goods/goods_basicChouJiangT.html&#9;FILE&#9;file://D:/huodieupdate/addons/lexiangpingou/web/view/default/goods/goods_basicChouJiangT.html&#10;lexiangpingou/app/controller/order/shoporderconfirm.ctrl.php&#9;FILE&#9;file://D:/huodieupdate/addons/lexiangpingou/app/controller/order/shoporderconfirm.ctrl.php&#10;lexiangpingou/app/controller/order/orderconfirm.ctrl.php&#9;FILE&#9;file://D:/huodieupdate/addons/lexiangpingou/app/controller/order/orderconfirm.ctrl.php&#10;lexiangpingou/web/controller/store/setting.ctrl.php&#9;FILE&#9;file://D:/huodieupdate/addons/lexiangpingou/web/controller/store/setting.ctrl.php&#10;lexiangpingou/web/controller/goods/goods.ctrl.php&#9;FILE&#9;file://D:/huodieupdate/addons/lexiangpingou/web/controller/goods/goods.ctrl.php&#10;addons/lexiangpingou/app/view/default/common/cube.html&#9;FILE&#9;file://D:/huodieupdate/addons/lexiangpingou/app/view/default/common/cube.html&#10;lexiangpingou/app/controller/pay/payfunctionajax.ctrl.php&#9;FILE&#9;file://D:/huodieupdate/addons/lexiangpingou/app/controller/pay/payfunctionajax.ctrl.php&#10;lexiangpingou/web/controller/service/vip_service.ctrl.php&#9;FILE&#9;file://D:/huodieupdate/addons/lexiangpingou/web/controller/service/vip_service.ctrl.php&#10;lexiangpingou/web/index.php&#9;FILE&#9;file://D:/huodieupdate/addons/lexiangpingou/web/index.php&#10;lexiangpingou/web/controller/service/xiaochengxu.ctrl.php&#9;FILE&#9;file://D:/huodieupdate/addons/lexiangpingou/web/controller/service/xiaochengxu.ctrl.php&#10;lexiangpingou/web/controller/service/meigong.ctrl.php&#9;FILE&#9;file://D:/huodieupdate/addons/lexiangpingou/web/controller/service/meigong.ctrl.php&#10;lexiangpingou/web/controller/service/APP.ctrl.php&#9;FILE&#9;file://D:/huodieupdate/addons/lexiangpingou/web/controller/service/APP.ctrl.php" />
+    <property name="SearchEverywhereHistoryKey" value="lexiangpingou/web/view/default/service/vip_service.html&#9;FILE&#9;file://D:/huodieupdate/addons/lexiangpingou/web/view/default/service/vip_service.html&#10;lexiangpingou/web/view/default/service/xiaochengxu.html&#9;FILE&#9;file://D:/huodieupdate/addons/lexiangpingou/web/view/default/service/xiaochengxu.html&#10;lexiangpingou/web/view/default/service/meigong.html&#9;FILE&#9;file://D:/huodieupdate/addons/lexiangpingou/web/view/default/service/meigong.html&#10;lexiangpingou/web/view/default/service/APP.html&#9;FILE&#9;file://D:/huodieupdate/addons/lexiangpingou/web/view/default/service/APP.html&#10;lexiangpingou/web/controller/platform/platform_order.ctrl.php&#9;FILE&#9;file://D:/huodieupdate/addons/lexiangpingou/web/controller/platform/platform_order.ctrl.php&#10;lexiangpingou/web/controller/platform/platform_list.ctrl.php&#9;FILE&#9;file://D:/huodieupdate/addons/lexiangpingou/web/controller/platform/platform_list.ctrl.php&#10;lexiangpingou/web/view/default/platform/goods_display.html&#9;FILE&#9;file://D:/huodieupdate/addons/lexiangpingou/web/view/default/platform/goods_display.html&#10;lexiangpingou/web/view/default/platform/order_detail.html&#9;FILE&#9;file://D:/huodieupdate/addons/lexiangpingou/web/view/default/platform/order_detail.html&#10;lexiangpingou/web/view/default/order/order.html&#9;FILE&#9;file://D:/huodieupdate/addons/lexiangpingou/web/view/default/order/order.html&#10;addons/lexiangpingou/web/view/default/goods/goods_post.html&#9;FILE&#9;file://D:/huodieupdate/addons/lexiangpingou/web/view/default/goods/goods_post.html&#10;addons/lexiangpingou/web/view/default/goods/goods_hexiao.htm&#9;FILE&#9;file://D:/huodieupdate/addons/lexiangpingou/web/view/default/goods/goods_hexiao.html&#10;addons/lexiangpingou/app/view/default/goods/goods_detail.html&#9;FILE&#9;file://D:/huodieupdate/addons/lexiangpingou/app/view/default/goods/goods_detail.html&#10;addons/lexiangpingou/web/view/default/goods/goods_hexiao.html&#9;FILE&#9;file://D:/huodieupdate/addons/lexiangpingou/web/view/default/goods/goods_hexiao.html&#10;addons/lexiangpingou/app/view/default/order/group.html&#9;FILE&#9;file://D:/huodieupdate/addons/lexiangpingou/app/view/default/order/group.html&#10;addons/lexiangpingou/app/view/default/order/order_confirm.html&#9;FILE&#9;file://D:/huodieupdate/addons/lexiangpingou/app/view/default/order/order_confirm.html&#10;addons/lexiangpingou/web/view/default/goods/goods_basicSuiYiT.html&#9;FILE&#9;file://D:/huodieupdate/addons/lexiangpingou/web/view/default/goods/goods_basicSuiYiT.html&#10;addons/lexiangpingou/app/controller/order/orderconfirm.ctrl.php&#9;FILE&#9;file://D:/huodieupdate/addons/lexiangpingou/app/controller/order/orderconfirm.ctrl.php&#10;addons/lexiangpingou/app/controller/goods/ajaxlist.ctrl.php&#9;FILE&#9;file://D:/huodieupdate/addons/lexiangpingou/app/controller/goods/ajaxlist.ctrl.php&#10;addons/lexiangpingou/core/function/global.func.php&#9;FILE&#9;file://D:/huodieupdate/addons/lexiangpingou/core/function/global.func.php&#10;addons/lexiangpingou/web/controller/order/group.ctrl.php&#9;FILE&#9;file://D:/huodieupdate/addons/lexiangpingou/web/controller/order/group.ctrl.php&#10;addons/lexiangpingou/core/model/group.mod.php&#9;FILE&#9;file://D:/huodieupdate/addons/lexiangpingou/core/model/group.mod.php&#10;addons/lexiangpingou/site.php&#9;FILE&#9;file://D:/huodieupdate/addons/lexiangpingou/site.php&#10;addons/lexiangpingou/web/controller/goods/goods.ctrl.php&#9;FILE&#9;file://D:/huodieupdate/addons/lexiangpingou/web/controller/goods/goods.ctrl.php&#10;addons/lexiangpingou/app/view/default/goods/goods_lindetail.html&#9;FILE&#9;file://D:/huodieupdate/addons/lexiangpingou/app/view/default/goods/goods_lindetail.html&#10;lexiangpingou/web/view/default/goods/goods_basic_param/one_card.html&#9;FILE&#9;file://D:/huodieupdate/addons/lexiangpingou/web/view/default/goods/goods_basic_param/one_card.html&#10;lexiangpingou/web/view/default/goods/goods_basic_param/self_time.html&#9;FILE&#9;file://D:/huodieupdate/addons/lexiangpingou/web/view/default/goods/goods_basic_param/self_time.html&#10;lexiangpingou/core/function/template.func.php&#9;FILE&#9;file://D:/huodieupdate/addons/lexiangpingou/core/function/template.func.php&#10;lexiangpingou/web/view/default/store/setting.html&#9;FILE&#9;file://D:/huodieupdate/addons/lexiangpingou/web/view/default/store/setting.html&#10;lexiangpingou/web/view/default/order/order_detail.html&#9;FILE&#9;file://D:/huodieupdate/addons/lexiangpingou/web/view/default/order/order_detail.html&#10;app/view/default/order/shoporder_confirm.html&#9;FILE&#9;file://D:/huodieupdate/addons/lexiangpingou/app/view/default/order/shoporder_confirm.html&#10;lexiangpingou/app/view/default/order/order_confirm.html&#9;FILE&#9;file://D:/huodieupdate/addons/lexiangpingou/app/view/default/order/order_confirm.html&#10;web/view/default/store/setting.html&#9;FILE&#9;file://D:/huodieupdate/addons/lexiangpingou/web/view/default/store/setting.html&#10;web/view/default/goods/goods_basic_param/self_time.html&#9;FILE&#9;file://D:/huodieupdate/addons/lexiangpingou/web/view/default/goods/goods_basic_param/self_time.html&#10;/web/view/default/goods/goods_basicZiXuanT.html&#9;FILE&#9;file://D:/huodieupdate/addons/lexiangpingou/web/view/default/goods/goods_basicZiXuanT.html&#10;lexiangpingou/web/view/default/goods/goods_basicXinZhuanT.html&#9;FILE&#9;file://D:/huodieupdate/addons/lexiangpingou/web/view/default/goods/goods_basicXinZhuanT.html&#10;web/view/default/goods/goods_basicSuiYiT.html&#9;FILE&#9;file://D:/huodieupdate/addons/lexiangpingou/web/view/default/goods/goods_basicSuiYiT.html&#10;web/view/default/goods/goods_basicLinGouT.html&#9;FILE&#9;file://D:/huodieupdate/addons/lexiangpingou/web/view/default/goods/goods_basicLinGouT.html&#10;web/view/default/goods/goods_basicJieTiT.html&#9;FILE&#9;file://D:/huodieupdate/addons/lexiangpingou/web/view/default/goods/goods_basicJieTiT.html&#10;web/view/default/goods/goods_basicDingJinT.html&#9;FILE&#9;file://D:/huodieupdate/addons/lexiangpingou/web/view/default/goods/goods_basicDingJinT.html&#10;lexiangpingou/web/view/default/goods/goods_basicChouJiangT.html&#9;FILE&#9;file://D:/huodieupdate/addons/lexiangpingou/web/view/default/goods/goods_basicChouJiangT.html&#10;lexiangpingou/app/controller/order/shoporderconfirm.ctrl.php&#9;FILE&#9;file://D:/huodieupdate/addons/lexiangpingou/app/controller/order/shoporderconfirm.ctrl.php&#10;lexiangpingou/app/controller/order/orderconfirm.ctrl.php&#9;FILE&#9;file://D:/huodieupdate/addons/lexiangpingou/app/controller/order/orderconfirm.ctrl.php&#10;lexiangpingou/web/controller/store/setting.ctrl.php&#9;FILE&#9;file://D:/huodieupdate/addons/lexiangpingou/web/controller/store/setting.ctrl.php&#10;lexiangpingou/web/controller/goods/goods.ctrl.php&#9;FILE&#9;file://D:/huodieupdate/addons/lexiangpingou/web/controller/goods/goods.ctrl.php&#10;addons/lexiangpingou/app/view/default/common/cube.html&#9;FILE&#9;file://D:/huodieupdate/addons/lexiangpingou/app/view/default/common/cube.html&#10;lexiangpingou/app/controller/pay/payfunctionajax.ctrl.php&#9;FILE&#9;file://D:/huodieupdate/addons/lexiangpingou/app/controller/pay/payfunctionajax.ctrl.php&#10;lexiangpingou/web/controller/service/vip_service.ctrl.php&#9;FILE&#9;file://D:/huodieupdate/addons/lexiangpingou/web/controller/service/vip_service.ctrl.php&#10;lexiangpingou/web/index.php&#9;FILE&#9;file://D:/huodieupdate/addons/lexiangpingou/web/index.php&#10;lexiangpingou/web/controller/service/xiaochengxu.ctrl.php&#9;FILE&#9;file://D:/huodieupdate/addons/lexiangpingou/web/controller/service/xiaochengxu.ctrl.php&#10;lexiangpingou/web/controller/service/meigong.ctrl.php&#9;FILE&#9;file://D:/huodieupdate/addons/lexiangpingou/web/controller/service/meigong.ctrl.php" />
     <property name="settings.editor.selected.configurable" value="preferences.lookFeel" />
     <property name="settings.editor.splitter.proportion" value="0.2" />
     <property name="full.screen.before.presentation.mode" value="false" />
@@ -529,15 +343,16 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
+    <frame x="-8" y="-8" width="1936" height="1056" extended-state="7" />
     <editor active="true" />
     <layout>
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.17377399" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Remote Host" active="true" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.2857143" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.17537314" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="11" side_tool="false" content_ui="tabs" />
       <window_info id="版本控制" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32936078" sideWeight="0.5" order="8" side_tool="true" content_ui="tabs" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32995737" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
-      <window_info id="File Transfer" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.32664436" sideWeight="0.5" order="12" side_tool="false" content_ui="tabs" />
+      <window_info id="File Transfer" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32664436" sideWeight="0.5" order="12" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
@@ -548,7 +363,6 @@
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="运行" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Remote Host" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.2857143" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
@@ -562,12 +376,12 @@
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32936078" sideWeight="0.5" order="8" side_tool="true" content_ui="tabs" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="File Transfer" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32700893" sideWeight="0.5" order="12" side_tool="false" content_ui="tabs" />
+      <window_info id="File Transfer" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.32664436" sideWeight="0.5" order="12" side_tool="false" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="运行" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Remote Host" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.2857143" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.16897655" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.17537314" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="版本控制" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32995737" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
@@ -594,48 +408,6 @@
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/addons/lexiangpingou/web/view/default/goods/goods_basic_param/one_card.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.33969012">
-          <caret line="16" column="28" selection-start-line="16" selection-start-column="28" selection-end-line="16" selection-end-column="28" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/addons/lexiangpingou/app/view/default/goods/goods_list5.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.2943981">
-          <caret line="13" column="40" selection-start-line="13" selection-start-column="40" selection-end-line="13" selection-end-column="40" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/addons/lexiangpingou/app/view/default/goods/goods_list4.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.33969012">
-          <caret line="15" column="13" selection-start-line="15" selection-start-column="13" selection-end-line="15" selection-end-column="13" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/addons/lexiangpingou/app/view/default/goods/goods_list2.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-6.544696">
-          <caret line="32" column="2" selection-start-line="32" selection-start-column="2" selection-end-line="32" selection-end-column="2" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/addons/lexiangpingou/app/view/default/goods/goods_list1.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.24910608">
-          <caret line="21" column="203" selection-start-line="21" selection-start-column="203" selection-end-line="21" selection-end-column="203" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/addons/lexiangpingou/app/view/default/goods/goods_list3.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.2943981">
-          <caret line="13" column="31" selection-start-line="13" selection-start-column="31" selection-end-line="13" selection-end-column="31" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/addons/lexiangpingou/app/view/default/goods/goods_list6.html">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="-12.892858">
@@ -1001,103 +773,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/addons/lexiangpingou/web/view/default/platform/order_detail.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="10" column="8" selection-start-line="10" selection-start-column="8" selection-end-line="10" selection-end-column="8" />
-          <folding>
-            <marker date="1522531167000" expanded="true" signature="17203:17228" placeholder="..." />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/addons/lexiangpingou/web/controller/platform/platform_order.ctrl.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="14" column="42" selection-start-line="14" selection-start-column="42" selection-end-line="14" selection-end-column="42" />
-          <folding>
-            <marker date="1524213617925" expanded="true" signature="1022:1175" placeholder="SELECT * FRO... ${tablename('tg_supply_order')}" />
-            <marker date="1524213617925" expanded="true" signature="1217:1318" placeholder="SELECT count... ${tablename('tg_supply_order')}" />
-            <marker date="1524213617925" expanded="true" signature="1521:1591" placeholder="SELECT name ${tablename('account_wechats')}" />
-            <marker date="1524213617925" expanded="true" signature="1886:2066" placeholder="select * fro... ${tablename('tg_order')}" />
-            <marker date="1524213617925" expanded="true" signature="2108:2259" placeholder="select count... ${tablename('tg_order')}" />
-            <marker date="1524213617925" expanded="true" signature="2394:2537" placeholder="select * fro... ${tablename('tg_order')}" />
-            <marker date="1524213617925" expanded="true" signature="2861:2962" placeholder="select suppl... ${tablename('tg_supply_goods')}" />
-            <marker date="1524213617925" expanded="true" signature="3645:3784" placeholder="select * fro... ${tablename('tg_goods_supply_option')}" />
-            <marker date="1524213617925" expanded="true" signature="4124:4214" placeholder="select * fro... ${tablename('tg_supply_goods')}" />
-            <marker date="1524213617925" expanded="true" signature="4528:4651" placeholder="select nickn... ${tablename('tg_member')}" />
-            <marker date="1524213617925" expanded="true" signature="6251:6313" placeholder="select * fro... ${tablename('tg_supply_order')}" />
-            <marker date="1524213617925" expanded="true" signature="7549:7693" placeholder="select * fro... ${tablename('tg_supply_order')}" />
-            <marker date="1524213617925" expanded="true" signature="7739:7827" placeholder="select count... ${tablename('tg_supply_order')}" />
-            <marker date="1524213617925" expanded="true" signature="8239:8301" placeholder="select * fro... ${tablename('tg_supply_order')}" />
-            <marker date="1524213617925" expanded="true" signature="8782:8936" placeholder="select * fro... ${tablename('tg_supply_collect')}" />
-            <marker date="1524213617925" expanded="true" signature="9012:9073" placeholder="select order... ${tablename('tg_order')}" />
-            <marker date="1524213617925" expanded="true" signature="9176:9239" placeholder="SELECT * FRO... ${tablename('tg_supply_goods')}" />
-            <marker date="1524213617925" expanded="true" signature="9434:9504" placeholder="SELECT name ${tablename('account_wechats')}" />
-            <marker date="1524213617925" expanded="true" signature="9713:9811" placeholder="select count... ${tablename('tg_supply_collect')}" />
-            <marker date="1524213617925" expanded="true" signature="11013:11138" placeholder="SELECT * FRO... ${tablename('tg_supply_collect')}" />
-            <marker date="1524213617925" expanded="true" signature="11214:11295" placeholder="select order... ${tablename('tg_order')}" />
-            <marker date="1524213617925" expanded="true" signature="11376:11446" placeholder="SELECT name ${tablename('account_wechats')}" />
-            <marker date="1524213617925" expanded="true" signature="11502:11565" placeholder="SELECT * FRO... ${tablename('tg_supply_goods')}" />
-            <marker date="1524213617925" expanded="true" signature="11917:11986" placeholder="SELECT count... ${tablename('tg_supply_collect')}" />
-            <marker date="1524213617925" expanded="true" signature="12759:12835" placeholder="SELECT * FRO... ${tablename('tg_supply_collect')}" />
-            <marker date="1524213617925" expanded="true" signature="12895:12976" placeholder="select order... ${tablename('tg_order')}" />
-            <marker date="1524213617925" expanded="true" signature="13053:13123" placeholder="SELECT name ${tablename('account_wechats')}" />
-            <marker date="1524213617925" expanded="true" signature="13308:13377" placeholder="SELECT count... ${tablename('tg_supply_collect')}" />
-            <marker date="1524213617925" expanded="true" signature="13965:14041" placeholder="SELECT * FRO... ${tablename('tg_supply_collect')}" />
-            <marker date="1524213617925" expanded="true" signature="14496:14569" placeholder="SELECT * FRO... ${tablename('tg_platform_supplier')}" />
-            <marker date="1524213617925" expanded="true" signature="17034:17110" placeholder="SELECT * FRO... ${tablename('tg_supply_collect')}" />
-            <marker date="1524213617925" expanded="true" signature="17170:17251" placeholder="select order... ${tablename('tg_order')}" />
-            <marker date="1524213617925" expanded="true" signature="17328:17398" placeholder="SELECT name ${tablename('account_wechats')}" />
-            <marker date="1524213617925" expanded="true" signature="17583:17652" placeholder="SELECT count... ${tablename('tg_supply_collect')}" />
-            <marker date="1524213617925" expanded="true" signature="18324:18400" placeholder="SELECT * FRO... ${tablename('tg_supply_collect')}" />
-            <marker date="1524213617925" expanded="true" signature="18859:18932" placeholder="SELECT * FRO... ${tablename('tg_platform_supplier')}" />
-            <marker date="1524213617925" expanded="true" signature="20939:21055" placeholder="SELECT * FRO... ${tablename('tg_platform_pay_supply_refund')}" />
-            <marker date="1524213617925" expanded="true" signature="21540:21621" placeholder="SELECT count... ${tablename('tg_platform_pay_supply_refund')}" />
-            <marker date="1524213617925" expanded="true" signature="22531:22607" placeholder="SELECT * FRO... ${tablename('tg_supply_collect')}" />
-            <marker date="1524213617925" expanded="true" signature="22734:22797" placeholder="SELECT * FRO... ${tablename('tg_supply_goods')}" />
-            <marker date="1524213617925" expanded="true" signature="23567:23640" placeholder="SELECT * FRO... ${tablename('tg_platform_supplier')}" />
-            <marker date="1524213617925" expanded="true" signature="25567:25638" placeholder="select * fro... ${tablename('tg_supply_collect')}" />
-            <marker date="1524213617925" expanded="true" signature="25667:25756" placeholder="select order... ${tablename('tg_order')}" />
-            <marker date="1524213617925" expanded="true" signature="25788:25877" placeholder="select * fro... ${tablename('tg_supply_order')}" />
-            <marker date="1524213617925" expanded="true" signature="25911:25978" placeholder="select * fro... ${tablename('account_wechats')}" />
-            <marker date="1524213617925" expanded="true" signature="26150:26213" placeholder="SELECT * FRO... ${tablename('tg_supply_goods')}" />
-            <marker date="1524213617925" expanded="true" signature="27547:27622" placeholder="select * fro... ${tablename('tg_supply_order')}" />
-            <marker date="1524213617925" expanded="true" signature="28633:28706" placeholder="select * fro... ${tablename('tg_platform_supplier')}" />
-            <marker date="1524213617925" expanded="true" signature="28862:28937" placeholder="select * fro... ${tablename('tg_supply_order')}" />
-            <marker date="1524213617925" expanded="true" signature="30849:30920" placeholder="select * fro... ${tablename('tg_supply_collect')}" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/addons/lexiangpingou/web/controller/platform/platform_list.ctrl.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-12.892858">
-          <caret line="19" column="0" selection-start-line="19" selection-start-column="0" selection-end-line="19" selection-end-column="0" />
-          <folding>
-            <marker date="1524213621700" expanded="true" signature="201:269" placeholder="SELECT * FRO... ${tablename('tg_platform_supplier')}" />
-            <marker date="1524213621700" expanded="true" signature="330:392" placeholder="SELECT * FRO... ${tablename('tg_manage_cate')}" />
-            <marker date="1524213621700" expanded="true" signature="1160:1283" placeholder="SELECT * FRO... ${tablename('tg_platform_supplier')}" />
-            <marker date="1524213621700" expanded="true" signature="1378:1458" placeholder="select sum(p... ${tablename('tg_supply_collect')}" />
-            <marker date="1524213621700" expanded="true" signature="1596:1676" placeholder="select sum(p... ${tablename('tg_supply_collect')}" />
-            <marker date="1524213621700" expanded="true" signature="1749:1865" placeholder="select sum(t... ${tablename('tg_supply_collect')}" />
-            <marker date="1524213621700" expanded="true" signature="1991:2147" placeholder="select sum(p... ${tablename('tg_supply_collect')}" />
-            <marker date="1524213621700" expanded="true" signature="2269:2389" placeholder="select sum(r... ${tablename('tg_supply_collect')}" />
-            <marker date="1524213621700" expanded="true" signature="2671:2787" placeholder="select total... ${tablename('tg_supply_score')}" />
-            <marker date="1524213621700" expanded="true" signature="3184:3205" placeholder="SELECT COUNT... ${tablename('tg_platform_supplier')}" />
-            <marker date="1524213621700" expanded="true" signature="3720:3843" placeholder="SELECT * FRO... ${tablename('tg_platform_supplier')}" />
-            <marker date="1524213621700" expanded="true" signature="4362:4485" placeholder="SELECT * FRO... ${tablename('tg_platform_supplier')}" />
-            <marker date="1524213621700" expanded="true" signature="4763:4839" placeholder="select * fro... ${tablename('tg_scan_code')}" />
-            <marker date="1524213621700" expanded="true" signature="5084:5160" placeholder="SELECT follo... ${tablename('mc_mapping_fans')}" />
-            <marker date="1524213621700" expanded="true" signature="7634:7706" placeholder="SELECT openi... ${tablename('tg_platform_supplier')}" />
-            <marker date="1524213621700" expanded="true" signature="8876:8948" placeholder="SELECT openi... ${tablename('tg_platform_supplier')}" />
-            <marker date="1524213621700" expanded="true" signature="9624:9694" placeholder="SELECT * FRO... ${tablename(&quot;tg_platform_supplier&quot;)}" />
-            <marker date="1524213621700" expanded="true" signature="10102:10172" placeholder="SELECT * FRO... ${tablename(&quot;tg_platform_supplier&quot;)}" />
-            <marker date="1524213621700" expanded="true" signature="11168:11238" placeholder="SELECT * FRO... ${tablename(&quot;tg_platform_supplier&quot;)}" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/addons/lexiangpingou/web/view/default/order/order.html">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.13893966">
@@ -1122,249 +797,401 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/minapi.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-9.035714">
-          <caret line="2468" column="0" selection-start-line="2468" selection-start-column="0" selection-end-line="2468" selection-end-column="0" />
-          <folding>
-            <marker date="1524275171924" expanded="true" signature="443:627" placeholder="SELECT id,gn... ${tablename('tg_goods')}" />
-            <marker date="1524275171924" expanded="true" signature="1240:1302" placeholder="SELECT * FRO... cm_tg_setting" />
-            <marker date="1524275171924" expanded="true" signature="2766:2855" placeholder="select tpl f... ${tablename('account_wechats')}" />
-            <marker date="1524275171924" expanded="true" signature="2882:2959" placeholder="select * fro... ${tablename('tg_function')}" />
-            <marker date="1524275171924" expanded="true" signature="3377:3491" placeholder="SELECT * FRO... ${tablename('tg_goods')}" />
-            <marker date="1524275171924" expanded="true" signature="3578:3636" placeholder="SELECT COUNT... ${tablename('tg_goods')}" />
-            <marker date="1524275171924" expanded="true" signature="4141:4218" placeholder="select * fro... ${tablename('tg_goods_atlas')}" />
-            <marker date="1524275171924" expanded="true" signature="4591:4736" placeholder="select id,ti... ${tablename('tg_goods_option')}" />
-            <marker date="1524275171924" expanded="true" signature="4859:4966" placeholder="select * fro... ${tablename('tg_goods_openid')}" />
-            <marker date="1524275171924" expanded="true" signature="5271:5410" placeholder="select * fro... ${tablename('tg_adv')}" />
-            <marker date="1524275171924" expanded="true" signature="5705:5858" placeholder="SELECT * FRO... ${tablename('tg_category')}" />
-            <marker date="1524275171924" expanded="true" signature="6188:6248" placeholder="select * fro... ${tablename('tg_goods')}" />
-            <marker date="1524275171924" expanded="true" signature="6529:6597" placeholder="select * fro... ${tablename('tg_goods_atlas')}" />
-            <marker date="1524275171924" expanded="true" signature="7517:7577" placeholder="select * fro... ${tablename('tg_goods')}" />
-            <marker date="1524275171924" expanded="true" signature="7862:7969" placeholder="select `valu... ${tablename('tg_setting')}" />
-            <marker date="1524275171924" expanded="true" signature="8129:8197" placeholder="select * fro... ${tablename('tg_goods_atlas')}" />
-            <marker date="1524275171924" expanded="true" signature="8822:8943" placeholder="SELECT produ... ${tablename('tg_goods_option')}" />
-            <marker date="1524275171924" expanded="true" signature="9141:9297" placeholder="select * fro... ${tablename('tg_group')}" />
-            <marker date="1524275171924" expanded="true" signature="11255:11299" placeholder="SELECT * FRO... ${tablename('tg_order')}" />
-            <marker date="1524275171924" expanded="true" signature="11490:11504" placeholder="SELECT * FRO... ${tablename('tg_member')}" />
-            <marker date="1524275171924" expanded="true" signature="11977:12050" placeholder="select uid f... ${tablename('tg_member')}" />
-            <marker date="1524275171924" expanded="true" signature="12513:12624" placeholder="SELECT * FRO... ${tablename('tg_sendtime')}" />
-            <marker date="1524275171924" expanded="true" signature="13042:13193" placeholder="SELECT id FR... ${tablename('tg_order')}" />
-            <marker date="1524275171924" expanded="true" signature="13547:13658" placeholder="SELECT * FRO... ${tablename('tg_sendtime')}" />
-            <marker date="1524275171924" expanded="true" signature="14076:14227" placeholder="SELECT id FR... ${tablename('tg_order')}" />
-            <marker date="1524275171924" expanded="true" signature="14506:14689" placeholder="SELECT Deliv... ${tablename('tg_dispatch')}" />
-            <marker date="1524275171924" expanded="true" signature="16065:16191" placeholder="select num,o... ${tablename('tg_collect')}" />
-            <marker date="1524275171924" expanded="true" signature="17091:17176" placeholder="select hexia... ${tablename('tg_goods')}" />
-            <marker date="1524275171924" expanded="true" signature="17638:17738" placeholder="select * fro... ${tablename('tg_address')}" />
-            <marker date="1524275171924" expanded="true" signature="17950:18037" placeholder="select * fro... ${tablename('tg_address')}" />
-            <marker date="1524275171924" expanded="true" signature="18445:18524" placeholder="select * fro... ${tablename('tg_address')}" />
-            <marker date="1524275171924" expanded="true" signature="19401:19456" placeholder="select * fro... ${tablename('tg_goods')}" />
-            <marker date="1524275171924" expanded="true" signature="23809:23875" placeholder="select * fro... ${tablename('tg_order')}" />
-            <marker date="1524275171924" expanded="true" signature="24396:24471" placeholder="select * fro... ${tablename('account_wechats')}" />
-            <marker date="1524275171924" expanded="true" signature="24994:25064" placeholder="select * fro... ${tablename('tg_group')}" />
-            <marker date="1524275171924" expanded="true" signature="25155:25252" placeholder="select count... ${tablename('tg_order')}" />
-            <marker date="1524275171924" expanded="true" signature="26049:26228" placeholder="select id,g_... ${tablename('tg_order')}" />
-            <marker date="1524275171924" expanded="true" signature="26383:26503" placeholder="select SUM(g... ${tablename('tg_order')}" />
-            <marker date="1524275171924" expanded="true" signature="29100:29139" placeholder="SELECT cash cm_tg_coupon" />
-            <marker date="1524275171924" expanded="true" signature="30529:30584" placeholder="select * fro... ${tablename('tg_goods')}" />
-            <marker date="1524275171924" expanded="true" signature="31629:31736" placeholder="select * fro... ${tablename('tg_goods_openid')}" />
-            <marker date="1524275171924" expanded="true" signature="32662:32709" placeholder="SELECT * FRO... cm_account_wechats" />
-            <marker date="1524275171924" expanded="true" signature="34119:34295" placeholder="SELECT `coup... ${tablename('tg_coupon')}" />
-            <marker date="1524275171924" expanded="true" signature="34735:34820" placeholder="select id fr... ${tablename('tg_coupon')}" />
-            <marker date="1524275171924" expanded="true" signature="34904:34974" placeholder="select id fr... ${tablename('tg_coupon')}" />
-            <marker date="1524275171924" expanded="true" signature="35705:35772" placeholder="SELECT * FRO... cm_tg_coupon_qrcode" />
-            <marker date="1524275171924" expanded="true" signature="40003:40132" placeholder="SELECT COUNT... cm_" />
-            <marker date="1524275171924" expanded="true" signature="41263:41356" placeholder="UPDATE cm_tg... " />
-            <marker date="1524275171924" expanded="true" signature="43650:43761" placeholder="SELECT * FRO... ${tablename('tg_coupon')}" />
-            <marker date="1524275171924" expanded="true" signature="44054:44129" placeholder="select * fro... ${tablename('tg_order')}" />
-            <marker date="1524275171924" expanded="true" signature="44646:44710" placeholder="select * fro... ${tablename('tg_saler')}" />
-            <marker date="1524275171924" expanded="true" signature="44837:44893" placeholder="select * fro... ${tablename('tg_store')}" />
-            <marker date="1524275171924" expanded="true" signature="45062:45145" placeholder="select * fro... ${tablename('tg_collect')}" />
-            <marker date="1524275171924" expanded="true" signature="45364:45497" placeholder="select openi... ${tablename('tg_order')}" />
-            <marker date="1524275171924" expanded="true" signature="46161:46255" placeholder="select avata... ${tablename('tg_member')}" />
-            <marker date="1524275171924" expanded="true" signature="46544:46617" placeholder="select * fro... ${tablename('tg_group')}" />
-            <marker date="1524275171924" expanded="true" signature="46787:46863" placeholder="select gimg,... ${tablename('tg_goods')}" />
-            <marker date="1524275171924" expanded="true" signature="47104:47177" placeholder="SELECT * FRO... ${tableName('account_wechats')}" />
-            <marker date="1524275171924" expanded="true" signature="48162:48276" placeholder="SELECT * FRO... ${tablename('tg_order')}" />
-            <marker date="1524275171924" expanded="true" signature="48363:48421" placeholder="SELECT COUNT... ${tablename('tg_order')}" />
-            <marker date="1524275171924" expanded="true" signature="49291:49405" placeholder="SELECT * FRO... ${tablename('tg_order')}" />
-            <marker date="1524275171924" expanded="true" signature="49492:49550" placeholder="SELECT COUNT... ${tablename('tg_order')}" />
-            <marker date="1524275171924" expanded="true" signature="49642:49714" placeholder="SELECT * FRO... ${tablename('tg_goods')}" />
-            <marker date="1524275171924" expanded="true" signature="49749:49834" placeholder="SELECT * FRO... ${tablename('tg_group')}" />
-            <marker date="1524275171924" expanded="true" signature="51151:51228" placeholder="SELECT openi... cm_tg_order" />
-            <marker date="1524275171924" expanded="true" signature="51814:51908" placeholder="select * fro... ${tablename(&quot;tg_delivery_price&quot;)}" />
-            <marker date="1524275171924" expanded="true" signature="51945:52059" placeholder="select * fro... ${tablename(&quot;tg_delivery_price&quot;)}" />
-            <marker date="1524275171924" expanded="true" signature="52100:52233" placeholder="select * fro... ${tablename(&quot;tg_delivery_price&quot;)}" />
-            <marker date="1524275171924" expanded="true" signature="53880:53951" placeholder="select uniac... ${tablename('tg_goods')}" />
-            <marker date="1524275171924" expanded="true" signature="54990:55104" placeholder="SELECT id,av... ${tablename('tg_member')}" />
-            <marker date="1524275171924" expanded="true" signature="55204:55299" placeholder="SELECT * FRO... ${tablename('tg_member')}" />
-            <marker date="1524275171924" expanded="true" signature="56164:56257" placeholder="SELECT * FRO... ${tablename('tg_member')}" />
-            <marker date="1524275171924" expanded="true" signature="57436:57529" placeholder="select title... ${tablename('tg_spec')}" />
-            <marker date="1524275171924" expanded="true" signature="57623:57741" placeholder="select title... ${tablename('tg_spec_item')}" />
-            <marker date="1524275171924" expanded="true" signature="57967:58118" placeholder="select id,ti... ${tablename('tg_goods_option')}" />
-            <marker date="1524275171924" expanded="true" signature="58515:58608" placeholder="SELECT title... ${tablename('tg_spec')}" />
-            <marker date="1524275171924" expanded="true" signature="58724:58842" placeholder="SELECT title... ${tablename('tg_spec_item')}" />
-            <marker date="1524275171924" expanded="true" signature="59328:59479" placeholder="SELECT id,ti... ${tablename('tg_goods_option')}" />
-            <marker date="1524275171924" expanded="true" signature="60107:60163" placeholder="select * fro... ${tablename('tg_store')}" />
-            <marker date="1524275171924" expanded="true" signature="60932:61016" placeholder="select * fro... ${tablename('tg_member')}" />
-            <marker date="1524275171924" expanded="true" signature="64575:64641" placeholder="SELECT * FRO... ${tablename('tg_order')}" />
-            <marker date="1524275171924" expanded="true" signature="65769:65839" placeholder="SELECT * FRO... ${tablename('tg_group')}" />
-            <marker date="1524275171924" expanded="true" signature="65930:66027" placeholder="SELECT count... ${tablename('tg_order')}" />
-            <marker date="1524275171924" expanded="true" signature="67244:67302" placeholder="SELECT * FRO... ${tablename('tg_goods')}" />
-            <marker date="1524275171924" expanded="true" signature="69666:69808" placeholder="SELECT COUNT... cm_tg_puv_record" />
-            <marker date="1524275171924" expanded="true" signature="69918:70036" placeholder="select id fr... ${tablename('tg_data_base')}" />
-            <marker date="1524275171924" expanded="true" signature="70102:70317" placeholder="SELECT SUM(p... cm_tg_order" />
-            <marker date="1524275171924" expanded="true" signature="70429:70577" placeholder="SELECT COUNT... cm_tg_order" />
-            <marker date="1524275171924" expanded="true" signature="70710:70872" placeholder="SELECT COUNT... cm_tg_order" />
-            <marker date="1524275171924" expanded="true" signature="70987:71118" placeholder="SELECT COUNT... cm_tg_group" />
-            <marker date="1524275171924" expanded="true" signature="71217:71368" placeholder="SELECT COUNT... cm_tg_group" />
-            <marker date="1524275171924" expanded="true" signature="71469:71616" placeholder="SELECT COUNT... cm_tg_group" />
-            <marker date="1524275171924" expanded="true" signature="71731:71898" placeholder="SELECT SUM(p... cm_tg_order" />
-            <marker date="1524275171924" expanded="true" signature="72013:72188" placeholder="SELECT SUM(r... cm_tg_refund_record" />
-            <marker date="1524275171924" expanded="true" signature="72360:72496" placeholder="select disti... cm_tg_order" />
-            <marker date="1524275171924" expanded="true" signature="72591:72739" placeholder="select sum(p... cm_tg_order" />
-            <marker date="1524275171924" expanded="true" signature="72831:72979" placeholder="select disti... cm_tg_order" />
-            <marker date="1524275171924" expanded="true" signature="73068:73216" placeholder="select disti... cm_tg_order" />
-            <marker date="1524275171924" expanded="true" signature="73314:73493" placeholder="select count... cm_tg_order" />
-            <marker date="1524275171924" expanded="true" signature="73828:73958" placeholder="SELECT count... cm_tg_puv_record" />
-            <marker date="1524275171924" expanded="true" signature="74064:74208" placeholder="SELECT count... cm_tg_puv_record" />
-            <marker date="1524275171924" expanded="true" signature="74318:74446" placeholder="SELECT COUNT... cm_mc_mapping_fans" />
-            <marker date="1524275171924" expanded="true" signature="76621:76753" placeholder="SELECT uniac... cm_tg_puv_record" />
-            <marker date="1524275171924" expanded="true" signature="76901:77017" placeholder="select id fr... ${tablename('tg_data_uv')}" />
-            <marker date="1524275171924" expanded="true" signature="77085:77314" placeholder="SELECT count... " />
-            <marker date="1524275171924" expanded="true" signature="77933:78049" placeholder="select id fr... ${tablename('tg_data_pv')}" />
-            <marker date="1524275171924" expanded="true" signature="78117:78331" placeholder="SELECT count... " />
-            <marker date="1524275171924" expanded="true" signature="79418:79556" placeholder="SELECT uniac... cm_tg_order" />
-            <marker date="1524275171924" expanded="true" signature="79687:79740" placeholder="select id fr... cm_tg_store" />
-            <marker date="1524275171924" expanded="true" signature="79888:80031" placeholder="select id fr... ${tablename('tg_since_data')}" />
-            <marker date="1524275171924" expanded="true" signature="80108:80324" placeholder="SELECT SUM(p... cm_tg_order" />
-            <marker date="1524275171924" expanded="true" signature="80446:80643" placeholder="SELECT COUNT... cm_tg_order" />
-            <marker date="1524275171924" expanded="true" signature="80768:80985" placeholder="SELECT SUM(p... cm_tg_order" />
-            <marker date="1524275171924" expanded="true" signature="81114:81291" placeholder="SELECT SUM(r... cm_tg_refund_record" />
-            <marker date="1524275171924" expanded="true" signature="82551:82903" placeholder="SELECT a.g_i... cm_tg_order" />
-            <marker date="1524275171924" expanded="true" signature="83070:83244" placeholder="select id fr... ${tablename('tg_since_data_info')}" />
-            <marker date="1524275171924" expanded="true" signature="83345:83699" placeholder="SELECT sum(i... cm_tg_order" />
-            <marker date="1524275171924" expanded="true" signature="83846:84225" placeholder="SELECT sum(i... cm_tg_order" />
-            <marker date="1524275171924" expanded="true" signature="85777:85915" placeholder="SELECT uniac... cm_tg_order" />
-            <marker date="1524275171924" expanded="true" signature="86046:86109" placeholder="select id,st... cm_tg_store" />
-            <marker date="1524275171924" expanded="true" signature="86241:86876" placeholder="SELECT a.com... cm_tg_order" />
-            <marker date="1524275171924" expanded="true" signature="87086:87264" placeholder="select id fr... ${tablename('tg_new_since_data_info')}" />
-            <marker date="1524275171924" expanded="true" signature="87374:87708" placeholder="SELECT sum(i... cm_tg_order" />
-            <marker date="1524275171924" expanded="true" signature="87865:88161" placeholder="SELECT COUNT... cm_tg_order" />
-            <marker date="1524275171924" expanded="true" signature="88341:88407" placeholder="SELECT * FRO... cm_tg_goods" />
-            <marker date="1524275171924" expanded="true" signature="90144:90207" placeholder="SELECT uniac... cm_tg_order" />
-            <marker date="1524275171924" expanded="true" signature="90883:91049" placeholder="select max(n... ${tablename('tg_group')}" />
-            <marker date="1524275171924" expanded="true" signature="91118:91235" placeholder="select * fro... ${tablename('tg_data_base')}" />
-            <marker date="1524275171924" expanded="true" signature="91308:91760" placeholder="SELECT max(o... ${tablename('tg_data_base')}" />
-            <marker date="1524275171924" expanded="true" signature="91857:92035" placeholder="SELECT sum(p... cm_tg_order" />
-            <marker date="1524275171924" expanded="true" signature="92104:92362" placeholder="SELECT sum(p... " />
-            <marker date="1524275171924" expanded="true" signature="92427:92691" placeholder="SELECT sum(p... cm_tg_order" />
-            <marker date="1524275171924" expanded="true" signature="92779:92927" placeholder="SELECT COUNT... cm_mc_mapping_fans" />
-            <marker date="1524275171924" expanded="true" signature="92996:93217" placeholder="SELECT COUNT... " />
-            <marker date="1524275171924" expanded="true" signature="93283:93510" placeholder="SELECT COUNT... cm_mc_mapping_fans" />
-            <marker date="1524275171924" expanded="true" signature="93609:93781" placeholder="SELECT SUM(p... cm_tg_order" />
-            <marker date="1524275171924" expanded="true" signature="93860:94116" placeholder="SELECT SUM(p... " />
-            <marker date="1524275171924" expanded="true" signature="94192:94454" placeholder="SELECT SUM(p... cm_tg_order" />
-            <marker date="1524275171924" expanded="true" signature="94549:94804" placeholder="SELECT uniac... cm_tg_puv_record" />
-            <marker date="1524275171924" expanded="true" signature="94868:95134" placeholder="SELECT uniac... cm_tg_puv_record" />
-            <marker date="1524275171924" expanded="true" signature="95204:95352" placeholder="select disti... cm_tg_order" />
-            <marker date="1524275171924" expanded="true" signature="95438:95671" placeholder="SELECT (orde... cm_tg_data_base" />
-            <marker date="1524275171924" expanded="true" signature="95849:96241" placeholder="SELECT a.g_i... cm_tg_order" />
-            <marker date="1524275171924" expanded="true" signature="96329:96717" placeholder="SELECT a.g_i... cm_tg_order" />
-            <marker date="1524275171924" expanded="true" signature="97953:98027" placeholder="select id fr... ${tablename('annual_data')}" />
-            <marker date="1524275171924" expanded="true" signature="98581:98671" placeholder="select id fr... ${tablename('annual_data_order')}" />
-            <marker date="1524275171924" expanded="true" signature="99238:99327" placeholder="select id fr... ${tablename('annual_data_fans')}" />
-            <marker date="1524275171924" expanded="true" signature="99918:100017" placeholder="select id fr... ${tablename('annual_data_customer_price')}" />
-            <marker date="1524275171924" expanded="true" signature="101721:101899" placeholder="SELECT openi... cm_tg_order" />
-            <marker date="1524275171924" expanded="true" signature="101992:102169" placeholder="SELECT sum(p... cm_tg_order" />
-            <marker date="1524275171924" expanded="true" signature="102242:102463" placeholder="SELECT COUNT... cm_tg_order" />
-            <marker date="1524275171924" expanded="true" signature="102504:102810" placeholder="SELECT COUNT... cm_tg_order" />
-            <marker date="1524275171924" expanded="true" signature="102841:103124" placeholder="SELECT (b.ne... cm_tg_order" />
-            <marker date="1524275171924" expanded="true" signature="103158:103395" placeholder="SELECT COUNT... cm_tg_order" />
-            <marker date="1524275171924" expanded="true" signature="103434:103696" placeholder="SELECT COUNT... cm_tg_order" />
-            <marker date="1524275171924" expanded="true" signature="103756:103974" placeholder="SELECT COUNT... cm_tg_order" />
-            <marker date="1524275171924" expanded="true" signature="104033:104251" placeholder="SELECT COUNT... cm_tg_order" />
-            <marker date="1524275171924" expanded="true" signature="104592:104810" placeholder="SELECT COUNT... cm_tg_order" />
-            <marker date="1524275171924" expanded="true" signature="105024:105242" placeholder="SELECT COUNT... cm_tg_order" />
-            <marker date="1524275171924" expanded="true" signature="105990:106094" placeholder="select id fr... ${tablename('fans_data')}" />
-            <marker date="1524275171924" expanded="true" signature="106504:106590" placeholder="SELECT uniac... cm_fans_data" />
-            <marker date="1524275171924" expanded="true" signature="106659:106745" placeholder="SELECT * FRO... cm_fans_data" />
-            <marker date="1524275171924" expanded="true" signature="107293:107325" placeholder="SELECT * FRO... cm_fans_data_limit" />
-            <marker date="1524275171924" expanded="true" signature="107602:107759" placeholder="SELECT openi... cm_tg_order" />
-            <marker date="1524275171924" expanded="true" signature="107822:107978" placeholder="SELECT openi... cm_tg_order" />
-            <marker date="1524275171924" expanded="true" signature="108069:108206" placeholder="SELECT uniac... cm_tg_order" />
-            <marker date="1524275171924" expanded="true" signature="108449:108591" placeholder="SELECT uniac... cm_tg_order" />
-            <marker date="1524275171924" expanded="true" signature="108736:108809" placeholder="SELECT uniac... cm_tg_order" />
-            <marker date="1524275171924" expanded="true" signature="108957:109113" placeholder="SELECT openi... cm_tg_order" />
-            <marker date="1524275171924" expanded="true" signature="109214:109391" placeholder="SELECT sum(p... cm_tg_order" />
-            <marker date="1524275171924" expanded="true" signature="109466:109687" placeholder="SELECT COUNT... cm_tg_order" />
-            <marker date="1524275171924" expanded="true" signature="109728:110034" placeholder="SELECT COUNT... cm_tg_order" />
-            <marker date="1524275171924" expanded="true" signature="110065:110348" placeholder="SELECT (b.ne... cm_tg_order" />
-            <marker date="1524275171924" expanded="true" signature="110382:110619" placeholder="SELECT COUNT... cm_tg_order" />
-            <marker date="1524275171924" expanded="true" signature="110658:110920" placeholder="SELECT COUNT... cm_tg_order" />
-            <marker date="1524275171924" expanded="true" signature="110980:111198" placeholder="SELECT COUNT... cm_tg_order" />
-            <marker date="1524275171924" expanded="true" signature="111257:111475" placeholder="SELECT COUNT... cm_tg_order" />
-            <marker date="1524275171924" expanded="true" signature="111822:112040" placeholder="SELECT COUNT... cm_tg_order" />
-            <marker date="1524275171924" expanded="true" signature="112258:112476" placeholder="SELECT COUNT... cm_tg_order" />
-            <marker date="1524275171924" expanded="true" signature="113270:113381" placeholder="select id fr... ${tablename('fans_data_spring')}" />
-            <marker date="1524275171924" expanded="true" signature="113803:113887" placeholder="SELECT * FRO... cm_fans_data_spring" />
-            <marker date="1524275171924" expanded="true" signature="114319:114412" placeholder="SELECT uniac... cm_fans_data_spring" />
-            <marker date="1524275171924" expanded="true" signature="114490:114583" placeholder="SELECT * FRO... cm_fans_data_spring" />
-            <marker date="1524275171924" expanded="true" signature="115038:115234" placeholder="SELECT id,un... ${tablename('tg_order')}" />
-            <marker date="1524275171924" expanded="true" signature="115307:115447" placeholder="select id,re... ${tablename('tg_order_collect')}" />
-            <marker date="1524275171924" expanded="true" signature="115789:115852" placeholder="SELECT store... ${tablename('tg_store')}" />
-            <marker date="1524275171924" expanded="true" signature="116938:117001" placeholder="SELECT store... ${tablename('tg_store')}" />
-            <marker date="1524275171924" expanded="true" signature="132624:132726" placeholder="select * fro... cm_tg_group" />
-            <marker date="1524275171924" expanded="true" signature="132835:132900" placeholder="select openi... cm_tg_order" />
-            <marker date="1524275171924" expanded="true" signature="132975:133026" placeholder="select no_nu... cm_tg_goods" />
-            <marker date="1524275171924" expanded="true" signature="134189:134297" placeholder="SELECT count... cm_tg_group" />
-            <marker date="1524275171924" expanded="true" signature="134947:135122" placeholder="SELECT count... cm_tg_order" />
-            <marker date="1524275171924" expanded="true" signature="136428:136603" placeholder="SELECT count... cm_tg_order" />
-            <marker date="1524275171924" expanded="true" signature="136719:136765" placeholder="select store... cm_tg_store" />
-            <marker date="1524275171924" expanded="true" signature="137300:137442" placeholder="SELECT count... cm_tg_order" />
-            <marker date="1524275171924" expanded="true" signature="138456:138517" placeholder="SELECT id,st... cm_tg_store" />
-            <marker date="1524275171924" expanded="true" signature="138637:138762" placeholder="SELECT comad... cm_tg_order" />
-            <marker date="1524275171924" expanded="true" signature="140040:140157" placeholder="select * fro... ${tablename('tg_data_base')}" />
-            <marker date="1524275171924" expanded="true" signature="140281:140396" placeholder="select * fro... ${tablename('tg_data_base')}" />
-            <marker date="1524275171924" expanded="true" signature="140523:141030" placeholder="select sum(o... ${tablename('tg_data_base')}" />
-            <marker date="1524275171924" expanded="true" signature="141156:141664" placeholder="select sum(o... ${tablename('tg_data_base')}" />
-            <marker date="1524275171924" expanded="true" signature="141733:142185" placeholder="SELECT max(o... ${tablename('tg_data_base')}" />
-            <marker date="1524275171924" expanded="true" signature="142621:142970" placeholder="select sum(o... ${tablename('tg_since_data')}" />
-            <marker date="1524275171924" expanded="true" signature="143075:143110" placeholder="select * fro... cm_tg_store" />
-            <marker date="1524275171924" expanded="true" signature="143543:143606" placeholder="select id,st... cm_tg_store" />
-            <marker date="1524275171924" expanded="true" signature="143676:144003" placeholder="SELECT uniac... cm_tg_new_since_data_info" />
-            <marker date="1524275171924" expanded="true" signature="144739:145256" placeholder="SELECT a.uni... cm_tg_commander" />
-            <marker date="1524275171924" expanded="true" signature="145327:145471" placeholder="SELECT count... cm_tg_order" />
-            <marker date="1524275171924" expanded="true" signature="145505:145677" placeholder="SELECT sum(g... cm_tg_order" />
-            <marker date="1524275171924" expanded="true" signature="146348:146411" placeholder="select id,st... cm_tg_store" />
-            <marker date="1524275171924" expanded="true" signature="146480:146685" placeholder="SELECT *,sum... cm_tg_new_since_data_info" />
-            <marker date="1524275171924" expanded="true" signature="147079:147459" placeholder="select sum(o... ${tablename('tg_since_data_info')}" />
-            <marker date="1524275171924" expanded="true" signature="147564:147599" placeholder="select * fro... cm_tg_goods" />
-            <marker date="1524275171924" expanded="true" signature="148085:148807" placeholder="select sum(o... ${tablename('tg_data_base')}" />
-            <marker date="1524275171924" expanded="true" signature="152567:152712" placeholder="select * fro... ${tablename('tg_data_base')}" />
-            <marker date="1524275171924" expanded="true" signature="152977:153124" placeholder="select sum(p... cm_tg_order" />
-            <marker date="1524275171924" expanded="true" signature="153291:153430" placeholder="select openi... cm_tg_order" />
-            <marker date="1524275171924" expanded="true" signature="154049:154206" placeholder="select pv,uv... ${tablename('tg_data_base')}" />
-            <marker date="1524275171924" expanded="true" signature="154813:154974" placeholder="select id, p... ${tablename('tg_data_base')}" />
-            <marker date="1524275171924" expanded="true" signature="155244:155404" placeholder="select openi... cm_tg_order" />
-            <marker date="1524275171924" expanded="true" signature="155553:155701" placeholder="select openi... cm_tg_order" />
-            <marker date="1524275171924" expanded="true" signature="155841:155979" placeholder="select openi... cm_tg_order" />
-            <marker date="1524275171924" expanded="true" signature="156945:157064" placeholder="SELECT count... cm_tg_address" />
-            <marker date="1524275171924" expanded="true" signature="157171:157278" placeholder="SELECT count... cm_tg_address" />
-            <marker date="1524275171924" expanded="true" signature="157387:157500" placeholder="SELECT count... cm_tg_address" />
-            <marker date="1524275171924" expanded="true" signature="157941:158104" placeholder="SELECT verop... cm_tg_order" />
-            <marker date="1524275171924" expanded="true" signature="158206:158293" placeholder="SELECT nickn... cm_tg_member" />
-            <marker date="1524275171924" expanded="true" signature="159412:159500" placeholder="select * fro... ${tablename('tg_merchant')}" />
-            <marker date="1524275171924" expanded="true" signature="164623:164704" placeholder="DELETE FROM " />
-            <marker date="1524275171924" expanded="true" signature="165067:165151" placeholder="SELECT smsnu... ${tablename('account_wechats')}" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/.gitignore">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.033043478">
           <caret line="1" column="5" selection-start-line="1" selection-start-column="5" selection-end-line="1" selection-end-column="5" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/minapi.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.3827839">
+          <caret line="11" column="31" selection-start-line="11" selection-start-column="31" selection-end-line="11" selection-end-column="31" />
+          <folding>
+            <marker date="1524275843106" expanded="true" signature="443:627" placeholder="SELECT id,gn... ${tablename('tg_goods')}" />
+            <marker date="1524275843106" expanded="true" signature="1240:1302" placeholder="SELECT * FRO... cm_tg_setting" />
+            <marker date="1524275843106" expanded="true" signature="2766:2855" placeholder="select tpl f... ${tablename('account_wechats')}" />
+            <marker date="1524275843106" expanded="true" signature="2882:2959" placeholder="select * fro... ${tablename('tg_function')}" />
+            <marker date="1524275843106" expanded="true" signature="3377:3491" placeholder="SELECT * FRO... ${tablename('tg_goods')}" />
+            <marker date="1524275843106" expanded="true" signature="3578:3636" placeholder="SELECT COUNT... ${tablename('tg_goods')}" />
+            <marker date="1524275843106" expanded="true" signature="4141:4218" placeholder="select * fro... ${tablename('tg_goods_atlas')}" />
+            <marker date="1524275843106" expanded="true" signature="4591:4736" placeholder="select id,ti... ${tablename('tg_goods_option')}" />
+            <marker date="1524275843106" expanded="true" signature="4859:4966" placeholder="select * fro... ${tablename('tg_goods_openid')}" />
+            <marker date="1524275843106" expanded="true" signature="5271:5410" placeholder="select * fro... ${tablename('tg_adv')}" />
+            <marker date="1524275843106" expanded="true" signature="5705:5858" placeholder="SELECT * FRO... ${tablename('tg_category')}" />
+            <marker date="1524275843106" expanded="true" signature="6188:6248" placeholder="select * fro... ${tablename('tg_goods')}" />
+            <marker date="1524275843106" expanded="true" signature="6529:6597" placeholder="select * fro... ${tablename('tg_goods_atlas')}" />
+            <marker date="1524275843106" expanded="true" signature="7517:7577" placeholder="select * fro... ${tablename('tg_goods')}" />
+            <marker date="1524275843106" expanded="true" signature="7862:7969" placeholder="select `valu... ${tablename('tg_setting')}" />
+            <marker date="1524275843106" expanded="true" signature="8129:8197" placeholder="select * fro... ${tablename('tg_goods_atlas')}" />
+            <marker date="1524275843106" expanded="true" signature="8822:8943" placeholder="SELECT produ... ${tablename('tg_goods_option')}" />
+            <marker date="1524275843106" expanded="true" signature="9141:9297" placeholder="select * fro... ${tablename('tg_group')}" />
+            <marker date="1524275843106" expanded="true" signature="11255:11299" placeholder="SELECT * FRO... ${tablename('tg_order')}" />
+            <marker date="1524275843106" expanded="true" signature="11490:11504" placeholder="SELECT * FRO... ${tablename('tg_member')}" />
+            <marker date="1524275843106" expanded="true" signature="11977:12050" placeholder="select uid f... ${tablename('tg_member')}" />
+            <marker date="1524275843106" expanded="true" signature="12513:12624" placeholder="SELECT * FRO... ${tablename('tg_sendtime')}" />
+            <marker date="1524275843106" expanded="true" signature="13042:13193" placeholder="SELECT id FR... ${tablename('tg_order')}" />
+            <marker date="1524275843106" expanded="true" signature="13547:13658" placeholder="SELECT * FRO... ${tablename('tg_sendtime')}" />
+            <marker date="1524275843106" expanded="true" signature="14076:14227" placeholder="SELECT id FR... ${tablename('tg_order')}" />
+            <marker date="1524275843106" expanded="true" signature="14506:14689" placeholder="SELECT Deliv... ${tablename('tg_dispatch')}" />
+            <marker date="1524275843106" expanded="true" signature="16065:16191" placeholder="select num,o... ${tablename('tg_collect')}" />
+            <marker date="1524275843106" expanded="true" signature="17091:17176" placeholder="select hexia... ${tablename('tg_goods')}" />
+            <marker date="1524275843106" expanded="true" signature="17638:17738" placeholder="select * fro... ${tablename('tg_address')}" />
+            <marker date="1524275843106" expanded="true" signature="17950:18037" placeholder="select * fro... ${tablename('tg_address')}" />
+            <marker date="1524275843106" expanded="true" signature="18445:18524" placeholder="select * fro... ${tablename('tg_address')}" />
+            <marker date="1524275843106" expanded="true" signature="19401:19456" placeholder="select * fro... ${tablename('tg_goods')}" />
+            <marker date="1524275843106" expanded="true" signature="23809:23875" placeholder="select * fro... ${tablename('tg_order')}" />
+            <marker date="1524275843106" expanded="true" signature="24396:24471" placeholder="select * fro... ${tablename('account_wechats')}" />
+            <marker date="1524275843106" expanded="true" signature="24994:25064" placeholder="select * fro... ${tablename('tg_group')}" />
+            <marker date="1524275843106" expanded="true" signature="25155:25252" placeholder="select count... ${tablename('tg_order')}" />
+            <marker date="1524275843106" expanded="true" signature="26049:26228" placeholder="select id,g_... ${tablename('tg_order')}" />
+            <marker date="1524275843106" expanded="true" signature="26383:26503" placeholder="select SUM(g... ${tablename('tg_order')}" />
+            <marker date="1524275843106" expanded="true" signature="29100:29139" placeholder="SELECT cash cm_tg_coupon" />
+            <marker date="1524275843106" expanded="true" signature="30529:30584" placeholder="select * fro... ${tablename('tg_goods')}" />
+            <marker date="1524275843106" expanded="true" signature="31629:31736" placeholder="select * fro... ${tablename('tg_goods_openid')}" />
+            <marker date="1524275843106" expanded="true" signature="32662:32709" placeholder="SELECT * FRO... cm_account_wechats" />
+            <marker date="1524275843106" expanded="true" signature="34119:34295" placeholder="SELECT `coup... ${tablename('tg_coupon')}" />
+            <marker date="1524275843106" expanded="true" signature="34735:34820" placeholder="select id fr... ${tablename('tg_coupon')}" />
+            <marker date="1524275843106" expanded="true" signature="34904:34974" placeholder="select id fr... ${tablename('tg_coupon')}" />
+            <marker date="1524275843106" expanded="true" signature="35705:35772" placeholder="SELECT * FRO... cm_tg_coupon_qrcode" />
+            <marker date="1524275843106" expanded="true" signature="40003:40132" placeholder="SELECT COUNT... cm_" />
+            <marker date="1524275843106" expanded="true" signature="41263:41356" placeholder="UPDATE cm_tg... " />
+            <marker date="1524275843106" expanded="true" signature="43650:43761" placeholder="SELECT * FRO... ${tablename('tg_coupon')}" />
+            <marker date="1524275843106" expanded="true" signature="44054:44129" placeholder="select * fro... ${tablename('tg_order')}" />
+            <marker date="1524275843106" expanded="true" signature="44646:44710" placeholder="select * fro... ${tablename('tg_saler')}" />
+            <marker date="1524275843106" expanded="true" signature="44837:44893" placeholder="select * fro... ${tablename('tg_store')}" />
+            <marker date="1524275843106" expanded="true" signature="45062:45145" placeholder="select * fro... ${tablename('tg_collect')}" />
+            <marker date="1524275843106" expanded="true" signature="45364:45497" placeholder="select openi... ${tablename('tg_order')}" />
+            <marker date="1524275843106" expanded="true" signature="46161:46255" placeholder="select avata... ${tablename('tg_member')}" />
+            <marker date="1524275843106" expanded="true" signature="46544:46617" placeholder="select * fro... ${tablename('tg_group')}" />
+            <marker date="1524275843106" expanded="true" signature="46787:46863" placeholder="select gimg,... ${tablename('tg_goods')}" />
+            <marker date="1524275843106" expanded="true" signature="47104:47177" placeholder="SELECT * FRO... ${tableName('account_wechats')}" />
+            <marker date="1524275843106" expanded="true" signature="48162:48276" placeholder="SELECT * FRO... ${tablename('tg_order')}" />
+            <marker date="1524275843106" expanded="true" signature="48363:48421" placeholder="SELECT COUNT... ${tablename('tg_order')}" />
+            <marker date="1524275843106" expanded="true" signature="49291:49405" placeholder="SELECT * FRO... ${tablename('tg_order')}" />
+            <marker date="1524275843106" expanded="true" signature="49492:49550" placeholder="SELECT COUNT... ${tablename('tg_order')}" />
+            <marker date="1524275843106" expanded="true" signature="49642:49714" placeholder="SELECT * FRO... ${tablename('tg_goods')}" />
+            <marker date="1524275843106" expanded="true" signature="49749:49834" placeholder="SELECT * FRO... ${tablename('tg_group')}" />
+            <marker date="1524275843106" expanded="true" signature="51151:51228" placeholder="SELECT openi... cm_tg_order" />
+            <marker date="1524275843106" expanded="true" signature="51814:51908" placeholder="select * fro... ${tablename(&quot;tg_delivery_price&quot;)}" />
+            <marker date="1524275843106" expanded="true" signature="51945:52059" placeholder="select * fro... ${tablename(&quot;tg_delivery_price&quot;)}" />
+            <marker date="1524275843106" expanded="true" signature="52100:52233" placeholder="select * fro... ${tablename(&quot;tg_delivery_price&quot;)}" />
+            <marker date="1524275843106" expanded="true" signature="53880:53951" placeholder="select uniac... ${tablename('tg_goods')}" />
+            <marker date="1524275843106" expanded="true" signature="54990:55104" placeholder="SELECT id,av... ${tablename('tg_member')}" />
+            <marker date="1524275843106" expanded="true" signature="55204:55299" placeholder="SELECT * FRO... ${tablename('tg_member')}" />
+            <marker date="1524275843106" expanded="true" signature="56164:56257" placeholder="SELECT * FRO... ${tablename('tg_member')}" />
+            <marker date="1524275843106" expanded="true" signature="57436:57529" placeholder="select title... ${tablename('tg_spec')}" />
+            <marker date="1524275843106" expanded="true" signature="57623:57741" placeholder="select title... ${tablename('tg_spec_item')}" />
+            <marker date="1524275843106" expanded="true" signature="57967:58118" placeholder="select id,ti... ${tablename('tg_goods_option')}" />
+            <marker date="1524275843106" expanded="true" signature="58515:58608" placeholder="SELECT title... ${tablename('tg_spec')}" />
+            <marker date="1524275843106" expanded="true" signature="58724:58842" placeholder="SELECT title... ${tablename('tg_spec_item')}" />
+            <marker date="1524275843106" expanded="true" signature="59328:59479" placeholder="SELECT id,ti... ${tablename('tg_goods_option')}" />
+            <marker date="1524275843106" expanded="true" signature="60107:60163" placeholder="select * fro... ${tablename('tg_store')}" />
+            <marker date="1524275843106" expanded="true" signature="60932:61016" placeholder="select * fro... ${tablename('tg_member')}" />
+            <marker date="1524275843106" expanded="true" signature="64575:64641" placeholder="SELECT * FRO... ${tablename('tg_order')}" />
+            <marker date="1524275843106" expanded="true" signature="65769:65839" placeholder="SELECT * FRO... ${tablename('tg_group')}" />
+            <marker date="1524275843106" expanded="true" signature="65930:66027" placeholder="SELECT count... ${tablename('tg_order')}" />
+            <marker date="1524275843106" expanded="true" signature="67244:67302" placeholder="SELECT * FRO... ${tablename('tg_goods')}" />
+            <marker date="1524275843106" expanded="true" signature="69666:69808" placeholder="SELECT COUNT... cm_tg_puv_record" />
+            <marker date="1524275843106" expanded="true" signature="69918:70036" placeholder="select id fr... ${tablename('tg_data_base')}" />
+            <marker date="1524275843106" expanded="true" signature="70102:70317" placeholder="SELECT SUM(p... cm_tg_order" />
+            <marker date="1524275843106" expanded="true" signature="70429:70577" placeholder="SELECT COUNT... cm_tg_order" />
+            <marker date="1524275843106" expanded="true" signature="70710:70872" placeholder="SELECT COUNT... cm_tg_order" />
+            <marker date="1524275843106" expanded="true" signature="70987:71118" placeholder="SELECT COUNT... cm_tg_group" />
+            <marker date="1524275843106" expanded="true" signature="71217:71368" placeholder="SELECT COUNT... cm_tg_group" />
+            <marker date="1524275843106" expanded="true" signature="71469:71616" placeholder="SELECT COUNT... cm_tg_group" />
+            <marker date="1524275843106" expanded="true" signature="71731:71898" placeholder="SELECT SUM(p... cm_tg_order" />
+            <marker date="1524275843106" expanded="true" signature="72013:72188" placeholder="SELECT SUM(r... cm_tg_refund_record" />
+            <marker date="1524275843106" expanded="true" signature="72360:72496" placeholder="select disti... cm_tg_order" />
+            <marker date="1524275843106" expanded="true" signature="72591:72739" placeholder="select sum(p... cm_tg_order" />
+            <marker date="1524275843106" expanded="true" signature="72831:72979" placeholder="select disti... cm_tg_order" />
+            <marker date="1524275843106" expanded="true" signature="73068:73216" placeholder="select disti... cm_tg_order" />
+            <marker date="1524275843106" expanded="true" signature="73314:73493" placeholder="select count... cm_tg_order" />
+            <marker date="1524275843106" expanded="true" signature="73828:73958" placeholder="SELECT count... cm_tg_puv_record" />
+            <marker date="1524275843106" expanded="true" signature="74064:74208" placeholder="SELECT count... cm_tg_puv_record" />
+            <marker date="1524275843106" expanded="true" signature="74318:74446" placeholder="SELECT COUNT... cm_mc_mapping_fans" />
+            <marker date="1524275843106" expanded="true" signature="76621:76753" placeholder="SELECT uniac... cm_tg_puv_record" />
+            <marker date="1524275843106" expanded="true" signature="76901:77017" placeholder="select id fr... ${tablename('tg_data_uv')}" />
+            <marker date="1524275843106" expanded="true" signature="77085:77314" placeholder="SELECT count... " />
+            <marker date="1524275843106" expanded="true" signature="77933:78049" placeholder="select id fr... ${tablename('tg_data_pv')}" />
+            <marker date="1524275843106" expanded="true" signature="78117:78331" placeholder="SELECT count... " />
+            <marker date="1524275843106" expanded="true" signature="79418:79556" placeholder="SELECT uniac... cm_tg_order" />
+            <marker date="1524275843106" expanded="true" signature="79687:79740" placeholder="select id fr... cm_tg_store" />
+            <marker date="1524275843106" expanded="true" signature="79888:80031" placeholder="select id fr... ${tablename('tg_since_data')}" />
+            <marker date="1524275843106" expanded="true" signature="80108:80324" placeholder="SELECT SUM(p... cm_tg_order" />
+            <marker date="1524275843106" expanded="true" signature="80446:80643" placeholder="SELECT COUNT... cm_tg_order" />
+            <marker date="1524275843106" expanded="true" signature="80768:80985" placeholder="SELECT SUM(p... cm_tg_order" />
+            <marker date="1524275843106" expanded="true" signature="81114:81291" placeholder="SELECT SUM(r... cm_tg_refund_record" />
+            <marker date="1524275843106" expanded="true" signature="82551:82903" placeholder="SELECT a.g_i... cm_tg_order" />
+            <marker date="1524275843106" expanded="true" signature="83070:83244" placeholder="select id fr... ${tablename('tg_since_data_info')}" />
+            <marker date="1524275843106" expanded="true" signature="83345:83699" placeholder="SELECT sum(i... cm_tg_order" />
+            <marker date="1524275843106" expanded="true" signature="83846:84225" placeholder="SELECT sum(i... cm_tg_order" />
+            <marker date="1524275843106" expanded="true" signature="85777:85915" placeholder="SELECT uniac... cm_tg_order" />
+            <marker date="1524275843106" expanded="true" signature="86046:86109" placeholder="select id,st... cm_tg_store" />
+            <marker date="1524275843106" expanded="true" signature="86241:86876" placeholder="SELECT a.com... cm_tg_order" />
+            <marker date="1524275843106" expanded="true" signature="87086:87264" placeholder="select id fr... ${tablename('tg_new_since_data_info')}" />
+            <marker date="1524275843106" expanded="true" signature="87374:87708" placeholder="SELECT sum(i... cm_tg_order" />
+            <marker date="1524275843106" expanded="true" signature="87865:88161" placeholder="SELECT COUNT... cm_tg_order" />
+            <marker date="1524275843106" expanded="true" signature="88341:88407" placeholder="SELECT * FRO... cm_tg_goods" />
+            <marker date="1524275843106" expanded="true" signature="90144:90207" placeholder="SELECT uniac... cm_tg_order" />
+            <marker date="1524275843106" expanded="true" signature="90883:91049" placeholder="select max(n... ${tablename('tg_group')}" />
+            <marker date="1524275843106" expanded="true" signature="91118:91235" placeholder="select * fro... ${tablename('tg_data_base')}" />
+            <marker date="1524275843106" expanded="true" signature="91308:91760" placeholder="SELECT max(o... ${tablename('tg_data_base')}" />
+            <marker date="1524275843106" expanded="true" signature="91857:92035" placeholder="SELECT sum(p... cm_tg_order" />
+            <marker date="1524275843106" expanded="true" signature="92104:92362" placeholder="SELECT sum(p... " />
+            <marker date="1524275843106" expanded="true" signature="92427:92691" placeholder="SELECT sum(p... cm_tg_order" />
+            <marker date="1524275843106" expanded="true" signature="92779:92927" placeholder="SELECT COUNT... cm_mc_mapping_fans" />
+            <marker date="1524275843106" expanded="true" signature="92996:93217" placeholder="SELECT COUNT... " />
+            <marker date="1524275843106" expanded="true" signature="93283:93510" placeholder="SELECT COUNT... cm_mc_mapping_fans" />
+            <marker date="1524275843106" expanded="true" signature="93609:93781" placeholder="SELECT SUM(p... cm_tg_order" />
+            <marker date="1524275843106" expanded="true" signature="93860:94116" placeholder="SELECT SUM(p... " />
+            <marker date="1524275843106" expanded="true" signature="94192:94454" placeholder="SELECT SUM(p... cm_tg_order" />
+            <marker date="1524275843106" expanded="true" signature="94549:94804" placeholder="SELECT uniac... cm_tg_puv_record" />
+            <marker date="1524275843106" expanded="true" signature="94868:95134" placeholder="SELECT uniac... cm_tg_puv_record" />
+            <marker date="1524275843106" expanded="true" signature="95204:95352" placeholder="select disti... cm_tg_order" />
+            <marker date="1524275843106" expanded="true" signature="95438:95671" placeholder="SELECT (orde... cm_tg_data_base" />
+            <marker date="1524275843106" expanded="true" signature="95849:96241" placeholder="SELECT a.g_i... cm_tg_order" />
+            <marker date="1524275843106" expanded="true" signature="96329:96717" placeholder="SELECT a.g_i... cm_tg_order" />
+            <marker date="1524275843106" expanded="true" signature="97953:98027" placeholder="select id fr... ${tablename('annual_data')}" />
+            <marker date="1524275843106" expanded="true" signature="98581:98671" placeholder="select id fr... ${tablename('annual_data_order')}" />
+            <marker date="1524275843106" expanded="true" signature="99238:99327" placeholder="select id fr... ${tablename('annual_data_fans')}" />
+            <marker date="1524275843106" expanded="true" signature="99918:100017" placeholder="select id fr... ${tablename('annual_data_customer_price')}" />
+            <marker date="1524275843106" expanded="true" signature="101721:101899" placeholder="SELECT openi... cm_tg_order" />
+            <marker date="1524275843106" expanded="true" signature="101992:102169" placeholder="SELECT sum(p... cm_tg_order" />
+            <marker date="1524275843106" expanded="true" signature="102242:102463" placeholder="SELECT COUNT... cm_tg_order" />
+            <marker date="1524275843106" expanded="true" signature="102504:102810" placeholder="SELECT COUNT... cm_tg_order" />
+            <marker date="1524275843106" expanded="true" signature="102841:103124" placeholder="SELECT (b.ne... cm_tg_order" />
+            <marker date="1524275843106" expanded="true" signature="103158:103395" placeholder="SELECT COUNT... cm_tg_order" />
+            <marker date="1524275843106" expanded="true" signature="103434:103696" placeholder="SELECT COUNT... cm_tg_order" />
+            <marker date="1524275843106" expanded="true" signature="103756:103974" placeholder="SELECT COUNT... cm_tg_order" />
+            <marker date="1524275843106" expanded="true" signature="104033:104251" placeholder="SELECT COUNT... cm_tg_order" />
+            <marker date="1524275843106" expanded="true" signature="104592:104810" placeholder="SELECT COUNT... cm_tg_order" />
+            <marker date="1524275843106" expanded="true" signature="105024:105242" placeholder="SELECT COUNT... cm_tg_order" />
+            <marker date="1524275843106" expanded="true" signature="105990:106094" placeholder="select id fr... ${tablename('fans_data')}" />
+            <marker date="1524275843106" expanded="true" signature="106504:106590" placeholder="SELECT uniac... cm_fans_data" />
+            <marker date="1524275843106" expanded="true" signature="106659:106745" placeholder="SELECT * FRO... cm_fans_data" />
+            <marker date="1524275843106" expanded="true" signature="107293:107325" placeholder="SELECT * FRO... cm_fans_data_limit" />
+            <marker date="1524275843106" expanded="true" signature="107602:107759" placeholder="SELECT openi... cm_tg_order" />
+            <marker date="1524275843106" expanded="true" signature="107822:107978" placeholder="SELECT openi... cm_tg_order" />
+            <marker date="1524275843106" expanded="true" signature="108069:108206" placeholder="SELECT uniac... cm_tg_order" />
+            <marker date="1524275843106" expanded="true" signature="108449:108591" placeholder="SELECT uniac... cm_tg_order" />
+            <marker date="1524275843106" expanded="true" signature="108736:108809" placeholder="SELECT uniac... cm_tg_order" />
+            <marker date="1524275843106" expanded="true" signature="108957:109113" placeholder="SELECT openi... cm_tg_order" />
+            <marker date="1524275843106" expanded="true" signature="109214:109391" placeholder="SELECT sum(p... cm_tg_order" />
+            <marker date="1524275843106" expanded="true" signature="109466:109687" placeholder="SELECT COUNT... cm_tg_order" />
+            <marker date="1524275843106" expanded="true" signature="109728:110034" placeholder="SELECT COUNT... cm_tg_order" />
+            <marker date="1524275843106" expanded="true" signature="110065:110348" placeholder="SELECT (b.ne... cm_tg_order" />
+            <marker date="1524275843106" expanded="true" signature="110382:110619" placeholder="SELECT COUNT... cm_tg_order" />
+            <marker date="1524275843106" expanded="true" signature="110658:110920" placeholder="SELECT COUNT... cm_tg_order" />
+            <marker date="1524275843106" expanded="true" signature="110980:111198" placeholder="SELECT COUNT... cm_tg_order" />
+            <marker date="1524275843106" expanded="true" signature="111257:111475" placeholder="SELECT COUNT... cm_tg_order" />
+            <marker date="1524275843106" expanded="true" signature="111822:112040" placeholder="SELECT COUNT... cm_tg_order" />
+            <marker date="1524275843106" expanded="true" signature="112258:112476" placeholder="SELECT COUNT... cm_tg_order" />
+            <marker date="1524275843106" expanded="true" signature="113270:113381" placeholder="select id fr... ${tablename('fans_data_spring')}" />
+            <marker date="1524275843106" expanded="true" signature="113803:113887" placeholder="SELECT * FRO... cm_fans_data_spring" />
+            <marker date="1524275843106" expanded="true" signature="114319:114412" placeholder="SELECT uniac... cm_fans_data_spring" />
+            <marker date="1524275843106" expanded="true" signature="114490:114583" placeholder="SELECT * FRO... cm_fans_data_spring" />
+            <marker date="1524275843106" expanded="true" signature="115038:115234" placeholder="SELECT id,un... ${tablename('tg_order')}" />
+            <marker date="1524275843106" expanded="true" signature="115307:115447" placeholder="select id,re... ${tablename('tg_order_collect')}" />
+            <marker date="1524275843106" expanded="true" signature="115789:115852" placeholder="SELECT store... ${tablename('tg_store')}" />
+            <marker date="1524275843106" expanded="true" signature="116938:117001" placeholder="SELECT store... ${tablename('tg_store')}" />
+            <marker date="1524275843106" expanded="true" signature="132624:132726" placeholder="select * fro... cm_tg_group" />
+            <marker date="1524275843106" expanded="true" signature="132835:132900" placeholder="select openi... cm_tg_order" />
+            <marker date="1524275843106" expanded="true" signature="132975:133026" placeholder="select no_nu... cm_tg_goods" />
+            <marker date="1524275843106" expanded="true" signature="134189:134297" placeholder="SELECT count... cm_tg_group" />
+            <marker date="1524275843106" expanded="true" signature="134947:135122" placeholder="SELECT count... cm_tg_order" />
+            <marker date="1524275843106" expanded="true" signature="136428:136603" placeholder="SELECT count... cm_tg_order" />
+            <marker date="1524275843106" expanded="true" signature="136719:136765" placeholder="select store... cm_tg_store" />
+            <marker date="1524275843106" expanded="true" signature="137300:137442" placeholder="SELECT count... cm_tg_order" />
+            <marker date="1524275843106" expanded="true" signature="138456:138517" placeholder="SELECT id,st... cm_tg_store" />
+            <marker date="1524275843106" expanded="true" signature="138637:138762" placeholder="SELECT comad... cm_tg_order" />
+            <marker date="1524275843106" expanded="true" signature="140040:140157" placeholder="select * fro... ${tablename('tg_data_base')}" />
+            <marker date="1524275843106" expanded="true" signature="140281:140396" placeholder="select * fro... ${tablename('tg_data_base')}" />
+            <marker date="1524275843106" expanded="true" signature="140523:141030" placeholder="select sum(o... ${tablename('tg_data_base')}" />
+            <marker date="1524275843106" expanded="true" signature="141156:141664" placeholder="select sum(o... ${tablename('tg_data_base')}" />
+            <marker date="1524275843106" expanded="true" signature="141733:142185" placeholder="SELECT max(o... ${tablename('tg_data_base')}" />
+            <marker date="1524275843106" expanded="true" signature="142621:142970" placeholder="select sum(o... ${tablename('tg_since_data')}" />
+            <marker date="1524275843106" expanded="true" signature="143075:143110" placeholder="select * fro... cm_tg_store" />
+            <marker date="1524275843106" expanded="true" signature="143543:143606" placeholder="select id,st... cm_tg_store" />
+            <marker date="1524275843106" expanded="true" signature="143676:144003" placeholder="SELECT uniac... cm_tg_new_since_data_info" />
+            <marker date="1524275843106" expanded="true" signature="144739:145256" placeholder="SELECT a.uni... cm_tg_commander" />
+            <marker date="1524275843106" expanded="true" signature="145327:145471" placeholder="SELECT count... cm_tg_order" />
+            <marker date="1524275843106" expanded="true" signature="145505:145677" placeholder="SELECT sum(g... cm_tg_order" />
+            <marker date="1524275843106" expanded="true" signature="146348:146411" placeholder="select id,st... cm_tg_store" />
+            <marker date="1524275843106" expanded="true" signature="146480:146685" placeholder="SELECT *,sum... cm_tg_new_since_data_info" />
+            <marker date="1524275843106" expanded="true" signature="147079:147459" placeholder="select sum(o... ${tablename('tg_since_data_info')}" />
+            <marker date="1524275843106" expanded="true" signature="147564:147599" placeholder="select * fro... cm_tg_goods" />
+            <marker date="1524275843106" expanded="true" signature="148085:148807" placeholder="select sum(o... ${tablename('tg_data_base')}" />
+            <marker date="1524275843106" expanded="true" signature="152567:152712" placeholder="select * fro... ${tablename('tg_data_base')}" />
+            <marker date="1524275843106" expanded="true" signature="152977:153124" placeholder="select sum(p... cm_tg_order" />
+            <marker date="1524275843106" expanded="true" signature="153291:153430" placeholder="select openi... cm_tg_order" />
+            <marker date="1524275843106" expanded="true" signature="154049:154206" placeholder="select pv,uv... ${tablename('tg_data_base')}" />
+            <marker date="1524275843106" expanded="true" signature="154813:154974" placeholder="select id, p... ${tablename('tg_data_base')}" />
+            <marker date="1524275843106" expanded="true" signature="155244:155404" placeholder="select openi... cm_tg_order" />
+            <marker date="1524275843106" expanded="true" signature="155553:155701" placeholder="select openi... cm_tg_order" />
+            <marker date="1524275843106" expanded="true" signature="155841:155979" placeholder="select openi... cm_tg_order" />
+            <marker date="1524275843106" expanded="true" signature="156945:157064" placeholder="SELECT count... cm_tg_address" />
+            <marker date="1524275843106" expanded="true" signature="157171:157278" placeholder="SELECT count... cm_tg_address" />
+            <marker date="1524275843106" expanded="true" signature="157387:157500" placeholder="SELECT count... cm_tg_address" />
+            <marker date="1524275843106" expanded="true" signature="157941:158104" placeholder="SELECT verop... cm_tg_order" />
+            <marker date="1524275843106" expanded="true" signature="158206:158293" placeholder="SELECT nickn... cm_tg_member" />
+            <marker date="1524275843106" expanded="true" signature="159412:159500" placeholder="select * fro... ${tablename('tg_merchant')}" />
+            <marker date="1524275843106" expanded="true" signature="164623:164704" placeholder="DELETE FROM " />
+            <marker date="1524275843106" expanded="true" signature="165067:165151" placeholder="SELECT smsnu... ${tablename('account_wechats')}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/addons/lexiangpingou/web/view/default/platform/goods_display.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.3849821">
+          <caret line="17" column="15" selection-start-line="17" selection-start-column="15" selection-end-line="17" selection-end-column="15" />
+          <folding>
+            <marker date="1523505068000" expanded="true" signature="50113:50142" placeholder="..." />
+            <marker date="1523505068000" expanded="true" signature="50282:50311" placeholder="..." />
+            <marker date="1523505068000" expanded="true" signature="51432:51449" placeholder="..." />
+            <marker date="1523505068000" expanded="true" signature="53287:53726" placeholder="..." />
+            <marker date="1523505068000" expanded="true" signature="70141:70175" placeholder="..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/addons/lexiangpingou/web/controller/platform/platform_list.ctrl.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-5.428571">
+          <caret line="26" column="32" selection-start-line="26" selection-start-column="32" selection-end-line="26" selection-end-column="32" />
+          <folding>
+            <marker date="1524278009562" expanded="true" signature="201:269" placeholder="SELECT * FRO... ${tablename('tg_platform_supplier')}" />
+            <marker date="1524278009562" expanded="true" signature="330:392" placeholder="SELECT * FRO... ${tablename('tg_manage_cate')}" />
+            <marker date="1524278009562" expanded="true" signature="1183:1306" placeholder="SELECT * FRO... ${tablename('tg_platform_supplier')}" />
+            <marker date="1524278009562" expanded="true" signature="1401:1481" placeholder="select sum(p... ${tablename('tg_supply_collect')}" />
+            <marker date="1524278009562" expanded="true" signature="1619:1699" placeholder="select sum(p... ${tablename('tg_supply_collect')}" />
+            <marker date="1524278009562" expanded="true" signature="1772:1888" placeholder="select sum(t... ${tablename('tg_supply_collect')}" />
+            <marker date="1524278009562" expanded="true" signature="2014:2170" placeholder="select sum(p... ${tablename('tg_supply_collect')}" />
+            <marker date="1524278009562" expanded="true" signature="2292:2412" placeholder="select sum(r... ${tablename('tg_supply_collect')}" />
+            <marker date="1524278009562" expanded="true" signature="2694:2810" placeholder="select total... ${tablename('tg_supply_score')}" />
+            <marker date="1524278009562" expanded="true" signature="3207:3228" placeholder="SELECT COUNT... ${tablename('tg_platform_supplier')}" />
+            <marker date="1524278009562" expanded="true" signature="3743:3866" placeholder="SELECT * FRO... ${tablename('tg_platform_supplier')}" />
+            <marker date="1524278009562" expanded="true" signature="4385:4508" placeholder="SELECT * FRO... ${tablename('tg_platform_supplier')}" />
+            <marker date="1524278009562" expanded="true" signature="4786:4862" placeholder="select * fro... ${tablename('tg_scan_code')}" />
+            <marker date="1524278009562" expanded="true" signature="5107:5183" placeholder="SELECT follo... ${tablename('mc_mapping_fans')}" />
+            <marker date="1524278009562" expanded="true" signature="7657:7729" placeholder="SELECT openi... ${tablename('tg_platform_supplier')}" />
+            <marker date="1524278009562" expanded="true" signature="8899:8971" placeholder="SELECT openi... ${tablename('tg_platform_supplier')}" />
+            <marker date="1524278009562" expanded="true" signature="9647:9717" placeholder="SELECT * FRO... ${tablename(&quot;tg_platform_supplier&quot;)}" />
+            <marker date="1524278009562" expanded="true" signature="10125:10195" placeholder="SELECT * FRO... ${tablename(&quot;tg_platform_supplier&quot;)}" />
+            <marker date="1524278009562" expanded="true" signature="11191:11261" placeholder="SELECT * FRO... ${tablename(&quot;tg_platform_supplier&quot;)}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/addons/lexiangpingou/web/view/default/platform/order_detail.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-5.428571">
+          <caret line="17" column="44" selection-start-line="17" selection-start-column="44" selection-end-line="17" selection-end-column="44" />
+          <folding>
+            <element signature="n#style#0;n#div#4;n#div#1;n#div#0;n#div#1;n#div#0;n#div#8;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#div#5;n#div#1;n#div#0;n#div#1;n#div#0;n#div#8;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#div#6;n#div#1;n#div#0;n#div#1;n#div#0;n#div#8;n#!!top" expanded="true" />
+            <marker date="1524278124124" expanded="true" signature="17203:17228" placeholder="..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/addons/lexiangpingou/web/controller/platform/platform_order.ctrl.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.2943981">
+          <caret line="26" column="77" selection-start-line="26" selection-start-column="77" selection-end-line="26" selection-end-column="77" />
+          <folding>
+            <marker date="1524278174886" expanded="true" signature="1022:1175" placeholder="SELECT * FRO... ${tablename('tg_supply_order')}" />
+            <marker date="1524278174886" expanded="true" signature="1217:1318" placeholder="SELECT count... ${tablename('tg_supply_order')}" />
+            <marker date="1524278174886" expanded="true" signature="1521:1591" placeholder="SELECT name ${tablename('account_wechats')}" />
+            <marker date="1524278174886" expanded="true" signature="1886:2066" placeholder="select * fro... ${tablename('tg_order')}" />
+            <marker date="1524278174886" expanded="true" signature="2108:2259" placeholder="select count... ${tablename('tg_order')}" />
+            <marker date="1524278174886" expanded="true" signature="2394:2537" placeholder="select * fro... ${tablename('tg_order')}" />
+            <marker date="1524278174886" expanded="true" signature="2861:2962" placeholder="select suppl... ${tablename('tg_supply_goods')}" />
+            <marker date="1524278174886" expanded="true" signature="3645:3784" placeholder="select * fro... ${tablename('tg_goods_supply_option')}" />
+            <marker date="1524278174886" expanded="true" signature="4124:4214" placeholder="select * fro... ${tablename('tg_supply_goods')}" />
+            <marker date="1524278174886" expanded="true" signature="4528:4651" placeholder="select nickn... ${tablename('tg_member')}" />
+            <marker date="1524278174886" expanded="true" signature="6251:6313" placeholder="select * fro... ${tablename('tg_supply_order')}" />
+            <marker date="1524278174886" expanded="true" signature="7549:7693" placeholder="select * fro... ${tablename('tg_supply_order')}" />
+            <marker date="1524278174886" expanded="true" signature="7739:7827" placeholder="select count... ${tablename('tg_supply_order')}" />
+            <marker date="1524278174886" expanded="true" signature="8239:8301" placeholder="select * fro... ${tablename('tg_supply_order')}" />
+            <marker date="1524278174886" expanded="true" signature="8782:8936" placeholder="select * fro... ${tablename('tg_supply_collect')}" />
+            <marker date="1524278174886" expanded="true" signature="9012:9073" placeholder="select order... ${tablename('tg_order')}" />
+            <marker date="1524278174886" expanded="true" signature="9176:9239" placeholder="SELECT * FRO... ${tablename('tg_supply_goods')}" />
+            <marker date="1524278174886" expanded="true" signature="9434:9504" placeholder="SELECT name ${tablename('account_wechats')}" />
+            <marker date="1524278174886" expanded="true" signature="9713:9811" placeholder="select count... ${tablename('tg_supply_collect')}" />
+            <marker date="1524278174886" expanded="true" signature="11013:11138" placeholder="SELECT * FRO... ${tablename('tg_supply_collect')}" />
+            <marker date="1524278174886" expanded="true" signature="11214:11295" placeholder="select order... ${tablename('tg_order')}" />
+            <marker date="1524278174886" expanded="true" signature="11376:11446" placeholder="SELECT name ${tablename('account_wechats')}" />
+            <marker date="1524278174886" expanded="true" signature="11502:11565" placeholder="SELECT * FRO... ${tablename('tg_supply_goods')}" />
+            <marker date="1524278174886" expanded="true" signature="11917:11986" placeholder="SELECT count... ${tablename('tg_supply_collect')}" />
+            <marker date="1524278174886" expanded="true" signature="12759:12835" placeholder="SELECT * FRO... ${tablename('tg_supply_collect')}" />
+            <marker date="1524278174886" expanded="true" signature="12895:12976" placeholder="select order... ${tablename('tg_order')}" />
+            <marker date="1524278174886" expanded="true" signature="13053:13123" placeholder="SELECT name ${tablename('account_wechats')}" />
+            <marker date="1524278174886" expanded="true" signature="13308:13377" placeholder="SELECT count... ${tablename('tg_supply_collect')}" />
+            <marker date="1524278174886" expanded="true" signature="13965:14041" placeholder="SELECT * FRO... ${tablename('tg_supply_collect')}" />
+            <marker date="1524278174886" expanded="true" signature="14496:14569" placeholder="SELECT * FRO... ${tablename('tg_platform_supplier')}" />
+            <marker date="1524278174886" expanded="true" signature="17034:17110" placeholder="SELECT * FRO... ${tablename('tg_supply_collect')}" />
+            <marker date="1524278174886" expanded="true" signature="17170:17251" placeholder="select order... ${tablename('tg_order')}" />
+            <marker date="1524278174886" expanded="true" signature="17328:17398" placeholder="SELECT name ${tablename('account_wechats')}" />
+            <marker date="1524278174886" expanded="true" signature="17583:17652" placeholder="SELECT count... ${tablename('tg_supply_collect')}" />
+            <marker date="1524278174886" expanded="true" signature="18324:18400" placeholder="SELECT * FRO... ${tablename('tg_supply_collect')}" />
+            <marker date="1524278174886" expanded="true" signature="18859:18932" placeholder="SELECT * FRO... ${tablename('tg_platform_supplier')}" />
+            <marker date="1524278174886" expanded="true" signature="20939:21055" placeholder="SELECT * FRO... ${tablename('tg_platform_pay_supply_refund')}" />
+            <marker date="1524278174886" expanded="true" signature="21540:21621" placeholder="SELECT count... ${tablename('tg_platform_pay_supply_refund')}" />
+            <marker date="1524278174886" expanded="true" signature="22531:22607" placeholder="SELECT * FRO... ${tablename('tg_supply_collect')}" />
+            <marker date="1524278174886" expanded="true" signature="22734:22797" placeholder="SELECT * FRO... ${tablename('tg_supply_goods')}" />
+            <marker date="1524278174886" expanded="true" signature="23762:23835" placeholder="SELECT * FRO... ${tablename('tg_platform_supplier')}" />
+            <marker date="1524278174886" expanded="true" signature="25762:25833" placeholder="select * fro... ${tablename('tg_supply_collect')}" />
+            <marker date="1524278174886" expanded="true" signature="25862:25970" placeholder="select order... ${tablename('tg_order')}" />
+            <marker date="1524278174886" expanded="true" signature="26002:26091" placeholder="select * fro... ${tablename('tg_supply_order')}" />
+            <marker date="1524278174886" expanded="true" signature="26125:26192" placeholder="select * fro... ${tablename('account_wechats')}" />
+            <marker date="1524278174886" expanded="true" signature="26364:26427" placeholder="SELECT * FRO... ${tablename('tg_supply_goods')}" />
+            <marker date="1524278174886" expanded="true" signature="27859:27934" placeholder="select * fro... ${tablename('tg_supply_order')}" />
+            <marker date="1524278174886" expanded="true" signature="28945:29018" placeholder="select * fro... ${tablename('tg_platform_supplier')}" />
+            <marker date="1524278174886" expanded="true" signature="29174:29249" placeholder="select * fro... ${tablename('tg_supply_order')}" />
+            <marker date="1524278174886" expanded="true" signature="31161:31232" placeholder="select * fro... ${tablename('tg_supply_collect')}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/test.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.36233613">
+          <caret line="16" column="2" selection-start-line="16" selection-start-column="2" selection-end-line="16" selection-end-column="2" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/addons/lexiangpingou/web/view/default/service/APP.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.416819">
+          <caret line="12" column="45" selection-start-line="12" selection-start-column="45" selection-end-line="12" selection-end-column="45" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/addons/lexiangpingou/web/view/default/service/meigong.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-6.107143">
+          <caret line="9" column="30" selection-start-line="9" selection-start-column="30" selection-end-line="9" selection-end-column="30" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/addons/lexiangpingou/web/view/default/service/xiaochengxu.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-6.107143">
+          <caret line="9" column="37" selection-start-line="9" selection-start-column="37" selection-end-line="9" selection-end-column="37" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/addons/lexiangpingou/web/view/default/service/vip_service.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.61071426">
+          <caret line="27" column="77" selection-start-line="27" selection-start-column="77" selection-end-line="27" selection-end-column="77" />
           <folding />
         </state>
       </provider>
