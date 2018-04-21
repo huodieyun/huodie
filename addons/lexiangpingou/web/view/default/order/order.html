@@ -576,7 +576,7 @@
 								<p><span>下次发货:{$item['once_card_next']}</span></p>
 								<p><span>有效期:{$item['once_card_validity']}</span></p>
 							{/if}
-							{if $item['self_time'] != 0}
+							{if $item['self_time'] != 0 && $item['dispatchtype'] == 3}
 								<p><span>自提时间：{php echo date("Y-m-d", $item['self_time'])}</span></p>
 							{/if}
 					</td>
