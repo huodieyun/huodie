@@ -1,0 +1,15 @@
+{
+  "applinks": {
+    "apps": [],
+    "details": [
+    	{
+    	"appID": "J85MA246JS.com.huodie.51life",
+    	"paths": ["/app/application/2180/*"]
+    	},
+    	{
+    	"appID": "U4SRXF3QR6.com.huodie.xiaoming",
+    	"paths": ["/33/*"]
+    	}
+    ]
+  }
+}
