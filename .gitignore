@@ -1,1 +1,3 @@
-minapi.php
+#.gitignore  
+*.xml  
+*.log 
