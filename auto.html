@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+	<meta charset="utf-8">
+	<META HTTP-EQUIV="Refresh" content="43200">
+	<title>任务处理器222</title>
+<SCRIPT LANGUAGE="JavaScript" src="http://www.lexiangpingou.cn/addons/lexiangpingou/app/view/default/admin/js/jquery-3.1.1.min.js"></SCRIPT>
+<script type="text/javascript">
+try{
+var i=0;
+var arr;
+var len=0;
+ function autoFun(n){
+ $.ajax({
+ type: "post",
+ contentType: "application/json; charset=utf-8",
+ datatype: "json",
+ url: "http://www.lexiangpingou.cn/addons/lexiangpingou/core/asynchronous/autotrands.php?op=run&id="+n,
+ success: function (data) {
+var data=JSON.parse(data);
+ if(i<len){ i++;}else{i=0;location.reload();}
+ if(data.status!=1){
+ document.write(arr[i]+'<br/>');
+ document.write(data.status+'<br/>');
+ }
+ 
+	 autoFun(arr[i]); 
+
+
+ }
+ });
+}
+
+
+
+$.ajax({ 
+type: "get", 
+url: "http://www.lexiangpingou.cn/addons/lexiangpingou/core/asynchronous/autotrands.php?op=getuniacid",
+success: function(msg){
+var msg=JSON.parse(msg);
+ arr=msg.status;
+ len=arr.length-1;
+ 
+  autoFun(arr[0]); 
+
+
+},
+error:function(XMLHttpRequest,textStatus, errorThrown){
+      alert("error Code："+XMLHttpRequest.status);	
+	  }
+ });
+ }catch(e){
+     location.reload();  
+    }
+</script>
+		
+</head>
+<body>
+</body>
+</html>

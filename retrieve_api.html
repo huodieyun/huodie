@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+    <title>找回密码</title>
+    <link rel="stylesheet" href="/web/themes/hz/style/css/common1.css" type="text/css"/>
+    <link rel="stylesheet" href="/web/themes/hz/style/css/register.css" type="text/css"/>
+    <link href="/web/resource/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/web/resource/css/font-awesome.min.css" rel="stylesheet">
+    <!--<script src="/web/resource/js/require.js"></script>-->
+    <!--<script src="/web/resource/js/app/util.js"></script>-->
+    <script src="/web/resource/js/lib/jquery-1.11.1.min.js"></script>
+    <!--<script src="/web/resource/js/app/util.js"></script>-->
+    <!--<script src="/web/resource/js/app/config.js"></script>-->
+    <style type="text/css">
+     body {   
+
+        background: url("./web/resource/images/back_img.jpg") no-repeat;
+    }
+        .app, .app body {
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+        }
+
+        .whz-register-form input {
+            padding-left: 10px;
+            border: 1px solid #c3c3c3 !important;
+            border-radius: 5px;
+        }
+
+        .whz-register-form input:focus {
+            border: 2px solid orange !important;
+        }
+
+        .whz-register-box ul li input[type="text"], .whz-register-box ul li input[type="password"] {
+            float: none;
+        }
+        .loginLogo {
+            background: url("./web/resource/images/loginlogo.png") no-repeat;
+            background-size: 100% 100%;
+        }
+        .loginListUser label{
+            background:url("./web/resource/images/user_name.png") no-repeat;
+            background-size: 95% 95%;       
+         }
+         .loginListPwd label,
+         .loginListPwd_confirm label{
+            background:url("./web/resource/images/password.png") no-repeat;  
+            background-size: 100% 100%;   
+         }
+         .loginListCode label {
+            background:url("./web/resource/images/loginList_code.png") no-repeat;    
+            background-size: 100% 100%;
+         }
+         .loginListMobile label{
+            background:url("./web/resource/images/phone_num.png") no-repeat;    
+            background-size: 100% 100%;
+         }
+         .loginList input:focus,
+        .loginList select { 
+           outline:none; 
+        }
+        @media only screen and (max-width: 480px) {
+            body {
+                background-image: none; 
+            }
+            .loginWrapper {
+                display: flex; 
+                margin: 0;
+                flex-direction: column;
+                justify-content: space-between;   
+                align-items: center;
+                width: 100%;
+            }
+            .banWrapper {
+                display: none;    
+            }
+            .whz-footer-wrap {
+                display: none;  
+            }
+            .iphone {
+                display: block;
+                flex: 0 0 100%;
+                width: 100%; 
+            }
+            .self_desc {
+                flex: 0 0; 
+            }
+            .banContent a img {
+                object-fit: contain;              
+            }
+            .loginListCode .loginText {
+                width: 107px;
+            }
+        }  
+    </style>
+    <script type='text/javascript' charset="UTF-8" async="async">
+        (function (m, ei, q, i, a, j, s) {
+            m[a] = m[a] || function () {
+                    (m[a].a = m[a].a || []).push(arguments)
+                };
+            j = ei.createElement(q),
+                s = ei.getElementsByTagName(q)[0];
+            j.async = true;
+            j.charset = 'UTF-8';
+            j.src = i + '?v=' + new Date().getUTCDate();
+            s.parentNode.insertBefore(j, s);
+        })(window, document, 'script', '//static.meiqia.com/dist/meiqia.js', '_MEIQIA');
+        _MEIQIA('entId', 23646);
+    </script>
+    <script>
+        var popuptip = function ( str, url ) {
+            var popup = document.getElementById( 'popup' );
+            popup.style.setProperty( 'display', 'block' );
+            popup.querySelector( 'span' ).innerHTML = str;
+            setTimeout( function () {
+                popup.style.setProperty( 'display', 'none' );
+                if ( url ) {
+                    location.href = url;
+                }
+            }, 1000 )
+        }
+    </script>
+</head>
+<body>
+<!-- <div id="wrapper" class='bg-black'>
+    <div class="whz-register-box"
+         style="width:600px;height:650px;border-radius:10px;border:5px solid rgb(233,233,233);">
+        <div style="font-size:40px;font-weight:900;height:60px;line-height:60px;color:#666">用户密码找回</div>
+        <div class="mod-body">
+            <form class="whz-register-form" method="post" id="register_form" style="" action="retrieve_api.php">
+                <ul>
+                    <li>
+                        <label class="pull-left">用户名:</label>
+                        <input name="username" type="text" class="form-control" placeholder="请输入用户名">
+                    </li>
+                    <li>
+                        <label class="pull-left">新密码:</label>
+                        <input name="password" type="password" id="password" class="form-control"
+                               placeholder="请输入重置的新密码">
+                    </li>
+                    <li>
+                        <label class="pull-left">手机号:</label>
+                        <input name="mobile" type="text" id="mobile" class="form-control" placeholder="请输入手机号码">
+                    </li>
+                    <li style="position:relative;overflow:visible;display: flex; flex-direction: row;align-items: center ">
+                        <span id='status' style="position:absolute;display:inline-block;right:20%;top:30px;width:auto;">未发送短信</span>
+                        <label style="display:block;" class="pull-left"><span
+                                style="color:red;position:static;">*</span>手机验证码:</label>
+                        <input name="code1" id="code1" type="text" class="form-control" placeholder="请输入验证码"
+                               style="width:30%;display:inline;margin-right:17px">
+                        <input onclick="getCorda(this)" type="button" value="点击获得验证码" id="getCord" class="btn btn-primary btn-block"
+                                style="height: 40px;width:140px;background-color:#42b0e9"/>
+                    </li>
+                    <input name="smscode" value="" type="hidden" />
+                    <div style="display:block;">
+                        <input type="button" name="submit" id="linkregist" value="立即找回"
+                               class="btn btn-primary btn-block"
+                           style="margin-top: 50px;padding: 10px 30px;color: #fff;font-size:18px;background-color:#42b0e9;width:50%;margin-left: 120px;"/>
+                    </div>
+                </ul>
+            </form>
+        </div>
+        <div class="mod-footer">
+        </div>
+        <div class="mod-footer"></div>
+
+    </div> -->
+    <div class="loginWrapper clearfix">
+        <div class="banWrapper">
+            <div class="banContent">
+                <a href="./?refresh" target="_blank" title="Data，Change The World"><img
+                        src="./web/resource/images/left_bar_img.jpg" border="0"/></a>
+            </div>
+        </div>
+        <div class="loginMain">
+            <div class="loginWidth">
+                <div class="loginLogoDiv"><a class="loginLogo" href="./?refresh"></a></div>
+                <form class="login_form" method="post" id="login_form">
+                    <div class="loginList loginListUser">
+                        <label></label>
+                        <!-- <span class="icon icon-card"></span> -->
+                        <input type="text" class="loginText" name="username" id="username" value=""
+                               placeholder="用户名/手机号"/>
+                        <span class="errorTips"><i></i><em></em></span>
+                    </div>
+                    <div class="loginList loginListPwd"> 
+                        <label></label> 
+                        <input type="password" class="loginText" name="password" id="password" value=""
+                               placeholder="密码"/>
+                        <span class="errorTips"><i></i><em></em></span>   
+                    </div>
+                    <div class="loginList loginListPwd_confirm">  
+                        <label></label>
+                        <input name="repassword" type="password" id="repassword" class="loginText" 
+                               placeholder="请再次输入密码">   
+                    </div>
+                    <div class="loginList loginListMobile">
+                        <label></label>
+                        <!-- <span class="icon icon-card"></span> -->
+                        <input type="text" class="loginText" name="mobile" id="mobile" value=""
+                               placeholder="手机号"/>
+                        <span class="errorTips"><i></i><em></em></span> 
+                    </div>
+                    <div class="loginList loginListCode">
+                        <label></label>
+                        <input name="code1" type="text" class="loginText" id="code1" placeholder="请输入验证码">
+                        <input type="button" onclick="getCorda(this)" value="点击获得验证码" id="getCord" class="btn btn-block"
+                               style="background-color:#e4572e;color: #fff"/>     
+                    </div>
+                    <div class="sysError" style="display:none"><label></label><span><i></i><em></em></span></div>
+                    <input class="loginBtn" id="linkregist" value="立即找回"/> 
+                    <input name="token" value="{$_W['token']}" type="hidden" />
+                    <div style="display: flex; flex-direction: row;justify-content: space-between; align-items: center;">
+                        <p class="have">还没有账号?<a href="/web/index.php?c=user&a=register&">立即注册<i></i></a></p>
+                        <p class="have">已有账号?<a href="/web/index.php?c=user&a=login&">直接登录→</a></p>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="banWrapper iphone"> 
+            <div class="banContent">
+                <a href="./?refresh" target="_blank" ><img
+                        src="./web/resource/images/left_bar_img.jpg" border="0"/></a>
+            </div>
+        </div>
+        <div class="whz-footer-wrap iphone self_desc" style='margin-top:20px;'>
+            <div class="whz-footer">
+                <div class="text-center" style="text-align: center;">
+                    <a href="http://www.lexiangpingou.cn" target="_blank">关于火蝶</a>
+                </div>
+                <div class="text-center" style="text-align: center;">
+                    Powered by <a href="http://www.lexiangpingou.cn" target="_blank"><b>乐享拼购</b></a>
+                    v1.0 &copy; 2014 <a href="http://www.lexiangpingou.cn" target="_blank">www.lexiangpingou.cn</a>
+                </div>
+            </div>
+        </div>   
+    </div>
+    <div class="whz-footer-wrap" style='margin-top:20px;'>
+        <div class="whz-footer">
+            <div class="text-center" style="text-align: center;">
+                <a href="http://www.lexiangpingou.cn" target="_blank">关于火蝶</a>
+            </div>
+            <div class="text-center" style="text-align: center;"> 
+                Powered by <a href="http://www.lexiangpingou.cn" target="_blank"><b>乐享拼购</b></a>
+                v1.0 &copy; 2015 <a href="http://www.lexiangpingou.cn" target="_blank">www.lexiangpingou.cn</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    //var linkregist = document.getElementById( 'linkregist' );
+    //var popup = document.getElementById( 'popup' );
+    //linkregist.onclick = function ( ev ) {
+    //alert('.');
+    //location.href='{url 'user/login'}';
+    //}
+    var checkXin = false;
+    var smscode = document.querySelector("input[name='smscode']");
+    var statuse = document.getElementById("status");
+    var url = "/retrieve_api.php?op=code";
+    var getCord = document.getElementById("getCord");
+    function getCorda(ev) {
+        if (getCord.value == '点击获得验证码' || getCord.value == '发送失败' || getCord.value == '重新发送验证码') {
+            ajaxData(0, url);
+        }
+        else {
+//            var num = document.querySelector('input[name="code1"]').value;
+//            ajaxData(num, url);
+            alert('倒计时还未结束');
+            return;
+        }
+
+    }
+
+    function ajaxData(num, url){
+
+        var mobile = document.querySelector("input[name='mobile']").value;
+//        if (!/\d{11}/.test(mobile)) {
+//            alert("手机号码长度不够");
+//            return false;
+//        }
+//        var regex = '^(0\\d{2}-\\d{8}(-\\d{1,4})?)|(0\\d{3}-\\d{7,8}(-\\d{1,4})?)$';
+//        if (!(/^(0\\d{2}-\\d{8}(-\\d{1,4})?)|(0\\d{3}-\\d{7,8}(-\\d{1,4})?)$/.test(mobile))){
+//            alert("手机号码不正确");
+//            return false;
+//        }
+        if(!(/^1[34578]\d{9}$/.test(mobile))){
+            alert("手机号码不正确");
+            return false;
+        }
+        //去除单击事件，防止多次点击
+        $('#getCord').attr('onclick','');
+        var xhr = new XMLHttpRequest();
+        var formData = new FormData();
+
+        formData.append('num', num);
+        if (num == 0) {
+            formData.append("mobile", mobile);
+            formData.append('retrieve', 1);
+        }
+        else if (num.length == 6) {
+            formData.append('retrieve', 2);
+        }
+        else {
+            alert("验证码不正确");
+            return false;
+        }
+        xhr.open('post', url, true);
+        xhr.send(formData);
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState == 4) {
+                if ((xhr.status >= 200 && xhr.status < 300) || xhr.status == 304) {
+                    var res = JSON.parse(xhr.responseText);
+                    if(res.result){
+                        alert(res.result);
+                        return false;
+                    }
+                    if (res['status'] == 1) {
+                        window.localStorage.setItem('mobile_code',res['code'])
+                        var a = 60;
+                        var timp = setInterval(function () {
+                            a--;
+                            getCord.value = a + '秒';
+                            if (a == 0) {
+                                $('#getCord').attr('onclick','getCorda(this)');
+                                getCord.value = '重新发送验证码';
+                                clearInterval(timp);
+                            }
+                        }, 1000);
+                    // }else if(res['status'] == -1){
+                    //     alert(res.result);
+                    // }else if(res['status'] == 2){
+                    //     alert(res.result);
+                    //     window.history(-1);
+                    }
+                }
+            }
+        }
+    }
+
+    function ajaxSubmit(url){
+
+        var username = document.querySelector("input[name='username']").value;
+        var password = document.querySelector("input[name='password']").value;
+        var mobile = document.querySelector("input[name='mobile']").value;
+
+        var xhr = new XMLHttpRequest();
+        var formData = new FormData();
+
+        formData.append('username', username);
+        formData.append('password', password);
+        formData.append('mobile', mobile);
+
+        xhr.open('post', url, true);
+        xhr.send(formData);
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState == 4) {
+                if ((xhr.status >= 200 && xhr.status < 300) || xhr.status == 304) {
+                    var res = JSON.parse(xhr.responseText);
+                    if(res['status'] == -1){
+                        alert(res.result);
+                        return;
+                    }else if(res['status'] == 1){
+                        window.localStorage.removeItem('mobile_code');
+                        alert(res.result);
+                        history.go(-1);
+                    }
+                }
+            }
+        }
+    }
+
+
+    var dropaway = document.getElementById("dropaway"),
+        agree = document.getElementById("agree"),
+        popupitem = document.getElementById("popupitem"),
+        reading = document.getElementById("reading"),
+        hasread = document.getElementById("hasread");
+
+//    require(['jquery', 'util'], function ($, u) {
+//        $('#register_form').submit(function () {
+//            var num = document.querySelector('input[name="code1"]').value;
+//
+//            if (num != smscode.value) {
+//                u.message('短信验证码不正确', '', 'error');
+//                return false;
+//            }
+//            if ($.trim($('input:text[name="username"]').val()) == '') {
+//                u.message('没有输入用户名.', '', 'error');
+//                return false;
+//            }
+//            if ($('#password').val() == '') {
+//                u.message('没有输入密码.', '', 'error');
+//                return false;
+//            }
+//            if ($('#mobile').val() == '') {
+//                u.message('必须输入手机号.', '', 'error');
+//                return false;
+//            }
+//        });
+//    });
+    $('#linkregist').click(function () {
+        var num = document.querySelector('input[name="code1"]').value;
+        var _code = window.localStorage.getItem('mobile_code');
+
+        if ($.trim($('input:text[name="username"]').val()) == '') {
+            alert('请输入用户名.', '', 'error');
+            return false;
+        }
+        if ($('#password').val() == '') {
+                alert('请输入密码.', '', 'error');
+                return false;
+            }
+        if($('#repassword').val() == '') {
+             alert('请确认密码', '', 'error');
+            return false;
+        }
+        if($('#password').val() != $('#repassword').val()) {
+            alert('两次密码不一致','','error');
+            return false;
+        }
+        if ($('#mobile').val() == '') {
+            alert('请输入手机号.', '', 'error');
+            return false;
+        }
+        if ($('#code1').val() == '') {
+            alert('请输入验证码.', '', 'error');
+            return false;
+        }
+        if (num != _code) {
+            alert('短信验证码不正确', '', 'error');
+            return false;
+        }
+        var url = "/retrieve_api.php";
+        window.ajaxSubmit(url)
+
+    })
+//    require(['jquery'], function ($) {
+//        var h = document.documentElement.clientHeight;
+//        $("#wrapper").css('min-height', h);
+//    });
+
+</script>
+</body>
+</html>

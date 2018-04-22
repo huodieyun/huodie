@@ -449,3 +449,67 @@ array (
   'out_trade_no' => 'APP15235236507689',
   'paykey' => 'hxfp4zwj4vc03z5bpccgzvpgrdghcbky',
 )
+array (
+  'uniacid' => '33',
+  'op' => 'wx_query',
+  'appid' => 'wx6086cdfacbe1db2e',
+  'mch_id' => '1489784642',
+  'out_trade_no' => 'XCX15239364819012',
+  'paykey' => 'zl5dscvpfbemgzf3jddw3wgpeorjqskz',
+)
+'WechatError: -6'
+'WechatError: -6'
+''
+'WechatError: -6'
+'TypeError: undefined is not an object (evaluating &#039;this.props.navigation.state.params.info&#039;)'
+'TypeError: undefined is not an object (evaluating &#039;this.props.navigation.state.params.info&#039;)'
+'TypeError: undefined is not an object (evaluating &#039;this.props.navigation.state.params.info&#039;)'
+'TypeError: undefined is not an object (evaluating &#039;this.props.navigation.state.params.info&#039;)'
+'TypeError: Cannot read property &#039;info&#039; of undefined'
+'TypeError: Cannot read property &#039;info&#039; of undefined'
+'TypeError: Cannot read property &#039;info&#039; of undefined'
+'TypeError: Cannot read property &#039;info&#039; of undefined'
+array (
+  'uniacid' => '2180',
+  'op' => 'wx_query',
+  'appid' => 'wx11e29b1857b6aead',
+  'mch_id' => '1499165462',
+  'out_trade_no' => 'APP15239550960495',
+  'paykey' => 'hxfp4zwj4vc03z5bpccgzvpgrdghcbky',
+)
+array (
+  'uniacid' => '2180',
+  'op' => 'wx_query',
+  'appid' => 'wx11e29b1857b6aead',
+  'mch_id' => '1499165462',
+  'out_trade_no' => 'APP15242751278726',
+  'paykey' => 'hxfp4zwj4vc03z5bpccgzvpgrdghcbky',
+)
+'TypeError: undefined is not an object (evaluating &#039;this.props.navigation.state.params.info&#039;)'
+'TypeError: undefined is not an object (evaluating &#039;this.props.navigation.state.params.info&#039;)'
+'TypeError: undefined is not an object (evaluating &#039;this.props.navigation.state.params.info&#039;)'
+array (
+  'uniacid' => '2180',
+  'op' => 'wx_query',
+  'appid' => 'wx11e29b1857b6aead',
+  'mch_id' => '1499165462',
+  'out_trade_no' => 'APP15242768774776',
+  'paykey' => 'hxfp4zwj4vc03z5bpccgzvpgrdghcbky',
+)
+array (
+  'uniacid' => '2180',
+  'op' => 'wx_query',
+  'appid' => 'wx11e29b1857b6aead',
+  'mch_id' => '1499165462',
+  'out_trade_no' => 'APP15242778914236',
+  'paykey' => 'hxfp4zwj4vc03z5bpccgzvpgrdghcbky',
+)
+'TypeError: undefined is not an object (evaluating &#039;this.props.navigation.state.params.info&#039;)'
+array (
+  'uniacid' => '33',
+  'op' => 'wx_query',
+  'appid' => 'wx6086cdfacbe1db2e',
+  'mch_id' => '1489784642',
+  'out_trade_no' => 'APP15242789133018',
+  'paykey' => 'zl5dscvpfbemgzf3jddw3wgpeorjqskz',
+)
