@@ -156,7 +156,7 @@ if($do == 'ext') {
 	$title = '扩展功能概况';
 	$installedmodulelist = uni_modules(false);
 	foreach ($installedmodulelist as $k => &$value) {
-		$value['official'] = empty($value['issystem']) && (strexists($value['author'], 'WeEngine Team') || strexists($value['author'], '乐享拼购团队'));
+		$value['official'] = empty($value['issystem']) && (strexists($value['author'], 'WeEngine Team') || strexists($value['author'], '火蝶云团队'));
 	}
 	$m = $_GPC['m'];
 	if(empty($m)) {

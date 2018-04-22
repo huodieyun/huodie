@@ -1,7 +1,7 @@
 <?php
 /**
  * [weliam] Copyright (c) 2016/3/23
- * 乐享拼购公共方法
+ * 火蝶云公共方法
  */
  function wl_tpl_form_field_date($name, $value = '', $withtime = false) {
 	$html = '';

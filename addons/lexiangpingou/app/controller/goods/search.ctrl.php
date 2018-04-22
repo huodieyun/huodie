@@ -7,7 +7,7 @@
  */
 defined('IN_IA') or exit('Access Denied');
 
-$pagetitle = !empty($config['tginfo']['sname']) ? $config['tginfo']['sname'] : '乐享拼购';
+$pagetitle = !empty($config['tginfo']['sname']) ? $config['tginfo']['sname'] : '火蝶云';
 
 $config['tginfo']['slogo'] = tomedia($config['tginfo']['slogo']);
 

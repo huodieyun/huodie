@@ -1,5 +1,5 @@
 <?php
-	//1：积分，乐享拼购表,2：tg表
+	//1：积分，火蝶云表,2：tg表
 	function credit_get_by_uid($uid = '' ,$credit_type=1) {
 		global $_W;
 		if($credit_type==1){

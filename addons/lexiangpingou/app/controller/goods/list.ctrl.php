@@ -181,7 +181,7 @@ if (!$checkfunction['status'] || $member['parentid'] == -1) {
     $params = array('from_user' => $_W['openid']);
     member_update_by_params($data, $params);
 }
-$pagetitle = !empty($config['tginfo']['sname']) ? $config['tginfo']['sname'] : '乐享拼购';
+$pagetitle = !empty($config['tginfo']['sname']) ? $config['tginfo']['sname'] : '火蝶云';
 //全民兼职 结束
 $shop = pdo_fetch("SELECT * FROM " . tablename('account_wechats') . " WHERE uniacid = :uniacid", array(':uniacid' => $_W['uniacid']));
 $con = "";

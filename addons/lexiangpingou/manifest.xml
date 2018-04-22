@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns="http://www.we7.cc" versionCode="0.6">
 	<application setting="true">
-		<name><![CDATA[乐享拼购]]></name>
+		<name><![CDATA[火蝶云]]></name>
 		<identifie><![CDATA[lexiangpingou]]></identifie>
 		<version><![CDATA[5.1]]></version>
 		<type><![CDATA[activity]]></type>
-		<ability><![CDATA[乐享拼购]]></ability>
-		<description><![CDATA[乐享拼购]]></description>
+		<ability><![CDATA[火蝶云]]></ability>
+		<description><![CDATA[火蝶云]]></description>
 		<author><![CDATA[火蝶信息]]></author>
 		<url><![CDATA[]]></url>
 	</application>

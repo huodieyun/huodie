@@ -1,7 +1,7 @@
 <?php
 /**
  * [weliam] Copyright (c) 2016
- * 乐享拼购数据库查询方法
+ * 火蝶云数据库查询方法
  */
 defined('IN_IA') or exit('Access Denied');
 

@@ -1,7 +1,7 @@
 <?php
 /**
  * [weliam] Copyright (c) 2016/3/23
- * 乐享拼购公共方法
+ * 火蝶云公共方法
  */
 defined('IN_IA') or exit('Access Denied');
 function saveImage($path)
@@ -384,7 +384,7 @@ function wl_template_compile($from, $to, $inmodule = false)
     }
     $content = wl_template_parse(file_get_contents($from), $inmodule);
     if (IMS_FAMILY == 'x' && !preg_match('/(footer|header)+/', $from)) {
-        $content = str_replace('乐享拼购', '系统', $content);
+        $content = str_replace('火蝶云', '系统', $content);
     }
     file_put_contents($to, $content);
 }

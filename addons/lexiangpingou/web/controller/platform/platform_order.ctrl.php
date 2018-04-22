@@ -344,7 +344,7 @@ if ($op == 'shop_refund_check_submit') {
     $id = pdo_insertid();
     pdo_update('tg_supply_collect', array('shop_refund_orderid' => $id), array('shop_refund_orderid' => -1, 'uniacid' => $_GPC['id']));
     //短信通知
-    //  $content=$supplier['bank_name'].'账户号:'.substr($supplier['bank_account'],-6).'打了一笔款，请将款数填入乐享拼购系统';
+    //  $content=$supplier['bank_name'].'账户号:'.substr($supplier['bank_account'],-6).'打了一笔款，请将款数填入火蝶云系统';
 
     // 您好，我司已将退款单号：#tkno#款项汇入账户名:#jxname#账户尾号:#jxno#，请查收。
 
@@ -449,7 +449,7 @@ if ($op == 'supply_refund_check_submit') {
     $id = pdo_insertid();
     pdo_update('tg_supply_collect', array('supply_refund_orderid' => $id), array('supply_refund_orderid' => -1, 'supply_id' => $_GPC['id']));
     //短信通知
-    //  $content=$supplier['bank_name'].'账户号:'.substr($supplier['bank_account'],-6).'打了一笔款，请将款数填入乐享拼购系统';
+    //  $content=$supplier['bank_name'].'账户号:'.substr($supplier['bank_account'],-6).'打了一笔款，请将款数填入火蝶云系统';
 
     // 您好，我司已将退款单号：#tkno#款项汇入账户名:#jxname#账户尾号:#jxno#，请查收。
 
@@ -565,7 +565,7 @@ if ($op == 'platform_check_submit') {
     $id = pdo_insertid();
     pdo_update('tg_supply_collect', array('platform_supplier_orderid' => $id), array('platform_supplier_orderid' => -1, 'supply_id' => $_GPC['id']));
     //短信通知
-    // 您好，我司已将结算单号：#jsno#款项汇入账户名:#jxname#账户尾号:#jxno#，请查收  $content=$supplier['bank_name'].'账户号:'.substr($supplier['bank_account'],-6).'打了一笔款，请将款数填入乐享拼购系统';
+    // 您好，我司已将结算单号：#jsno#款项汇入账户名:#jxname#账户尾号:#jxno#，请查收  $content=$supplier['bank_name'].'账户号:'.substr($supplier['bank_account'],-6).'打了一笔款，请将款数填入火蝶云系统';
 
     $mobile = $supplier['contact_phone'];
     $jsno = $data['singleno'];

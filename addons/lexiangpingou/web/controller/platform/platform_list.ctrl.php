@@ -146,7 +146,7 @@ if ($op == 'sub_check') {
             }
             die(json_encode(array('errno' => 1, 'message' => '申请提交成功！')));
         } else {
-            die(json_encode(array('errno' => 0, 'message' => '您还未关注乐想拼购公众号，请立即关注此公众号以便及时接收平台信息！！')));
+            die(json_encode(array('errno' => 0, 'message' => '您还未关注火蝶云公众号，请立即关注此公众号以便及时接收平台信息！！')));
         }
     } else {
         die(json_encode(array('errno' => 0, 'message' => '通信失败' . $_GPC['code'])));
@@ -244,14 +244,14 @@ if ($op == 'financial_price') {
     pdo_update('tg_platform_supplier', $data, array('id' => $id));
     $supplier = pdo_fetch("SELECT * FROM " . tablename("tg_platform_supplier") . " WHERE id = :id", array(":id" => $id));
     //短信通知
-    //  $content=$supplier['bank_name'].'账户号:'.substr($supplier['bank_account'],-6).'打了一笔款，请将款数填入乐享拼购系统';
+    //  $content=$supplier['bank_name'].'账户号:'.substr($supplier['bank_account'],-6).'打了一笔款，请将款数填入火蝶云系统';
     send_platform_sms(substr($supplier['bank_account'], -6), $supplier['contact_phone'], $supplier['bank_name']);
     $dat['openid'] = $supplier['openid'];
     if ($dat['openid']) {
         $dat['first'] = '供应商入驻申请进度';
         $dat['keyword1'] = date('Ymd') . substr(time(), -5) . substr(microtime(), 2, 5) . sprintf('%02d', rand(0, 99));
-        $dat['keyword2'] = '财务打款验证';  //【火蝶科技】您好，我司已向账户名:账户尾号:汇入一笔随机金额款项，请将金额回填乐享拼购系统完成验证。
-        $dat['keyword3'] = '我司已向账户名' . $supplier['bank_name'] . '账户尾号:' . substr($supplier['bank_account'], -6) . '汇入一笔随机金额款项，请将具体金额回填乐享拼购系统完成验证';
+        $dat['keyword2'] = '财务打款验证';  //【火蝶科技】您好，我司已向账户名:账户尾号:汇入一笔随机金额款项，请将金额回填火蝶云系统完成验证。
+        $dat['keyword3'] = '我司已向账户名' . $supplier['bank_name'] . '账户尾号:' . substr($supplier['bank_account'], -6) . '汇入一笔随机金额款项，请将具体金额回填火蝶云系统完成验证';
         $dat['keyword4'] = '财务打款验证';
         $dat['remark'] = '';
         pdo_insert('tg_service_process', $dat);
@@ -271,7 +271,7 @@ if ($op == 'financial_check') {
         if ($dat['openid']) {
             $dat['first'] = '供应商入驻申请进度';
             $dat['keyword1'] = date('Ymd') . substr(time(), -5) . substr(microtime(), 2, 5) . sprintf('%02d', rand(0, 99));
-            $dat['keyword2'] = '商家验证';  //【火蝶科技】您好，我司已向账户名:账户尾号:汇入一笔随机金额款项，请将金额回填乐享拼购系统完成验证。
+            $dat['keyword2'] = '商家验证';  //【火蝶科技】您好，我司已向账户名:账户尾号:汇入一笔随机金额款项，请将金额回填火蝶云系统完成验证。
             $dat['keyword3'] = '商家验证金额错误';
             $dat['keyword4'] = '商家验证';
             $dat['remark'] = '';
@@ -282,13 +282,13 @@ if ($op == 'financial_check') {
         $data['type'] = 2;
         pdo_update('tg_platform_supplier', $data, array('id' => $id));
         //短信通知
-        // $content=$supplier['bank_name'].'账户号:'.$supplier['bank_account'].'打了一笔款，请将款数填入乐享拼购系统';
+        // $content=$supplier['bank_name'].'账户号:'.$supplier['bank_account'].'打了一笔款，请将款数填入火蝶云系统';
 
         $dat['openid'] = $supplier['openid'];
         if ($dat['openid']) {
             $dat['first'] = '供应商入驻申请进度';
             $dat['keyword1'] = date('Ymd') . substr(time(), -5) . substr(microtime(), 2, 5) . sprintf('%02d', rand(0, 99));
-            $dat['keyword2'] = '供应商验证';  //【火蝶科技】您好，我司已向账户名:账户尾号:汇入一笔随机金额款项，请将金额回填乐享拼购系统完成验证。
+            $dat['keyword2'] = '供应商验证';  //【火蝶科技】您好，我司已向账户名:账户尾号:汇入一笔随机金额款项，请将金额回填火蝶云系统完成验证。
             $dat['keyword3'] = '供应商验证成功';
             $dat['keyword4'] = '供应商验证';
             $dat['remark'] = '';

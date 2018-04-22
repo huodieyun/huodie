@@ -115,7 +115,7 @@ if ($_W['isajax']) {
     /*微信卡券*/
     if ($setting['payment']['card']['switch'] == 2 && !empty($_W['openid'])) {
     }
-    /*乐享拼购卡券*/
+    /*火蝶云卡券*/
     if ($setting['payment']['card']['switch'] == 3 && $_W['member']['uid']) {
     }
     /*tg卡券*/

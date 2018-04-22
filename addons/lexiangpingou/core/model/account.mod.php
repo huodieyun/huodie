@@ -48,7 +48,7 @@
 		$you = 0;
 		/*微信卡券*/
 		if($pay['card']['switch'] == 2 && !empty($_W['openid'])) {}
-		/*乐享拼购卡券*/
+		/*火蝶云卡券*/
 		if($pay['card']['switch'] == 3 && $_W['member']['uid']) {}
 		/*tg卡券*/
 		$post_data = array();

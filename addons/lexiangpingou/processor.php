@@ -10,7 +10,7 @@ defined('IN_IA') or exit('Access Denied');
 class lexiangpingouModuleProcessor extends WeModuleProcessor {
 	public function respond() {
 		global $_W;
-		//这里定义此模块进行消息处理时的具体过程, 请查看乐享拼购文档来编写你的代码
+		//这里定义此模块进行消息处理时的具体过程, 请查看火蝶云文档来编写你的代码
 		$message = $this -> message;
 		$openid = $this -> message['from'];
 		$content = $this -> message['content'];

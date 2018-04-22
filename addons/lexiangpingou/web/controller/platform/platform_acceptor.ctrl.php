@@ -61,7 +61,7 @@ if ($op == 'sub_check') {
                 die(json_encode(array('errno' => -1, 'message' => '申请失败！')));
             }
         } else {
-            die(json_encode(array('errno' => -1, 'message' => '您还未关注乐想拼购公众号，请立即关注此公众号以便及时接收平台信息！！')));
+            die(json_encode(array('errno' => -1, 'message' => '您还未关注火蝶云公众号，请立即关注此公众号以便及时接收平台信息！！')));
         }
     } else {
         die(json_encode(array('errno' => 0, 'message' => '通信失败' . $_GPC['code'])));
