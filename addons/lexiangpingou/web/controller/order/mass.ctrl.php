@@ -20,7 +20,57 @@ if (checksubmit('submit'))
         $saveData['type'] = $_GPC['msgtype'];
         $saveData['thread_count'] = intval($threadCount);
         $saveData['options'] = htmlspecialchars_decode($_GPC['options']);
-        $fansList = pdo_fetchall("SELECT * FROM " . tablename('tg_order') . " WHERE uniacid='{$_W['uniacid']}' and status=10 order by tuan_id asc");
+
+        //按条件查询退款订单
+        $condition = "  uniacid = :uniacid";
+        $paras = array(':uniacid' => $_W['uniacid']);
+
+        $status = $_GPC['status'];
+        $transid = $_GPC['transid'];
+        $pay_type = $_GPC['pay_type'];
+        $keyword = $_GPC['keyword'];
+        $member = $_GPC['member'];
+        $time = $_GPC['time'];
+
+        if (empty($starttime) || empty($endtime)) {
+            $starttime = strtotime('-1 month');
+            $endtime = time();
+        }
+        if (!empty($_GPC['time'])) {
+            $starttime = strtotime($_GPC['time']['start']);
+            $endtime = strtotime($_GPC['time']['end']);
+            $condition .= " AND  createtime >= :starttime AND  createtime <= :endtime ";
+            $paras[':starttime'] = $starttime;
+            $paras[':endtime'] = $endtime;
+        }
+        if (trim($_GPC['goodsid']) != '') {
+            $condition .= " and g_id like '%{$_GPC['goodsid']}%' ";
+        }
+        if (trim($_GPC['goodsid2']) != '') {
+            $condition .= " and g_id like '%{$_GPC['goodsid2']}%' ";
+        }
+        if (!empty($_GPC['transid'])) {
+            $condition .= " AND  transid =  '{$_GPC['transid']}'";
+        }
+        if (!empty($_GPC['pay_type'])) {
+            $condition .= " AND  pay_type = '{$_GPC['pay_type']}'";
+        } elseif ($_GPC['pay_type'] === '0') {
+            $condition .= " AND  pay_type = '{$_GPC['pay_type']}'";
+        }
+        if (!empty($_GPC['keyword'])) {
+            $condition .= " AND  orderno LIKE '%{$_GPC['keyword']}%'";
+        }
+        if (!empty($_GPC['member'])) {
+            $condition .= " AND (addname LIKE '%{$_GPC['member']}%' or mobile LIKE '%{$_GPC['member']}%')";
+        }
+        $condition .= " AND  status = 10 and merchantid = '{$_W['user']['merchant_id']}' ";
+        $condition .=" and pay_type<>9";
+        $sql = "select  * from " . tablename('tg_order') . " where $condition and mobile<>'虚拟' order by tuan_id asc " ;
+        $fansList = pdo_fetchall($sql, $paras);
+
+
+
+//        $fansList = pdo_fetchall("SELECT * FROM " . tablename('tg_order') . " WHERE uniacid='{$_W['uniacid']}' and status=10 order by tuan_id asc");
         $saveData['total'] = count($fansList);
         if (count($fansList) <= 0) {  
 		

@@ -57,7 +57,8 @@ session_start();
 	if (!empty($_GPC['member'])) {
 		$condition .= " AND (addname LIKE '%{$_GPC['member']}%' or mobile LIKE '%{$_GPC['member']}%')";
 	}
-	$condition .= " AND  status = 10";
+		$condition .= " AND  status = 10 and merchantid = '{$_W['user']['merchant_id']}' ";
+    $condition .=" and pay_type<>9";
 	$sql = "select  * from " . tablename('tg_order') . " where $condition and mobile<>'虚拟' ORDER BY createtime DESC " . "LIMIT " . ($pindex - 1) * $psize . ',' . $psize;
 	$list = pdo_fetchall($sql, $paras);
 	$paytype = array('0' => array('css' => 'default', 'name' => '未支付'), '1' => array('css' => 'info', 'name' => '余额支付'), '2' => array('css' => 'success', 'name' => '在线支付'), '3' => array('css' => 'warning', 'name' => '货到付款'));

@@ -524,7 +524,7 @@ require(['jquery', 'order'], function($, o){
 									<div>
 										<h5>商品总价<span class="pull-right text-currency b">￥{php echo currency_format($item['goodsprice']);}</span></h5>
 										<h5>运费<span class="pull-right b">￥{php echo currency_format($item['freight']);}</span></h5>
-										{if $item['is_usecard']==0 || !empty($item['first_fee'])}
+										{if $item['is_usecard']==0 || !empty($item['first_fee']) || $item['discount_fee'] > 0}
 										<h5 class="js-discount-info" style="cursor: pointer;">
 											优惠
 											<i class="fa fa-caret-right"></i>
@@ -535,6 +535,9 @@ require(['jquery', 'order'], function($, o){
 										<div style="padding-left: 1em;display: none;" class="js-discount-info-detail">
 												<!--<h6>优惠券减({php echo cutstr($coupon_template['name'], '15', true);})<span class="pull-right">- ￥{php echo currency_format($item['discount_fee']);}</span></h6>-->
 												<h6>团长优惠(团ID：{$item['tuan_id']})<span class="pull-right">- ￥{php echo currency_format($item['first_fee']);}</span></h6>
+												{if $item['discount_fee'] > 0}
+													<h6>优惠券折扣<span class="pull-right b">-¥{$item['discount_fee']}</span></h6>
+												{/if}
 										</div>
 										{/if}
 										<h5>退款<span class="pull-right b">￥{php echo currency_format($resultfee);}</span></h5>

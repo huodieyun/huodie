@@ -63,7 +63,7 @@
 </div>
 <div class="panel panel-default" ng-controller="advAPI">
 	<div class="table-responsive">
-		<table class="table table-hover">
+		<table class="table table-hover" style="table-layout: auto;">
 			<thead>
 			<tr>
 			<!--	<th style="width:40px;">
@@ -71,6 +71,7 @@
 				</th>-->
 				<th style="width:125px;">商品图</th>
 				<th style="width:300px;">商品名</th>
+				<th class="text-center" style="width:200px;">订单号</th>
 				<th class="text-center" style="width:200px;">买家</th>
 				<th class="text-center" style="width:120px;">付款时间</th>
 				<th class="text-center" style="width:100px;">状态</th>
@@ -86,6 +87,7 @@
                     <b>所属商家：{$item['merchant_name']}</b><br/>
 					{php echo cutstr($item['goods']['gname'], 30, true);}
 				</td>
+				<td>{$item['orderno']}</td>
 				<td class="text-center" style="width:100px;">
 					<p>{if $item['cname']}{$item['cname']}{else}{$item['addname']}{/if}</p>
 					<p>{if $item['tel']}{$item['tel']}{else}{$item['mobile']}{/if}</p>
@@ -102,7 +104,9 @@
 				<td colspan="8">
 					<!--<a href="javascript:;" class="btn btn-default min-width js-batch js-refund">退款选中订单</a>-->
 					{if checkstr($_W['user']['perms'],'refund.mass')}
-					<a href="{php echo web_url('order/mass')}" class="btn btn-default min-width js-batch js-refundall">退款所有订单</a>
+
+
+					<a href="{php echo web_url('order/mass',array('goodsid2'=>$_GPC['goodsid2'],'goodsid'=>$_GPC['goodsid'],'keyword'=>$_GPC['keyword'],'transid'=>$_GPC['transid'],'member'=>$_GPC['member'],'time'=>array('start'=>$_GPC['time']['start'],'end'=>$_GPC['time']['end'])))}" class="btn btn-default min-width js-batch js-refundall">退款所有订单</a>
 					{/if}
 				</td>
 			</tr>
