@@ -455,6 +455,183 @@ class creat_qrcode {
         }
     }
 
+
+    //现金券二维码
+    public function createCashCodeQrcode($url,$template_id){
+        set_time_limit(0);
+        //用户把浏览器关掉（断开连接）亦继续执行
+        ignore_user_abort(true);
+        global $_W;
+        global $_GPC;
+        $path = IA_ROOT . '/addons/lexiangpingou/data/couponqrcode/' . $_W['uniacid'] . '/';
+        if (!is_dir($path)) {
+            load()->func('file');
+            mkdirs($path);
+        }
+        $file = md5(base64_encode($url)) . '.jpg';
+        $qrcode_file = $path . $file;
+        if (!is_file($qrcode_file)) {
+            require_once IA_ROOT . '/framework/library/qrcode/phpqrcode.php';
+            QRcode::png($url, $qrcode_file, QR_ECLEVEL_L, 4);
+        }
+
+//        $QR = $qrcode_file; //原始二维码
+//        $QR = imagecreatefromstring(file_get_contents($QR));
+//        //背景图
+//        $bimg  = IA_ROOT . '/addons/lexiangpingou/web/resource/images/couponbg.png';
+//        $bimg = imagecreatefromstring(file_get_contents($bimg));
+//        $QR_width = imagesx($QR);//二维码图片宽度
+//        $QR_height = imagesy($QR);//二维码图片高度
+//        $bimg_width = imagesx($bimg);//商品图片宽度
+//        $bimg_height = imagesy($bimg);//商品图片高度
+//
+//        $newgimg=imagecreatetruecolor($bimg_width, $bimg_height);
+//        //2.上色
+//        $color=imagecolorallocate($newgimg,255,255,255);
+//        //3.设置透明
+//        imagecolortransparent($newgimg,$color);
+//        imagefill($newgimg,0,0,$color);
+//        imagecopyresized($newgimg, $bimg,0, 0,0, 0,$bimg_width, $bimg_height, $bimg_width, $bimg_height);
+//
+//
+////        $per=200/$gimg_width;
+////        $n_gw=$gimg_width*$per;
+////        $n_gh=$gimg_height*$per;
+////        $newgimg=imagecreatetruecolor($n_gw, $n_gh);
+////        imagecopyresized($newgimg, $gimg,0, 0,0, 0,$n_gw, $n_gh, $gimg_width, $gimg_height);
+//        //二维码等比缩放
+//        $per=$bimg_width/$QR_width*0.5;
+//        $n_w=100;
+//        $n_h=100;
+//        $newQR=imagecreatetruecolor($n_w, $n_h);
+//        imagecopyresized($newQR, $QR,0, 0,0, 0,$n_w, $n_h, $QR_width, $QR_height);
+//        $rs_qr_height = $bimg_height;//最终图片高度
+//        //重新创建画布
+//        $backimg = imagecreatetruecolor($bimg_width,$rs_qr_height);
+//        //2.上色
+//        $color=imagecolorallocate($backimg,255,255,255);
+//        //3.设置透明
+//        imagecolortransparent($backimg,$color);
+//        imagefill($backimg,0,0,$color);
+//        //将商品图，二维码重构到画布
+//
+//        imagecopymerge($backimg, $newgimg, 0, 0, 0, 0, $bimg_width, $bimg_height, 100);
+//        imagecopymerge($backimg, $newQR, 365, 160, 0, 0, $n_w, $n_h, 100);
+//
+//        //优惠券内容文本水印
+//        $coupon = pdo_fetch("select * from" . tablename('tg_coupon_template') . "where id = '{$template_id}' and uniacid='{$_W['uniacid']}'");
+//        $font = IA_ROOT . '/framework/library/qrcode/myfont.ttf';//字体
+//        $black = imagecolorallocate($backimg, 255, 255, 255);//字体颜色 RGB
+//        $red = imagecolorallocate($backimg, 255, 255, 255);//字体颜色 RGB
+//        $fontSize = 40;   //字体大小
+//        $fontsize_2 = 14;
+//        $circleSize = 0; //旋转角度
+//        $left = 80;      //左边距
+//        $top = 180;       //顶边距
+//        $str1 = '¥ '.$coupon['value'].' 元';
+//        $str2 = $coupon['name'];
+//        $str3 = '截止时间: '.date("Y-m-d H:i:s",$coupon['end_time']);
+//        if(mb_strlen($str1,'utf-8')>12){
+//            $str1_1 = mb_substr($str1,0,10,'utf-8');
+//            $str1_2 = mb_substr($str1,10,10,'utf-8');
+//            imagefttext($backimg, $fontSize, $circleSize, $left, $top, $black, $font, $str1_1);
+//            imagefttext($backimg, $fontSize, $circleSize, $left, $top+30, $black, $font, $str1_2);
+//            if(strlen($str1_2)>10){
+//                $str1_3 = mb_substr($str1,20,10,'utf-8');
+//                imagefttext($backimg, $fontSize, $circleSize, $left, $top+60, $black, $font, $str1_3);
+//                imagefttext($backimg, $fontsize_2, $circleSize, $left, $top+90, $red, $font, $str2);
+//                imagefttext($backimg, $fontsize_2, $circleSize, $left, $top+120, $black, $font, $str3);
+//            }else{
+//                imagefttext($backimg, $fontsize_2, $circleSize, $left, $top+60, $red, $font, $str2);
+//                imagefttext($backimg, $fontsize_2, $circleSize, $left, $top+90, $black, $font, $str3);
+//            }
+//        }else{
+//            imagefttext($backimg, $fontSize, $circleSize, $left, $top, $black, $font, $str1);
+//            imagefttext($backimg, $fontsize_2, $circleSize, $left, $top+30, $red, $font, $str2);
+//            imagefttext($backimg, $fontsize_2, $circleSize, $left, $top+60, $black, $font, $str3);
+//        }
+//
+//
+//        if (imagejpeg($backimg, $qrcode_file)){
+        return ['errcode'=>1,'url'=>'addons/lexiangpingou/data/couponqrcode/' . $_W['uniacid'] . '/' . $file,'name'=>$file];
+////            return json_encode(array('errcode'=>1,'msg'=>$_W['siteroot'] . 'addons/lexiangpingou/data/goodsqrcode/' . $_W['uniacid'] . '/' . $file));
+//        }else{
+//            return ['errcode'=>0,'url'=>'addons/lexiangpingou/data/couponqrcode/' . $_W['uniacid'] . '/' . $file,'name'=>$file];
+////            return json_encode(array('errcode'=>0,'msg'=>'二维码生成失败'));
+//        }
+
+
+
+
+//        return ['url'=>'addons/lexiangpingou/data/couponqrcode/' . $_W['uniacid'] . '/' . $file,'name'=>$file];
+    }
+    //压缩现金券二维码
+    public function zipCashCodeQrcode($files,$template_id){
+        set_time_limit(0);
+        //用户把浏览器关掉（断开连接）亦继续执行
+        ignore_user_abort(true);
+        global $_W;
+        global $_GPC;
+        $path = 'couponqrcode/' . $_W['uniacid'] . '/'.$template_id;
+        $path = IA_ROOT . "/attachment/" . $path;
+        if (!is_dir($path)) {
+            load()->func('file');
+            mkdirs($path);
+        }
+        if($files){
+            $zip = new ZipArchive;
+            $file = rand(10000, 99999) . time() . '.zip';
+            $zipurl = $path.'/'.$file;
+            if ($zip->open($zipurl, ZIPARCHIVE::CREATE)===TRUE) {
+                foreach ($files as $key => $vvv) {
+                    $filename = $vvv['name'];
+                    $f =$vvv['url'];
+                    $mmm = $zip->addFile(IA_ROOT.'/'.$f,$filename);//假设加入的文件名是image.txt，在当前路径下
+                }
+
+                $sss = $zip->close();
+                foreach ($files as $v){
+                    @unlink(IA_ROOT.'/'.$v['url']);
+                }
+                //压缩成功之后上传到OOS
+                require_once(IA_ROOT . '/framework/library/alioss/sdk.class.php');//oos SDK引入
+
+                //获取文件名字
+                $info = $file;
+                //    die(json_encode($_FILES));
+                //获取文件后缀名
+                $infos = explode(".", $info);;
+
+                //文件后缀名为info[1]
+                $filearray = array("zip");
+                if (!in_array($infos[1], $filearray)) {
+                    $ret = array("status" => "error", "data" => "类型不对");
+                    message("类型不对");
+                    die(json_encode($ret));
+                }
+                load()->model('setting');
+                load()->func('file');
+                $remote = setting_load('remote');
+                $oss_sdk_service = new ALIOSS($remote['remote']['alioss']['key'], $remote['remote']['alioss']['secret']);
+                //设置是否打开curl调试模式
+                $oss_sdk_service->set_debug_mode(FALSE);
+                $path = "couponqrcode/" . $_W['uniacid'] . "/" . $template_id. "/";
+                $bucket = $remote['remote']['alioss']['bucket'];
+                $object = $path . $info;
+                $res = move_uploaded_file($_FILES["file"]['tmp_name'], $zipurl);
+                $response = $oss_sdk_service->upload_file_by_file($bucket, $object, $zipurl);
+                file_remote_upload($object);
+                $zipurl = $remote['remote']['alioss']['url'] . "/" . $object;
+                return $zipurl;
+                //var_dump($sss);
+                //echo '压缩成功';
+            } else {
+                //echo '打开zip失败';
+                message(error(0, '打开zip失败!'));
+            }
+        }
+    }
+
     //团单二维码
     public function createOrderQrcode($url,$groupnumber){
         global $_W;

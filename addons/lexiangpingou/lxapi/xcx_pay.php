@@ -531,6 +531,11 @@ if ($op == 'order_corfim') {
     } elseif ($is_tuan) {
         $tuan_first = 1;
     }
+    if($obj->addressid){
+        $addid = $obj->addressid;
+        $tel = pdo_fetch("select * from cm_tg_address where id=".$addid);
+        $obj->tel = $tel['tel'];
+    }
     $data = array(
         'uniacid' => $_GPC['uniacid'],//公众号ID
         'gnum' => $obj->gnum,//购买数量

@@ -1,0 +1,143 @@
+{php include wl_template('common/header');}
+<style>
+	html, body {
+	margin: 0;
+	height: 100%;
+	width: 100%;
+	position: absolute;
+}
+	.box-xjhx{
+		height: 100%;
+	}
+	.title-xjhx{
+		width: 100%;
+	}
+	.title-xjhx span{
+		color:#6fbfd8;
+		padding: 30px 0;
+		display:block;
+		width: 130px;
+		margin: 0 auto;
+		text-align:content;
+		font-size: 22px;
+		font-weight: 600;
+	}
+	.styel-xjhx{
+		color: #000;
+		display: block;
+		width: 80%;
+		font-size: 16px;
+		margin: 0 auto;
+	}
+	.but-xjhx{
+		width: 130px;
+		margin: 5px auto;
+		color:rgb(0, 183, 255);
+		color:#fff;
+	}
+	.select_store{
+		height: 50px;
+		line-height: 50px;
+		background: #fff;
+		margin: 0 auto; 
+	}
+	.select_store label{
+		margin-left: .7rem
+	}
+	.margin_xjhx{
+		margin-left: 4.7rem
+	}
+	#actualAdress{
+		border: 1px solid #ccc;
+	}
+</style>
+<body>
+	{if $is_hexiao_member && $show}
+	<div class="box-xjhx">
+		<div class="page-group">
+			<div class="page page-current" id="page-order-check">
+				<div class="content infinite-scroll">
+					<div class="list-block cards-list" style="margin: 0;">
+						<div class="select_store">
+							<label>实际核销点：</label>
+							<select id="actualAdress" name="actualAdress" style="display: inline;width: auto;height: 28px; line-height: 28px;">
+								<option value="0">请点击选择核销门店</option>
+								{loop $stores $item}
+								<option value="{$item['id']}">{$item['storename']}</option>
+								{/loop}
+							</select>
+						</div>
+						<ul>
+							<li class="card" style="border-radius: .2rem;">
+								<div class="card-header">
+									<h3 class="font-size-14">现金券核销</h3>
+								</div>
+								<div class="card-content">
+									<div class="card-content-inner">
+	
+										<div class="voucher-address font-size-14" style="margin-top:-10px;">
+												<span class="styel-xjhx">编&emsp;码：{$code}</span>
+												<span class="styel-xjhx">名&emsp;称：{$coupon['name']}</span>
+												<span class="styel-xjhx">面&emsp;值：{$coupon['value']}</span>
+												<span class="styel-xjhx">有效期：{$coupon['starttime']}</span>
+												<span class="styel-xjhx margin_xjhx">{$coupon['endtime']}</span>
+												<span class="styel-xjhx">核销员：{$hexiao_member['nickname']}</span>
+										</div>
+										
+									</div>
+								</div>
+							</li>
+						</ul>
+					</div>
+					<div class="weui_btn_area">
+						<a id="submit" class="weui_btn weui_btn_primary">确认核销</a>
+						<a id="closewindow" class="weui_btn weui_btn_default">返回微信</a>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+{else}
+	<div class="msg">
+		<div class="weui_msg">
+			<div class="weui_icon_area"><i class="weui_icon_msg weui_icon_warn"></i></div>
+			<div class="weui_text_area">
+				<h2 class="weui_msg_title">{if !$show}{$str}{else}非核销人员{/if}</h2>
+				<p class="weui_msg_desc">点击确定，可返回微信</p>
+			</div>
+			<div class="weui_opr_area">
+				<p class="weui_btn_area">
+					<a id="closewindow" class="weui_btn weui_btn_primary">确定</a>
+				</p>
+			</div>
+		</div>
+	</div>
+{/if}
+
+</body>
+
+<script>
+	wx.ready(function(){
+		$('#closewindow').click(function(){
+			wx.closeWindow();
+		});
+	});
+	$('#submit').on('click',function () {
+	    var actualAdress = $('select[name=actualAdress]').val();
+	    if(actualAdress == '0'){
+	        $.toast('请选择核销门店');
+	        return;
+		}
+		$.post("{php echo app_url('member/cash_code/post',array('id'=>$id,'code'=>$code))}",{'actualAdress':actualAdress},function(d){
+
+			if(d.status == 0){
+				$.alert('现金券使用成功', function () {
+					wx.closeWindow();
+				});
+			}else{
+				$.toast(d.result);
+			}
+		},"json");
+	})
+</script>
+{php include wl_template('common/footer');}

@@ -1,0 +1,305 @@
+{php include wl_template('common/header');}
+
+<ul class="nav nav-tabs">
+	<li {if $do == 'list' && $opp == 'on'} class="active"{/if}><a href="{php echo web_url('goods/cash_code/list', array('opp' => 'on'));}">进行中</a></li>
+	<li {if $do == 'list' && $opp == 'future'} class="active"{/if}><a href="{php echo web_url('goods/cash_code/list', array('opp' => 'future'));}">未开始</a></li>
+	<li {if $do == 'list' && $opp == 'end'} class="active"{/if}><a href="{php echo web_url('goods/cash_code/list', array('opp' => 'end'));}">己结束</a></li>
+	<li {if $do == 'list' && $opp == 'record'} class="active"{/if}><a href="{php echo web_url('goods/cash_code/list', array('opp' => 'record'));}">核销记录</a></li>
+	<li class="ex-button"><a class="ex-b-lastA" target="_blank" href="https://doc.lexiangpingou.cn/pCard.html">图文说明</a></li>
+</ul>
+{if $opp == 'record'}
+<div class="panel panel-info">
+		<div class="panel-heading">筛选</div>
+		<div class="panel-body">
+			<form id="search_record" action="" method="get" class="form-horizontal" role="form">
+				<input type="hidden" name="c" value="site">
+				<input type="hidden" name="a" value="entry">
+				<input type="hidden" name="m" value="lexiangpingou">
+				<input type="hidden" name="do" value="goods">
+				<input type="hidden" name="ac" value="cash_code">
+				<input type="hidden" name="op" value="list">
+				<input type="hidden" name="opp" value="record">
+							<div class="form-group">
+					<label class="col-md-1 control-label" style="width:100px;">现金券编码</label>
+					<div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
+							<input class="form-control" name="code" id="" type="text" value="">
+					</div>
+					<label class="col-md-1 control-label" >面值</label>
+					<div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
+							<input class="form-control" name="cash" id="" type="text" value="">
+					</div>
+				</div>
+							<div class="form-group">
+	
+					<label class="col-xs-12 col-sm-2 col-md-2 col-lg-1 control-label" style="width:100px;">现金券名称</label>
+					<div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
+						<input class="form-control" name="name" id="" type="text" value="">
+					</div>
+					<!--<div class="form-group">-->
+							<!--<label class="col-md-1 control-label">核销</label>-->
+							<!--<div class="col-md-4">-->
+								<!--<select name="category[parentid]" onchange="categoryIC(this)" class="categoryI form-control tpl-category-parent" style="margin-right:20px;display: inline-block;width: 48%;">-->
+									<!--<option value="">请选择一级分类</option>-->
+									<!--<option value="1671">阶梯团测试</option>-->
+									<!--<option value="1669">测试外链</option>-->
+									<!--<option value="1664">拼团测试</option>-->
+									<!--<option value="1663">单买测试</option>-->
+									<!--<option value="1662">营销活动3</option>-->
+									<!--<option value="1661">营销活动2</option>-->
+									<!--<option value="1660">营销活动1</option>-->
+									<!--<option value="1657">团购&#45;&#45;限时测试</option>-->
+									<!--<option value="1654">子商户</option>-->
+									<!--<option value="1652">测试首页取价</option>-->
+									<!--<option value="1428">拼团分类</option>-->
+									<!--<option value="1427">微商城</option>-->
+									<!--<option value="269">售罄</option>-->
+									<!--<option value="268">拼团</option>-->
+									<!--<option value="204">区测试</option><option value="201">限时秒杀</option></select>-->
+							<!--</div>-->
+					<!--</div>-->
+					<div class="col-md-2" style="float: left">
+						<div class="btn btn-default min-width fa fa-search search_record">搜索</div>
+					</div>
+				</div>
+	
+	
+			</form>
+		</div>
+	</div>
+
+{/if}
+{if $opp != 'record'}
+<div class="clearfix coupon-list-top">
+	<div class="search pull-right">
+		<form class="form-inline" action='./index.php' method='get'>
+			<input type="hidden" name="c" value="site" />
+			<input type="hidden" name="a" value="entry" />
+			<input type="hidden" name="m" value="lexiangpingou" />
+			<input type="hidden" name="do" value="goods" />
+			<input type="hidden" name="ac" value="cash_code" />
+			<input type="hidden" name="op" value="list"/>
+			<div class="form-group">
+				<div class="input-group">
+					<div class="input-group-addon"><i class="fa fa-search search_list"></i></div>
+					<input type="text" class="form-control" placeholder="搜索" name="keyword">
+				</div>
+			</div>
+		</form>
+	</div>
+	<div><a href="{php echo web_url('goods/cash_code/create');}" class="btn btn-success">新建现金券</a></div>
+</div>
+{/if}
+<style>
+table thead tr th, table tbody tr td {text-align: center; width: 10%;}
+table thead tr th:last-child, table tbody tr td:last-child {text-align: right;}
+</style>
+
+<div class="panel panel-default">
+	<div class="panel-body table-responsive">
+		{if $opp != 'record'}
+		<table class="table table-hover">
+			<thead>
+			<tr>
+				<th>现金券名称</th>
+				<th>价值(元)</th>
+				<th>库存</th>
+				<th>已使用</th>
+				<th style="width:180px;">有效期</th>
+				<th style="width:180px;">操作</th>
+			</tr>
+			</thead>
+			<tbody>
+			{loop $tg_coupon_templates $coupon_template}
+			<tr>
+				<td >{$coupon_template['name']}</td>
+				<td>
+					{if $coupon_template['is_random'] == 2} {$coupon_template['value']} <br/>~<br/> {$coupon_template['value_to']} {else} {$coupon_template['value']} {/if}
+				</td>
+				
+				
+				<td>{$coupon_template['stock']} </td>
+				<td>{if $coupon_template['count_receive_person']}
+							{$coupon_template['count_receive_person']}
+						{else}
+							0
+						{/if}</td>
+				
+				<td>
+					{php echo date('Y-m-d H:i:s', $coupon_template['start_time']);} <br/>
+					至<br/>
+					{php echo date('Y-m-d H:i:s', $coupon_template['end_time']);}
+				</td>
+				<td style="position:relative;">
+					{if $coupon_template['enable'] != 1}
+					<a href="{php echo web_url('goods/cash_code/edit', array('id' => $coupon_template['id']))}" >查看</a>
+					已失效-
+					{else}
+
+					{if checkstr($_W['user']['perms'],'cash_code.edit')}
+					<a href="{php echo web_url('goods/cash_code/edit', array('id' => $coupon_template['id']))}">编辑</a>
+					 -
+					{/if}
+					{if checkstr($_W['user']['perms'],'cash_code.fail')}
+					<a href="javascript:;" class="js-disable" data-coupon-template-id="{$coupon_template['id']}">使失效</a>
+					{/if}
+					{if $coupon_template['have_qrcode'] == 0}
+					<br />
+					<a href="javascript:;" data-url="{php echo web_app_url('member/cash_code/get',array('id'=>$coupon_template['id']))}" class="js-qrcode create-qrcode" data-coupon-template-id="{$coupon_template['id']}" data-coupon-template-stock="{$coupon_template['stock']}" id="create-qrcode"  onclick="popwin = $('#modal-module-url').modal();">生成二维码</a>
+					{else}
+					<br />
+					<a href="{$coupon_template['qrcode_url']}" class="js-qrcode">下载二维码</a>
+					{/if}
+					{/if}
+
+				</td>
+			</tr>
+			{/loop}
+			</tbody>
+		</table>
+		{/if}
+		{if $opp == 'record'}
+			<table class="table table-hxjl">
+				<thead>
+					<tr>
+						<th>现金券编码</th>
+						<th>现金券名称</th>
+						<th>价值(元)</th>
+						<th>有效期</th>	
+						<th>核销员</th>				
+						<th>核销时间</th>
+					</tr>
+				</thead>
+				<tbody>
+						{loop $record $coupon_template}
+					<tr>
+						<td>{$coupon_template['code']}</td>
+						<td>{$coupon_template['name']}</td>
+						<td>
+							{$coupon_template['cash']}
+						</td>
+						<td>
+							{php echo date('Y-m-d H:i:s', $coupon_template['start_time']);} <br/>
+							至<br/>
+							{php echo date('Y-m-d H:i:s', $coupon_template['end_time']);}
+						</td>
+						<td>{$coupon_template['nickname']}</td>
+						<td>{php echo date('Y-m-d H:i:s', $coupon_template['use_time']);}</td>
+					</tr>
+					{/loop}
+				</tbody>
+			</table>
+		{/if}
+	</div>
+</div>
+
+<div class="modal fade" tabindex="-1" role="dialog" id="modal-module-url">
+	<div class="modal-dialog" role="document" style="margin-top: 20%">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				<h4 class="modal-title">生成二维码</h4>
+			</div>
+			<div class="modal-body">
+				<div class="form-group">
+					<input type="hidden" name="template_id" id="template_id">
+					<input type="hidden" name="stock" id="stock">
+					<input type="number" class="form-control" id="num" name="num" placeholder="请填写需要生成的二维码数量，最多一次生成400张">
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+				<button type="button" id="crecode" class="btn btn-primary" onclick="createQrcode()" data-url="">提交</button>
+			</div>
+		</div><!-- /.modal-content -->
+	</div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+{if $opp == 'record'}
+{$record_pager}
+{else}
+{$pager}
+{/if}
+<!--<style>
+.inner__content {background: #eee none repeat scroll 0 0;border-top: 1px solid #dcdcdc;box-sizing: border-box;color: #666;margin-top: 10px;margin-bottom:10px;min-width: 100%;padding: 10px 5px;width: auto;text-align:center;}
+</style>-->
+<script type="text/javascript">
+	require(['jquery', 'util'], function($, util){
+		$('.js-copy').each(function(){
+			var id=$(this).attr('data-id');
+			util.clip($("#js-copy"+id), $(this).attr('data-url'));
+		});
+	});
+	console.log({php echo json_encode($coupon_template)})
+</script>
+<script>
+$(function(){
+	$('.search_list').click(function() {
+		$('.coupon-list-top').find('form').submit();
+	});
+    $('.search_record').click(function() {
+        $('#search_record').submit();
+    });
+	$('.js-disable').click(function(e) {
+		e.stopPropagation();
+		var $this = $(this);
+		var op = "{$_GPC['op']}";
+		var coupon_template_id = $this.data('coupon-template-id');
+		var url = "{php echo web_url('goods/cash_code/edit')}&id=" + coupon_template_id;
+		var html = '<a href="'+ url +'">查看</a> - 已失效';
+		util.nailConfirm(this, function(state) {
+			if (!state) return;
+			$.post("{php echo web_url('goods/cash_code/disable')}", {id : coupon_template_id}, function(data) {
+
+				if(!data.errno){
+					if (op == 'on' || op == 'future') {
+						$this.parent().parent().remove();
+					};
+					$this.parent().html(html);
+				};
+				util.tips(data.message);
+			}, 'json');
+		}, {html:'<div class="inner__content"><span style="color:red;font-size:12px;">失效后将导致该现金券无法被领取和编辑</span></div>确定让这组现金券失效?', placement:'left'});
+	});
+});
+
+
+$(".create-qrcode").on('click',function () {
+	var template_id = $(this).attr('data-coupon-template-id');
+	var stock = $(this).attr('data-coupon-template-stock');
+	$('input[name=template_id]').val(template_id);
+    $('input[name=stock]').val(stock);
+    var url = $(this).attr('data-url');
+    $('#crecode').attr('data-url',url);
+
+})
+//二维码相关操作
+	function  createQrcode(_this) {
+    	var template_id = $('input[name=template_id]').val();
+    	var num = $('input[name=num]').val();
+    	var stock = $('input[name=stock]').val();
+    	var url = $('#crecode').attr('data-url');
+    	if(Number(num) > Number(stock)){
+            // util.message('生成的二维码数量不能超过优惠券库存：'+stock);
+            util.tips('生成的现金券数量不能超过现金券库存：'+stock,5000);
+            return false;
+		}
+        if(Number(num)>400){
+            // util.message('生成的二维码数量超过限制(400),如有需要请新建优惠券再生成二维码');
+            util.tips('生成的二维码数量超过限制(最大400),如有需要请新建现金券再生成二维码',5000);
+            return false;
+        }
+        $.post("{php echo web_url('goods/cash_code/createQrcode')}", {'template_id' : template_id,'num':num,'url':url}, function(data) {
+			data = data.message;
+            if(!data.errno){
+                popwin.hide();
+                util.tips('生成二维码成功');
+                setTimeout(function () {
+                    window.location.reload();
+                },3000)
+            }else{
+                util.tips('生成二维码失败');
+			}
+        }, 'json');
+    }
+		
+</script>
+{php include wl_template('common/footer');}

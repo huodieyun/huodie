@@ -517,7 +517,7 @@ function getgoodsFrames()
 {
     global $_W;
     $frames = array();
-
+    $shop = pdo_fetch("select * from " . tablename('account_wechats') . " where uniacid = :uniacid", array(':uniacid' => $_W['uniacid']));
     if (checkstr($_W['user']['perms'], 'category_all') &&
         checkstr($_W['user']['perms'], 'item_all')
     ) {
@@ -557,7 +557,12 @@ function getgoodsFrames()
             $frames['member2']['items']['group']['title'] = '组优惠券';
             $frames['member2']['items']['group']['actions'] = array('ac', 'coupon');
             $frames['member2']['items']['group']['active'] = '';
-
+            if ($shop['vip'] >= 1) {
+                $frames['member2']['items']['cash_code']['url'] = web_url('goods/cash_code');
+                $frames['member2']['items']['cash_code']['title'] = '现金券';
+                $frames['member2']['items']['cash_code']['actions'] = array('ac', 'cash_code');
+                $frames['member2']['items']['cash_code']['active'] = '';
+            }
             /*
                 $frames['member2']['items']['display2']['url'] = web_url('goods/member/display');
                 $frames['member2']['items']['display2']['title'] = '折扣券';
@@ -577,7 +582,7 @@ function getgoodsFrames()
         }
     }
 
-    $shop = pdo_fetch("select * from " . tablename('account_wechats') . " where uniacid = :uniacid", array(':uniacid' => $_W['uniacid']));
+
     if ($_W['user']['merchant_id'] > 0) {
         $mer = pdo_fetch("select taobao from " . tablename('tg_merchant') . " where uniacid = :uniacid and id = '{$_W['user']['merchant_id']}'", array(':uniacid' => $_W['uniacid']));
     }
