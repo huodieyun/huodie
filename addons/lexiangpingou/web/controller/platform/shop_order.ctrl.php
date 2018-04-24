@@ -7,6 +7,26 @@ if (!$op) {
 }
 global $_W, $_GPC;
 load()->func("tpl");
+
+
+function setting_get_by_name($name='',$uniacid){
+    global $_W;
+    $setting = pdo_fetch("select * from".tablename('tg_setting')." where `key`  = '{$name}' and uniacid={$uniacid}");
+    if($setting){
+        $set = unserialize($setting['value']);
+        return $set;
+    }else{
+        return FALSE;
+    }
+}
+$setting = setting_get_by_name('subsidy',33);
+
+if(empty($setting)){
+    $percent = 0;
+}else{
+    $percent = $setting['percent']/100;
+}
+
 $uniacid = $_W['uniacid'];
 $province = pdo_getall('erp_area', array('level' => 1));
 
@@ -82,7 +102,6 @@ if ($op == 'shop_submit') {
     $id = $_GPC['id'];
 
     $order = pdo_fetchall("select * from " . tablename('tg_order') . " where uniacid = {$uniacid} and g_id = {$id} and status = 8 and singleno = '' order by id asc ");
-
     if (!empty($order)) {
         $data = array();
         $data['singleno'] = $singleno = 'L' . date('Ymd') . substr(time(), -5) . substr(microtime(), 2, 5) . sprintf('%02d', rand(0, 99));
@@ -91,6 +110,7 @@ if ($op == 'shop_submit') {
         $goods = pdo_fetch("select * from " . tablename('tg_supply_goods') . " where id = {$order[0]['supply_goodsid']} ");
         $data['supply_id'] = $goods['supply_id'];
         $price = 0.0;
+        $sprice = 0.0;
         foreach ($order as $value) {
             $collect['supply_id'] = $goods['supply_id'];
             $collect['uniacid'] = $value['uniacid'];
@@ -108,12 +128,15 @@ if ($op == 'shop_submit') {
                 $collect['price'] = $option['costprice'] * $value['gnum'] + floatval($value['freight']);
                 $collect['pay_price'] = $option['costprice'] * $value['gnum'] + floatval($value['freight']);
                 $price += $option['costprice'] * $value['gnum'] + floatval($value['freight']);
+                $sprice += $option['costprice'] * $value['gnum'];
             } else {
                 $goods = pdo_fetch("select * from " . tablename('tg_supply_goods') . " where id = '{$value['supply_goodsid']}' ");
                 $collect['oprice'] = $goods['mprice'];
                 $collect['price'] = $goods['mprice'] * $value['gnum'] + floatval($value['freight']);
                 $collect['pay_price'] = $goods['mprice'] * $value['gnum'] + floatval($value['freight']);
                 $price += $goods['mprice'] * $value['gnum'] + floatval($value['freight']);
+                $sprice += $goods['mprice'] * $value['gnum'];
+
             }
             $collect['taxrate'] = floatval($collect['oprice']) * floatval($goods['taxrate']) * floatval($collect['num']) * 0.01;
 
@@ -137,10 +160,14 @@ if ($op == 'shop_submit') {
         $data['gname'] = $order[0]['goodsname'];
         $data['price'] = $price;
         $data['createtime'] = TIMESTAMP;
+        $data['subsidy'] = $percent*$sprice;
         pdo_insert('tg_supply_order', $data);
         $order_id = pdo_insertid();
+        if($goods['has_subsidy'] != 1){
+            $percent = 0;
+        }
         pdo_update('tg_supply_collect', array('supply_orderid' => $order_id), array('singleno' => $singleno));
-        die(json_encode(array('order_id' => $order_id, 'money' => $price, 'message' => '订单生成成功，请支付！')));
+        die(json_encode(array('order_id' => $order_id, 'money' => $price,'percent'=>$percent*$sprice, 'message' => '订单生成成功，请支付！')));
 //        $tip = '申请成功，请等候供应商处理！';
     } else {
         die(json_encode(array('order_id' => 0, 'message' => '申请失败，暂无可申请订单！')));
@@ -157,6 +184,13 @@ if ($op == 'order') {
         $list = pdo_fetchall("select * from " . tablename('tg_supply_order') . " where id = {$order_id} order by id desc ");
         foreach ($list as &$item) {
             $item['uni_payimg'] = tomedia($item['uni_payimg']);
+            $goods = pdo_fetch("select * from " . tablename('tg_supply_goods') . " where id = {$item['supply_goodsid']} ");
+            if($goods['has_subsidy'] !=1){
+                $item['percent'] = 0;
+            }else{
+                $item['percent'] = $percent;
+            }
+
             unset($item);
         }
 //        die(json_encode(array('list' => $list)));
@@ -211,6 +245,12 @@ if ($op == 'order') {
         $total = pdo_fetchcolumn("select count(id) from " . tablename('tg_supply_order') . " where uniacid = '{$uniacid}' " . $con);
         foreach ($list as &$item) {
             $item['uni_payimg'] = tomedia($item['uni_payimg']);
+            $goods = pdo_fetch("select * from " . tablename('tg_supply_goods') . " where id = {$item['supply_goodsid']} ");
+            if($goods['has_subsidy'] !=1){
+                $item['percent'] = 0;
+            }else{
+                $item['percent'] = $percent;
+            }
             unset($item);
         }
         $pager = pagination($total, $page, $size);
@@ -382,7 +422,8 @@ if ($op == 'order_submit') {
         $data['uni_payno'] = $_GPC['uni_payno'];
         $data['uni_payimg'] = $_GPC['uni_payimg'];
         $data['uni_paytime'] = TIMESTAMP;
-        if ($order['price'] > $data['uni_payprice']) {
+        $data['subsidy'] = $_GPC['subsidy'];
+        if ($order['price'] > ($data['uni_payprice'] + $_GPC['subsidy'])) {
             $data['uni_pay'] = 1;
         } else {
             $data['uni_pay'] = 2;

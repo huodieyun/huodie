@@ -1,0 +1,52 @@
+{php include wl_template('common/header');}
+<ul class="nav nav-tabs">
+    {if $_W['uniacid']==33}
+    <li {if $_GPC['op']=='' || $_GPC['op']=='display'} class="active"{/if}><a href="{php echo web_url('platform/platform_list');}">商家补贴设置</a></li>
+    {/if}
+</ul>
+{if $_GPC['op']=='display' || $_GPC['op']==''}
+
+<div class="panel panel-info">
+    <div class="panel-heading">极限单品商家补贴设置</div>
+    <div class="panel-body table-responsive" style="padding: 0px;">
+        <form action="" method="post" class="form-horizontal" role="form" id="form1">
+            <div class="plugins_wrp">
+                <dl>
+                    <dd>
+                        <ul id="js_plugins1">
+                            <li class="item_wrp" style="width: 100%;">
+                                <div class="plugin_item">
+                                    <div class="plugin_icon"><img src="{TG_URL_WRES}images/function/fans/jianzhi.png"></div>
+                                    <div class="plugin_status" style="width: 14%;padding-right: 0px;">
+                                        <input type="submit" name="submit" value="提交" class="btn btn-primary col-lg-10"/>
+                                        <input type="hidden" name="token" value="{$_W['token']}"/>
+                                    </span>
+                                </div> 
+
+                                <div class="plugin_content" style="width: 50%;margin-top: 18px;">
+                                    <label>极限单品商家优惠比例</label>
+                                    <div class="input-group">
+
+                                        <input type="text" name="percent" class="form-control" value="{$setting['percent']}" placeholder="补贴比例"/>
+                                        <span class="input-group-addon">%</span>
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
+                    </dd>
+                </dl>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $("#search").click(function(){
+        $('#form1')[0].submit();
+    })
+
+</script>
+
+
+{/if}
+{php include wl_template('common/footer');}

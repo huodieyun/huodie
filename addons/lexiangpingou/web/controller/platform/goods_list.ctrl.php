@@ -7,7 +7,7 @@ if (!$op) {
 }
 global $_W, $_GPC;
 load()->func("tpl");
-
+wl_load()->model('setting');
 $province = pdo_getall('erp_area', array('level' => 1));
 
 if ($op == "display") {
@@ -527,19 +527,22 @@ if ($op == "check") {
     $reason = $_GPC["reason"];
     $data["status"] = intval($status);
     $data["reason"] = $reason;
-    $ip = getClientIP();
-    internal_log('sendhello',array('status' => $ip));
+    $data["has_subsidy"] = $_GPC["has_subsidy"];
 
     $res = pdo_update("tg_supply_goods", $data, array("id" => intval($id)));
     $goods = pdo_fetch("SELECT supply_id,name,mprice,stock FROM " . tablename('tg_supply_goods') . " WHERE id = " . $id);
     if ($status == 1) {
+
+        $setting = setting_get_by_name('subsidy');
+        $percent = $setting['percent'];
+
         $message = '审核成功';
         $shops = pdo_fetchall("SELECT openid FROM " . tablename('tg_platform_shop') . " WHERE status = 1 ");
         $dat['first'] = '新品上架';
         $dat['keyword1'] = date('Ymd') . substr(time(), -5) . substr(microtime(), 2, 5) . sprintf('%02d', rand(0, 99));
         $dat['keyword2'] = '火蝶云极限单品供应商上架新品';
         $dat['keyword3'] = '火蝶云极限单品有供应商上架名称：【' .$goods['name'] .'】价格：¥' . $goods['mprice'] .'，库存：' .$goods['stock'] .'，的新品';
-        $dat['keyword4'] = '等候您采纳';
+        $dat['keyword4'] = '等候您采纳,上架即享'.$percent.'%补贴，采多少补多少！';
         if($goods['ctype']==0){
             $dat['remark'] = '模式：一件代发';
         }else{
@@ -568,6 +571,12 @@ if ($op == "check") {
         pdo_insert('tg_service_process', $dat);
     }
 
+    die(json_encode(array("status" => "success")));
+}
+if($op == 'set_subsidy'){
+    $id = $_GPC["id"];
+    $data["has_subsidy"] = $_GPC["has_subsidy"];
+    $res = pdo_update("tg_supply_goods", $data, array("id" => intval($id)));
     die(json_encode(array("status" => "success")));
 }
 //商品下架

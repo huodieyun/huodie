@@ -1682,7 +1682,15 @@ function getplatformFrames()
         $frames['platform']['items']['score']['actions'] = array();
         $frames['platform']['items']['score']['active'] = '';
     }
+    if ( $_W['uniacid'] == 33) {
 
+        $frames['platform']['items']['subsidy']['url'] = web_url('platform/subsidy');
+        $frames['platform']['items']['subsidy']['title'] = '商家补贴设置';
+        $frames['platform']['items']['subsidy']['actions'] = array();
+        $frames['platform']['items']['subsidy']['active'] = '';
+
+
+    }
     unset($supplier);
     return $frames;
 }

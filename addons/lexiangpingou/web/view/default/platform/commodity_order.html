@@ -73,6 +73,7 @@
                     <!--<th style="width: 100px">批次号</th>-->
                     <th style="width: 180px">极限单品单号/极限单品名称</th>
                     <th style="text-align:center;">订单总价</th>
+                    <th style="text-align:center;">补贴金额</th>
                     <th style="text-align:center;">申请时间</th>
                     <th style="text-align:center;">处理状态/时间</th>
                     <th style="width:180px;text-align:center;">支付方式/单号/价格</th>
@@ -88,6 +89,7 @@
                     <!--<td class="goods-info line-feed" style="padding-left: 10px;width: 100px">{$item['pici']}</td>-->
                     <td class="goods-info line-feed" style="width: 180px">{if $_W['uniacid'] == 33 }{$item['uni_name']}<br>{/if}{$item['gname']}<br>{$item['singleno']}</td>
                     <td class="goods-info line-feed" style="padding-left: 10px;">{$item['price']}</td>
+                    <td class="goods-info line-feed" style="padding-left: 10px;">{$item['subsidy']}</td>
                     <!--<td class="text-center" style="width:60px;"><input type="checkbox" name="checkbox[]"  value="{$item['id']}" /></td>-->
                     <td class="goods-info line-feed" style="padding-left: 10px;">{php echo date('Y-m-d',$item['createtime'])}
                     </td>
@@ -144,7 +146,7 @@
                     <td class="text-center" style="text-align:center;width: 80px">
                         <a href="{php echo web_url('platform' , array('ac' => $_GPC['ac'],'op' => 'collect','collect_id' => $item['id']))}">查看详情</a><br/>
                         {if $item['uni_pay'] != '2' && $item['platform_status'] == 0 && $_GPC['ac'] == 'shop_order'}
-                        <a onclick="openSQ({$item['id']},{$item['price']})"
+                        <a onclick="openSQ({$item['id']},{$item['price']},{$item['subsidy']})"
                            data-id="{$item['id']}" href="javascript:;">申请发货</a><br/>
                         {/if}
                         {if $item['supply_status'] == 0 && $_GPC['ac'] == 'platform_order'}
@@ -176,7 +178,7 @@
         <div class="panel-heading" style="color: red;">申请发货（请尽量全额付款，未全额付款将导致无法提交审核，供货商无法发货）
             <a onclick="closeSQ()" style="cursor:pointer; float:right; margin-right:10px; font-weight:bold;" href="javascript:;">X</a>
         </div>
-        <div class="panel-body">
+        <div class="panel-body" style="overflow-y: scroll;height: 700px;overflow-x: hidden;">
             <div class="panel-body">
                 <div class="form-group" style="height: 50px;">
                     <label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label">付款方式</label>
@@ -196,8 +198,20 @@
                     <img id="payimage" src="" alt="" style="width: 200px;">
                 </div>
                 <div class="card">
-                    <div class="form-group" style="height: 50px;">
-                        <label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label">支付金额</label>
+                    <div class="form-group" style="height: 60px;">
+                        <label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label">应付金额</label>
+                        <div class="col-md-8">
+                            <input type="number" name="unii_payprice" class="form-control" value=""/>
+                        </div>
+                    </div>
+                    <div class="form-group" style="height: 60px;">
+                        <label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label">平台补贴</label>
+                        <div class="col-md-8">
+                            <input type="number" name="subsidy" class="form-control" value=""/>
+                        </div>
+                    </div>
+                    <div class="form-group" style="height: 60px;">
+                        <label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label">实付金额</label>
                         <div class="col-md-8">
                             <input type="number" name="uni_payprice" class="form-control" value=""/>
                         </div>
@@ -328,12 +342,18 @@
         })
     }
 
-    function openSQ(id,money){
+    function openSQ(id,money,subsidy){
         $('.paydetail').show();
         $('.sqfh').attr('data-id',id);
         $('input[name="uni_paytype"]').attr('data-money',money);
         $('input[name="uni_payprice"]').val(money);
 //        wx_pay();
+        var money_round=money-subsidy;
+        $('input[name="unii_paytype"]').attr('data-money',money);
+        $('input[name="unii_payprice"]').val(money);
+        $('input[name="uni_paytype"]').attr('data-money',Math.round(money_round * 100) / 100);
+        $('input[name="subsidy"]').val(Math.round(subsidy * 100) / 100);
+        $('input[name="uni_payprice"]').val(Math.round(money_round * 100) / 100);
     }
 
     function openSH(id) {
@@ -392,15 +412,16 @@
                 uni_paytype: 1,
                 uni_payprice: $('input[name="uni_payprice"]').val(),
                 uni_payno: $('input[name="uni_payno"]').val(),
-                uni_payimg: $('input[name="uni_payimg"]').val()
+                uni_payimg: $('input[name="uni_payimg"]').val(),
+                subsidy: $('input[name="subsidy"]').val()
             },
             function (res) {
                 var data = JSON.parse(res);
                 if (data.status == 1) {
                     util.tips(data.message);
                     setTimeout(function () {
-                        location.reload()
-                    }, 1000)
+                        location.href = location.href;
+                    }, 3000)
                 } else {
                     util.tips(data.message);
                 }

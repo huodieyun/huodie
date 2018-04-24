@@ -157,6 +157,16 @@
                                 <div style="clear: both;"></div>
                             </div>
                         </div>
+                        <div class="modal-body">
+                            <div class="form-group">
+                                <label class="col-xs-12 col-sm-6 col-md-4 col-lg-4 control-label">是否提供平台补贴</label>
+                                <div class="col-md-7">
+                                    <label><input type="radio" name="has_subsidy" value="0" checked="checked"/> 否 </label>
+                                    <label><input type="radio" name="has_subsidy" value="1"/> 是 </label>
+                                </div>
+                                <div style="clear: both;"></div>
+                            </div>
+                        </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-default" id="yunxu" onclick="yunxu()">拒绝审核
                             </button>
@@ -223,6 +233,36 @@
                     </div><!-- /.modal-content -->
                 </div><!-- /.modal -->
             </div>
+            <!-- 设置模态框 -->
+            <div class="modal fade" id="js-goods-set" tabindex="-1" role="dialog" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                                &times;
+                            </button>
+                            <h4 class="modal-title" id="myModalLabel1">
+                                设置
+                            </h4>
+                        </div>
+                        <div class="modal-body">
+                            <div class="form-group">
+                                <label class="col-xs-12 col-sm-6 col-md-4 col-lg-4 control-label">是否提供平台补贴</label>
+                                <div class="col-md-7">
+                                    <label><input type="radio" name="is_subsidy" value="0" checked="checked" id="subsidy_off" /> 否 </label>
+                                    <label><input type="radio" name="is_subsidy" value="1" id="subsidy_on"/> 是 </label>
+                                </div>
+                                <div style="clear: both;"></div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-primary" onclick="set()">
+                                确定
+                            </button>
+                        </div>
+                    </div><!-- /.modal-content -->
+                </div><!-- /.modal -->
+            </div>
             <!--延期确认模态框-->
             <div class="modal fade" tabindex="-1" role="dialog" id="delayModal">
                 <div class="modal-dialog" role="document">
@@ -280,7 +320,37 @@
                         data:{
                             'id':$('#yunxu').attr('data-id'),
                             "op":"check",
-                            "status":1
+                            "status":1,
+                            'has_subsidy': $('input[name=has_subsidy]:checked').val()
+                        },
+                        success:function (res) {
+                            window.location.reload();
+                        },
+                        error:function (res) {
+
+                        }
+                    });
+                }
+                function setData(id,has_subsidy) {
+                    $('#js-goods-set').attr('data-id', id);
+                    $('input[name=has_subsidy]').prop('checked','');
+                    if(has_subsidy == 1){
+                        $('#subsidy_on').prop('checked','checked');
+                    }else{
+                        $('#subsidy_off').prop('checked','checked');
+                    }
+
+                }
+                // 设置
+                function set() {
+                    $.ajax({
+                        url:"{php echo web_url('platform/goods_list')}",
+                        type:'post',
+                        dataType:"json",
+                        data:{
+                            'id': $('#js-goods-set').attr('data-id'),
+                            "op": "set_subsidy",
+                            'has_subsidy': $('input[name=is_subsidy]:checked').val()
                         },
                         success:function (res) {
                             window.location.reload();
@@ -372,6 +442,9 @@
                     {/if}
                     {if $_W['uniacid'] == 33 && $goods['status'] == -1 && $goods['activetime'] > TIMESTAMP}
                         <a href="javascript:;" class="" id="check" data-toggle="modal" data-target="#myModal" data-id="{$goods['id']}" onclick="check(this)">审核</a>
+                    {/if}
+                    {if $goods['status'] == 1 && $_W['uniacid'] ==33}
+                        <a href="javascript:;" data-toggle="modal" data-target="#js-goods-set" onclick="setData({$goods['id']},{$goods['has_subsidy']})">设置</a><br/>
                     {/if}
                     {if $goods['activetime'] < TIMESTAMP && $goods['status'] == 1 && ($goods['copy'] || $goods['is_copy'])}
                         <a href="{php echo web_url('platform/score', array('op' => 'add','id' => $goods['id']))}">评价</a>

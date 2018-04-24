@@ -204,8 +204,21 @@
                     <img id="payimage" src="" alt="" style="width: 200px;">
                 </div>
                 <div class="card">
+
                     <div class="form-group" style="height: 60px;">
-                        <label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label">支付金额</label>
+                        <label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label">应付金额</label>
+                        <div class="col-md-8">
+                            <input type="number" name="unii_payprice" class="form-control" value=""/>
+                        </div>
+                    </div>
+                    <div class="form-group" style="height: 60px;">
+                        <label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label">平台补贴</label>
+                        <div class="col-md-8">
+                            <input type="number" name="subsidy" class="form-control" value=""/>
+                        </div>
+                    </div>
+                    <div class="form-group" style="height: 60px;">
+                        <label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label">实付金额</label>
                         <div class="col-md-8">
                             <input type="number" name="uni_payprice" class="form-control" value=""/>
                         </div>
@@ -298,8 +311,13 @@
                 if(data.order_id>0){
                     $('.paydetail').show();
                     $('.sqfh').attr('data-id',data.order_id);
-                    $('input[name="uni_paytype"]').attr('data-money',data.money);
-                    $('input[name="uni_payprice"]').val(data.money);
+                    var subsidy = data.percent;
+                    var money_round=data.money-subsidy;
+                    $('input[name="unii_paytype"]').attr('data-money',data.money);
+                    $('input[name="unii_payprice"]').val(data.money);
+                    $('input[name="uni_paytype"]').attr('data-money',Math.round(money_round * 100) / 100);
+                    $('input[name="subsidy"]').val(Math.round(subsidy * 100) / 100);
+                    $('input[name="uni_payprice"]').val(Math.round(money_round * 100) / 100);
                 }
 //                setTimeout(function(){
 //                    window.location.href=url+'&order_id='+data.order_id;
