@@ -254,11 +254,11 @@ class lexiangpingouModuleSite extends WeModuleSite
                                 pay_onesuccess($order_out['orderno'], $order_out['openid'], $fee, TIMESTAMP, $url);
                                 /*更改库存*/
                                 if ($order_out['g_id'] > 0) {
-//                                    if ($goodsInfo['gnum'] >= $order_out['gnum']) {
-//                                        goods_update_by_params(array('gnum' => $goodsInfo['gnum'] - $order_out['gnum'], 'salenum' => $goodsInfo['salenum'] + $order_out['gnum']), array('id' => $order_out['g_id']));
-//                                    } elseif (!empty($goodsInfo['gnum'])) {
-//                                        goods_update_by_params(array('gnum' => $goodsInfo['gnum'] - $order_out['gnum'], 'salenum' => $goodsInfo['salenum'] + $order_out['gnum']), array('id' => $order_out['g_id']));
-//                                    }
+                                    if ($goodsInfo['gnum'] >= $order_out['gnum']) {
+                                        goods_update_by_params(array('gnum' => $goodsInfo['gnum'] - $order_out['gnum'], 'salenum' => $goodsInfo['salenum'] + $order_out['gnum']), array('id' => $order_out['g_id']));
+                                    } elseif (!empty($goodsInfo['gnum'])) {
+                                        goods_update_by_params(array('gnum' => $goodsInfo['gnum'] - $order_out['gnum'], 'salenum' => $goodsInfo['salenum'] + $order_out['gnum']), array('id' => $order_out['g_id']));
+                                    }
                                     //极限单品减库存加销量
                                     if ($goodsInfo['supply_goodsid'] > 0) {
                                         $go = pdo_fetch("SELECT * FROM " . tablename('tg_supply_goods') . " WHERE id = " . $goodsInfo['supply_goodsid']);
